@@ -1,7 +1,7 @@
 /**
  * new
  *
- * only header and content
+ * only header and footer
  *
  * @category	template
  * @version 	1.0
@@ -17,9 +17,11 @@
   <title>[*pagetitle*] - [(site_name)] </title>
   <meta http-equiv="Content-Type" content="text/html; charset=[(modx_charset)]" />
   <base href="[(site_url)]"></base>
-  
 </head>
+
 <body>
 [*content*]
 </body>
+
+<!--MySQL: [^qt^], запросов: [^q^], PHP: [^p^], всего: [^t^], памяти [^m^], документ взят из [^s^] -->
 </html>
