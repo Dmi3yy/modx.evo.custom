@@ -3,6 +3,7 @@
 -fancybox
 -ie6nomore
 -swfobject
+-изменил setup.sql (поправил настройки по умолчанию)
 
 своя сборка modx 
 включает в себя:
