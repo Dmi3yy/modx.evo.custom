@@ -1,0 +1,71 @@
+  /*************************/
+ /* vlaCalendar Adobe CS3 */
+/*************************/
+
+/* Picker */
+
+.adobe_cs3 .pickerBackground {
+	background-image: url('../images/adobe_cs3/calendar_background.gif') !important;
+	padding-top: 26px;
+	height: 140px;
+}
+
+/* Calender */
+
+.adobe_cs3 .arrowLeft:hover {
+	background-image: url('../images/adobe_cs3/arrowleft_hover.gif');
+}
+.adobe_cs3 .arrowRight:hover {
+	background-image: url('../images/adobe_cs3/arrowright_hover.gif');
+}
+
+.adobe_cs3 .label:hover {
+	color: #939393;
+}
+
+/* Month */
+
+.adobe_cs3 .month td:hover {
+	background-image: url('../images/adobe_cs3/day_hover.gif');
+	color: #515151;
+}
+
+.adobe_cs3 .month td.today {
+	background-image: url('../images/adobe_cs3/today.gif');
+	color: #939393;
+}
+.adobe_cs3 .month td.today:hover {
+	background-image: url('../images/adobe_cs3/today_hover.gif');
+}
+
+.adobe_cs3 .month td.outsideDay:hover {
+	color: #939393;
+}
+
+/* Year & decade */
+
+.adobe_cs3 .year td:hover {
+	background-image: url('../images/adobe_cs3/month_hover.gif');
+	color: #515151;
+}
+.adobe_cs3 .year td.selected:hover {
+	background-image: url('../images/adobe_cs3/month_selected_hover.gif');
+}
+.adobe_cs3 .year td.current {
+	background-image: url('../images/adobe_cs3/month_current.gif');
+	color: #939393;
+}
+.adobe_cs3 .year td.current:hover {
+	background-image: url('../images/adobe_cs3/month_current_hover.gif');
+}
+
+.adobe_cs3 .year td.selectedcurrent {
+	background-image: url('../images/adobe_cs3/month_selectedcurrent.gif');
+}
+.adobe_cs3 .year td.selectedcurrent:hover {
+	background-image: url('../images/adobe_cs3/month_selectedcurrent_hover.gif');
+}
+
+.adobe_cs3 .year td.outsideYear:hover {
+	color: #939393;
+}
