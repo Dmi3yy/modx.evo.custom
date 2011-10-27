@@ -194,24 +194,28 @@ class template{
 	// 
 	// http://modxcms.com/forums/index.php/topic,5344.msg41096.html#msg41096
 	// ---------------------------------------------------
-	function fetch($tpl){
-		global $modx;
-		$template = "";
-		if ($modx->getChunk($tpl) != "") {
-			$template = $modx->getChunk($tpl);
-		} else if(substr($tpl, 0, 6) == "@FILE:") {
-			$template = $this->get_file_contents(substr($tpl, 6));
-		} else if(substr($tpl, 0, 6) == "@CODE:") {
-			$template = substr($tpl, 6);
-		} else if(substr($tpl, 0, 5) == "@FILE") {
-			$template = $this->get_file_contents(trim(substr($tpl, 5)));
-		} else if(substr($tpl, 0, 5) == "@CODE") {
-			$template = trim(substr($tpl, 5));
-		} else {
-			$template = $this->language['missing_placeholders_tpl'];
-		}
-			return $template;
-	}
+	   function fetch($tpl){
+      global $modx;
+      $template = "";
+      if ($modx->getChunk($tpl) != "") {
+         $template = $modx->getChunk($tpl);
+      } else if(substr($tpl, 0, 6) == "@FILE:") {
+         $template = $this->get_file_contents(substr($tpl, 6));
+      } else if(substr($tpl, 0, 6) == "@CODE:") {
+         $template = substr($tpl, 6);
+//Taken from feedx snippe
+        $template =  str_replace(array('|xq|','|xe|','|xa|'), array('?','=','&'), $template);
+      } else if(substr($tpl, 0, 5) == "@FILE") {
+         $template = $this->get_file_contents(trim(substr($tpl, 5)));
+      } else if(substr($tpl, 0, 5) == "@CODE") {
+         $template = trim(substr($tpl, 5));
+//Taken from feedx snippet
+         $template =  str_replace(array('|xq|','|xe|','|xa|'), array('?','=','&'), $template);
+      } else {
+         $template = $this->language['missing_placeholders_tpl'];
+      }
+         return $template;
+   }
 
 	// ---------------------------------------------------
 	// Function: get_file_contents

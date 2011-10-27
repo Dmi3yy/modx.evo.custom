@@ -13,8 +13,14 @@
 
 
 -------Изменение системных файлов----------------
+-поправил robot.txt
 -транслитерация файлов в менеджере картинко и файлов
 -wait.static.php - ускоряем переход на главную при сохранении
+-jot обновил шаблоны
+-правка managermanager - глюк тв параметра с картинкой mm_widget_showimagetvs
+-ditto отключение пагинации если 1 страничка (ditto.class.inc.php)
+-ditto замена ?=& при работе с @CODE на |xq|','|xe|','|xa| (template.class.inc.php)
+-transalias - правильная транслитерация по умолчанию
 
 
 ------------------------Шаблоны----------------
@@ -33,19 +39,50 @@
 -MultiFiles 1.11
 -MultiPhotos 1.22
 -TvTable 1.1
+-aDate  - вывод русской даты
+-GetField 1.3
+-parentTitle - получаем pagetitle парента
+-sitemap.xml 1.0.8
+-splitPagination 2.0 - красивая пагинация для Ditto 
+-YouTube 0.1 
 
 
 ------------------------Плагины----------------
 -добавил плагин seo_strict_urls
 -добавил codemirror (подсветка кода)
 -TvTable 1.11
--MultiFiles 1.01
+-MultiFiles 1.01 
 -MultiPhotos 1.23
+-customTemplate 0.1
+-devStat 1.0
+-PHx 2.1.4
+
 
 
 -------------------------Модули----------------
 -добавил Модуль doc finder
 -добавил Модуль mass redirect
+
+
+----------------Экстендеры для Ditto---------
+-customsort
+-distinct
+-jotcount
+-tvFilter
+-glossaryFilter
+
+--------------setup.sql----------------------
+-Default admin account -> admin
+-My MODx site -> MODx Site By Dmi3yy
+-Шаблон по умолчанию СОСЕДНИЙ
+-Опубликованно по умолчанию
+-Дружественные урлы ВКЛ с вложенностью
+-капча 0,1,2,3,4,5,6,7,8,9
+-запоминать вкладки ДА
+
+
+
+
 
    
 

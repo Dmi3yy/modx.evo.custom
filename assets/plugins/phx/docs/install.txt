@@ -1,0 +1,31 @@
+Quick Installation and Setup quide: 
+-------------------------------------
+
+New Install:
+
+1) Download and extract the archive. 
+2) Create a directory called "phx" in your [MODx Directory]/assets/plugins directory
+3) FTP or copy the files into [MODx Directory]/assets/plugins/phx
+4) Create a new plugin in the manager called "PHx" and copy/paste the contents of phx.plugin.txt into the code field.
+5) Check "OnParseDocument" at the System Events tab
+
+Update:
+
+1) Download and extract the archive. 
+2) Backup and delete the contents of [MODx Directory]/assets/snippets/phx
+3) Create a directory called "phx" in your [MODx Directory]/assets/plugins directory
+4) FTP or copy the files into [MODx Directory]/assets/plugins/phx
+5) Update the "PHx" plugin in the manager and copy/paste the contents of phx.plugin.txt into the code field.
+6) Check "OnParseDocument" at the System Events tab
+
+Optional steps (as of 2.0):
+
+On the Configuration tab -> Plugin configuration enter: 
+
+&phxdebug=Debug;int;0 &phxmaxpass=Max. Passes;int;50
+
+
+
+
+
+

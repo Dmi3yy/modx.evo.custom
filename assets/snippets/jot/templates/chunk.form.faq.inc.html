@@ -1,20 +1,15 @@
-﻿<a name="jf[+jot.link.id+]"></a>
-<h2>[+form.edit:is=`1`:then=`Правка комментария`:else=`Написать комментарий`+]</h2>
-<div class="jot-list">
-<ul>
-	<li>Обязательные для заполнения поля помечены знаком <span style="font-weight:bold; color:#FF0000">*</span>.</li>
-</ul>
-</div>
+<!--<a name="jf[+jot.link.id+]"></a>-->
+<h3 class=forceup>[+form.edit:is=`1`:then=`Правка`:else=`Задать вопрос`+]</h3>
 [+form.error:isnt=`0`:then=`
 <div class="jot-err">
 [+form.error:select=`
 &-3=Вы отправляете один и тот же пост - не стоит нажимать на кнопку более 1 раза.
-&-2=Ваш комментарий отвергнут.
-&-1=Комментарий отправлен - ждет проверки модератора, после проверки будет опубликован.
+&-2=Ваш вопрос отвергнут.
+&-1=Ваш вопрос отправлен - ждет проверки модератора, после проверки будет опубликован.
 &1=Вы отправляете один и тот же пост - не стоит нажимать на кнопку более 1 раза.
 &2=Код на изображении не совпадает с тем, что вы указали.
 &3=Не торопитесь, ограничение на время повторного поста [+jot.postdelay+] секунд.
-&4=Ваш комментарий отвергнут.
+&4=Ваш вопрос отвергнут.
 &5=[+form.errormsg:ifempty=`Необходимо заполнять поля помеченные знаком *`+]
 `+]
 </div>
@@ -22,9 +17,9 @@
 [+form.confirm:isnt=`0`:then=`
 <div class="jot-cfm">
 [+form.confirm:select=`
-&1=Ваш комментарий успешно добавлен.
-&2=Комментарий отправлен - ждет проверки модератора, после проверки будет опубликован.
-&3=Комментарий сохранен.
+&1=Ваш вопрос успешно добавлен.
+&2=Ваш вопрос отправлен - ждет проверки модератора, после проверки будет опубликован.
+&3=Ваш вопрос сохранен.
 `+]
 </div>
 `:strip+]
@@ -52,28 +47,40 @@
 	`:strip+]
 	
 	[+form.guest:is=`1`:then=`
-		<label for="name[+jot.id+]">Имя:<br />
+		<label for="name[+jot.id+]">Имя:<span style="font-weight:bold; color:#FF0000">*</span><br />
 		<input tabindex="[+jot.seed:math=`?+1`+]" name="name" type="text" size="40" value="[+form.field.custom.name:esc+]" id="name[+jot.id+]" />
 		</label>
-		<label for="email[+jot.id+]">Email:<br />
+		<label for="email[+jot.id+]">Email:<span style="font-weight:bold; color:#FF0000">*</span><br />
 		<input tabindex="[+jot.seed:math=`?+2`+]" name="email" type="text" size="40" value="[+form.field.custom.email:esc+]" id="email[+jot.id+]"/>
 		</label>
 	`:strip+]
-	
-	<label for="title[+jot.id+]">Тема:<br />
-	<input tabindex="[+jot.seed:math=`?+3`+]" name="title" type="text" size="40" value="[+form.field.title:esc+]" id="title[+jot.id+]"/>
+	[+form.moderation:is=`1`:then=`
+	<label for="title[+jot.id+]">Ответ:<br />
+	<textarea tabindex="[+jot.seed:math=`?+3`+]" name="title" cols="50" rows="8"  id="title[+jot.id+]"/>[+form.field.title:esc+]</textarea>
 	</label>
-	<label for="content[+jot.id+]">Комментарий: <span style="font-weight:bold; color:#FF0000">*</span><br />
+	`:strip+]
+	 <!---<label for="ans[+jot.id+]">Телефон:<br />
+	<input tabindex="[+jot.seed:math=`?+9`+]" name="ans" type="text" size="40" value="[+form.field.custom.ans:esc+]" id="ans[+jot.id+]"/>
+	</label>--->
+	<label for="content[+jot.id+]">Ваш вопрос:<span style="font-weight:bold; color:#FF0000">*</span><br />
 	<textarea tabindex="[+jot.seed:math=`?+4`+]" name="content" cols="50" rows="8" id="content[+jot.id+]">[+form.field.content:esc+]</textarea>
 	</label><br />
+   <!--- [+form.moderation:is=`1`:then=`
+ 
+    <label for="title[+jot.id+]">Комментарий админа:<br />
+	<textarea tabindex="[+jot.seed:math=`?+3`+]" name="title" cols="50" rows="8"  id="title[+jot.id+]"/>[+form.field.title:esc+]</textarea>
 	
+	</label>
+   
+	  `:strip+]
+	--->
   [+jot.captcha:is=`1`:then=`
 		<div style="width:150px;margin-top: 5px;margin-bottom: 5px;"><a href="[+jot.link.current:esc+]"><img src="[(base_url)]manager/includes/veriword.php?rand=[+jot.seed+]" width="148" height="60" alt="Если у Вас возникли проблемы с чтением кода, нажмите на картинку с кодом для нового кода." style="border: 1px solid #003399" /></a></div>
 		<label for="vericode[+jot.id+]">Для защиты от спама - введите код:<br /><input type="text" name="vericode" style="width:150px;" size="20" id="vericode[+jot.id+]" /></label>&nbsp;
 	`:strip+]
 	
 	<div style="float:right;width: 100px;"></div>
-	<input tabindex="[+jot.seed:math=`?+5`+]" name="submit" type="submit" value="[+form.edit:is=`1`:then=`Сохранить изменения`:else=`Отправить комментарий`+]" />
+	<input class="butti"  tabindex="[+jot.seed:math=`?+5`+]" name="submit" type="submit" value="[+form.edit:is=`1`:then=`Сохранить изменения`:else=`Отправить вопрос`+]" />
 	[+form.edit:is=`1`:then=`
 		<input tabindex="[+jot.seed:math=`?+5`+]" name="submit" type="submit" value="Отмена" onclick="history.go(-1);return false;" />
 	`+] 
