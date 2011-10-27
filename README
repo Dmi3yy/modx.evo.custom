@@ -4,6 +4,18 @@
 -ie6nomore
 -swfobject
 -изменил setup.sql (поправил настройки по умолчанию)
+-добавил Модуль doc finder
+-добавил Модуль mass redirect
+-удалил чанк: weblogin sidebar 
+-добавил чанк стандартной формы отправки сообщения feedback
+-добавил чанк ie6nomore(можно всраивать в шапку 
+-переименовал mm_demo_rules в mm_rules
+-заменил modx_host на new(шаблоны) 
+-добавил плагин seo_strict_urls
+
+  
+    
+   
 
 своя сборка modx 
 включает в себя:
