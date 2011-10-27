@@ -871,7 +871,7 @@ REPLACE INTO `{PREFIX}manager_users`
 
 REPLACE INTO `{PREFIX}user_attributes` 
 (id, internalKey, fullname, role, email, phone, mobilephone, blocked, blockeduntil, blockedafter, logincount, lastlogin, thislogin, failedlogincount, sessionid, dob, gender, country, state, zip, fax, photo, comment) VALUES 
-(1, 1, 'Default admin account', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '');
+(1, 1, 'Admin', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
@@ -895,33 +895,31 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('server_protocol','http'),
 ('manager_language','{MANAGERLANGUAGE}'),
 ('modx_charset','UTF-8'),
-('site_name','My MODx Site'),
+('site_name','MODx Site By Dmi3yy'),
 ('site_start','1'),
 ('error_page','1'),
 ('unauthorized_page','1'),
 ('site_status','1'),
-('site_unavailable_message','The site is currently unavailable'),
 ('track_visitors','0'),
 ('top_howmany','10'),
-('auto_template_logic','{AUTOTEMPLATELOGIC}'),
+('auto_template_logic','sibling'),
 ('default_template','3'),
 ('old_template',''),
-('publish_default','0'),
+('publish_default','1'),
 ('cache_default','1'),
 ('search_default','1'),
-('friendly_urls','0'),
+('friendly_urls','1'),
 ('friendly_url_prefix',''),
 ('friendly_url_suffix','.html'),
 ('friendly_alias_urls','1'),
-('use_alias_path','0'),
+('use_alias_path','1'),
 ('use_udperms','1'),
 ('udperms_allowroot','0'),
-('failed_login_attempts','3'),
-('blocked_minutes','60'),
+('failed_login_attempts','5'),
+('blocked_minutes','30'),
 ('use_captcha','0'),
-('captcha_words','MODx,Access,Better,BitCode,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Tattoo,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote'),
+('captcha_words','0,1,2,3,4,5,6,7,8,9'),
 ('emailsender','{ADMINEMAIL}'),
-('emailsubject','Your login details'),
 ('number_of_logs','100'),
 ('number_of_messages','30'),
 ('number_of_results','20'),
@@ -960,12 +958,14 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('rss_url_security', 'http://feeds.feedburner.com/modxsecurity'),
 ('validate_referer', '1'),
 ('datepicker_offset','-10'),
-('xhtml_urls','1'),
+('xhtml_urls','0'),
 ('allow_duplicate_alias','0'),
 ('automatic_alias','1'),
 ('datetime_format','dd-mm-YYYY'),
-('warning_visibility', '1'),
-('remember_last_tab', '0');
+('warning_visibility', '0'),
+('tree_page_click', '27'),
+('clean_uploaded_filename', '1'),
+('remember_last_tab', '1');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
