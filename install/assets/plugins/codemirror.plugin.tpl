@@ -8,7 +8,7 @@
  * @version 	0.04
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
- * @internal	@events OnDocFormRender,OnTempFormRender,OnChunkFormRender,OnSnipFormRender,OnPluginFormRender,OnModFormRender
+ * @internal	@events OnTempFormRender,OnChunkFormRender,OnSnipFormRender,OnPluginFormRender,OnModFormRender
  * @internal	@modx_category Search
  * @internal    @legacy_names Search Highlighting
  * @internal    @installset base, sample
