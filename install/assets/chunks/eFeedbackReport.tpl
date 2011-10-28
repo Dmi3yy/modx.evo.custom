@@ -1,4 +1,4 @@
-﻿/**
+/**
  * eFeedbackReport
  * 
  * eFeedbackReport  шаблон отправки на почту

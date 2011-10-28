@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ie6nomore
  * 
  * Добавление ie6nomore

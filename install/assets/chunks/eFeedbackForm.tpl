@@ -1,4 +1,4 @@
-﻿/**
+/**
  * eFeedbackForm
  * 
  * eFeedbackForm Шаблон формы обратной связи
