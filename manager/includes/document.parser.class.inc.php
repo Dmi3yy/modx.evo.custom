@@ -537,14 +537,11 @@ class DocumentParser {
         $queryTime= $this->queryTime;
         $phpTime= $totalTime - $queryTime;
 
-        $queryTime= sprintf("%2.4f c", $queryTime);
-        $totalTime= sprintf("%2.4f c", $totalTime);
-        $phpTime= sprintf("%2.4f c", $phpTime);
-        $source= $this->documentGenerated == 1 ? "базы" : "кеша";
+        $queryTime= sprintf("%2.4f s", $queryTime);
+        $totalTime= sprintf("%2.4f s", $totalTime);
+        $phpTime= sprintf("%2.4f s", $phpTime);
+        $source= $this->documentGenerated == 1 ? "database" : "cache";
         $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
-		// и память выводим
-		$phpMemory = (memory_get_peak_usage(true) / 1024 / 1024) . " МБ";
-        
 
         $out =& $this->documentOutput;
         if ($this->dumpSQL) {
@@ -555,8 +552,6 @@ class DocumentParser {
         $out= str_replace("[^p^]", $phpTime, $out);
         $out= str_replace("[^t^]", $totalTime, $out);
         $out= str_replace("[^s^]", $source, $out);
-		// и память выводим
-		$out= str_replace("[^m^]", $phpMemory, $out);
         //$this->documentOutput= $out;
 
         // invoke OnWebPagePrerender event
