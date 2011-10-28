@@ -6,7 +6,7 @@
  * @package MODx
  * @version 1.0.1
  * 
- * Filename:       /install/lang/russian.inc.php
+ * Filename:       /install/lang/russian-utf8.inc.php
  * Language:       Russian
  * Encoding:       UTF-8
  * Translated by:  Pertsev Dmitriy, Safronovich Victor, Russian MODx Community
