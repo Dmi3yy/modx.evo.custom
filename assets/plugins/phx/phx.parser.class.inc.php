@@ -302,32 +302,33 @@ class PHxParser {
 					// If we haven't yet found the modifier, let's look elsewhere	
 					default:
 					
-						// Is a snippet defined?
-						if (!array_key_exists($modifier_cmd[$i], $this->cache["cm"])) {
-							$sql = "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='phx:" . $modifier_cmd[$i] . "';";
-			             	$result = $modx->dbQuery($sql);
-			             	if ($modx->recordCount($result) == 1) {
-								$row = $modx->fetchRow($result);
-						 		$cm = $this->cache["cm"][$modifier_cmd[$i]] = $row["snippet"];
-						 		$this->Log("  |--- DB -> Custom Modifier");
-						 	} else if ($modx->recordCount($result) == 0){ // If snippet not found, look in the modifiers folder
+												// modified by Anton Kuzmin (23.06.2010) //
+						$snippetName = 'phx:'.$modifier_cmd[$i];
+						if( isset($modx->snippetCache[$snippetName]) ) {
+							$snippet = $modx->snippetCache[$snippetName];
+						} else { // not in cache so let's check the db
+							$sql= "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='" . $modx->db->escape($snippetName) . "';";
+							$result= $modx->dbQuery($sql);
+							if ($modx->recordCount($result) == 1) {
+								$row= $modx->fetchRow($result);
+								$snippet= $modx->snippetCache[$row['name']]= $row['snippet'];
+								$this->Log("  |--- DB -> Custom Modifier");
+							} else if ($modx->recordCount($result) == 0){ // If snippet not found, look in the modifiers folder
 								$filename = $modx->config['rb_base_dir'] . 'plugins/phx/modifiers/'.$modifier_cmd[$i].'.phx.php';
 								if (@file_exists($filename)) {
 									$file_contents = @file_get_contents($filename);
-									$file_contents = str_replace('<?php', '', $file_contents);
-									$file_contents = str_replace('?>', '', $file_contents);
+									$file_contents = str_replace('<'.'?php', '', $file_contents);
+									$file_contents = str_replace('?'.'>', '', $file_contents);
 									$file_contents = str_replace('<?', '', $file_contents);
-									$cm = $this->cache["cm"][$modifier_cmd[$i]] = $file_contents;
+									$snippet = $modx->snippetCache[$snippetName] = $file_contents;
+									$modx->snippetCache[$snippetName.'Props'] = '';
 									$this->Log("  |--- File ($filename) -> Custom Modifier");
-								} else {
-									$cm = '';
-									$this->Log("  |--- PHX Error:  {$modifier_cmd[$i]} could not be found");
 								}
-							} 
-						 } else {
-						 	$cm = $this->cache["cm"][$modifier_cmd[$i]];
-						 	$this->Log("  |--- Cache -> Custom Modifier");
-						 }
+							}
+						}
+						$cm = $snippet;
+						// end //
+
 						 ob_start();
 						 $options = $modifier_value[$i];
 		        	     $custom = eval($cm);
