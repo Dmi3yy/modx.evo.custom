@@ -60,6 +60,24 @@ class PHxParser {
 		// To the parse mobile.. let's go! *insert batman tune here*
 		$template = $this->ParseValues($template);
 		// clean up unused placeholders that have modifiers attached (MODx can't clean them)
+		
+// http://community.modx-cms.ru/blog/fast-solution/2782.html
+		$ar1 = explode('<!--phx-stop-->', $template);
+    
+			if (count($ar1) > 1) {
+			  $ret[0] = $ar1[0];
+			  for ($i=1; $i<count($ar1); $i++) {
+				$ar2 = explode('<!--phx-start-->',$ar1[$i]);
+				if ($ar2[0] == $ar1[$i]) continue;
+				$srch = array('[',']');
+				$repl = array('@$@','$@$');
+				$ar2[0] = str_replace($srch,$repl,$ar2[0]);
+				$ret[$i] = implode('<!--phx-start-->',$ar2);
+			  }
+			  $template = implode('<!--phx-stop-->',$ret);
+			} 
+// http://community.modx-cms.ru/blog/fast-solution/2782.html
+		
 		preg_match_all('~\[(\+|\*|\()([^:\+\[\]]+)([^\[\]]*?)(\1|\))\]~s', $template, $matches);
     	if ($matches[0]) {
 			$template = str_replace($matches[0], '', $template);
@@ -67,6 +85,9 @@ class PHxParser {
 		}
 		// Restore non-call characters in the template: [, ]
 		$template = str_replace($this->safetags[1],$this->safetags[2],$template);
+// http://community.modx-cms.ru/blog/fast-solution/2782.html
+		$template = str_replace($repl, $srch, $template);
+// http://community.modx-cms.ru/blog/fast-solution/2782.html
 		// Set template post-process hash
 		$et = md5($template);
 		// If template has changed, parse it once more...
