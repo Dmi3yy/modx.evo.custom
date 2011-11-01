@@ -1030,7 +1030,7 @@ class ditto {
 		return $IDs;
 	}
 	
-	// ---------------------------------------------------
+		// ---------------------------------------------------
 	// Function: buildURL
 	// Build a URL with regard to Ditto ID
 	// ---------------------------------------------------
@@ -1041,7 +1041,14 @@ class ditto {
 			$query = array();
 			foreach ($_GET as $param=>$value) {
 				if ($param != 'id' && $param != 'q') {
-					$query[htmlspecialchars($param, ENT_QUOTES)] = htmlspecialchars($value, ENT_QUOTES);
+					if(is_array($value)) {
+					  //$query[$param] = $value;
+					  foreach($value as $key => $val) {
+              $query[htmlspecialchars($param, ENT_QUOTES)][] = htmlspecialchars($val, ENT_QUOTES);
+            }
+					}else{
+					  $query[htmlspecialchars($param, ENT_QUOTES)] = htmlspecialchars($value, ENT_QUOTES);
+					}
 				}
 			}
 			if (!is_array($args)) {
@@ -1056,13 +1063,23 @@ class ditto {
 				}
 			}
 			$queryString = "";
-			foreach ($query as $param=>$value) {
-				$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
+			foreach ($query as $param=>$value){
+				
+        //$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
+        
+        if(!is_array($value)){
+          $queryString .= '&'.$param.'='.$value;
+        }else{
+          foreach ($value as $key=>$val){
+            $queryString .= '&'.$param.'[]='.$val;
+          }
+        }
 			}
 			$cID = ($id !== false) ? $id : $modx->documentObject['id'];
 			$url = $modx->makeURL(trim($cID), '', $queryString);
 			return ($modx->config['xhtml_urls']) ? $url : str_replace("&","&amp;",$url);
 	}
+	
 	
 	// ---------------------------------------------------
 	// Function: getParam

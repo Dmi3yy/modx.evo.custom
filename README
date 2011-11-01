@@ -29,6 +29,7 @@
 -Jot исправлен баг с доп полями: (http://forums.modx.com/index.php/topic,38282.msg234226.html#msg234226)
 -Jot исправлен баг с кодировкой писем: (http://community.modx-cms.ru/blog/questions/2344.html#comment21387)
 -phpmailer - патч (http://forums.modx.com/index.php/topic,36046.0.html)
+-ditto исправлен баг в get масивом (http://community.modx-cms.ru/blog/2760.html#comment21973)
 
 
 
