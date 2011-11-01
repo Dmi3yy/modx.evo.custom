@@ -671,7 +671,11 @@ class CJot {
 							$tpl->AddVar('siteurl',"http://".$_SERVER["SERVER_NAME"]);
 							$tpl->AddVar('recipient',$user);
 							$message = $tpl->Render();
-							mail($user["email"], $this->config["subject"]["subscribe"], $message, "From: ".$modx->config['emailsender']."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
+							//add
+							$headers = "From: =?koi8-r?B?".base64_encode(iconv("UTF-8", "koi8-r", $modx->config['site_name']))."?= <".$modx->config['emailsender'].">\r\n";
+							$headers .= "Content-type: text/plain; charset=koi8-r\r\nContent-Transfer-Encoding: 8bit\r\n";
+							mail($user["email"],"=?koi8-r?B?".base64_encode(iconv("UTF-8", "koi8-r", $this->config["subject"]["subscribe"]))."?=", iconv("UTF-8", "koi8-r", $message), $headers);
+							//mail($user["email"], $this->config["subject"]["subscribe"], $message, "From: ".$modx->config['emailsender']."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
 						}
 				}
 		}
@@ -697,7 +701,11 @@ class CJot {
 				$tpl->AddVar('siteurl',"http://".$_SERVER["SERVER_NAME"]);
 				$tpl->AddVar('recipient',$user);
 				$message = $tpl->Render();
-				mail($user["email"], $this->config["subject"]["moderate"], $message, "From: ".$modx->config['emailsender']."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
+				//add
+				$headers = "From: =?koi8-r?B?".base64_encode(iconv("UTF-8", "koi8-r", $modx->config['site_name']))."?= <".$modx->config['emailsender'].">\r\n";
+				$headers .= "Content-type: text/plain; charset=koi8-r\r\nContent-Transfer-Encoding: 8bit\r\n";
+				mail($user["email"],"=?koi8-r?B?".base64_encode(iconv("UTF-8", "koi8-r", $this->config["subject"]["moderate"]))."?=", iconv("UTF-8", "koi8-r", $message), $headers);
+				//mail($user["email"], $this->config["subject"]["moderate"], $message, "From: ".$modx->config['emailsender']."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
 			}
 		}
 	}
@@ -729,8 +737,11 @@ class CJot {
 			$tpl->AddVar('siteurl',"http://".$_SERVER["SERVER_NAME"]);
 			$tpl->AddVar('recipient',$user);
 			$message = $tpl->Render();
-			
-			mail($user["email"], $this->config["subject"]["author"], $message, "From: ".$modx->config['emailsender']."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
+			//add
+			$headers = "From: =?koi8-r?B?".base64_encode(iconv("UTF-8", "koi8-r", $modx->config['site_name']))."?= <".$modx->config['emailsender'].">\r\n";
+			$headers .= "Content-type: text/plain; charset=koi8-r\r\nContent-Transfer-Encoding: 8bit\r\n";
+			mail($user["email"],"=?koi8-r?B?".base64_encode(iconv("UTF-8", "koi8-r", $this->config["subject"]["author"]))."?=", iconv("UTF-8", "koi8-r", $message), $headers)
+			//mail($user["email"], $this->config["subject"]["author"], $message, "From: ".$modx->config['emailsender']."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
 			
 		}
 		
