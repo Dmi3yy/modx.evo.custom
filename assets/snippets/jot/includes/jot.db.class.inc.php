@@ -146,7 +146,11 @@ class CJotDataDb {
 					'label' => $n,
 					'content' => $modx->db->escape($v)
 				);
-				if (!$modx->db->update($update, $this->tbl["fields"], "id=$id and label='".$update["label"]."'")) $modx->db->insert($update,$this->tbl["fields"]);
+				//if (!$modx->db->update($update, $this->tbl["fields"], "id=$id and label='".$update["label"]."'")) $modx->db->insert($update,$this->tbl["fields"]);
+				$modx->db->update($update,$this->tbl["fields"], "id=$id and label='".$update["label"]."'");
+				$query=$modx->db->query("SELECT * FROM ".$this->tbl["fields"]." WHERE id=$id and label='".$update["label"]."'");
+				$limit = $modx->db->getRecordCount($query); 
+				if ($limit<1) {$modx->db->insert($update,$this->tbl["fields"]);}
 			}
 			
 			
@@ -159,6 +163,8 @@ class CJotDataDb {
 		if($this->isNew) return;
 		$id=$this->fields['id'];
 		$modx->db->delete($this->tbl["content"],"id=$id");
+		// add
+		$modx->db->delete($this->tbl["fields"],"id=$id");
 		$this->isNew=true;
 	}
 	
