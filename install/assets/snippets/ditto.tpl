@@ -946,7 +946,7 @@ if ($count > 0) {
             - <tplPaginatePrevious>
             - <paginateSplitterCharacter>
         */
-        $tplPaginatePage = isset($tplPaginatePage)? $ditto->template->fetch($tplPaginatePage) : "<a class='ditto_page' href='[+url+]'>[+page+]</a> [+splitter+]";
+        $tplPaginatePage = isset($tplPaginatePage)? $ditto->template->fetch($tplPaginatePage) : "<a class='ditto_page' href='[+url+]'>[+page+]</a>";
         /*
             Param: tplPaginatePage
 
@@ -966,7 +966,7 @@ if ($count > 0) {
             - <tplPaginatePrevious>
             - <paginateSplitterCharacter>
         */
-        $tplPaginateCurrentPage = isset($tplPaginateCurrentPage)? $ditto->template->fetch($tplPaginateCurrentPage) : "<span class='ditto_currentpage'>[+page+]</span> [+splitter+]";
+        $tplPaginateCurrentPage = isset($tplPaginateCurrentPage)? $ditto->template->fetch($tplPaginateCurrentPage) : "<span class='ditto_currentpage'>[+page+]</span>";
         /*
             Param: tplPaginateCurrentPage
 

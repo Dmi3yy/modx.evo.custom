@@ -30,7 +30,7 @@
 -Jot исправлен баг с кодировкой писем: (http://community.modx-cms.ru/blog/questions/2344.html#comment21387)
 -phpmailer - патч (http://forums.modx.com/index.php/topic,36046.0.html)
 -ditto исправлен баг в get масивом (http://community.modx-cms.ru/blog/2760.html#comment21973)
--ditto в шаблоны пагинации добавил плейсхолдер сплиттер
+
 
 
 
@@ -102,6 +102,7 @@ tinymce: добавление в xconfig.js тегов iframe с парамет�
 добавить параметры в ditto(http://modx-shopkeeper.ru/forum/viewtopic.php?id=266)
 хак дерева документов для редактирования дочерних ресурсов(http://community.modx-cms.ru/blog/tips_and_tricks/848.html)
 EvoGallery (http://modx.com/extras/package/evogallery)
+ditto добавить сплитер к результатам страничек
 
 
 
