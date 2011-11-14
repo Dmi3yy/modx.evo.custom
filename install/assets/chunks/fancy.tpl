@@ -1,5 +1,5 @@
 /**
- * feedback
+ * fancybox
  * 
  * скрипт fancybox (Jquery подключить отдельно)
  * 
