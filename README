@@ -17,7 +17,7 @@
 
 -------------Изменение системных файлов----------------
 -поправил robot.txt
--транслитерация файлов в менеджере картинко и файлов  (http://www.supremum.lv/2010/04/09/transliteraciya-imyon-fajlov-pri-zagruzke-v-modx/)
+-транслитерация файлов в менеджере картинок и файлов  (http://www.supremum.lv/2010/04/09/transliteraciya-imyon-fajlov-pri-zagruzke-v-modx/)
 -wait.static.php - ускоряем переход на главную при сохранении (http://community.modx-cms.ru/blog/tips_and_tricks/2580.html)
 -jot обновил шаблоны
 -правка managermanager - глюк тв параметра с картинкой mm_widget_showimagetvs  (http://community.modx-cms.ru/blog/questions/2486.html)
