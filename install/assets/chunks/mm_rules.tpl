@@ -19,3 +19,15 @@ if($modx->db->getValue("SELECT COUNT(id) FROM " . $modx->getFullTableName('site_
 }
 
 mm_widget_showimagetvs(); // Always give a preview of Image TVs
+
+//mm_createTab('Для SEO', 'seo', '', '', '', '');
+//mm_moveFieldsToTab('keyw,desc', 'seo', '', '');
+
+//mm_createTab('Изображения', 'photos', '', '', '', '850');
+//mm_moveFieldsToTab('images,photos', 'photos', '', '');
+
+//mm_hideFields('longtitle,description,link_attributes,menutitle,content', '', '6,7');
+
+//mm_hideTemplates('0,5,8,9,11,12', '2,3');
+
+//mm_hideTabs('settings, access', '2');
