@@ -20,8 +20,11 @@ if($modx->db->getValue("SELECT COUNT(id) FROM " . $modx->getFullTableName('site_
 
 mm_widget_showimagetvs(); // Always give a preview of Image TVs
 
+mm_renameField('log', 'Дочерние ресурсы отображаются в дереве');
+mm_changeFieldHelp('log', 'Это поле используется для папок с большим числом вложенных страниц');
+
 mm_createTab('Для SEO', 'seo', '', '', '', '');
-mm_moveFieldsToTab('titl,keyw,desc', 'seo', '', '');
+mm_moveFieldsToTab('titl,keyw,desc,seoOverride', 'seo', '', '');
 
 //mm_createTab('Изображения', 'photos', '', '', '', '850');
 //mm_moveFieldsToTab('images,photos', 'photos', '', '');
