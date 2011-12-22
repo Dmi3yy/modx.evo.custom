@@ -1,4 +1,4 @@
-текущая версии 0.5.5
+текущая версии 0.6
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -29,12 +29,13 @@
 -Jot исправлен баг с доп полями: (http://forums.modx.com/index.php/topic,38282.msg234226.html#msg234226)
 -phpmailer - патч (http://forums.modx.com/index.php/topic,36046.0.html)
 -ditto исправлен баг в get масивом (http://community.modx-cms.ru/blog/2760.html#comment21973)
+-хак дерева документов для редактирования дочерних ресурсов(http://community.modx-cms.ru/blog/tips_and_tricks/848.html)
 
 
 
 
---------------------------------Шаблоны----------------
--заменил modx_host на new оставил только код в шапку (ещё добавлю в футер)
+--------------------------------TV----------------
+-добавленны TV для SEO:  ключевые слова, мета дескрипшн, мета титл, управление URL
 
 
 -------------------------------Чанки------------------
@@ -92,6 +93,7 @@
 -Дружественные урлы ВКЛ с вложенностью
 -капча 0,1,2,3,4,5,6,7,8,9
 -запоминать вкладки ДА
+-изменен шаблон по умолчанию
 
 ----------------в планах добавить-----------------------------------
 jot уменьшение запросов к базе (http://forums.modx.com/index.php?topic=51824.0#dis-post-368696)
@@ -100,9 +102,8 @@ nikoFeedBack (http://predvoditelev.ru/blog/archives/43)
 tinymce: добавление в xconfig.js тегов iframe с параметрами (для видео ютуба) и nowrap  (http://community.modx-cms.ru/blog/2760.html#comment21971)
 перевести на русский datepicker.js
 добавить параметры в ditto(http://modx-shopkeeper.ru/forum/viewtopic.php?id=266)
-хак дерева документов для редактирования дочерних ресурсов(http://community.modx-cms.ru/blog/tips_and_tricks/848.html)
 EvoGallery (http://modx.com/extras/package/evogallery)
-ditto добавить сплитер к результатам страничек
+
 
 
 
