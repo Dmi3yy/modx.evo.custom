@@ -855,13 +855,13 @@ UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/html' W
 
 
 REPLACE INTO `{PREFIX}site_templates` 
-(id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Minimal Template','Default minimal empty template (content returned only)','0','0','','0','[*content*]','0');
+(id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Home','','0','0','','0','<!DOCTYPE html>\r\n<html>\r\n<head>\r\n  <title>[*titl*]</title>\r\n  <meta name="keywords" content="[*keyw*]" />\r\n  <meta name="description" content="[*desc*]" />\r\n  <meta http-equiv="Content-Type" content="text/html; charset=[(modx_charset)]" />\r\n  <base href="[(site_url)]"></base>\r\n</head>\r\n<body>\r\n\r\n[*content*]\r\n\r\n<!-- MySQL: [^qt^], query: [^q^], PHP: [^p^], total: [^t^], document from: [^s^]. -->\r\n\r\n</body>\r\n</html>','0');
 
 
 # Default Site Documents
 
 
-REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','MODx CMS Install Success','Welcome to the MODx Content Management System','','minimal-base','',1,0,0,0,0,'','<h3>Install Successful!</h3>\r\n<p>You have successfully installed MODx.</p>\r\n\r\n<h3>Getting Help</h3>\r\n<p>The <a href=\"http://modxcms.com/forums/\" target=\"_blank\">MODx Community</a> provides a great starting point to learn all things MODx, or you can also <a href=\"http://modxcms.com/learn/it.html\">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>\r\n<p>Welcome to MODx!</p>\r\n',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'Base Install',0,0,0,0,0,0,0);
+REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','Home','','','index','',1,0,0,0,0,'','',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'',0,0,0,0,0,0,0);
 
 
 REPLACE INTO `{PREFIX}manager_users` 
