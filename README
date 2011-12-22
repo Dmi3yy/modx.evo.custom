@@ -1,4 +1,4 @@
-текущая версии 0.6
+текущая версии 0.6.1
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -58,6 +58,7 @@
 -YouTube 0.1  
 -phpthumbof как модификатор   (http://community.modx-cms.ru/blog/addons/2156.html) + обновил phpthumb.function.php для нормальной работы с php 5.3
 -include
+-EvoGallery (http://modx.com/extras/package/evogallery) 
 
 
 ------------------------Плагины-------------------------
@@ -102,7 +103,8 @@ nikoFeedBack (http://predvoditelev.ru/blog/archives/43)
 tinymce: добавление в xconfig.js тегов iframe с параметрами (для видео ютуба) и nowrap  (http://community.modx-cms.ru/blog/2760.html#comment21971)
 перевести на русский datepicker.js
 добавить параметры в ditto(http://modx-shopkeeper.ru/forum/viewtopic.php?id=266)
-EvoGallery (http://modx.com/extras/package/evogallery)
+добавить paramEditFull
+веблогин и вебсингап взять с сайта shopkeeper
 
 
 

@@ -1,0 +1,1 @@
+<div class="photo"><a href="[+images_dir+][+filename+]"><img src="[+thumbs_dir+][+filename+]" alt="[+title+]" /></a></div>

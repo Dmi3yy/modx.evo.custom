@@ -1,0 +1,11 @@
+<script type="text/javascript">
+jQuery.noConflict();
+jQuery(document).ready(function(){
+    jQuery('#myGallery').cycle({
+        timeout: 5000
+    });
+});
+</script>
+<div id="myGallery">
+[+items+]
+</div>

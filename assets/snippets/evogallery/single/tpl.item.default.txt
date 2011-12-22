@@ -1,0 +1,1 @@
+<div class="pic"><img src="[+images_dir+][+filename+]" alt="[+title+]" /><p>[+description+]</p></div>

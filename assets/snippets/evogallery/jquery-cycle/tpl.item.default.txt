@@ -1,0 +1,4 @@
+<div class="imageElement">
+    <img src="[+images_dir+][+filename+]" alt="[+title+]" />
+</div>
+

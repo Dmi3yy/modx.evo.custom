@@ -18,7 +18,11 @@ if($modx->db->getValue("SELECT COUNT(id) FROM " . $modx->getFullTableName('site_
     mm_widget_tags('keyw',' '); // Give blog tag editing capabilities to the 'documentTags (3)' TV
 }
 
-mm_widget_showimagetvs(); // Always give a preview of Image TVs
+//mm_widget_evogallery(1, Галерея, 1, 3);   // подключаем галерею 
+//mm_galleryLink($fields, $roles, $templates, $moduleid);
+//mm_widget_evogallery($moduleid, $title, $roles, $templates);
+
+mm_widget_showimagetvs(); // Показываем превью ТВ
 
 mm_renameField('log', 'Дочерние ресурсы отображаются в дереве');
 mm_changeFieldHelp('log', 'Это поле используется для папок с большим числом вложенных страниц');
