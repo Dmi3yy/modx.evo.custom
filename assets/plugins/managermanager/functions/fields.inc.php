@@ -270,9 +270,8 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 					if (isset($mm_fields[$field])) {
 						$fieldtype = $mm_fields[$field]['fieldtype'];
 						$fieldname = $mm_fields[$field]['fieldname'];
-						//var toMove = $j("'.$fieldtype.'[name='.$fieldname.']").parents("tr:not(.urltv)");
-						$output .= ' 
-						var toMove = $j("'.$fieldtype.'[name=\''.$fieldname.'\']").parents(«tr:not(.urltv)»); // Identify the table row to move
+						$output .= '
+						var toMove = $j("'.$fieldtype.'[name=\''.$fieldname.'\']").parents("tr:not(.urltv)");
 						toMove.find("script").remove();
 						toMove.next("tr").find("td[colspan=2]").parents("tr").remove(); // Get rid of line after, if there is one
 						var movedTV = toMove.appendTo("#tab'.$newtab.'>table:first"); // Move the table row
