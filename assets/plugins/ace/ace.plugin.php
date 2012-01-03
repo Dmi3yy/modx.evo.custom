@@ -1,3 +1,19 @@
+//<?
+/**
+ * ACE
+ * 
+ * подсветка кода в админке
+ *
+ * @category 	plugin
+ * @version 	0.01
+ * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal	@properties &theme=theme;list;clouds,clouds_midnight,cobalt,crimson_editor,dawn,eclipse,idle_fingers,kr_theme,merbivore,merbivore_soft,mono_industrial,monokai,pastel_on_dark,solarized_dark,solarized_light,textmate,twilight,vibrant_ink;crimson_editor &gutter=gutter;list;true,false;false &fontSize=fontSize;list;10px,11px,12px,14px,16px;12px &showInvisibles=showInvisibles;list;true,false;false &useSoftTabs=useSoftTabs;list;true,false;true
+ * @internal	@events OnTempFormRender,OnChunkFormRender,OnSnipFormRender,OnPluginFormRender,OnModFormRender
+ * @internal	@modx_category Search
+ * @internal    @legacy_names Search Highlighting
+ * @internal    @installset base, sample
+ */
+
 /*
  * ACE Plugin 0.01 by Dmi3yy
  * Usage:
@@ -86,6 +102,16 @@ function inject() {
     load('ace.js', 'text!ace/css/editor.css', function() {
         var ace = window.__ace_shadowed__;
         ace.options.mode = "$mode";
+        ace.options.theme = "$theme";
+        ace.options.gutter = "$gutter";
+        ace.options.fontSize = "$fontSize";
+        ace.options.softWrap = "off";
+        ace.options.showPrintMargin = "false";
+        ace.options.useSoftTabs = "$useSoftTabs";
+        ace.options.showInvisibles = "$showInvisibles";
+        
+        
+        
         var Event = ace.require('pilot/event');
         var areas = document.getElementsByTagName("textarea");
         for (var i = 0; i < areas.length; i++) {
