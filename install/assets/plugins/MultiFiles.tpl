@@ -5,7 +5,7 @@
  * Добавление нескольких файлов к странице
  *
  * @category 	plugin
- * @version 	1.01
+ * @version 	1.0.2
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @author      Temus (temus3@gmail.com)
  * @internal	@properties &tvIds=TV Ids;text;&templ=Template;text;&role=Role;text;
@@ -51,6 +51,14 @@ var MultiFiles = new Class({
 		this.fid.getParent().adopt(this.box);
 		this.file=0;
 		for (var f=0;f<fArr.length;f++) this.addItem(fArr[f]);
+		if (typeof(SetUrl) != 'undefined') {
+			this.OrigSetUrl = SetUrl;
+			SetUrl = function(url, width, height, alt) {
+				var lastFile = lastFileCtrl;
+				this.OrigSetUrl(url, width, height, alt);
+				if ($(lastFile)!=null) $(lastFile).fireEvent('change');
+			}.bind(this)
+		}
 		this.sort=new Sortables(this.box,{
 			onStart: function(el){el.setStyles({'background':'#f0f0f0','opacity':1});},
 			onComplete: function(el){el.setStyle('background','none');this.setEditor();}.bind(this)

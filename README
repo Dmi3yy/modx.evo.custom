@@ -1,4 +1,4 @@
-текущая версии 0.6.1
+текущая версии 0.6.2
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -35,7 +35,7 @@
 
 
 --------------------------------TV----------------
--добавленны TV для SEO:  ключевые слова, мета дескрипшн, мета титл, управление URL
+-добавленны TV для SEO:  ключевые слова, мета дескрипшн, мета титл, управление URL (вынесено сразу в отдельную вкладку)
 
 
 -------------------------------Чанки------------------
@@ -43,6 +43,7 @@
 -добавил чанк стандартной формы отправки сообщения feedback
 -добавил чанк ie6nomore(можно всраивать в шапку 
 -переименовал mm_demo_rules в mm_rules
+-добавил в mm_rules несколько примеров
 -fancy  - скрипты для лайтбокса
 
 
@@ -63,13 +64,14 @@
 
 ------------------------Плагины-------------------------
 -добавил плагин seo_strict_urls       (http://modx.com/extras/package/?id=seostricturls)
--добавил codemirror (подсветка кода)    (http://community.modx-cms.ru/blog/addons/2269.html)
+-добавил ACE (подсветка кода)    (http://community.modx-cms.ru/blog/addons/5828.html)
 -TvTable 1.11         (http://community.modx-cms.ru/blog/addons/1170.html)
--MultiFiles 1.01      (http://community.modx-cms.ru/blog/addons/1232.html)
+-MultiFiles 1.0.2      (http://community.modx-cms.ru/blog/addons/1232.html)
 -MultiPhotos 1.23     (http://community.modx-cms.ru/blog/addons/1146.html)
 -customTemplate 0.1   (http://community.modx-cms.ru/blog/addons/2368.html)
 -devStat 1.0    (http://62.109.9.249/raznoe/devstat___plagin_dlya_mod.html)
 -PHx 2.1.4 + хак(меньше запросов) + <!--phx-stop--><!--phx-start-->    (http://community.modx-cms.ru/blog/fast-solution/2782.html)
+-исправил глюк с вкладками в MM при переносе в них тв вида чекбокс и радио
 
 
 
