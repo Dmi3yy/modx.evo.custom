@@ -34,7 +34,7 @@ if (!class_exists('modPhpThumb')) {
 }
 
 if (empty($input)) {
-    echo '[phpThumbOf] Empty image path passed, aborting.';
+    echo '/assets/snippets/phpthumbof/noimage.png';
     return '';
 }
 
@@ -111,10 +111,10 @@ if (file_exists($cacheKey) && !$useS3 && !$expired) {
         if ($phpThumb->RenderToFile($cacheKey)) {
             echo $cacheUrl;
         } else {
-            echo '[phpThumbOf] Could not cache thumb "'.$input.'" to file at: '.$cacheKey.' - Debug: '.print_r($phpThumb->debugmessages,true);
+            echo '/assets/snippets/phpthumbof/noimage.png';
         }
     } else {
-        echo '[phpThumbOf] Could not generate thumbnail: '.$input.' - Debug: '.print_r($phpThumb->debugmessages,true);
+        echo '/assets/snippets/phpthumbof/noimage.png';
     }
 }
 ?>
