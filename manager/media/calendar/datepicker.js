@@ -21,11 +21,11 @@ var DatePicker = new Class({
 
         // Options defaults
         this.dayChars = 1; // number of characters in day names abbreviation
-        this.dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        this.dayNames = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
         this.daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         this.format = 'dd-mm-yyyy hh:mm:00';
-        this.monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        this.startDay = 7; // 1 = week starts on Monday, 7 = week starts on Sunday
+        this.monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+        this.startDay = 1; // 1 = week starts on Monday, 7 = week starts on Sunday
         this.yearOrder = 'asc';
         this.yearRange = 10;
         this.yearStart = (new Date().getFullYear());

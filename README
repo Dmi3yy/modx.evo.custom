@@ -1,4 +1,4 @@
-текущая версии 0.6.2
+текущая версии 0.6.3
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -30,6 +30,7 @@
 -phpmailer - патч (http://forums.modx.com/index.php/topic,36046.0.html)
 -ditto исправлен баг в get масивом (http://community.modx-cms.ru/blog/2760.html#comment21973)
 -хак дерева документов для редактирования дочерних ресурсов(http://community.modx-cms.ru/blog/tips_and_tricks/848.html)
+-переведен на русский datepicker.js
 
 
 
@@ -103,7 +104,6 @@ jot уменьшение запросов к базе (http://forums.modx.com/in
 Jot баг с кодировкой писем: (http://community.modx-cms.ru/blog/questions/2344.html#comment21387)
 nikoFeedBack (http://predvoditelev.ru/blog/archives/43)
 tinymce: добавление в xconfig.js тегов iframe с параметрами (для видео ютуба) и nowrap  (http://community.modx-cms.ru/blog/2760.html#comment21971)
-перевести на русский datepicker.js
 добавить параметры в ditto(http://modx-shopkeeper.ru/forum/viewtopic.php?id=266)
 добавить paramEditFull
 веблогин и вебсингап взять с сайта shopkeeper
