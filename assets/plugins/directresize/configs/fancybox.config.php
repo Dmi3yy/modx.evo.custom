@@ -13,7 +13,7 @@ HTML;
 // All CSS and JS files and all other code that we need in our <HEAD> tag.
 $header  = 	'
 
-{{fancy}}
+
 
 ';
 
