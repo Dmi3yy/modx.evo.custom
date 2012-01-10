@@ -73,6 +73,7 @@
 -devStat 1.0    (http://62.109.9.249/raznoe/devstat___plagin_dlya_mod.html)
 -PHx 2.1.4 + хак(меньше запросов) + <!--phx-stop--><!--phx-start-->    (http://community.modx-cms.ru/blog/fast-solution/2782.html)
 -исправил глюк с вкладками в MM при переносе в них тв вида чекбокс и радио
+-DirectResize 0.8  - автосоздание мелких картинок в контенте и не только
 
 
 

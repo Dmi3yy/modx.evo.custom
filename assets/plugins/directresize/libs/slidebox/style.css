@@ -1,0 +1,78 @@
+#lightbox{
+	background: #eee;
+	padding: 8px 15px 8px 15px;
+	border: 2px #000000 solid;
+}
+
+#lightboxDetails{
+	font-size: 0.8em;
+	padding-top: 0.8em;
+	text-align: center;
+}
+
+#userMsg{
+	float: left;
+	margin: 0px;
+}
+
+#lightboxNumber{
+	margin: 0px;
+	font-family:  arial,verdana, serif;
+	font-size: 12px;
+	font-weight: normal;
+	position: relative;
+	left: -10px;
+}
+
+#lightboxTitle{
+	margin: 0px;
+	font-family:  arial,verdana, serif;
+	font-size: 12px;
+	font-weight: bold;
+	position: relative;
+	left: -15px;
+}
+#closeButton{
+	top: 6px;
+	right: 6px;
+	border: 0;
+}
+
+#lightboxImage{
+	border: 1px #000000 solid;
+	clear: both;
+}
+
+#overlay img{
+	border: none;
+}
+
+#overlay{
+	background: url(overlay.png);
+}
+
+div#lightboxCaption {
+	color: #555;
+	font-family: sans;
+	font-weight: normal;
+	margin-top: 10px;
+	text-align: center;
+}
+
+a#go_left {
+	margin-right: 10px;
+	font-weight: bold;
+	float: left;
+	font-size: xx-small;
+	color: #444;
+	text-decoration: none;
+}
+
+a#go_right{
+	margin-left: 10px;
+	font-weight: bold;
+	float: right;
+	font-size: xx-small;
+	color: #444;
+	text-decoration: none;
+}
