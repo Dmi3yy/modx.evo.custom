@@ -61,7 +61,7 @@
 -phpthumbof как модификатор   (http://community.modx-cms.ru/blog/addons/2156.html) + обновил phpthumb.function.php для нормальной работы с php 5.3
 -include
 -EvoGallery (http://modx.com/extras/package/evogallery) 
-
+-phpthumb by Karandash (http://community.modx-cms.ru/blog/6217.html)
 
 ------------------------Плагины-------------------------
 -добавил плагин seo_strict_urls       (http://modx.com/extras/package/?id=seostricturls)
