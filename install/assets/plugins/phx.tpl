@@ -10,6 +10,7 @@
  * @internal    @properties &phxdebug=Log events;int;0 &phxmaxpass=Max. Passes;int;50
  * @internal    @events OnParseDocument
  * @internal    @modx_category Manager and Admin
+ * @internal    @legacy_names directResize
  */
 
 include_once $modx->config['rb_base_dir'] . "plugins/phx/phx.parser.class.inc.php";
