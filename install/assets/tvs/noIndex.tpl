@@ -6,8 +6,8 @@
  * @category        tv
  * @name            noIndex
  * @internal        @caption Индексировать страницу
- * @internal        @input_type dropdown
- * @internal        @input_options Да==<!--  -->||Нет==<meta name="robots" content="noindex, nofollow">
+ * @internal        @input_type checkbox
+ * @internal        @input_options Нет==<meta name="robots" content="noindex, nofollow">
  * @internal        @input_default 
  * @internal        @output_widget 
  * @internal        @output_widget_params 
