@@ -91,6 +91,7 @@
 -tvFilter
 -glossaryFilter  (http://setpro.pl/software/ditto-stuff/glossary-extender)
 -nosort(customsort)
+-search(https://github.com/yama/MODx-Ditto-Extenders/)
 
 
 ----------------------------setup.sql----------------------
