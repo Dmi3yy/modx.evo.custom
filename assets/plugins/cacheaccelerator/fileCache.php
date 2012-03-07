@@ -53,6 +53,9 @@ class fileCache {
 	
 	//deletes cache from folder
 	public function deleteCache($older_than='', $groups = null){
+	    //if not set MODX_BASE_PATH
+		if(strpos($this->cache_path,MODX_BASE_PATH)===false) return;
+		
 	    $this->addLog('delete cache');
 		if (!is_numeric($older_than)) $older_than=$this->cache_expire;
 		if(!$groups)
