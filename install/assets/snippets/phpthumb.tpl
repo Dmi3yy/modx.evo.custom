@@ -14,7 +14,7 @@
 
 $replace  = Array("," => "&", "_" => "=");
     $options  = strtr($options, $replace);
-    $options .= "&f=jpg&q=100";
+    $options .= "&f=jpg&q=85";
     $opt = $options;
     $pt = $modx->getPageInfo($modx->documentIdentifier);
     require_once $_SERVER['DOCUMENT_ROOT']."/assets/snippets/phpthumbof/phpthumb.class.php";

@@ -48,7 +48,7 @@ foreach ($eoptions as $opt) {
         $ptOptions[$opt[0]] = $opt[1];
     }
 }
-if (empty($ptOptions['f'])) $ptOptions['f'] = 'png';
+if (empty($ptOptions['f'])) $ptOptions['f'] = 'jpg';
 
 /* load phpthumb */
 $assetsPath = $modx->config['base_path'].'assets/cache/phpthumbof';
