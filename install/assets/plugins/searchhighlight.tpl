@@ -8,8 +8,7 @@
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@events OnWebPagePrerender 
- * @internal	@modx_category Search
- * @internal    @legacy_names Search Highlighting
+ * @internal    @legacy_names Search Highlight
  * @internal    @installset base, sample
  */
  

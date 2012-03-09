@@ -602,10 +602,21 @@ if (isset ($_POST['plugin']) || $installData) {
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                    if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,category) VALUES('$name','$desc','$plugin','$properties','$guid',$category);", $sqlParser->conn)) {
-                        echo "<p>" . mysql_error() . "</p>";
-                        return;
-                    }
+				 
+				    //add disabled
+                    if ($category == 'add'){				
+						if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','1',$category);", $sqlParser->conn)) {
+							echo "<p>" . mysql_error() . "</p>";
+							return;
+						}
+					}else{	
+						if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,category) VALUES('$name','$desc','$plugin','$properties','$guid',$category);", $sqlParser->conn)) {
+							echo "<p>" . mysql_error() . "</p>";
+							return;
+						}
+					}
+						
+					
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
                 // add system events

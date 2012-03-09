@@ -10,6 +10,7 @@
  * @author      Temus (temus3@gmail.com)
  * @internal	@properties &tvIds=TV Ids;text;&templ=Template;text;&role=Role;text;&loadfile=Load csv file;list;true,false;false;
  * @internal	@events OnDocFormRender,OnBeforeDocFormSave
+ * @internal    @legacy_names TvTable
  */
  
 //defined('IN_MANAGER_MODE') or die();
