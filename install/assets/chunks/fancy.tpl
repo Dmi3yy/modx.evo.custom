@@ -9,7 +9,7 @@
  * @internal @modx_category Js
  */
  
-<script type="text/javascript" src="/assets/js/fancybox/jquery.mousewheel-3.0.2.pack.js"></script>
-<script type="text/javascript" src="/assets/js/fancybox/jquery.fancybox-1.3.1.js"></script>
+<script type="text/javascript" src="/assets/js/fancybox/jquery.mousewheel-3.0.6.pack.js"></script>
+<script type="text/javascript" src="/assets/js/fancybox/jquery.fancybox.js"></script>
 <script type="text/javascript" src="/assets/js/fancybox/jquery.fancybox-conf.js"></script>
-<link rel="stylesheet" type="text/css" href="/assets/js/fancybox/jquery.fancybox-1.3.1.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/assets/js/fancybox/jquery.fancybox.css" media="screen" />

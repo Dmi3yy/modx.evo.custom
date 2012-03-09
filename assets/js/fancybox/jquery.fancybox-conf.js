@@ -1,6 +1,6 @@
 ﻿		$(document).ready(function() {
 		
-			$("a[rel=example_group]").fancybox({
+			$("a[rel=fancy]").fancybox({
 				'transitionIn'		: 'none',
 				'transitionOut'		: 'none',
 				'titlePosition' 	: 'over',

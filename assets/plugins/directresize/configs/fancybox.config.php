@@ -3,7 +3,7 @@
 // This is the template to markup your thumbnails. See readme for possible placeholders.
 $tpl = <<<HTML
 
-<a title="[+dr.title+]" rel="example_group" href="[+dr.bigPath+]">
+<a title="[+dr.title+]" rel="fancy" href="[+dr.bigPath+]">
 	<img width="[+dr.thumbWidth+]" height="[+dr.thumbHeight+]" title="[+dr.title+]" alt="[+dr.alt+]"  class="[+dr.class+]" style="[+dr.style+]" align="[+dr.align+]" src="[+dr.thumbPath+]" >
 </a>
 
