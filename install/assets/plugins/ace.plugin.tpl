@@ -9,8 +9,8 @@
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties &theme=theme;list;clouds,clouds_midnight,cobalt,crimson_editor,dawn,eclipse,idle_fingers,kr_theme,merbivore,merbivore_soft,mono_industrial,monokai,pastel_on_dark,solarized_dark,solarized_light,textmate,twilight,vibrant_ink;crimson_editor &gutter=gutter;list;true,false;false &fontSize=fontSize;list;10px,11px,12px,14px,16px;12px &showInvisibles=showInvisibles;list;true,false;false &useSoftTabs=useSoftTabs;list;true,false;true
  * @internal	@events OnTempFormRender,OnChunkFormRender,OnSnipFormRender,OnPluginFormRender,OnModFormRender
- * @internal	@modx_category Search
- * @internal    @legacy_names Manager and Admin
+ * @internal	@modx_category Manager and Admin
+ * @internal    @legacy_names ACE
  * @internal    @installset base, sample
  */
 
