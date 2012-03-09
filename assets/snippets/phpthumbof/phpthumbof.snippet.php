@@ -78,43 +78,48 @@ if (strpos($input,'/') != 0 && strpos($input,'http') != 0) {
     $input = urldecode($input);
 }
 
-/* set source */
-$phpThumb->set($input);
+if (file_exists($input)) {
 
-/* setup cache filename that is unique to this tag */
-$inputSanitized = str_replace(array(':','/'),'_',$input);
-$cacheFilename = $inputSanitized;
-$cacheFilename .= '.'.md5($options);
-$cacheFilename .= '.' . (!empty($ptOptions['f']) ? $ptOptions['f'] : 'png');
-$cacheKey = $cacheDir.$cacheFilename;
+	/* set source */
+	$phpThumb->set($input);
 
-/* get cache Url */
-$assetsUrl = $modx->config['site_url'].'assets/cache/phpthumbof';
-$cacheUrl = $assetsUrl.'/'.str_replace($cacheDir,'',$cacheKey);
-//$cacheUrl = str_replace('//','/',$cacheUrl);
+	/* setup cache filename that is unique to this tag */
+	$inputSanitized = str_replace(array(':','/'),'_',$input);
+	$cacheFilename = $inputSanitized;
+	$cacheFilename .= '.'.md5($options);
+	$cacheFilename .= '.' . (!empty($ptOptions['f']) ? $ptOptions['f'] : 'png');
+	$cacheKey = $cacheDir.$cacheFilename;
 
-/* ensure we have an accurate and clean cache directory */
-$phpThumb->CleanUpCacheDirectory();
+	/* get cache Url */
+	$assetsUrl = $modx->config['site_url'].'assets/cache/phpthumbof';
+	$cacheUrl = $assetsUrl.'/'.str_replace($cacheDir,'',$cacheKey);
+	//$cacheUrl = str_replace('//','/',$cacheUrl);
 
-/* ensure file has proper permissions */
-if (!empty($cacheKey)) {
-    $filePerm = (int) '0664';
-    @chmod($cacheKey, octdec($filePerm));
-}
+	/* ensure we have an accurate and clean cache directory */
+	$phpThumb->CleanUpCacheDirectory();
 
-/* check to see if there's a cached file of this already */
-if (file_exists($cacheKey) && !$useS3 && !$expired) {
-    echo $cacheUrl;
-} else {
-    /* actually make the thumbnail */
-    if ($phpThumb->GenerateThumbnail()) { // this line is VERY important, do not remove it!
-        if ($phpThumb->RenderToFile($cacheKey)) {
-            echo $cacheUrl;
-        } else {
-            echo '/assets/snippets/phpthumbof/noimage.png';
-        }
-    } else {
-        echo '/assets/snippets/phpthumbof/noimage.png';
-    }
+	/* ensure file has proper permissions */
+	if (!empty($cacheKey)) {
+		$filePerm = (int) '0664';
+		@chmod($cacheKey, octdec($filePerm));
+	}
+
+	/* check to see if there's a cached file of this already */
+	if (file_exists($cacheKey) && !$useS3 && !$expired) {
+		echo $cacheUrl;
+	} else {
+		/* actually make the thumbnail */
+		if ($phpThumb->GenerateThumbnail()) { // this line is VERY important, do not remove it!
+			if ($phpThumb->RenderToFile($cacheKey)) {
+				echo $cacheUrl;
+			} else {
+				echo '/assets/snippets/phpthumbof/noimage.png';
+			}
+		} else {
+			echo '/assets/snippets/phpthumbof/noimage.png';
+		}
+	}
+}else {
+			echo '/assets/snippets/phpthumbof/noimage.png';
 }
 ?>
