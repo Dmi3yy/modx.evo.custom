@@ -1,4 +1,4 @@
-текущая версии 0.7.7
+текущая версии 0.7.8
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -69,6 +69,7 @@
 ------------------------Плагины-------------------------
 -добавил плагин seo_strict_urls       (http://modx.com/extras/package/?id=seostricturls)
 -добавил ACE (подсветка кода)    (http://community.modx-cms.ru/blog/addons/5828.html)
+-добавил CodeMirror (подсветка кода)    (http://forums.modx.com/thread/73753/codemirror-for-modx-evolution)
 -TvTable 1.11         (http://community.modx-cms.ru/blog/addons/1170.html)
 -MultiFiles 1.0.2      (http://community.modx-cms.ru/blog/addons/1232.html)
 -MultiPhotos 1.23     (http://community.modx-cms.ru/blog/addons/1146.html)
