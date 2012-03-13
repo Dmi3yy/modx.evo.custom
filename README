@@ -95,6 +95,7 @@
 -glossaryFilter  (http://setpro.pl/software/ditto-stuff/glossary-extender)
 -nosort(customsort)
 -search(https://github.com/yama/MODx-Ditto-Extenders/)
+-jotdatesort (http://community.modx-cms.ru/blog/addons/6532.html)
 
 
 ----------------------------setup.sql----------------------
