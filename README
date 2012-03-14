@@ -96,6 +96,7 @@
 -nosort(customsort)
 -search(https://github.com/yama/MODx-Ditto-Extenders/)
 -jotdatesort (http://community.modx-cms.ru/blog/addons/6532.html)
+-level (вывод документов определенного уровня http://community.modx-cms.ru/blog/questions/6534.html#comment31029)
 
 
 ----------------------------setup.sql----------------------
