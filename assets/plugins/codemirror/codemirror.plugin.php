@@ -3,13 +3,13 @@
  * @name        CodeMirror
  * @description JavaScript library that can be used to create a relatively pleasant editor interface
  *
- * @released    Jan 29, 2012
- * @CodeMirror  2.21
+ * @released    Mar 19, 2012
+ * @CodeMirror  2.22
  *
  * @required    MODx 0.9.6.3+
- *              CodeMirror  2.21 : pl
+ *              CodeMirror  2.22 : pl
  *
- * @confirmed   MODx Evolution 1.0.5
+ * @confirmed   MODx Evolution 1.0.6
  *
  * @author      hansek from www.modxcms.cz  <http://www.modxcms.cz>
  *
@@ -24,15 +24,12 @@ $obect_type  = substr($evt->name, 2, 1);
 
 $mode = 'htmlmixed';
 
-$theme = 'default';
-
 /*
  * Default Plugin configuration
  */
+$theme                  = (isset($theme)                    ? $theme                    : 'default');
 $indentUnit             = (isset($indentUnit)               ? $indentUnit               : 4);
-$tabMode                = (isset($tabMode)                  ? $tabMode                  : 'shift');
-$lineNumbers            = (isset($lineNumbers)              ? $lineNumbers              : true);
-$matchBrackets          = (isset($matchBrackets)            ? $matchBrackets            : true);
+$tabSize                = (isset($tabSize)                  ? $tabSize                  : 4);
 
 /*
  * This plugin is only valid in "text" mode. So check for the current Editor
@@ -59,7 +56,7 @@ switch($modx->Event->name) {
     case 'OnSnipFormRender'   :
     case 'OnPluginFormRender' :
     case 'OnModFormRender'    :
-        $mode  = 'php';
+        $mode  = 'application/x-httpd-php-open';
         $rte   = ($prte ? $prte : 'none');
         break;
 
@@ -78,22 +75,27 @@ switch($modx->Event->name) {
 $object_id = md5($obect_type.'-'.$object_name);
 
 if (('none' == $rte) && $mode) {
-    $output = <<< HEREDOC
-    <script src="{$_CM_URL}lib/codemirror.js"></script>
-    <link rel="stylesheet" href="{$_CM_URL}lib/codemirror.css">
-    <link rel="stylesheet" href="{$_CM_URL}theme/{$theme}.css">
+    $output = '';
 
-    <script src="{$_CM_URL}mode/xml/xml.js"></script>
-    <script src="{$_CM_URL}mode/javascript/javascript.js"></script>
-    <script src="{$_CM_URL}mode/css/css.js"></script>
-    <script src="{$_CM_URL}mode/clike/clike.js"></script>
-    <script src="{$_CM_URL}mode/htmlmixed/htmlmixed.js"></script>
-    <script src="{$_CM_URL}custom/php.js"></script>
+    if ($theme != 'default') {
+        $output .= <<< HEREDOC
+        <link rel="stylesheet" href="{$_CM_URL}cm/theme/{$theme}.css">
+HEREDOC;
+    }
+
+    $output .= <<< HEREDOC
+    <script src="{$_CM_URL}cm/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="{$_CM_URL}cm/lib/codemirror.css">
+
+    <script src="{$_CM_URL}cm/mode/xml/xml.js"></script>
+    <script src="{$_CM_URL}cm/mode/javascript/javascript.js"></script>
+    <script src="{$_CM_URL}cm/mode/css/css.js"></script>
+    <script src="{$_CM_URL}cm/mode/clike/clike.js"></script>
+    <script src="{$_CM_URL}cm/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="{$_CM_URL}cm/mode/php/php.js"></script>
 
     <link rel="stylesheet" href="{$_CM_URL}codemirror.plugin.css">
     <script src="{$_CM_URL}codemirror.plugin.js"></script>
-
-    <script src="{$_CM_URL}custom/complete.js"></script>
 
     <script type="text/javascript">
 
@@ -126,18 +128,12 @@ if (('none' == $rte) && $mode) {
 
                 return event.stop();
             }
-/*
-            // CTRL + SPACE
-            if(event.keyCode == 32 && (event.ctrlKey || event.metaKey) && !event.altKey) {
-                event.stop();
-                return startComplete();
-            }
-*/
         }
 
         /*
          * Save of cursor position
          */
+/*
         var positionHolder = function() {
             if(myCodeMirror) {
                 myCodeMirror.setLineClass(hlLine, null);
@@ -148,34 +144,50 @@ if (('none' == $rte) && $mode) {
                 setCookie('{$object_id}', position);
             }
         }
+*/
 
         /*
          * Main CodeMirror initialization
          */
-        var myTextArea = document.getElementsByName('$textarea_name')[0];
-        var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
+        var config = {
             mode: '{$mode}',
             theme: '{$theme}',
             indentUnit: {$indentUnit},
-            tabMode: '{$tabMode}',
-            lineNumbers: {$lineNumbers},
-            matchBrackets: {$matchBrackets},
+            tabSize: '{$tabSize}',
+            lineNumbers: true,
+            matchBrackets: true,
             onKeyEvent: myEventHandler,
-            onCursorActivity: positionHolder
-        });
+            // onCursorActivity: positionHolder
+        };
 
-        var hlLine = myCodeMirror.setLineClass(0, "activeline");
+        var myTextArea = document.getElementsByName('$textarea_name')[0];
+        var myCodeMirror = CodeMirror.fromTextArea(myTextArea, config);
+
+        if (document.getElementById('tv_body') !== null) {
+            var tv_textareas = document.getElementById('tv_body').getElementsByTagName('textarea');
+
+            if (tv_textareas) {
+                for (var i = 0; i < tv_textareas.length; i++) {
+                    var ta = tv_textareas[i];
+
+                    CodeMirror.fromTextArea(document.getElementById(ta.id), config);
+                }
+            }
+        }
+
+        // var hlLine = myCodeMirror.setLineClass(0, "activeline");
 
         /*
          * Restore of cursor position
          */
+/*
         pos = getCookie('{$object_id}');
         if(pos) {
             pos = pos.split('|');
 
             myCodeMirror.setCursor(pos[0] , pos[1]);
         }
-
+*/
     </script>
 HEREDOC;
 

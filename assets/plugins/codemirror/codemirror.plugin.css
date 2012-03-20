@@ -6,12 +6,9 @@
 }
 
 .CodeMirror-scroll {
-    height: 500px;
-    /*
     height: auto;
     overflow-y: hidden;
     overflow-x: auto;
-    */
 }
 
 .CodeMirror pre {
@@ -25,10 +22,6 @@
 .CodeMirror-matchingbracket {
     color: red !important;
     background-color: lime;
-}
-
-.CodeMirror .activeline {
-    background: #ffffcc !important;
 }
 
 .completions {
