@@ -378,7 +378,7 @@ $lastClass = isset($lastClass) ? $lastClass: 'last';
 $return = isset($return) ? $return : 0;
 
 // Do nothing if there's nothing to do
-if ($total == 0 || $display==0) {
+if ($total == 0 || $display==0 || $total <= $display) {
 	return false;
 }
 
