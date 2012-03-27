@@ -24,7 +24,7 @@ if(!isset($_SESSION['webValidated'])){
 //        $thestring = $rc4->endecrypt($thepasswd,$sitename,'de');
 //        $uid = $thestring;
 //    }else{
-        $uid = isset($_POST['username'])? $modx->db->escape(htmlspecialchars(trim($_POST['username']), ENT_QUOTES)):'';
+        $uid = isset($_POST['username'])? $modx->db->escape(htmlspecialchars($_POST['username'], ENT_QUOTES)):'';
 //    }
     ?>
     <script type="text/JavaScript">
@@ -86,11 +86,13 @@ if(!isset($_SESSION['webValidated'])){
         $tpl = str_replace("[+checkbox+]",(isset($cookieSet) ? "checked" : ""),$tpl);
         $tpl = str_replace("[+logintext+]",$loginText,$tpl);    
         echo $tpl;
+    /*
     ?>
     <script type="text/javascript">
-        if (document.loginfrm) <?php echo !empty($uid) ? "document.loginfrm.password.focus()" : "document.loginfrm.username.focus()" ?>;
+        //if (document.loginfrm) <?php echo !empty($uid) ? "document.loginfrm.password.focus()" : "document.loginfrm.username.focus()" ?>;
     </script>
     <?php
+    */
     $output .= ob_get_contents();
     ob_end_clean();
 } else {
