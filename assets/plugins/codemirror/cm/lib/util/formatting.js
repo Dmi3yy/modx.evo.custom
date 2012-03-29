@@ -1,10 +1,13 @@
-﻿// ============== Formatting extensions ============================
+// ============== Formatting extensions ============================
 // A common storage for all mode-specific formatting features
 if (!CodeMirror.modeExtensions) CodeMirror.modeExtensions = {};
 
 // Returns the extension of the editor's current mode
 CodeMirror.defineExtension("getModeExt", function () {
-  return CodeMirror.modeExtensions[this.getOption("mode")];
+  var mname = CodeMirror.resolveMode(this.getOption("mode")).name;
+  var ext = CodeMirror.modeExtensions[mname];
+  if (!ext) throw new Error("No extensions found for mode " + mname);
+  return ext;
 });
 
 // If the current mode is 'htmlmixed', returns the extension of a mode located at

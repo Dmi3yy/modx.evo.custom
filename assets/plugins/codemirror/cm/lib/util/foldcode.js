@@ -80,7 +80,7 @@ CodeMirror.tagRangeFinder = function(cm, line) {
   }
 
   if (found) {
-    var startTag = "(\\<\\/" + tag + "\\>)|(\\<" + tag + "\\>)|(\\<" + tag + "\s)|(\\<" + tag + "$)";
+    var startTag = "(\\<\\/" + tag + "\\>)|(\\<" + tag + "\\>)|(\\<" + tag + "\\s)|(\\<" + tag + "$)";
     var startTagRegExp = new RegExp(startTag, "g");
     var endTag = "</" + tag + ">";
     var depth = 1;
@@ -130,6 +130,19 @@ CodeMirror.braceRangeFinder = function(cm, line) {
   return end;
 };
 
+CodeMirror.indentRangeFinder = function(cm, line) {
+  var tabSize = cm.getOption("tabSize");
+  var myIndent = cm.getLineHandle(line).indentation(tabSize), last;
+  for (var i = line + 1, end = cm.lineCount(); i < end; ++i) {
+    var handle = cm.getLineHandle(i);
+    if (!/^\s*$/.test(handle.text)) {
+      if (handle.indentation(tabSize) <= myIndent) break;
+      last = i;
+    }
+  }
+  if (!last) return null;
+  return last + 1;
+};
 
 CodeMirror.newFoldFunction = function(rangeFinder, markText) {
   var folded = [];

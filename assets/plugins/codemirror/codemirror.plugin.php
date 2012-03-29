@@ -3,11 +3,11 @@
  * @name        CodeMirror
  * @description JavaScript library that can be used to create a relatively pleasant editor interface
  *
- * @released    Mar 19, 2012
- * @CodeMirror  2.22
+ * @released    Mar 29, 2012
+ * @CodeMirror  2.23
  *
  * @required    MODx 0.9.6.3+
- *              CodeMirror  2.22 : pl
+ *              CodeMirror  2.23 : pl
  *
  * @confirmed   MODx Evolution 1.0.6
  *
@@ -160,20 +160,31 @@ HEREDOC;
             // onCursorActivity: positionHolder
         };
 
-        var myTextArea = document.getElementsByName('$textarea_name')[0];
-        var myCodeMirror = CodeMirror.fromTextArea(myTextArea, config);
+        var myCodeMirror = [];
 
-        if (document.getElementById('tv_body') !== null) {
-            var tv_textareas = document.getElementById('tv_body').getElementsByTagName('textarea');
-
-            if (tv_textareas) {
-                for (var i = 0; i < tv_textareas.length; i++) {
-                    var ta = tv_textareas[i];
-
-                    CodeMirror.fromTextArea(document.getElementById(ta.id), config);
-                }
+        // when editing a snippet a chunk or else
+        if (document.getElementById('tv_body') === null) {
+            var myTextArea = document.getElementsByName('$textarea_name')[0];
+            myCodeMirror.push(CodeMirror.fromTextArea(myTextArea, config));
+        }
+        // pages with one or more TVs
+        else {
+            var tv_textareas = $$('#tv_body textarea');
+            if (tv_textareas.length != 0) {
+                tv_textareas.each(function(el,t){
+                    myCodeMirror.push(CodeMirror.fromTextArea(el, config));
+                });
             }
         }
+
+        // check if tab was changed and then refresh codemirror instances
+        $$('.tab-row .tab').addEvents({
+            click: function() {
+                myCodeMirror.each(function(el) {
+                    el.refresh();
+                });
+            }
+        });
 
         // var hlLine = myCodeMirror.setLineClass(0, "activeline");
 
