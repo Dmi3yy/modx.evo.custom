@@ -28,10 +28,14 @@ if (!$tvv || $tvv=='[]') return;
 $fotoArr=json_decode($tvv);
 $fotoRes=array();
 $num=1;
+if (!class_exists('PHxParser'))include_once(MODX_BASE_PATH.'assets/snippets/ditto/classes/phx.parser.class.inc.php');
 foreach ($fotoArr as $v) {
-	$fields = array ('[+url+]','[+link+]','[+title+]','[+num+]');
-	$values = array ($v[0],$v[1],$v[2],$num);
-	$fotoRes[$num] = str_replace($fields, $values, $rowTpl);
+	$phx = new PHxParser();
+	$phx->setPHxVariable('url',$v[0]);
+	$phx->setPHxVariable('link',$v[1]);
+	$phx->setPHxVariable('title',$v[2]);
+	$phx->setPHxVariable('num',$num);
+	$fotoRes[$num] = $phx->Parse($rowTpl);
 	$num++;
 }
 #################### PAGINATION ####################
