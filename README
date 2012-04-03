@@ -73,13 +73,15 @@
 -добавил CodeMirror (подсветка кода)    (http://forums.modx.com/thread/73753/codemirror-for-modx-evolution)
 -TvTable 1.11         (http://community.modx-cms.ru/blog/addons/1170.html)
 -MultiFiles 1.0.2      (http://community.modx-cms.ru/blog/addons/1232.html)
--MultiPhotos 1.26     (http://community.modx-cms.ru/blog/addons/1146.html)
+-MultiPhotos 1.26     (http://community.modx-cms.ru/blog/addons/1146.html) + (http://community.modx-cms.ru/blog/addons/1146.html#comment13064)
 -customTemplate 0.1   (http://community.modx-cms.ru/blog/addons/2368.html)
 -devStat 1.0    (http://62.109.9.249/raznoe/devstat___plagin_dlya_mod.html)
 -PHx 2.1.4 + хак(меньше запросов) + <!--phx-stop--><!--phx-start-->    (http://community.modx-cms.ru/blog/fast-solution/2782.html)
 -исправил глюк с вкладками в MM при переносе в них тв вида чекбокс и радио
 -DirectResize 0.8  - автосоздание мелких картинок в контенте и не только
 -CacheAccelerator    - кешируем все что можно :) (http://community.modx-cms.ru/blog/addons/1621.html)
+-CacheExtender 0.4b - (http://community.modx-cms.ru/blog/dev/1625.html)
+
 -managermanager 0.3.11 (http://modx.com/extras/package/managermanager)
 
 
