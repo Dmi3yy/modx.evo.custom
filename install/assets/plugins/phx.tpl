@@ -9,7 +9,6 @@
  * @author		Armand "bS" Pondman (apondman@zerobarrier.nl)
  * @internal    @properties &phxdebug=Log events;int;0 &phxmaxpass=Max. Passes;int;50
  * @internal    @events OnParseDocument
- * @internal    @modx_category Manager and Admin
  * @internal    @disabled 1
  */
 
