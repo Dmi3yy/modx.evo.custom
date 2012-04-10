@@ -80,10 +80,10 @@ if (0 < count($warnings))
 				if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$output,$_lang[$warning]);
 				break;
 			case 'configcheck_rb_base_dir':
-				$output = 'configcheck_rb_base_dir';
+				$output = '$modx->config[\'rb_base_dir\']';
 				break;
 			case 'configcheck_filemanager_path':
-				$output = 'configcheck_filemanager_path';
+				$output = '$modx->config[\'filemanager_path\']';
 				break;
 			case 'configcheck_lang_difference':
 				$output = $_lang['configcheck_lang_difference_msg'];

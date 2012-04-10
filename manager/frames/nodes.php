@@ -168,6 +168,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			$ph['alt']       = addslashes($alt);
 			$ph['parent']    = $parent;
 			$ph['spacer']    = $spacer;
+			$pagetitle = htmlspecialchars($pagetitle,ENT_QUOTES,$modx->config['modx_charset']);
 			$ph['pagetitle'] = "'" . addslashes($pagetitle) . "'";
 			$ph['nodetitle'] = "'" . addslashes($nodetitle) . "'";
 			$ph['url']       = "'{$url}'";

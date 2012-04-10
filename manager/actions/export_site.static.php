@@ -29,13 +29,13 @@ table.settings td.head {white-space:nowrap;vertical-align:top;padding-right:20px
 <table class="settings" cellspacing="0" cellpadding="2">
   <tr>
     <td class="head"><?php echo $_lang['export_site_cacheable']; ?></td>
-    <td><input type="radio" name="includenoncache" value="1" checked="checked"><?php echo $_lang['yes'];?>
-		<input type="radio" name="includenoncache" value="0"><?php echo $_lang['no'];?></td>
+    <td><label><input type="radio" name="includenoncache" value="1" checked="checked"><?php echo $_lang['yes'];?></label>
+		<label><input type="radio" name="includenoncache" value="0"><?php echo $_lang['no'];?></label></td>
   </tr>
   <tr>
     <td class="head">エクスポート対象</td>
-    <td><input type="radio" name="target" value="0" checked="checked">更新されたページのみ
-		<input type="radio" name="target" value="1">全てのページ</td>
+    <td><label><input type="radio" name="target" value="0" checked="checked">更新されたページのみ</label>
+		<label><input type="radio" name="target" value="1">全てのページ</label></td>
   </tr>
   <tr>
     <td class="head">文字列を置換(置換前)</td>
@@ -45,6 +45,10 @@ table.settings td.head {white-space:nowrap;vertical-align:top;padding-right:20px
     <td class="head">文字列を置換(置換後)</td>
     <td><input type="text" name="repl_after" value="<?php echo $modx->config['site_url']; ?>" style="width:300px;" /></td>
   </tr>
+<?php
+if($modx->config['friendly_urls']!=1 || $modx->config['use_alias_path']!=1)
+{
+?>
   <tr>
     <td class="head"><?php echo $_lang['export_site_prefix']; ?></td>
     <td><input type="text" name="prefix" value="<?php echo $modx->config['friendly_url_prefix']; ?>" /></td>
@@ -53,6 +57,9 @@ table.settings td.head {white-space:nowrap;vertical-align:top;padding-right:20px
     <td class="head"><?php echo $_lang['export_site_suffix']; ?></td>
     <td><input type="text" name="suffix" value="<?php echo $modx->config['friendly_url_suffix']; ?>" /></td>
   </tr>
+<?php
+}
+?>
   <tr>
     <td class="head"><?php echo $_lang['export_site_maxtime']; ?></td>
     <td><input type="text" name="maxtime" value="60" />
@@ -146,15 +153,15 @@ else
 				$filename = $prefix.$alias.$tsuffix;
 			}
 			// get the file
-			$somecontent = @file_get_contents(MODX_SITE_URL . "index.php?id={$id}");
-			if($somecontent === false)
+			$somecontent = file_get_contents(MODX_SITE_URL . "index.php?id={$id}");
+			if($somecontent !== false)
 			{
 				// save it
 				$filename = $filepath . $filename;
 				// Write $somecontent to our opened file.
 				$repl_before = $_POST['repl_before'];
 				$repl_after  = $_POST['repl_after'];
-				$somecontent = str_replace($repl_before,$repl_after,$somecontent);
+				if($repl_before!==$repl_after) $somecontent = str_replace($repl_before,$repl_after,$somecontent);
 				if(file_put_contents($filename, $somecontent) === FALSE)
 				{
 					echo ' <span class="fail">'.$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_writee"].'<br />';
@@ -223,12 +230,12 @@ class EXPORT_SITE
 	{
 		global  $modx,$_lang;
 		
-		$src = @file_get_contents(MODX_SITE_URL . "index.php?id={$docid}");
+		$src = file_get_contents(MODX_SITE_URL . "index.php?id={$docid}");
 		if($src !== false)
 		{
 			$repl_before = $_POST['repl_before'];
 			$repl_after  = $_POST['repl_after'];
-			$src = str_replace($repl_before,$repl_after,$src);
+			if($repl_before!==$repl_after) $src = str_replace($repl_before,$repl_after,$src);
 			$result = @file_put_contents($filepath,$src);
 			if($result !== false)
 			{

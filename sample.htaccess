@@ -5,7 +5,7 @@ RewriteEngine On
 RewriteBase /
 # MODXをサブディレクトリにインストールしている場合は「/modx」などに。
 
-RewriteRule ^(manager|assets)/*$ - [L]
+RewriteRule ^(manager|assets)/.*$ - [L]
 # RewriteRule \.(jpg|jpeg|png|gif|ico)$ - [L]
 RewriteRule ^index\.php$ - [L]
 

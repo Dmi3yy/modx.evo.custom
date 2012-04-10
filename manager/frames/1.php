@@ -1,10 +1,6 @@
 <?php
 if (IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-include_once ("browsercheck.inc.php");
-$browser = $client->property('browser');
-$_SESSION['browser'] = $browser;
-$version = $client->property('version');
-$_SESSION['browser_version'] = $version;
+$_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE')!==false) ? 'ie' : 'other';
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 if($_SESSION['mgrForgetPassword']) $action = '28';
 else                               $action = '2';

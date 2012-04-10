@@ -222,16 +222,11 @@ if ($_REQUEST['a'] == '16')
 	}
 	echo $tvList;
 ?>
-		</div>
-		<div class="sectionHeader">
-			<?php echo $_lang["tmplvars_title"];?>
-		</div>
-		<div class="sectionBody">
-		<ul style="margin-bottom:15px;">
+			<ul class="actionButtons" style="margin-top:15px;">
 <?php
 	$query = $_GET['id'] ? '&amp;tpl=' . intval($_GET['id']) : '';
 ?>
-			<li><a href="index.php?&amp;a=300<?php echo $query;?>"><?php echo $_lang['new_tmplvars'];?></a></li>
+				<li><a href="index.php?&amp;a=300<?php echo $query;?>"><img src="<?php echo $_style['icons_add'];?>" /> <?php echo $_lang['new_tmplvars'];?></a></li>
 <?php
 	if($modx->hasPermission('save_template') && $total > 1)
 	{

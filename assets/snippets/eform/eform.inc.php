@@ -172,7 +172,7 @@ $_dfnMaxlength = 6;
 	//check for <input type='hidden name='formid'...>
 	if( !preg_match('/<input[^>]*?name=[\'"]formid[\'"]/i',$tpl) ){
 			//insert hidden formid field
-			$tpl = str_replace('</form>',"<input type=\"hidden\" name=\"formid\" value=\"$form_id\" /></form>",$tpl);
+			$tpl = str_replace('</form>',"<input type=\"hidden\" name=\"formid\" value=\"$formid\" /></form>",$tpl);
 	}
 
 	$validFormId = (isset($_POST['formid']) && $formid==$_POST['formid'])?1:0;
@@ -667,7 +667,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 	// set vericode
 	if($vericode) {
 		$_SESSION['eForm.VeriCode'] = $fields['vericode'] = substr(uniqid(''),-5);
-		$fields['verimageurl'] = $modx->config['base_url'].'action.php?include=manager/includes/veriword.php&rand='.mt_rand();
+		$fields['verimageurl'] = $modx->config['base_url'].'action.php?include=manager/media/captcha/veriword.php&rand='.mt_rand();
 	}
 
 	# get SESSION data - thanks to sottwell

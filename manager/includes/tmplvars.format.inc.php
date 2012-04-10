@@ -160,47 +160,6 @@ function getTVDisplayFormat($name,$value,$format,$paramstring='',$tvtype='',$doc
             $o = getUnixtimeFromDateString($value);
 				break;
 
-			case 'viewport':
-				$value = parseInput($value);
-				$id = '_'.time();
-				if(!$params['vpid']) $params['vpid'] = $id;
-				if($_SESSION['browser']=='ns' && $_SESSION['browser_version']<'5.0') {
-					$sTag = '<ilayer';
-					$eTag = '</ilayer>';
-				}
-				else {
-					$sTag = '<iframe';
-					$eTag = '</iframe>';
-				}
-				$autoMode = '0';
-				$w = $params['width'];
-				$h = $params['height'];
-				if ($params['stretch']=='Yes') {
-					$w = '100%';
-					$h = '100%';
-				}
-				if ($params['asize']=='Yes' || ($params['awidth']=='Yes' && $params['aheight']=='Yes')) {
-					$autoMode = '3';  //both
-				}
-				else if ($params['awidth']=='Yes') {
-					$autoMode = '1'; //width only
-				}
-				else if ($params['aheight']=='Yes') {
-					$autoMode = '2';	//height only
-				}
-
-				$modx->regClientStartupScript('manager/media/script/bin/viewport.js', array('name'=>'viewport', 'version'=>'0', 'plaintext'=>false));
-				$o =  $sTag." id='".$params['vpid']."' name='".$params['vpid']."' ";
-				if ($params['class']) $o.= " class='".$params['class']."' ";
-				if ($params['style']) $o.= " style='".$params['style']."' ";
-				if ($params['attrib']) $o.= $params['attrib']." ";
-				$o.= "scrolling='".($params['sbar']=='No' ? "no":($params['sbar']=='Yes' ? "yes":"auto"))."' ";
-				$o.= "src='".$value."' frameborder='".$params['borsize']."' ";
-                $o.= "onload=\"window.setTimeout('ResizeViewPort(\\'".$params['vpid']."\\',".$autoMode.")',100);\" width='".$w."' height='".$h."' ";
-				$o.= '>';
-				$o.= $eTag;
-				break;
-
 			case 'datagrid':
 				include_once MODX_BASE_PATH.'manager/includes/controls/datagrid.class.php';
 				$grd = new DataGrid('',$value);

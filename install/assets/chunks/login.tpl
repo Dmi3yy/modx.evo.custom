@@ -4,7 +4,7 @@
  * ログイン画面テンプレート
  * 
  * @category	chunk
- * @version 	1.0
+ * @version 	1.0.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal 	@modx_category Manager and Admin
  * @internal    @installset base
@@ -108,7 +108,7 @@
             else {
                 var cimg = $('captcha_image');
                 if (cimg) {
-                	cimg.src = '../action.php?include=manager/includes/veriword.php&rand=' + Math.random();
+                	cimg.src = '../action.php?include=manager/media/captcha/veriword.php&rand=' + Math.random();
                 }
                 $$('input').removeProperty('readonly');
                 alert(response);

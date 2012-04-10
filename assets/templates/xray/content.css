@@ -2,7 +2,7 @@
 .content a:visited         {color:#75828b;}
 
 .content p                 {line-height:1.6;text-align:justify;text-justify:inter-ideograph;}
-.content h2                {font-size:1.2em;color:#fff;background-color:#75828b;padding:3px 5px;clear:both;}
+.content h2                {border-radius:3px;font-size:1.2em;color:#fff;background-color:#65727b;padding:3px 5px;clear:both;}
 .content h3                {border-left:8px solid;padding-left:8px;}
 
 .content img.justifyleft   {margin-right:10px;float:left;}

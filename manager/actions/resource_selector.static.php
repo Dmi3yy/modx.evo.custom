@@ -15,18 +15,6 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	<title><?php echo $content["name"]." ".$_lang['element_selector_title']; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
-<?php
-if($_SESSION['browser']=='ie') {
-?>   
-	<style>
-	/* stupid box model hack for equally stupid MSIE */
-	.sectionHeader, .sectionBody {
-		width:100%;
-	}
-	</style>
-<?php
-}
-?>
 </head>
 <body ondragstart="return false">
 

@@ -288,7 +288,7 @@ function createCategoryList()
 				}
 				else
 				{
-					echo '<li><strong>'.$v['category'].'</strong> (<a href="javascript:deleteCategory(\'' . $v['catid'] . '\');">'.$_lang['delete'].'</a>)<ul>';
+					echo '<li><strong>'.$v['category'].'</strong> (<a href="javascript:deleteCategory(\'' . $v['catid'] . '\');">'.$_lang['delete_category'].'</a>)<ul>';
 				}
 				$insideUl = 1;
 			}
