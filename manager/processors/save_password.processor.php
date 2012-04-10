@@ -4,9 +4,6 @@ if(!$modx->hasPermission('save_password')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
-
 $id = $_POST['id'];
 $pass1 = $_POST['pass1'];
 $pass2 = $_POST['pass2'];
@@ -22,12 +19,10 @@ if(strlen($pass1)<6){
 }
 
 $sql = "UPDATE $dbase.`".$table_prefix."manager_users` SET password=md5('".$pass1."') where id=".$modx->getLoginUserID().";";
-$rs = mysql_query($sql);
+$rs = $modx->db->query($sql);
 if(!$rs){
 	echo "An error occured while attempting to save the new password.";
 	exit;
 }
-
-$header="Location: index.php?a=7";
-header($header);
-?>
+if($_SESSION['mgrForgetPassword']) unset($_SESSION['mgrForgetPassword']);
+header("Location: index.php?a=7");

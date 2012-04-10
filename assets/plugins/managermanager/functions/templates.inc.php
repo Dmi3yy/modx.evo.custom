@@ -10,7 +10,7 @@
 function mm_hideTemplates($tplIds, $roles='', $templates='') {
         	global  $modx;
         	
-        	$e = &$modx->Event;
+        	$e = &$modx->event;
 			
 			$tplIds = makeArray($tplIds);
 
@@ -20,7 +20,7 @@ function mm_hideTemplates($tplIds, $roles='', $templates='') {
 
         		foreach ($tplIds as $tpl) {
 					$output .= 'if ($j("select#template").val() != '.$tpl. ') { '. "\n";
-        			$output .= '$j("select#template option[value='.$tpl.']").hide();' . "\n";
+        			$output .= '$j("select#template option[value='.$tpl.']").remove();' . "\n";
 					$output .= '}' . "\n";
         		}
         		$e->output($output . "\n");

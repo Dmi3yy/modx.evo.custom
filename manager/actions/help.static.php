@@ -8,16 +8,28 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <div class="sectionBody">
     <div class="tab-pane" id="resourcesPane">
         <script type="text/javascript">
-            tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+            tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ), <?php echo $modx->config['remember_last_tab'] == 0 ? 'false' : 'true'; ?> );
         </script>
 <?php
-if ($handle = opendir('../assets/templates/help')) {
-    while (false !== ($file = readdir($handle))) {
-        if ($file != "." && $file != ".." && $file != ".svn") {
-            $help[] = $file;
-        }
-    }
-    closedir($handle);
+$help_dir = MODX_BASE_PATH . 'assets/templates/help';
+if(file_exists($help_dir)==false)
+{
+	echo '<h3>' . $_lang["credits"] . '</h3>';
+	echo '<div>' . $_lang["about_msg"] . '</div>';
+	echo '<h3>' . $_lang["help"] . '</h3>';
+	echo '<div>' . $_lang["help_msg"] . '</div>';
+	exit;
+}
+
+if ($files = scandir($help_dir))
+{
+	foreach ($files as $file)
+	{
+		if ($file != "." && $file != ".." && $file != ".svn")
+		{
+			$help[] = $file;
+		}
+	}
 }
 
 
@@ -36,7 +48,7 @@ foreach($help as $k=>$v) {
     echo '<div class="tab-page" id="tab'.$v.'Help">';
     echo '<h2 class="tab">'.$helpname.'</h2>';
     echo '<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tab'.$v.'Help" ) );</script>';
-    include "../assets/templates/help/$v";
+    include ($help_dir . '/' . $v);
     echo '</div>';
 }
 ?>

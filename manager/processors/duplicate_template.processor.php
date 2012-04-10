@@ -4,38 +4,27 @@ if(!$modx->hasPermission('new_template')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-?>
-<?php
-
 $id=$_GET['id'];
 
 // duplicate template
-if (version_compare(mysql_get_server_info(),"4.0.14")>=0) {
-	$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates` (templatename, description, content, category)
-			SELECT CONCAT('Duplicate of ',templatename) AS 'templatename', description, content, category
-			FROM $dbase.`".$table_prefix."site_templates` WHERE id=$id;";
-	$rs = mysql_query($sql);
-}
-else {
-	$sql = "SELECT CONCAT('Duplicate of ',templatename) AS 'templatename', description, content, category
-			FROM $dbase.`".$table_prefix."site_templates` WHERE id=$id;";
-	$rs = mysql_query($sql);
-	if($rs) {
-		$row = mysql_fetch_assoc($rs);
-		$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates`
-				(templatename, description, content, category) VALUES
-				('".$modx->db->escape($row['templatename'])."', '".$modx->db->escape($row['description'])."','".$modx->db->escape($row['content'])."', ".$modx->db->escape($row['category']).");";
-		$rs = mysql_query($sql);
-	}
-}
+$tpl = $_lang['duplicate_title_string'];
+$tbl_site_templates = $modx->getFullTableName('site_templates');
+$sql = "INSERT INTO {$tbl_site_templates} (templatename, description, content, category)
+		SELECT REPLACE('{$tpl}','[+title+]',templatename) AS 'templatename', description, content, category
+		FROM {$tbl_site_templates} WHERE id={$id}";
+$rs = $modx->db->query($sql);
+
 if($rs) {
-	$newid = mysql_insert_id(); // get new id
+	$newid = $modx->db->getInsertId(); // get new id
 	// duplicate TV values
-	$tvs = $modx->db->select('*', $modx->getFullTableName('site_tmplvar_templates'), 'templateid='.$id);
-	if ($modx->db->getRecordCount($tvs) > 0) {
-		while ($row = $modx->db->getRow($tvs)) {
+	$tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
+	$tvs = $modx->db->select('*', $tbl_site_tmplvar_templates, 'templateid='.$id);
+	if ($modx->db->getRecordCount($tvs) > 0)
+	{
+		while ($row = $modx->db->getRow($tvs))
+		{
 			$row['templateid'] = $newid;
-			$modx->db->insert($row, $modx->getFullTableName('site_tmplvar_templates'));
+			$modx->db->insert($row, $tbl_site_tmplvar_templates);
 		}
 	}
 } else {
@@ -44,6 +33,4 @@ if($rs) {
 }
 
 // finish duplicating - redirect to new template
-$header="Location: index.php?r=2&a=16&id=$newid";
-header($header);
-?>
+header("Location: index.php?a=16&id=$newid");

@@ -1,30 +1,38 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('web_access_permissions')) {
+if(!$modx->hasPermission('web_access_permissions') || $modx->config['use_udperms'] == 0) {
 	$e->setError(3);
 	$e->dumpError();
 }
 
+$tbl_documentgroup_names = $modx->getFullTableName('documentgroup_names');
+$tbl_webgroup_names      = $modx->getFullTableName('webgroup_names');
 // find all document groups, for the select :)
-$sql = 'SELECT * FROM '.$modx->getFullTableName('documentgroup_names').' ORDER BY name';
-$rs = mysql_query($sql);
-if (mysql_num_rows($rs) < 1) {
+$rs = $modx->db->select('id,name',$tbl_documentgroup_names,'','name');
+if ($modx->db->getRecordCount($rs) < 1)
+{
 	$docgroupselector = "[no groups to add]";
-} else {
+}
+else
+{
 	$docgroupselector = '<select name="docgroup">'."\n";
-	while ($row = mysql_fetch_assoc($rs)) {
+	while ($row = $modx->db->getRow($rs))
+	{
 		$docgroupselector .= "\t".'<option value="'.$row['id'].'">'.$row['name']."</option>\n";
 	}
 	$docgroupselector .= "</select>\n";
 }
 
-$sql = 'SELECT * FROM '.$modx->getFullTableName('webgroup_names').' ORDER BY name';
-$rs = mysql_query($sql);
-if (mysql_num_rows($rs) < 1) {
+$rs = $modx->db->select('id,name',$tbl_webgroup_names,'','name');
+if ($modx->db->getRecordCount($rs) < 1)
+{
 	$usrgroupselector = '[no user groups]';
-} else {
+}
+else
+{
 	$usrgroupselector = '<select name="usergroup">'."\n";
-	while ($row = mysql_fetch_assoc($rs)) {
+	while ($row = $modx->db->getRow($rs))
+	{
 		$usrgroupselector .= "\t".'<option value="'.$row['id'].'">'.$row['name']."</option>\n";
 	}
 	$usrgroupselector .= "</select>\n";
@@ -39,7 +47,7 @@ if (mysql_num_rows($rs) < 1) {
 <p><?php echo $_lang['access_permissions_introtext'];?></p><?php echo $use_udperms!=1 ? '<p>'.$_lang['access_permissions_off'].'</p>' : '' ;?>
 
 <div class="tab-pane" id="tabPane1">
-<script type="text/javascript">tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );</script>
+<script type="text/javascript">tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ), <?php echo (($modx->config['remember_last_tab'] == 2) || ($_GET['stay'] == 2 )) ? 'true' : 'false'; ?> );</script>
 
 
 <div class="tab-page" id="tabPage1">
@@ -49,22 +57,13 @@ if (mysql_num_rows($rs) < 1) {
 // User Groups
 
 	echo '<p>'.$_lang['access_permissions_users_tab'].'</p>';
-
-	$sql = 'SELECT '.
-		'groupnames.*, '.
-		'users.id AS user_id, '.
-		'users.username user_name '.
-		'FROM '.$modx->getFullTableName('webgroup_names').' AS groupnames '.
-		'LEFT JOIN '.$modx->getFullTableName('web_groups').' AS groups ON groups.webgroup = groupnames.id '.
-		'LEFT JOIN '.$modx->getFullTableName('web_users').' AS users ON users.id = groups.webuser '.
-		'ORDER BY groupnames.name';
 ?>
 	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
 		<thead>
 		<tr><td><b><?php echo $_lang['access_permissions_add_user_group'] ?></b></td></tr>
 		</thead>
 		<tr class="row1"><td>
-			<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
+			<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;" enctype="multipart/form-data">
 				<input type="hidden" name="a" value="92" />
 				<input type="hidden" name="operation" value="add_user_group" />
 				<input type="text" value="" name="newusergroup" />&nbsp;
@@ -74,18 +73,27 @@ if (mysql_num_rows($rs) < 1) {
 	</table>
 	<br />
 <?php
-	$rs = mysql_query($sql);
-	if (mysql_num_rows($rs) < 1) {
+	$tbl_web_groups = $modx->getFullTableName('web_groups');
+	$tbl_web_users  = $modx->getFullTableName('web_users');
+	$field = 'groupnames.*, users.id AS user_id, users.username user_name';
+	$from  = "{$tbl_webgroup_names} AS groupnames";
+	$from .= " LEFT JOIN {$tbl_web_groups} AS groups ON groups.webgroup = groupnames.id";
+	$from .= " LEFT JOIN {$tbl_web_users}  AS users ON users.id = groups.webuser";
+	$rs = $modx->db->select($field,$from,'','groupnames.name');
+	if ($modx->db->getRecordCount($rs) < 1)
+	{
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
-	} else {
+	}
+	else
+	{
 		echo "<ul>\n";
 		$pid = '';
-		while ($row = mysql_fetch_assoc($rs)) {
+		while ($row = $modx->db->getRow($rs)) {
 			if ($row['id'] !== $pid) {
 				if ($pid != '') echo "</li></ul></li>\n"; // close previous one
 
 				// display the current user group with a rename/delete form
-				echo '<li><form method="post" action="index.php" name="accesspermissions" style="margin-top: 0.5em;">'."\n".
+				echo '<li><form method="post" action="index.php" name="accesspermissions" style="margin-top: 0.5em;" enctype="multipart/form-data">'."\n".
 				'	<input type="hidden" name="a" value="92" />'."\n".
 				'	<input type="hidden" name="groupid" value="'.$row['id'].'" />'."\n".
 				'	<input type="hidden" name="operation" value="rename_user_group" />'."\n".
@@ -127,7 +135,7 @@ if (mysql_num_rows($rs) < 1) {
 		'dgnames.name, '.
 		'sc.id AS doc_id, '.
 		'sc.pagetitle AS doc_title '.
-		'FROM '.$modx->getFullTableName('documentgroup_names').' AS dgnames '.
+		'FROM '.$tbl_documentgroup_names.' AS dgnames '.
 		'LEFT JOIN '.$modx->getFullTableName('document_groups').' AS dg ON dg.document_group = dgnames.id '.
 		'LEFT JOIN '.$modx->getFullTableName('site_content').' AS sc ON sc.id = dg.document '.
 		'ORDER BY dgnames.name, sc.id';
@@ -137,7 +145,7 @@ if (mysql_num_rows($rs) < 1) {
 		<tr><td><b><?php echo $_lang['access_permissions_add_resource_group'] ?></b></td></tr>
 		</thead>
 		<tr class="row1"><td>
-			<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
+			<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;" enctype="multipart/form-data">
 				<input type="hidden" name="a" value="92" />
 				<input type="hidden" name="operation" value="add_document_group" />
 				<input type="text" value="" name="newdocgroup" />&nbsp;
@@ -147,7 +155,7 @@ if (mysql_num_rows($rs) < 1) {
 	</table>
 	<br />
 <?php
-	$rs = mysql_query($sql);
+	$rs = $modx->db->query($sql);
 	if (mysql_num_rows($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
 	} else {
@@ -156,11 +164,11 @@ if (mysql_num_rows($rs) < 1) {
 		'	<tr><td><b>'.$_lang['access_permissions_resource_groups'].'</b></td></tr>'."\n".
 		'	</thead>'."\n";
 		$pid = '';
-		while ($row = mysql_fetch_assoc($rs)) {
+		while ($row = $modx->db->getRow($rs)) {
 			if ($row['id'] !== $pid) {
 				if ($pid != '') echo "</td></tr>\n"; // close previous one
 
-				echo '<tr><td class="row3"><form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">'."\n".
+				echo '<tr><td class="row3"><form method="post" action="index.php" name="accesspermissions" style="margin: 0px;" enctype="multipart/form-data">'."\n".
 				'	<input type="hidden" name="a" value="92" />'."\n".
 				'	<input type="hidden" name="groupid" value="'.$row['id'].'" />'."\n".
 				'	<input type="hidden" name="operation" value="rename_document_group" />'."\n".
@@ -199,11 +207,11 @@ if (mysql_num_rows($rs) < 1) {
 		"groupacc.id AS link_id, ".
 		"dgnames.id AS dg_id, ".
 		"dgnames.name AS dg_name ".
-		"FROM ".$modx->getFullTableName('webgroup_names')." AS groupnames ".
+		"FROM ".$tbl_webgroup_names." AS groupnames ".
 		"LEFT JOIN ".$modx->getFullTableName('webgroup_access')." AS groupacc ON groupacc.webgroup = groupnames.id ".
-		"LEFT JOIN ".$modx->getFullTableName('documentgroup_names')." AS dgnames ON dgnames.id = groupacc.documentgroup ".
+		"LEFT JOIN ".$tbl_documentgroup_names." AS dgnames ON dgnames.id = groupacc.documentgroup ".
 		"ORDER BY name";
-	$rs = mysql_query($sql);
+	$rs = $modx->db->query($sql);
 	if (mysql_num_rows($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span><br />';
 	} else {
@@ -230,7 +238,7 @@ if (mysql_num_rows($rs) < 1) {
 		<?php
 		echo "<ul>\n";
 		$pid = '';
-		while ($row = mysql_fetch_assoc($rs)) {
+		while ($row = $modx->db->getRow($rs)) {
 			if ($row['id'] != $pid) {
 				if ($pid != '') echo "</ul></li>\n"; // close previous one
 				echo '<li><b>'.$row['name'].'</b>';

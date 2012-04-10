@@ -9,7 +9,7 @@
 function mm_widget_accessdenied($ids='', $message='',  $roles='') {
 	
 	global $modx, $content;
-	$e = &$modx->Event;
+	$e = &$modx->event;
 	
 	if (empty($message))  $message='<span>Access denied</span>Access to current document closed for security reasons.';
 	

@@ -156,8 +156,7 @@ if($_SESSION['browser']=='ie') {
 <input type="hidden" name="cb" value="<?php echo $cb; ?>" />
 <div class="sectionHeader" style="margin:0px"><?php echo $title." - ".$_lang['element_selector_title']; ?></div>
 <div class="sectionBody" style="margin-top:5px;margin-right:0px;margin-left:0px;border:0px;">
-<p><img src="<?php echo $_style["icons_right_arrow"] ?>" alt="." width="32" height="32" align="left" /><?php echo $_lang['element_selector_msg']; ?></p>
-<br />
+<p><?php echo $_lang['element_selector_msg']; ?></p>
 <!-- resources -->
 	 <table width="100%" border="0" cellspacing="1" cellpadding="2">
 	 <tr>
@@ -166,16 +165,19 @@ if($_SESSION['browser']=='ie') {
 		<table border="0" width="100%">
 			<tr>
 			<td nowrap="nowrap">
-				<table border="0"><tr><td><?php echo $_lang["search"]; ?></td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
-				<td><a href="#" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
-				<td><a href="#" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="<?php echo $_style['icons_refresh']?>" width="16" height="16"/></a></td>
-				<td><a href="#" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="<?php echo $_style['icons_table']?>" width="16" height="16"/></a></td>
+				<table border="0">
+				<tr>
+				<td><?php echo $_lang["search"]; ?></td>
+				<td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
+				<td class="actionButtons"><a href="#" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
+				<td class="actionButtons"><a href="#" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="<?php echo $_style['icons_refresh']?>" /></a></td>
+				<td class="actionButtons"><a href="#" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="<?php echo $_style['icons_table']?>" /></a></td>
 				</tr>
 				</table>
 			</td>
-			<td width="200">
-				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="window.close()"><img src="<?php echo $_style['icons_cancel']?>" /> <?php echo $_lang['cancel']; ?></a>
-				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="saveSelection()"><img src="<?php echo $_style['icons_add']?>" /> <?php echo $_lang['insert']; ?></a>				
+			<td width="200" class="actionButtons">
+				<a href="#" style="float:right;margin-left:2px;" onclick="window.close()"><img src="<?php echo $_style['icons_cancel']?>" /> <?php echo $_lang['cancel']; ?></a>
+				<a href="#" style="float:right;margin-left:2px;" onclick="saveSelection()"><img src="<?php echo $_style['icons_add']?>" /> <?php echo $_lang['insert']; ?></a>				
 			</td>
 			</tr>
 		</table>
@@ -185,7 +187,7 @@ if($_SESSION['browser']=='ie') {
 	  <tr>
 		<td valign="top" align="left">
 		<?php
-			$ds = $modx->dbQuery($sql);
+			$ds = $modx->db->query($sql);
 			if (!$ds){
 				echo "An error occured while loading records.";
 				exit;
@@ -199,8 +201,7 @@ if($_SESSION['browser']=='ie') {
 				$grd->itemClass="gridItem"; 
 				$grd->altItemClass="gridAltItem"; 
 				$grd->columns=$_lang["name"]." ,".$_lang["description"];
-				$grd->colTypes = "template:<input type='".($sm=='m'? 'checkbox':'radio')."' name='id[]' value='[+id+]' onclick='setCheckbox(this);'> [+value+]";
-				$grd->colWidths = "45%";
+				$grd->colTypes = "template:<label><input type='".($sm=='m'? 'checkbox':'radio')."' name='id[]' value='[+id+]' onclick='setCheckbox(this);'> [+value+]</label>";
 				$grd->fields="name,description";
 				if($_REQUEST['listmode']=='1') $grd->pageSize=0;
 				echo $grd->render();

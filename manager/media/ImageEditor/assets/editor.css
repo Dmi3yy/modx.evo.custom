@@ -1,9 +1,9 @@
 		body
 		{
 			margin: 0; padding: 0;
-			font: 11px Tahoma,Verdana,sans-serif;
+			font: 12px Tahoma,Verdana,sans-serif;
 		}
-		select, input, button { font: 11px Tahoma,Verdana,sans-serif; }
+		select, input, button { font: inherit; }
 
 		#indicator
 		{

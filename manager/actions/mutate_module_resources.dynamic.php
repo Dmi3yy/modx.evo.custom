@@ -10,10 +10,6 @@ if (isset($_REQUEST['id']))
         $id = (int)$_REQUEST['id'];
 else    $id = 0;
 
-if ($manager_theme)
-        $manager_theme .= '/';
-else    $manager_theme  ='';
-
 // Get table names (alphabetical)
 $tbl_active_users       = $modx->getFullTableName('active_users');
 $tbl_site_content       = $modx->getFullTableName('site_content');
@@ -29,13 +25,13 @@ $tbl_site_tmplvars      = $modx->getFullTableName('site_tmplvars');
 $modx->manager->initPageViewState();
 
 // check to see the  editor isn't locked
-$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=108 AND id=\''.$id.'\'';
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=108 AND id='{$id}'");
+$limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
-	for ($i=0;$i<$limit;$i++) {
-		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {
+	while($lock = $modx->db->getRow($rs))
+	{
+		if($lock['internalKey']!=$modx->getLoginUserID())
+		{
 			$msg = sprintf($_lang['lock_msg'], $lock['username'], 'module');
 			$e->setError(5, $msg);
 			$e->dumpError();
@@ -53,7 +49,7 @@ if(!is_numeric($id)) {
 // take action
 switch ($_REQUEST['op']) {
 	case 'add':
-		$opids = explode(",",$_REQUEST['newids']);
+		$opids = explode(',',$_REQUEST['newids']);
 		if (count($opids)>0){
 			// 1-snips, 2-tpls, 3-tvs, 4-chunks, 5-plugins, 6-docs
 			$rt = strtolower($_REQUEST["rt"]);
@@ -69,8 +65,8 @@ switch ($_REQUEST['op']) {
 				$opids[$i] = intval($opids[$i]);
 				$sql.="('$id',".$opids[$i].",$type)";
 			}
-			$modx->dbQuery('DELETE FROM '.$tbl_site_module_depobj.' WHERE module=\''.$id.'\' AND resource IN ('.implode(',',$opids).') AND type=\''.$type.'\'');
-			$ds = $modx->dbQuery($sql);
+			$modx->db->query('DELETE FROM '.$tbl_site_module_depobj.' WHERE module=\''.$id.'\' AND resource IN ('.implode(',',$opids).') AND type=\''.$type.'\'');
+			$ds = $modx->db->query($sql);
 			if(!$ds){
 				echo '<script type="text/javascript">'.
 				     'function jsalert(){ alert(\'An error occured while trying to update the database. \''.mysql_error().');'.
@@ -85,7 +81,7 @@ switch ($_REQUEST['op']) {
 			$opids[$i]=intval($opids[$i]); // convert ids to numbers
 		}
 		// get resources that needs to be removed
-		$ds = $modx->dbQuery("SELECT * FROM ".$tbl_site_module_depobj." WHERE id IN (".implode(",",$opids).")");
+		$ds = $modx->db->query("SELECT * FROM ".$tbl_site_module_depobj." WHERE id IN (".implode(",",$opids).")");
 		if ($ds) {
 			// loop through resources and look for plugins and snippets
 			$i=0; $plids=array(); $snid=array();
@@ -94,41 +90,36 @@ switch ($_REQUEST['op']) {
 				if($row['type']=='40') $snids[$i]=$row['resource'];
 			}
 			// get guid
-			$ds = $modx->dbQuery("SELECT * FROM ".$tbl_site_modules." WHERE id='$id'");
+			$ds = $modx->db->select('*', $tbl_site_modules, "id='{$id}'");
 			if($ds) {
 				$row = $modx->fetchRow($ds);
 				$guid = $row['guid'];
 			}
 			// reset moduleguid for deleted resources
 			if (($cp=count($plids)) || ($cs=count($snids))) {
-				if ($cp) $modx->dbQuery('UPDATE '.$tbl_site_plugins.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $plids).') AND moduleguid=\''.$guid.'\'');
-				if ($cs) $modx->dbQuery('UPDATE '.$tbl_site_snippets.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $snids).') AND moduleguid=\''.$guid.'\'');
+				if ($cp) $modx->db->query('UPDATE '.$tbl_site_plugins.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $plids).') AND moduleguid=\''.$guid.'\'');
+				if ($cs) $modx->db->query('UPDATE '.$tbl_site_snippets.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $snids).') AND moduleguid=\''.$guid.'\'');
 				// reset cache
-				include_once $base_path."/manager/processors/cache_sync.class.processor.php";
-				$sync = new synccache();
-				$sync->setCachepath("../assets/cache/");
-				$sync->setReport(false);
-				$sync->emptyCache(); // first empty the cache
+				$modx->clearCache();
 			}
 		}
 		$sql = 'DELETE FROM '.$tbl_site_module_depobj.' WHERE id IN ('.implode(',', $opids).')';
-		$modx->dbQuery($sql);
+		$modx->db->query($sql);
 		break;
 }
 
 // load record
-$sql = "SELECT * FROM ".$tbl_site_modules." WHERE id = $id;";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->select('*',$tbl_site_modules,"id='{$id}'");
+$limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
 	echo "<p>Multiple modules sharing same unique id. Please contact the Site Administrator.<p>";
 	exit;
 }
-if($limit<1) {
+elseif($limit<1) {
 	echo "<p>Module not found for id '$id'.</p>";
 	exit;
 }
-$content = mysql_fetch_assoc($rs);
+$content = $modx->db->getRow($rs);
 $_SESSION['itemname']=$content['name'];
 if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 	$e->setError(3);
@@ -136,6 +127,9 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 }
 
 ?>
+<style type="text/css">
+a.searchtoolbarbtn {float:left;width:120px;margin-top:2px;width:170px}
+</style>
 <script type="text/javascript">
 
 	function removeDependencies() {
@@ -197,7 +191,8 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 	};
 </script>
 
-<form name="mutate" method="post" action="index.php?a=113">
+<form name="mutate" method="post" action="index.php">
+<input type="hidden" name="a" value="113" />
 <input type="hidden" name="op" value="" />
 <input type="hidden" name="rt" value="" />
 <input type="hidden" name="newids" value="" />
@@ -206,7 +201,7 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 
 <div id="actions">
 	<ul class="actionButtons">
-		<li><a href="index.php?a=106"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['close']; ?></a>
+		<li><a href="index.php?a=106"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']; ?></a>
 	</ul>
 </div>
 
@@ -215,28 +210,21 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 <p><img src="<?php echo $_style["icons_modules"] ?>" alt="" align="left" /><?php echo $_lang['module_resource_msg']; ?></p>
 <br />
 <!-- Dependencies -->
-	 <table width="100%" border="0" cellspacing="1" cellpadding="2">
-	  <tr>
-		<td valign="top" align="left">
+	<ul class="actionButtons">
+		<li><a href="#" onclick="addSnippet();return false;"><img src="<?php echo $_style["icons_add"] ?>" /> <?php echo $_lang['add_snippet']; ?></a></li>
+		<li><a href="#" onclick="addPlugin();return false;"><img src="<?php echo $_style["icons_add"] ?>" /> <?php echo $_lang['add_plugin']; ?></a></li>
+	</ul>
 		<?php
-			$sql = "SELECT smd.id,COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) as 'name'," .
+			$sql = "SELECT smd.id,COALESCE(ss.name,sp.name) as 'name'," .
 					"CASE smd.type " .
-					" WHEN 10 THEN 'Chunk' " .
-					" WHEN 20 THEN 'Document' " .
 					" WHEN 30 THEN 'Plugin' " .
 					" WHEN 40 THEN 'Snippet' " .
-					" WHEN 50 THEN 'Template' " .
-					" WHEN 60 THEN 'TV' " .
 					"END as 'type' " .
 					"FROM ".$tbl_site_module_depobj." smd ".
-					"LEFT JOIN ".$tbl_site_htmlsnippets." sc ON sc.id = smd.resource AND smd.type = '10' ".
-					"LEFT JOIN ".$tbl_site_content." sd ON sd.id = smd.resource AND smd.type = '20' ".
 					"LEFT JOIN ".$tbl_site_plugins." sp ON sp.id = smd.resource AND smd.type = '30' ".
 					"LEFT JOIN ".$tbl_site_snippets." ss ON ss.id = smd.resource AND smd.type = '40' ".
-					"LEFT JOIN ".$tbl_site_templates." st ON st.id = smd.resource AND smd.type = '50' ".
-					"LEFT JOIN ".$tbl_site_tmplvars." sv ON sv.id = smd.resource AND smd.type = '60' ".
 					"WHERE smd.module=$id ORDER BY smd.type,name ";
-			$ds = $modx->dbQuery($sql);
+			$ds = $modx->db->query($sql);
 			if (!$ds){
 				echo "An error occured while loading module dependencies.";
 			}
@@ -249,23 +237,15 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 				$grd->itemClass="gridItem";
 				$grd->altItemClass="gridAltItem";
 				$grd->columns=$_lang["element_name"]." ,".$_lang["type"];
-				$grd->colTypes = "template:<input type='checkbox' name='depid[]' value='[+id+]'> [+value+]";
+				$grd->colTypes = "template:<label><input type='checkbox' name='depid[]' value='[+id+]'> [+value+]</label>";
 				$grd->fields="name,type";
+				$grd->colWidths='200';
 				echo $grd->render();
 			}
 		?>
-		</td>
-		<td valign="top" width="120" style="background-color:#eeeeee">
-			<a class="searchtoolbarbtn" style="float:left;width:120px;margin-bottom:10px;" href="#" style="margin-top:2px;width:102px" onclick="removeDependencies();return false;"><img src="<?php echo $_style["icons_delete_document"]?>" align="absmiddle" /> <?php echo $_lang['remove']; ?></a><br />
-			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addSnippet();return false;"><img src="<?php echo $_style["icons_add"] ?>" align="absmiddle" /> <?php echo $_lang['add_snippet']; ?></a><br />
-			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addDocument();return false;"><img src="<?php echo $_style["icons_add"] ?>" align="absmiddle" /> <?php echo $_lang['add_doc']; ?></a><br />
-			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addChunk();return false;"><img src="<?php echo $_style["icons_add"] ?>" align="absmiddle" /> <?php echo $_lang['add_chunk']; ?></a><br />
-			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addPlugin();return false;"><img src="<?php echo $_style["icons_add"] ?>" align="absmiddle" /> <?php echo $_lang['add_plugin']; ?></a><br />
-			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addTV();return false;"><img src="<?php echo $_style["icons_add"] ?>" align="absmiddle" /> <?php echo $_lang['add_tv']; ?></a><br />
-			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addTemplate();return false;"><img src="<?php echo $_style["icons_add"] ?>" align="absmiddle" /> <?php echo $_lang['add_template']; ?></a><br />
-		</td>
-	  </tr>
-	</table>
+	<ul class="actionButtons">
+		<li><a style="margin-bottom:10px;" href="#" onclick="removeDependencies();return false;"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['remove']; ?></a></li>
+	</ul>
 </div>
 <input type="submit" name="save" style="display:none">
 </form>

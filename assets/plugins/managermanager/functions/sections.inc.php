@@ -10,7 +10,7 @@
 function mm_renameSection($section, $newname, $roles='', $templates='') {
 
 	global $modx;
-	$e = &$modx->Event;
+	$e = &$modx->event;
 			
 	// if the current page is being edited by someone in the list of roles, and uses a template in the list of templates
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)) {
@@ -53,7 +53,7 @@ function mm_hideSections($sections, $roles='', $templates='') {
 
 	
 	global $modx;
-	$e = &$modx->Event;
+	$e = &$modx->event;
 	
 	// if we've been supplied with a string, convert it into an array 
 	$sections = makeArray($sections);

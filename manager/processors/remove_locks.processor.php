@@ -6,12 +6,10 @@ if(!$modx->hasPermission('remove_locks')) {
 }
 
 // Remove locks
-$sql = "TRUNCATE $dbase.`".$table_prefix."active_users`";
-$rs = mysql_query($sql);
+$sql = 'TRUNCATE ' . $modx->getFullTableName('active_users');
+$rs = $modx->db->query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to remove the locks!";
 	exit;
 }
-$header="Location: index.php?a=7";
-	header($header);
-?>
+	header("Location: index.php?a=7");

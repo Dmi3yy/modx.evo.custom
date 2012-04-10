@@ -2,17 +2,17 @@
 /**
  * Doc Manager
  * 
- * Quickly perform bulk updates to the Documents in your site including templates, publishing details, and permissions
+ * テンプレート・権限・公開／非公開などのドキュメント設定を一括変更
  * 
  * @category	module
  * @version 	1.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal	@properties
+ * @internal	@properties	 
  * @internal	@guid 	
  * @internal	@shareparams 1
  * @internal	@dependencies requires files located at /assets/modules/docmanager/
  * @internal	@modx_category Manager and Admin
- * @internal    @installset base, sample
+ * @internal    @installset base
  */
 
 include_once(MODX_BASE_PATH.'assets/modules/docmanager/classes/docmanager.class.php');

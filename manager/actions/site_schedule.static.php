@@ -4,6 +4,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	$e->setError(3);
 	$e->dumpError();
 } */
+$tbl_site_content = $modx->getFullTableName('site_content');
 ?>
 
 <script type="text/javascript" src="media/script/tablesort.js"></script>
@@ -11,10 +12,12 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 <div class="sectionHeader"><?php echo $_lang["publish_events"]?></div><div class="sectionBody" id="lyr1">
 <?php
-$sql = "SELECT id, pagetitle, pub_date FROM $dbase.`".$table_prefix."site_content` WHERE pub_date > ".time()." ORDER BY pub_date ASC";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
-if($limit<1) {
+$field = 'id, pagetitle, pub_date';
+$where = 'pub_date > ' . time();
+$orderby = 'pub_date ASC';
+$rs = $modx->db->select($field,$tbl_site_content,$where,$orderby);
+$total = $modx->db->getRecordCount($rs);
+if($total<1) {
 	echo "<p>".$_lang["no_docs_pending_publishing"]."</p>";
 } else {
 ?>
@@ -28,8 +31,8 @@ if($limit<1) {
     </thead>
     <tbody>
 <?php
-	for ($i=0;$i<$limit;$i++) {
-		$row = mysql_fetch_assoc($rs);
+	for ($i=0;$i<$total;$i++) {
+		$row = $modx->db->getRow($rs);
 ?>
     <tr>
       <td><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle']?></a></td>
@@ -50,10 +53,12 @@ if($limit<1) {
 
 <div class="sectionHeader"><?php echo $_lang["unpublish_events"];?></div><div class="sectionBody" id="lyr2"><?php
 //$db->debug = true;
-$sql = "SELECT id, pagetitle, unpub_date FROM $dbase.`".$table_prefix."site_content` WHERE unpub_date > ".time()." ORDER BY unpub_date ASC";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
-if($limit<1) {
+$field = 'id, pagetitle, unpub_date';
+$where = 'unpub_date > ' . time();
+$orderby = 'unpub_date ASC';
+$rs = $modx->db->select($field,$tbl_site_content,$where,$orderby);
+$total = $modx->db->getRecordCount($rs);
+if($total<1) {
 	echo "<p>".$_lang["no_docs_pending_unpublishing"]."</p>";
 } else {
 ?>
@@ -67,8 +72,8 @@ if($limit<1) {
     </thead>
     <tbody>
 <?php
-	for ($i=0;$i<$limit;$i++) {
-		$row = mysql_fetch_assoc($rs);
+	for ($i=0;$i<$total;$i++) {
+		$row = $modx->db->getRow($rs);
 ?>
     <tr>
       <td><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a></td>
@@ -88,10 +93,13 @@ if($limit<1) {
 
 
 <div class="sectionHeader"><?php echo $_lang["all_events"];?></div><div class="sectionBody"><?php
-$sql = "SELECT id, pagetitle, pub_date, unpub_date FROM $dbase.`".$table_prefix."site_content` WHERE pub_date > 0 OR unpub_date > 0 ORDER BY pub_date DESC";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
-if($limit<1) {
+$field = 'id, pagetitle, pub_date, unpub_date';
+$where = 'pub_date > 0 OR unpub_date > 0';
+$orderby = 'pub_date DESC';
+$limit = $modx->config['number_of_logs'];
+$rs = $modx->db->select($field,$tbl_site_content,$where,$orderby,$limit);
+$total = $modx->db->getRecordCount($rs);
+if($total<1) {
 	echo "<p>".$_lang["no_docs_pending_pubunpub"]."</p>";
 } else {
 ?>
@@ -106,8 +114,8 @@ if($limit<1) {
     </thead>
     <tbody>
 <?php
-	for ($i=0;$i<$limit;$i++) {
-		$row = mysql_fetch_assoc($rs);
+	for ($i=0;$i<$total;$i++) {
+		$row = $modx->db->getRow($rs);
 ?>
     <tr class="<?php echo ($i % 2 ? 'even' : '')?>">
 	<td><a href="index.php?a=3&id=<?php echo $row['id']?>"><?php echo $row['pagetitle']?></a></td>

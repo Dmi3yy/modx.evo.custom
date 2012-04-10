@@ -151,7 +151,7 @@ function getWebChangePwdtpl(){
             <small><span class="warning" style="font-weight:normal">The password you 
             specify needs to be at least 6 characters long.</span></small>
           </div>
-          </fieldset><br />
+          </fieldset>
           <fieldset style="width:300px">
           <legend><b>Password notification method</b></legend>
           <input type="radio" name="passwordnotifymethod" value="e" />Send the new password 

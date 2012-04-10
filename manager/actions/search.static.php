@@ -7,7 +7,7 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
 
 <div class="sectionBody">
 
-<form action="index.php?a=71" method="post" name="searchform">
+<form action="index.php?a=71" method="post" name="searchform" enctype="multipart/form-data">
 <table width="100%" border="0">
   <tr>
     <td width="120"><?php echo $_lang['search_criteria_id']; ?></td>
@@ -71,7 +71,7 @@ if($limit<1) {
 } else {
 	printf('<p>'.$_lang['search_results_returned_msg'].'</p>', $limit);
 ?>
-	<script type="text/javascript" src="media/script/tablesort.js"></script>
+		<script type="text/javascript" src="media/script/tablesort.js"></script>
   <table border="0" cellpadding="2" cellspacing="0" class="sortabletable sortable-onload-2 rowstyle-even" id="table-1" width="90%"> 
     <thead> 
       <tr bgcolor="#CCCCCC"> 
@@ -100,44 +100,53 @@ if($limit<1) {
         'image/png' => $_style["tree_page_png"]
     );
 
-	for ($i = 0; $i < $limit; $i++) {
-		$logentry = $modx->db->getRow($rs);
+			for ($i = 0; $i < $limit; $i++) { 
+				$logentry = $modx->db->getRow($rs);
 
-		// figure out the icon for the document...
-		$icon = "";
+	// figure out the icon for the document...
+	$icon = "";
 		if ($logentry['type']=='reference') {
 			$icon .= $_style["tree_linkgo"];
 		} elseif ($logentry['isfolder'] == 0) {
 			$icon .= isset($icons[$logentry['contenttype']]) ? $icons[$logentry['contenttype']] : $_style["tree_page_html"];
 		} else {
 			$icon .= $_style['tree_folder'];
-		}
+	} 
 
 		$tdClass = "";
 		if($logentry['published'] == 0) {
 			$tdClass .= ' class="unpublishedNode"';
-		}
+	}
 		if($logentry['deleted'] == 1) {
 			$tdClass .= ' class="deletedNode"';
-		}
-?>
-    <tr>
+	}
+?> 
+    <tr> 
       <td align="center"><a href="index.php?a=3&id=<?php echo $logentry['id']; ?>" title="<?php echo $_lang['search_view_docdata']; ?>"><img src="<?php echo $_style['icons_resource_overview']; ?>" width="16" height="16" /></a></td> 
       <td><?php echo $logentry['id']; ?></td> 
-	  <?php if (function_exists('mb_strlen') && function_exists('mb_substr')) {?>
-		<td<?php echo $tdClass; ?>><?php echo mb_strlen($logentry['pagetitle'], $modx_manager_charset)>20 ? mb_substr($logentry['pagetitle'], 0, 20, $modx_manager_charset)."..." : $logentry['pagetitle'] ; ?></td> 
-		<td<?php echo $tdClass; ?>><?php echo mb_strlen($logentry['description'], $modx_manager_charset)>35 ? mb_substr($logentry['description'], 0, 35, $modx_manager_charset)."..." : $logentry['description'] ; ?></td>
-	  <?php } else { ?>
+<?php
+		if (function_exists('mb_strlen') && function_exists('mb_substr'))
+		{
+?>
+		<td<?php echo $tdClass; ?>><?php echo mb_strlen($logentry['pagetitle'], $modx_manager_charset)>70 ? mb_substr($logentry['pagetitle'], 0, 70, $modx_manager_charset)."..." : $logentry['pagetitle'] ; ?></td> 
+		<td<?php echo $tdClass; ?>><?php echo mb_strlen($logentry['description'], $modx_manager_charset)>70 ? mb_substr($logentry['description'], 0, 70, $modx_manager_charset)."..." : $logentry['description'] ; ?></td>
+<?php
+		}
+		else
+		{
+?>
 		<td<?php echo $tdClass; ?>><?php echo strlen($logentry['pagetitle'])>20 ? substr($logentry['pagetitle'], 0, 20)."..." : $logentry['pagetitle'] ; ?></td> 
 		<td<?php echo $tdClass; ?>><?php echo strlen($logentry['description'])>35 ? substr($logentry['description'], 0, 35)."..." : $logentry['description'] ; ?></td>
-	  <?php } ?>
+<?php
+		}
+?>
       <td align="center"><img src="<?php echo $icon; ?>" /></td>
-    </tr>
+    </tr> 
 <?php
 	}
-?>
-    </tbody>
-     </table>
+?> 
+    </tbody> 
+     </table> 
 <?php
 }
 ?>

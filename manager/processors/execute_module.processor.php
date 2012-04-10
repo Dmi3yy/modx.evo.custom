@@ -23,7 +23,7 @@ if($_SESSION['mgrRole']!=1){
 		"FROM ".$modx->getFullTableName("site_module_access")." sma " .
 		"LEFT JOIN ".$modx->getFullTableName("member_groups")." mg ON mg.user_group = sma.usergroup AND member='".$modx->getLoginUserID()."'".
 		"WHERE sma.module = '$id'";
-	$rs = $modx->dbQuery($sql);
+	$rs = $modx->db->query($sql);
 
 	//initialize permission to -1, if it stays -1 no permissions
 	//attached so permission granted
@@ -55,7 +55,7 @@ if($_SESSION['mgrRole']!=1){
 $sql = "SELECT * " .
 		"FROM ".$modx->getFullTableName("site_modules")." " .
 		"WHERE id = $id;";
-$rs = mysql_query($sql);
+$rs = $modx->db->query($sql);
 $limit = mysql_num_rows($rs);
 if($limit>1) {
 	echo "<script type='text/javascript'>" .
@@ -73,7 +73,7 @@ if($limit<1) {
 			"</script>";
 	exit;
 }
-$content = mysql_fetch_assoc($rs);
+$content = $modx->db->getRow($rs);
 if($content['disabled']) {
 	echo "<script type='text/javascript'>" .
 			"function jsalert(){ alert('This module is disabled and cannot be executed.');" .
@@ -122,7 +122,6 @@ function evalModule($moduleCode,$params){
 			if($modx->isBackend()) $modx->event->alert("<span style='color:maroon;'><b>".$content['name']." - Module"." runtime error:</b></span><br /><br />An error occurred while loading the module. Please see the event log.");
 		}
 	}
-	unset($modx->event->params); 
+	unset($modx->event->params);
 	return $mod.$msg;
 }
-?>

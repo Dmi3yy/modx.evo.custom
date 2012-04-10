@@ -126,6 +126,7 @@ $GLOBALS['action_list'] = array(
 	'304'	=> 'Duplicate Template Variable',
 
 	'200'	=> 'Viewing phpInfo()',
+	'501'	=> 'Delete category',
 	'998'	=> 'Viewing web page',
 	'999'	=> 'Viewing test page',
 );

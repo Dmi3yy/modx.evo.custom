@@ -23,7 +23,7 @@ if ($installMode > 0) {
       }
   }
 } else {
-    $database_name= 'modx';
+    $database_name= '';
     $database_server= 'localhost';
     $table_prefix= 'modx_';
 }
@@ -93,22 +93,15 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
 <?php
   if (($installMode == 0) || ($installMode == 2)) {
 ?>
-  <p class="labelHolder"><label for="database_connection_method"><?php echo $_lang['connection_screen_connection_method']?></label>
+  <p class="labelHolder">
     <div id="connection_method" name="connection_method">
-      <select id="database_connection_method" name="database_connection_method">
-        <option value="SET CHARACTER SET" <?php echo isset($database_connection_method) && $database_connection_method == 'SET CHARACTER SET' ? 'selected="selected"' : '' ?>>
-          SET CHARACTER SET
-        </option>
-        <option value="SET NAMES" <?php echo isset($database_connection_method) && $database_connection_method == 'SET NAMES' ? 'selected="selected"' : '' ?>>
-          SET NAMES
-        </option>
-      </select>
+        <input type="hidden" value="SET CHARACTER SET" id="database_connection_method" name="database_connection_method" />
     </div>
   </p>
 <?php
   }
 ?>
-  <p class="labelHolder"><label for="database_collation"><?php echo $_lang['connection_screen_collation']?></label>
+  <p class="labelHolder">
     <div id="collation" name="collation">
 		<select id="database_collation" name="database_collation">
         	<option value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>" selected="selected">
@@ -137,7 +130,7 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
       <input id="cmsadmin" value="<?php echo isset($_POST['cmsadmin']) ? $_POST['cmsadmin']:"admin" ?>" name="cmsadmin" />
     </p>
     <p class="labelHolder"><label for="cmsadminemail"><?php echo $_lang['connection_screen_default_admin_email']?></label>
-      <input id="cmsadminemail" value="<?php echo isset($_POST['cmsadminemail']) ? $_POST['cmsadminemail']:"" ?>" name="cmsadminemail" />
+      <input id="cmsadminemail" value="<?php echo isset($_POST['cmsadminemail']) ? $_POST['cmsadminemail']:"" ?>" name="cmsadminemail" style="width:300px;" />
     </p>
     <p class="labelHolder"><label for="cmspassword"><?php echo $_lang['connection_screen_default_admin_password']?></label>
       <input id="cmspassword" type="password" name="cmspassword" value="<?php echo isset($_POST['cmspassword']) ? $_POST['cmspassword']:"" ?>" />
@@ -146,42 +139,7 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
       <input id="cmspasswordconfirm" type="password" name="cmspasswordconfirm" value="<?php echo isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm']:"" ?>" />
     </p>
 
-    <h3 style="margin-top:2em"><?php echo $_lang["default_language"] ?></h3>
-    <p><?php echo $_lang["default_language_description"] ?></p>
-    <p class="labelHolder"><label for="managerlanguage_select">&nbsp;</label>
-    <select name="managerlanguage" id="managerlanguage_select">
-<?php
-	
-	if (isset($_POST['managerlanguage'])) {
-	    $manager_language = $_POST['managerlanguage'];
-	} else {
-	    if (isset($_GET['managerlanguage']))
-	        $manager_language = $_GET['managerlanguage'];
-	}
-	$langs = array();
-	if ($handle = opendir("../manager/includes/lang")) {
-	    while (false !== ($file = readdir($handle))) {
-	        if (!strpos($file, 'inc') === false) {
-	            $langs[] = $file;
-	        }
-	    }
-	    closedir($handle);
-	}
-	sort($langs);
-	
-	if ($install_language != "english" && file_exists("../manager/includes/lang/".$install_language.".inc.php")) {
-		$manager_language = $install_language;
-	} else {
-		$manager_language = "english";
-	}
-
-	foreach ($langs as $language) {
-	    $abrv_language = explode('.', $language);
-	        echo '<option value="' . $abrv_language[0] . '"'. ( (strtolower($abrv_language[0]) == strtolower($manager_language)) ? ' selected="selected"' : null ) .'>' . ucwords( $abrv_language[0] ) . '</option>' . "\n";
-	}
-?>
-  </select><br /><br />
-  </p>
+    <input type="hidden" name="managerlanguage" id="managerlanguage_select" value="japanese-utf8" />
 </div></div>
 
 <?php

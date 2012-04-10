@@ -26,10 +26,17 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	var buildText;
 
 	// Create the AJAX mail update object before requesting it
-	var updateMailerAjx = new Ajax('index.php', {method:'post', postBody:'updateMsgCount=true', onComplete:showResponse});
-	function updateMail(now) {
-		try {
-			// if 'now' is set, runs immediate ajax request (avoids problem on initial loading where periodical waits for time period before making first request)
+	var updateMailerAjx = new Ajax('index.php',
+	{
+		method:'post',
+		postBody:'updateMsgCount=true',
+		onComplete:showResponse
+	});
+	function updateMail(now)
+	{
+		try
+		{
+		// if 'now' is set, runs immediate ajax request (avoids problem on initial loading where periodical waits for time period before making first request)
 			if (now)
 				updateMailerAjx.request();
 			return false;
@@ -66,7 +73,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			parent.document.getElementsByTagName("FRAMESET").item(1).cols = '<?php echo (!$modx_textdir ? '0,*' : '*,0')?>';
 			top.__hideTree = true;
 		} catch(oException) {
-			x=window.setTimeout('hideTreeFrame()', 1000);
+			x=window.setTimeout('hideTreeFrame()', 100);
 		}
 	}
 
@@ -79,7 +86,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			parent.document.getElementsByTagName("FRAMESET").item(1).cols = defaultFrameWidth;
 			top.__hideTree = false;
 		} catch(oException) {
-			z=window.setTimeout('defaultTreeFrame()', 1000);
+			z=window.setTimeout('defaultTreeFrame()', 100);
 		}
 	}
 
@@ -89,7 +96,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		try {
 			parent.tree.d.openAll();  // dtree
 		} catch(oException) {
-			zz=window.setTimeout('expandTree()', 1000);
+			zz=window.setTimeout('expandTree()', 100);
 		}
 	}
 
@@ -97,7 +104,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		try {
 			parent.tree.d.closeAll();  // dtree
 		} catch(oException) {
-			yy=window.setTimeout('collapseTree()', 1000);
+			yy=window.setTimeout('collapseTree()', 100);
 		}
 	}
 
@@ -110,33 +117,31 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			elm.style.display = 'block';
 		}
 		top.tree.saveFolderState(); // save folder state
-		setTimeout('top.tree.restoreTree()',200);
+		setTimeout('top.tree.restoreTree()',100);
 	}
 
 	function reloadmenu() {
-<?php if($manager_layout==0) { ?>
 		var elm = $('buildText');
 		if (elm) {
 			elm.innerHTML = "&nbsp;&nbsp;<img src='<?php echo $_style['icons_working']?>' width='16' height='16' />&nbsp;<?php echo $_lang['loading_menu']?>";
 			elm.style.display = 'block';
 		}
 		parent.mainMenu.location.reload();
-<?php } ?>
 	}
 
 	function startrefresh(rFrame){
 		if(rFrame==1){
-			x=window.setTimeout('reloadtree()',500);
+			x=window.setTimeout('reloadtree()',100);
 		}
 		if(rFrame==2) {
-			x=window.setTimeout('reloadmenu()',500);
+			x=window.setTimeout('reloadmenu()',100);
 		}
 		if(rFrame==9) {
+			y=window.setTimeout('reloadtree()',100);
 			x=window.setTimeout('reloadmenu()',500);
-			y=window.setTimeout('reloadtree()',500);
 		}
 		if(rFrame==10) {
-			window.top.location.href = "../manager";
+			window.top.location.href = "../manager/";
 		}
 	}
 
@@ -168,11 +173,6 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
 	function stopIt() {
 		top.mainMenu.stopWork();
-	}
-
-	function openCredits() {
-		parent.main.document.location.href = "index.php?a=18";
-		xwwd = window.setTimeout('stopIt()', 2000);
 	}
 
 	function NavToggle(element) {
@@ -223,7 +223,7 @@ if($modx->hasPermission('help')) { ?>
 </div>
 
 <form name="menuForm" action="l4mnu.php" class="clear">
-    <input name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id());?>" />
+    <input name="sessToken" type="hidden" id="sessTokenInput" value="<?php echo md5(session_id());?>" />
 <div id="Navcontainer">
 <div id="divNav">
 	<ul id="nav">
@@ -276,10 +276,11 @@ if($modx->hasPermission('exec_module')) {
 				FROM '.$modx->getFullTableName('site_modules').' AS sm
 				LEFT JOIN '.$modx->getFullTableName('site_module_access').' AS sma ON sma.module = sm.id
 				LEFT JOIN '.$modx->getFullTableName('member_groups').' AS mg ON sma.usergroup = mg.user_group
-				WHERE (mg.member IS NULL OR mg.member = '.$modx->getLoginUserID().') AND sm.disabled != 1');
+				WHERE (mg.member IS NULL OR mg.member = '.$modx->getLoginUserID().') AND sm.disabled != 1
+				ORDER BY sm.editedon DESC');
 	} else {
 		// Admins get the entire list
-		$rs = $modx->db->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1');
+		$rs = $modx->db->select('id,name', $modx->getFullTableName('site_modules'), 'disabled != 1', 'editedon DESC');
 	}
 	while ($content = $modx->db->getRow($rs)) {
 		$modulemenu[] = '<li><a onclick="this.blur();" href="index.php?a=112&amp;id='.$content['id'].'" target="main">'.$content['name'].'</a></li>';
@@ -300,11 +301,11 @@ if($modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $mod
 	// roles
 	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=86" target="main">'.$_lang['role_management_title'].'</a></li>';
 }
-if($modx->hasPermission('access_permissions')) {
+if($modx->hasPermission('access_permissions') && $modx->config['use_udperms'] == 1) {
 	// manager-perms
 	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=40" target="main">'.$_lang['manager_permissions'].'</a></li>';
 }
-if($modx->hasPermission('web_access_permissions')) {
+if($modx->hasPermission('web_access_permissions') && $modx->config['use_udperms'] == 1) {
 	// web-user-perms
 	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=91" target="main">'.$_lang['web_permissions'].'</a></li>';
 }

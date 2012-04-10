@@ -11,7 +11,7 @@
 	width: 320px; 
 	padding: 40px 20px 40px 100px; 
 	border: 6px solid #AAA;
-	background: #FFF url(/assets/plugins/managermanager/widgets/accessdenied/alert.png) no-repeat 15px;
+	background: #FFF url(alert.png) no-repeat 15px;
 }
 
 #amessage SPAN{

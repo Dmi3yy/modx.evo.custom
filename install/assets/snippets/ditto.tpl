@@ -2,10 +2,10 @@
 /**
  * Ditto
  * 
- * Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more
+ * リソースの一覧を出力。ブログ・索引・目録・新着情報一覧・履歴一覧など
  *
  * @category 	snippet
- * @version 	2.1.0
+ * @version 	2.1.3
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties 
  * @internal	@modx_category Content
@@ -22,10 +22,10 @@
 
 //---Core Settings---------------------------------------------------- //
 
-$ditto_version = "2.1.0";
+$ditto_version = "2.1.1";
     // Ditto version being executed
 
-$ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $modx->config['base_path']."assets/snippets/ditto/";
+$ditto_base = isset($ditto_base) ? $modx->config['base_path'] . ltrim($ditto_base,'/') : $modx->config['base_path']."assets/snippets/ditto/";
 /*
     Param: ditto_base
     
@@ -89,6 +89,21 @@ $format = (isset($format)) ? strtolower($format) : "html" ;
     "html"
 */
 $config = (isset($config)) ? $config : "default";
+include_once("{$ditto_base}configs/default.config.php");
+
+if(substr($config, 0, 6) === '@CHUNK')
+{
+	eval('?>' . $modx->getChunk(trim(substr($config, 7))));
+}
+elseif(substr($config, 0, 5) === '@FILE')
+{
+	include_once($modx->config['base_path'] . ltrim(trim(substr($config, 6)),'/'));
+}
+elseif($config !== 'default')
+{
+	include_once("{$ditto_base}configs/{$config}.config.php");
+}
+
 /*
     Param: config
 
@@ -167,6 +182,7 @@ $filters = array("custom"=>array(),"parsed"=>array());
     // $filters["parsed"][] = array("name" => array("source"=>$source,"value"=>$value,"mode"=>$mode));
     // $filters["custom"][] = array("source","callback_function");
 
+$orderBy = (isset($orderBy))? $orderBy : '';
 $orderBy = array('parsed'=>array(),'custom'=>array(),'unparsed'=>$orderBy);
     // Variable: orderBy
     // An array that holds all criteria to sort the result set by. 
@@ -183,9 +199,7 @@ $files = array (
     "main_class" => $ditto_base."classes/ditto.class.inc.php",
     "template_class" => $ditto_base."classes/template.class.inc.php",
     "filter_class" => $ditto_base."classes/filter.class.inc.php",
-    "format" => $ditto_base."formats/$format.format.inc.php",
-    "config" => $ditto_base."configs/default.config.php",
-    "user_config" => (substr($config, 0, 5) != "@FILE") ? $ditto_base."configs/$config.config.php" : $modx->config['base_path'].trim(substr($config, 5))
+    "format" => $ditto_base."formats/$format.format.inc.php"
 );
 
 if ($phx == 1) {
@@ -216,6 +230,7 @@ foreach ($files as $filename => $filevalue) {
 }
 
 //---Initiate Class-------------------------------------------------- //
+$dbg_templates = (isset($dbg_templates)) ? $dbg_templates : NULL;
 if (class_exists('ditto')) {
     $ditto = new ditto($dittoID,$format,$_lang,$dbg_templates);
         // create a new Ditto instance in the specified format and language with the requested debug level
@@ -712,6 +727,10 @@ $save = (isset($save))? $save : 0;
     Default:
         0 - off; returns output
 */
+$tplAlt = (isset($tplAlt)) ? $tplAlt : '';
+$tplFirst = (isset($tplFirst)) ? $tplFirst : '';
+$tplLast = (isset($tplLast)) ? $tplLast : '';
+$tplCurrentDocument = (isset($tplCurrentDocument)) ? $tplCurrentDocument : '';
 $templates = array(
     "default" => "@CODE".$_lang['default_template'],
     "base" => $tpl,

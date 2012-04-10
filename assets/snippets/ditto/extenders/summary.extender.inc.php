@@ -9,6 +9,8 @@
 $placeholders['summary'] = array("introtext,content","determineSummary","@GLOBAL ditto_summary_type");
 $placeholders['link'] = array("id","determineLink");
 
+$strip_tags = isset($strip_tags) ? $strip_tags : 0;
+
 $trunc = isset($trunc) ? $trunc : 1;
  /*
 	Param: trunc
@@ -96,7 +98,7 @@ $trunc_tpl = isset($tplTrunc)? template::fetch($tplTrunc) : false;
 	&truncText
 */
 $GLOBALS['ditto_summary_link'] = "";
-$GLOBALS['ditto_summary_params'] = compact("trunc","splitter","length","offset","text","trunc_tpl");
+$GLOBALS['ditto_summary_params'] = compact("trunc","splitter","length","offset","text","trunc_tpl","strip_tags");
 $GLOBALS['ditto_object'] = $ditto;
 // ---------------------------------------------------
 // Truncate Functions
@@ -126,7 +128,7 @@ if (!function_exists("determineSummary")) {
 		global $ditto_summary_params;
 		$trunc = new truncate();
 		$p = $ditto_summary_params;
-		$output = $trunc->execute($resource, $p['trunc'], $p['splitter'], $p['text'], $p['length'], $p['offset'], $p['splitter'], true);
+		$output = $trunc->execute($resource, $p['trunc'], $p['splitter'], $p['text'], $p['length'], $p['offset'], $p['splitter'], true,$p['strip_tags']);
 		$GLOBALS['ditto_summary_link'] = $trunc->link;
 		$GLOBALS['ditto_summary_type'] = $trunc->summaryType;
 		return $output;
@@ -154,16 +156,16 @@ if (!class_exists("truncate")) {
 		   $tag_counter = 0;
 		   $quotes_on = FALSE;
 		   // Check if the text is too long
-		   if (strlen($posttext) > $minimum_length && $truncChars != 1) {
+		   if (mb_strlen($posttext) > $minimum_length && $truncChars != 1) {
 
 		       // Reset the tag_counter and pass through (part of) the entire text
 		       $c = 0;
-		       for ($i = 0; $i < strlen($posttext); $i++) {
+		       for ($i = 0; $i < mb_strlen($posttext); $i++) {
 		           // Load the current character and the next one
 		           // if the string has not arrived at the last character
-		           $current_char = substr($posttext,$i,1);
+		           $current_char = mb_substr($posttext,$i,1);
 		           if ($i < strlen($posttext) - 1) {
-		               $next_char = substr($posttext,$i + 1,1);
+		               $next_char = mb_substr($posttext,$i + 1,1);
 		           }
 		           else {
 		               $next_char = "";
@@ -203,22 +205,23 @@ if (!class_exists("truncate")) {
 		           // Check if the counter has reached the minimum length yet,
 		           // then wait for the tag_counter to become 0, and chop the string there
 		           if ($c > $minimum_length - $length_offset && $tag_counter == 0) {
-		               $posttext = substr($posttext,0,$i + 1);
+		               $posttext = mb_substr($posttext,0,$i + 1);
 		               return $posttext;
 		           }
 		       }
 		   }  return $this->textTrunc($posttext, $minimum_length + $length_offset);
 		}
 
-		function textTrunc($string, $limit, $break=". ") {
+		function textTrunc($string, $limit, $break="。") {
+			global $modx;
 	  	// Original PHP code from The Art of Web: www.the-art-of-web.com
-
+		    mb_internal_encoding($modx->config['modx_charset']);
 	    // return with no change if string is shorter than $limit
-	    if(strlen($string) <= $limit) return $string;
+		    if(mb_strwidth($string) <= $limit) return $string;
 
-	    $string = substr($string, 0, $limit);
-	    if(false !== ($breakpoint = strrpos($string, $break))) {
-	      $string = substr($string, 0, $breakpoint+1);
+		    $string = mb_strimwidth($string, 0, $limit);
+	    if(false !== ($breakpoint = mb_strrpos($string, $break))) {
+	      $string = mb_substr($string, 0, $breakpoint+1);
 	    }
 
 	    return $string;
@@ -282,13 +285,13 @@ if (!class_exists("truncate")) {
 			return $text . $endTags;
 		}
 
-		function execute($resource, $trunc, $splitter, $linktext, $truncLen, $truncOffset, $truncsplit, $truncChars) {
+		function execute($resource, $trunc, $splitter, $linktext, $truncLen, $truncOffset, $truncsplit, $truncChars, $strip_tags) {
 			$summary = '';
 			$this->summaryType = "content";
 			$this->link = false;
 			$closeTags = true;
 			// summary is turned off
-
+			
 			if ((strstr($resource['content'], $splitter)) && $truncsplit) {
 				$summary = array ();
 
@@ -303,7 +306,7 @@ if (!class_exists("truncate")) {
 				$this->summaryType = "content";
 		
 				// fall back to the summary text
-			} else if (strlen($resource['introtext']) > 0) {
+			} else if (mb_strlen($resource['introtext']) > 0) {
 					$summary = $resource['introtext'];
 					$this->link = '[~' . $resource['id'] . '~]';
 					$this->summaryType = "introtext";
@@ -318,6 +321,10 @@ if (!class_exists("truncate")) {
 				$summary = $resource['content'];
 				$this->summaryType = "content";
 				$this->link = false;
+			}
+			if($strip_tags !== 0)
+			{
+				$summary = strip_tags($summary,$strip_tags);
 			}
 
 			// Post-processing to clean up summaries

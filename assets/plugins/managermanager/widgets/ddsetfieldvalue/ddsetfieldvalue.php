@@ -1,7 +1,7 @@
 <?php
 /** 
  * ddSetFieldValue
- * @version 1.0.2 (2012-02-12)
+ * @version 1.0.1 (2012-01-13)
  * 
  * Жёстко выставляет необходимые значения заданному полю
  * 
@@ -18,8 +18,8 @@
 
 function mm_ddSetFieldValue($field, $value='', $roles='', $templates=''){
 
-	global $modx, $content, $mm_fields;
-	$e = &$modx->Event;
+	global $modx, $content, $mm_fields, $mm_current_page;
+	$e = &$modx->event;
 	
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
 		
@@ -133,11 +133,11 @@ function mm_ddSetFieldValue($field, $value='', $roles='', $templates=''){
 					$output .= '
 								$j("input[name=richtextcheck]").removeAttr("checked");
 								// Make the RTE displayed match the default value that has been set here
-								if (originalRichtextValue != "none"){
-									$j("#which_editor").val("none");
-									changeRTE();
+//								if (originalRichtextValue != "none"){
+//									$j("#which_editor").val("none");
+//									changeRTE();
 								}
-										
+								
 								';
 					$output .= ''."\n";
 				}
@@ -168,15 +168,8 @@ function mm_ddSetFieldValue($field, $value='', $roles='', $templates=''){
 			//TV
 			default:
 				// Which template is this page using?
-				if (isset($content['template'])){
-					$page_template = $content['template'];
-				}else{
-					// If no content is set, it's likely we're adding a new page at top level.
-					// So use the site default template. This may need some work as it might interfere with a default template set by MM?
-					$page_template = $modx->config['default_template'];
-				}
 				
-				$tvsMas = tplUseTvs($page_template, $field);
+				$tvsMas = tplUseTvs($mm_current_page['template'], $field);
 				
 				if ($tvsMas){
 					$output .= '$j("#tv'.$tvsMas[0]['id'].'").val("'.$value.'");' . "\n";

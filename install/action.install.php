@@ -11,7 +11,7 @@ echo $content;
 <?php
 if ($errors == 0) {
 	// check if install folder is removeable
-    if (is_writable("../install")) { ?>
+    if ((is_writable('../install') || is_webmatrix()) && !is_iis()) { ?>
 <span id="removeinstall" style="float:left;cursor:pointer;color:#505050;line-height:18px;" onclick="var chk=document.install.rminstaller; if(chk) chk.checked=!chk.checked;"><input type="checkbox" name="rminstaller" onclick="event.cancelBubble=true;" <?php echo (empty ($errors) ? 'checked="checked"' : '') ?> style="cursor:default;" /><?php echo $_lang['remove_install_folder_auto'] ?></span>
 <?php 
     } else {

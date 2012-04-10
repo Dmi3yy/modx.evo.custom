@@ -5,9 +5,7 @@ if(!$modx->hasPermission('settings')) {
 	$e->dumpError();
 }
 
-$sql = "TRUNCATE TABLE $dbase.`".$table_prefix."manager_log`";
-$rs = @mysql_query($sql);
+$sql = 'TRUNCATE TABLE ' . $modx->getFullTableName('manager_log');
+$rs = $modx->db->query($sql);
 
-$header="Location: index.php?a=13";
-header($header);
-?>
+header("Location: index.php?a=13");

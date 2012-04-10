@@ -97,21 +97,18 @@ switch ($_POST['mode']) {
             echo "An error occured while attempting to save the new role.<p>";
             exit;
         }
-        $header = "Location: index.php?a=86&r=2";
-        header($header);
+        header("Location: index.php?a=86");
         break;
     case '35' :
         $tbl = $modx->getFullTableName("user_roles");
         $rs = $modx->db->update($fields, $tbl, "id=$id");
-        if (!$rs = mysql_query($sql)) {
+        if (!$rs = $modx->db->query($sql)) {
             echo "An error occured while attempting to update the role. <br />" . mysql_error();
             exit;
         }
-        $header = "Location: index.php?a=86&r=2";
-        header($header);
+        header("Location: index.php?a=86");
         break;
     default :
     	echo "Erm... You supposed to be here now?";
         exit;
 }
-?>

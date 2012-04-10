@@ -59,7 +59,7 @@ if(!function_exists("json_parameters")) {
 	function json_parameters($placeholders) {
 		$jsonArr = array();
 		foreach ($placeholders as $name=>$value) {
-			$jsonArr["json_".$name] = addslashes($value);
+			$jsonArr["json_".$name] = str_replace(array("\r\n","\r"), '\n', addslashes($value));
 		}
 		$placeholders = array_merge($jsonArr,$placeholders);
 		return $placeholders;	

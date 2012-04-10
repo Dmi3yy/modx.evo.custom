@@ -13,6 +13,4 @@ if ($hasPermission) {
     include_once "categories.inc.php";
     deleteCategory($catId);
 }
-$header="Location: index.php?a=76";
-header($header);
-?>
+header("Location: index.php?a=76");

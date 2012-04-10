@@ -82,9 +82,10 @@ $rss_placeholders['[+xml_xsl+]'] = isset($xsl) ? '<?xml-stylesheet type="text/xs
 $placeholders['*'] = "xml_parameters"; 
 if(!function_exists("xml_parameters")) { 
 	function xml_parameters($placeholders) {
+		global $modx;
 		$xmlArr = array();
 		foreach ($placeholders as $name=>$value) {
-			$xmlArr["xml_".$name] = htmlentities($value);
+			$xmlArr["xml_".$name] = htmlentities($value,ENT_NOQUOTES,$modx->config["modx_charset"]);
 		}
 		$placeholders = array_merge($xmlArr,$placeholders);
 		return $placeholders;	
@@ -109,6 +110,7 @@ $xml_tpl = <<<TPL
 		<item>
 			<title>[+xml_pagetitle+]</title>
 			<link>[(site_url)][~[+id+]~]</link>
+			<guid isPermaLink="true">[(site_url)][~[+id+]~]</guid>
 			<summary><![CDATA[ [+xml_introtext+] ]]></summary>
 			<date>[+xml_createdon+]</date>
 			<createdon>[+xml_createdon+]</createdon>

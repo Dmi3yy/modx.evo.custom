@@ -39,8 +39,85 @@
 # SECURITY FIX: add additional sanitization to fields after stripping slashes to avoid remote tag execution
 ##
 
-$GLOBALS['optionsName'] = "eform"; //name of pseudo attribute used for format settings
+#----------------------------------------------------------
+# Modify ZeRo(http://www.petit-power.com) $Revision: 58 $
+# $Date: 2009-07-27 16:31:59 +0900 (??, 01 3 2009) $ 
+#----------------------------------------------------------
+
+$GLOBALS['optionsName'] = 'eform'; //name of pseudo attribute used for format settings
 $GLOBALS['efPostBack'] = false;
+
+//tidying up some casing errors in parameters
+if(isset($eformOnValidate)) $eFormOnValidate = $eformOnValidate;
+if(isset($eformOnBeforeMailSent)) $eFormOnBeforeMailSent = $eformOnBeforeMailSent;
+if(isset($eformOnMailSent)) $eFormOnMailSent = $eformOnMailSent;
+if(isset($eformOnValidate)) $eFormOnValidate = $eformOnValidate;
+if(isset($eformOnBeforeFormMerge)) $eFormOnBeforeFormMerge = $eformOnBeforeFormMerge;
+if(isset($eformOnBeforeFormParse)) $eFormOnBeforeFormParse = $eformOnBeforeFormParse;
+//for sottwell :)
+if(isset($eFormCSS)) $cssStyle = $eFormCSS;
+
+# Snippet customize settings
+$from   = (isset($from)) ? $from : $modx->config['emailsender'];
+$formid = (isset($formid)) ? $formid : '';
+$params = array (
+   // Snippet Path
+   'snipPath' => $snipPath, //includes $snip_dir
+	 'snipFolder' => $snip_dir,
+
+// eForm Params
+   'vericode' => isset($vericode)? $vericode:'',
+   'formid' => $formid,
+   'from' => $from,
+   'fromname' => isset($fromname)? $fromname:$modx->config['site_name'],
+   'to' => isset($to)? $to:$modx->config['emailsender'],
+   'cc' => isset($cc)? $cc:'',
+   'bcc' => isset($bcc)? $bcc:'',
+   'subject' => isset($subject)? $subject:'',
+   'ccsender' => isset($ccsender)? $ccsender:0,
+   'sendirect' => isset($sendirect)? $sendirect:0,
+   'mselector' => isset($mailselector)? $mailselector:0,
+   'mobile' => isset($mobile)? $mobile:'',
+   'mobiletext' => isset($mobiletext)? $mobiletext:'',
+   'autosender' => isset($autosender)? $autosender:$from,
+   'autotext' => isset($automessage)? $automessage:'',
+   'category' => isset($category)? $category:0,
+   'keywords' => isset($keywords)? $keywords:'',
+   'gid' => isset($gotoid)? $gotoid:$modx->documentIdentifier,
+   'noemail' => isset($noemail)? ($noemail):false,
+   'saveform' => isset($saveform)? ($saveform? true:false):true,
+   'tpl' => isset($tpl)? $tpl:'',
+   'report' => isset($report)? $report:'',
+   'allowhtml' => isset($allowhtml)? $allowhtml:0,
+   //Added by JJ
+   'replyto' => isset($replyto)? $replyto:'',
+   'language' => isset($language)? $language:$modx->config['manager_language'],
+   'thankyou' => isset($thankyou)? $thankyou:'',
+   'isDebug' => isset($debug)? $debug:0,
+   'reportAbuse' => isset($reportAbuse)? $reportAbuse:false,
+   'disclaimer' => isset($disclaimer)?$disclaimer:'',
+   'sendAsHtml' => isset($sendAsHtml)?$sendAsHtml:false,
+   'sendAsText' => isset($sendAsText)?$sendAsText:false,
+   'sessionVars' => isset($sessionVars)?$sessionVars:false,
+   'postOverides' => isset($postOverides)?$postOverides:0,
+   'eFormOnBeforeMailSent' => isset($eFormOnBeforeMailSent)?$eFormOnBeforeMailSent:'',
+   'eFormOnMailSent' => isset($eFormOnMailSent)?$eFormOnMailSent:'',
+   'eFormOnValidate' => isset($eFormOnValidate)?$eFormOnValidate:'',
+   'eFormOnBeforeFormMerge' => isset($eFormOnBeforeFormMerge)?$eFormOnBeforeFormMerge:'',
+   'eFormOnBeforeFormParse' => isset($eFormOnBeforeFormParse)?$eFormOnBeforeFormParse:'',
+   'cssStyle' => isset($cssStyle)?$cssStyle:'',
+   'jScript' => isset($jScript)?$jScript:'',
+   'submitLimit' => (isset($submitLimit) &&  is_numeric($submitLimit))?$submitLimit*60:0,
+   'protectSubmit' => isset($protectSubmit)?$protectSubmit:1,
+   'requiredClass' => isset($requiredClass)?$requiredClass:"required",
+   'invalidClass' => isset($invalidClass)?$invalidClass:"invalid",
+   'runSnippet' => ( isset($runSnippet) && !is_numeric($runSnippet) )?$runSnippet:'',
+   'autoSenderName' => isset($autoSenderName)?$autoSenderName:'',
+   'version' => isset($version) ? $version : '1.4.2'
+);
+
+// pixelchutes PHx workaround
+foreach( $params as $key=>$val ) $params[ $key ] = str_replace( array('((','))'), array('[+','+]'), $val );
 
 function eForm($modx,$params) {
 global $_lang;
@@ -54,27 +131,23 @@ $_dfnMaxlength = 6;
 
 	extract($params,EXTR_SKIP); // extract params into variables
 
-	$fileVersion = '1.4.4';
-	$version = isset($version)?$version:'prior to 1.4.2';
-
 	#include default language file
 	include_once($snipPath."lang/english.inc.php");
 
 	#include other language file if set.
-	$form_language = isset($language)?$language:$modx->config['manager_language'];
+	$form_language = isset($language) ? $language : $modx->config['manager_language'];
 	if($form_language!="english" && $form_language!='') {
-		if(file_exists($snipPath ."lang/".$form_language.".inc.php"))
-			include_once $snipPath ."lang/".$form_language.".inc.php";
+		if(file_exists("{$snipPath}lang/{$form_language}.inc.php"))
+			include_once("{$snipPath}lang/{$form_language}.inc.php");
 		else
-			if( $isDebug ) $debugText .= "<strong>Language file '$form_language.inc.php' not found!</strong><br />"; //always in english!
+			if( $isDebug ) $debugText .= "<strong>Language file '{$form_language}.inc.php' not found!</strong><br />"; //always in english!
 	}
 
+	//check version differences
+	if(version_compare($version, '1.4.4.7', '<')) return $_lang['ef_version_error'];
+	
 	# add debug warning - moved again...
 	if( $isDebug ) $debugText .= $_lang['ef_debug_warning'];
-
-	//check version differences
-	if( $version != $fileVersion )
-		return $_lang['ef_version_error'];
 
 	# check for valid form key - moved to below fetching form template to allow id coming from form template
 
@@ -87,11 +160,11 @@ $_dfnMaxlength = 6;
 	if($tpl==$modx->documentIdentifier) return $_lang['ef_is_own_id']."'$tpl'";
 
 	//required
-	if( $tmp=efLoadTemplate($tpl) ) $tpl=$tmp; else return $_lang['ef_no_doc'] . " '$tpl'";
+	if(empty($tpl)) $tpl = get_default_tpl();
+	elseif( $tmp=efLoadTemplate($tpl) ) $tpl = $tmp; else return $_lang['ef_no_doc'] . " '$tpl'";
 
 	# check for valid form key
-	if ($formid=="") return $_lang['ef_error_formid'];
-
+	if ($formid=='') $formid = 'eform';
 
 	// try to get formid from <form> tag id
 	preg_match('/<form[^>]*?id=[\'"]([^\'"]*?)[\'"]/i',$tpl,$matches);
@@ -102,14 +175,18 @@ $_dfnMaxlength = 6;
 			$tpl = str_replace('</form>',"<input type=\"hidden\" name=\"formid\" value=\"$form_id\" /></form>",$tpl);
 	}
 
-	$validFormId = ($formid==$_POST['formid'])?1:0;
+	$validFormId = (isset($_POST['formid']) && $formid==$_POST['formid'])?1:0;
 
 	# check if postback mode
 	$efPostBack = ($validFormId && count($_POST)>0)? true:false; //retain old variable?
 
 
 	if($efPostBack){
-		$report = (($tmp=efLoadTemplate($report))!==false)?$tmp:$_lang['ef_no_doc'] . " '$report'";
+		if(empty($report)) $report = get_default_report();
+		else
+		{
+			$report = (($tmp=efLoadTemplate($report))!==false)?$tmp:$_lang['ef_no_doc'] . " '$report'";
+		}
 		if($thankyou) $thankyou = (($tmp=efLoadTemplate($thankyou))!==false )?$tmp:$_lang['ef_no_doc'] . " '$thankyou'";
 		if($autotext) $autotext = (($tmp=efLoadTemplate($autotext))!==false )?$tmp:$_lang['ef_no_doc'] . " '$autotext'";
 	}
@@ -188,21 +265,11 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 		}
 
         # sanitize the values with slashes stripped to avoid remote execution of Snippets
-        modx_sanitize_gpc($fields, array (
-            '@<script[^>]*?>.*?</script>@si',
-            '@&#(\d+);@e',
-            '@\[\~(.*?)\~\]@si',
-            '@\[\((.*?)\)\]@si',
-            '@{{(.*?)}}@si',
-            '@\[\+(.*?)\+\]@si',
-            '@\[\*(.*?)\*\]@si',
-            '@\[\[(.*?)\]\]@si',
-            '@\[!(.*?)!\]@si'
-        ));
+        modx_sanitize_gpc($fields);
 
 		# validate fields
 		foreach($fields as $name => $value) {
-			$fld = $formats[$name];
+			$fld = isset($formats[$name]) ? $formats[$name] : '';
 			if ($fld) {
 				$desc		= $fld[1];
 				$datatype 	= $fld[2];
@@ -282,7 +349,7 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 		//New in 1.4.2 - classes are set in labels and form elements for invalid fields
 		foreach($rClass as $n => $class){
 			$fields[$n.'_class'] = $fields[$n.'_class']?$fields[$n.'_class'].' '. $class:$class;
-			$fields[$n.'_vClass'] = $fields[$n.'_vClass']?$fields[$n.'_vClass'].' '. $class:$class;
+			$fields[$n.'_vClass'] = isset($fields[$n.'_vClass']) ? $fields[$n.'_vClass'].' '. $class:$class;
 			//work around for checkboxes
 			if( isset($formats[$n][6] )){ //have separate id's for check and option tags - set classes as well
 				foreach( explode(',',$formats[$n][6]) as $id)
@@ -308,7 +375,10 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 			if(!strstr($tpl,'[+validationmessage+]'))
 				$modx->setPlaceholder('validationmessage',str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']));
 			else
+			{
+				if(!isset($fields['validationmessage'])) $fields['validationmessage'] = '';
 				$fields['validationmessage'] .= str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']);
+			}
 	} else {
 
 			# format report fields
@@ -353,7 +423,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				}
 			}
 			# set postdate
-			$fields['postdate'] = strftime("%d-%b-%Y %H:%M:%S",time());
+			$fields['postdate'] = strftime($modx->toDateFormat(null, 'formatOnly') . " %H:%M:%S",time());
 
 			//check against email injection and replace suspect content
 			if( hasMailHeaders($fields) ){
@@ -365,9 +435,9 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					foreach($fields as $key => $value)
 						$body .= "<tr><td>$key</td><td><pre>$value</pre></td></tr>";
 					$body .="</table>";
-					include_once "manager/includes/controls/class.phpmailer.php";
+					include_once "manager/includes/controls/modxmailer.inc.php";
 				# send abuse alert
-					$mail = new PHPMailer();
+					$mail = new MODxMailer();
 					$mail->IsMail();
 					$mail->IsHTML($isHtml);
 					$mail->From		= $modx->config['emailsender'];
@@ -409,11 +479,18 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 			if( $protectSubmit ){
 				$hash = '';
 				# create a hash of key data
-				if(!is_numeric($protectSubmit)){ //supplied field names
+				if(!is_numeric($protectSubmit))
+				{ //supplied field names
 					$protectSubmit = (strpos($protectSubmit,','))? explode(',',$protectSubmit):array($protectSubmit);
 					foreach($protectSubmit as $fld) $hash .= isset($fields[$fld]) ? $fields[$fld] : '';
-				}else //all required fields
-					foreach($formats as $fld) $hash .= ($fld[3]==1) ? $fields[$fld[0]] : '';
+				}
+				else //all required fields
+				{
+					foreach($formats as $fld)
+					{
+						$hash .= ($fld[3]==1) ? $fields[$fld[0]] : '';
+					}
+				}
 				if($hash) $hash = md5($hash);
 
 				if( $isDebug ) $debugText .= "<strong>SESSION HASH</strong>:".$_SESSION[$formid.'_hash']."<br />"."<b>FORM HASH</b>:".$hash."<br />";
@@ -424,7 +501,14 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 			}
 
 			$fields['disclaimer'] = ($disclaimer)? formMerge($disclaimer,$fields):"";
-			$subject	= isset($fields['subject'])?$fields['subject']:(($subject)? formMerge($subject,$fields):$category);
+			if(isset($fields['subject']))
+			{
+				$subject = $fields['subject'];
+			}
+			else
+			{
+				$subject = ($subject) ? formMerge($subject,$fields) : "from {$fromname}";
+			}
 			$fields['subject'] = $subject; //make subject available in report & thank you page
 			$report	= ($report)? formMerge($report,$fields):"";
 			$keywords	= ($keywords)? formMerge($keywords,$fields):"";
@@ -451,7 +535,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					$replyto = ( $fields[$replyto] && strstr($fields[$replyto],'@') )?$fields[$replyto]:$from;
 
 				# include PHP Mailer
-				include_once "manager/includes/controls/class.phpmailer.php";
+				include_once "manager/includes/controls/modxmailer.inc.php";
 
 				# send form
 				//defaults to html so only test sendasText
@@ -459,9 +543,8 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 
 				if(!$noemail) {
 					if($sendirect) $to = $fields['email'];
-					$mail = new PHPMailer();
+					$mail = new MODxMailer();
 					$mail->IsMail();
-					$mail->CharSet = $modx->config['modx_charset'];
 					$mail->IsHTML($isHtml);
 					$mail->From		= $from;
 					$mail->FromName	= $fromname;
@@ -477,9 +560,8 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 
 				# send user a copy of the report
 				if($ccsender && $fields['email']) {
-					$mail = new PHPMailer();
+					$mail = new MODxMailer();
 					$mail->IsMail();
-					$mail->CharSet = $modx->config['modx_charset'];
 					$mail->IsHTML($isHtml);
 					$mail->From		= $from;
 					$mail->FromName	= $fromname;
@@ -495,9 +577,8 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				$isHtml = ($sendAsText==1 || strstr($sendAsText,'autotext'))?false:true;
 				if ($autotext && $fields['email']!='') {
 					$autotext = formMerge($autotext,$fields);
-					$mail = new PHPMailer();
+					$mail = new MODxMailer();
 					$mail->IsMail();
-					$mail->CharSet = $modx->config['modx_charset'];
 					$mail->IsHTML($isHtml);
 					$mail->From		= ($autosender)? $autosender:$from;
 					$mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
@@ -512,9 +593,8 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				# send mobile email
 				if ($mobile && $mobiletext) {
 					$mobiletext = formMerge($mobiletext,$fields);
-					$mail = new PHPMailer();
+					$mail = new MODxMailer();
 					$mail->IsMail();
-					$mail->CharSet = $modx->config['modx_charset'];
 					$mail->IsHTML($isHtml);
 					$mail->From		= $from;
 					$mail->FromName	= $fromname;
@@ -587,7 +667,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 	// set vericode
 	if($vericode) {
 		$_SESSION['eForm.VeriCode'] = $fields['vericode'] = substr(uniqid(''),-5);
-		$fields['verimageurl'] = $modx->config['base_url'].'manager/includes/veriword.php?rand='.rand();
+		$fields['verimageurl'] = $modx->config['base_url'].'action.php?include=manager/includes/veriword.php&rand='.mt_rand();
 	}
 
 	# get SESSION data - thanks to sottwell
@@ -620,31 +700,31 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 # Form Merge
 function formMerge($docText, $docFields, $vClasses='') {
 	global $formats;
-	$lastitems;
+	global $lastitems;
 	if(!$docText) return '';
 
 	preg_match_all('~\[\+(.*?)\+\]~', $docText, $matches);
 	for($i=0;$i<count($matches[1]);$i++) {
 		$name = $matches[1][$i];
-		list($listName,$listValue) = explode(":",$name);
+		if(strpos($name,':')!==false) list($listName,$listValue) = explode(':',$name);
+		else $listName = $name;
 		$value = isset($docFields[$listName])? $docFields[$listName]:'';
 
 // support for multi checkbox, radio and select - Djamoer
 		if(is_array($value)) $value=implode(', ', $value);
-
-		$fld = $formats[$name];
-		if (!isset($fld)){
+		$fld = (isset($formats[$name])) ? $formats[$name] : '';
+		if (empty($fld)){
 			// listbox, checkbox, radio select
 			$colonPost = strpos($name, ':');
 			$listName = substr($name, 0, $colonPost);
 			$listValue = substr($name, $colonPost+1);
-			$datatype = $formats[$listName][2];
-			if(is_array($docFields[$listName])) {
+			$datatype = isset($formats[$listName][2]) ? $formats[$listName][2] : '';
+			if(isset($docFields[$listName]) && is_array($docFields[$listName])) {
 				if($datatype=="listbox" && in_array($listValue, $docFields[$listName])) $docText = str_replace("[+$listName:$listValue+]","selected='selected'",$docText);
 				if(($datatype=="checkbox"||$datatype=="radio") && in_array($listValue, $docFields[$listName])) $docText = str_replace("[+$listName:$listValue+]","checked='checked'",$docText);
 			}
 			else {
-				if($datatype=="listbox" && $listValue==$docFields[$listName]) $docText = str_replace("[+$listName:$listValue+]","selected='selected'",$docText);
+				if($datatype=="listbox" && isset($docFields[$listName]) && $listValue==$docFields[$listName]) $docText = str_replace("[+$listName:$listValue+]","selected='selected'",$docText);
 				if(($datatype=="checkbox"||$datatype=="radio") && $listValue==$docFields[$listName]) $docText = str_replace("[+$listName:$listValue+]","checked='checked'",$docText);
 			}
 		}
@@ -801,7 +881,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 				$tpl = str_replace($select,$newSelect,$tpl);
 				//add valid values to formats... (extension to $formats)
 
-				if($formats[$name] && !$formats[$name][5]){
+				if($formats[$name] && !isset($formats[$name][5])){
 					$formats[$name][4] = $_lang['ef_failed_default'];
 					//convert commas in values to something else !
 					$formats[$name][5]= "#LIST " . implode(",",str_replace(',','&#44;',$validValues));
@@ -811,7 +891,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 			case "textarea":
 				// add support for maxlength attribute for textarea
 				// attribute get's stripped form form //
-				if( $tagAttributes['maxlength'] ){
+				if( isset($tagAttributes['maxlength']) ){
 					$formats[$name][$_dfnMaxlength] == $tagAttributes['maxlength'];
 					unset($tagAttributes['maxlength']);
 				}
@@ -827,7 +907,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 				$newTag = buildTagPlaceholder($type,$tagAttributes,$name);
 				  $fieldType = stripTagQuotes($tagAttributes['type']);
 					//validate on maxlength...
-					if( $fieldType=='text' && $tagAttributes['maxlength'] ){
+					if( $fieldType=='text' && isset($tagAttributes['maxlength']) && $tagAttributes['maxlength'] ){
 						$formats[$name][$_dfnMaxlength] == $tagAttributes['maxlength'];
 					}
 					if($formats[$name] && !$formats[$name][2]) $formats[$name][2]=($fieldType=='text')?"string":$fieldType;
@@ -848,7 +928,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 						$formats[$name][6] .= ( isset($formats[$name][6])?",":"").stripTagQuotes($tagAttributes['id']);
 					}elseif(empty($fields[$name])){ //plain old text input field
 						//retain default value set in form template if not already set in code
-						$fields[$name] = stripTagQuotes($tagAttributes['value']);
+						$fields[$name] = (isset($tagAttributes['value'])) ? stripTagQuotes($tagAttributes['value']) : '';
 					}
 
 				$tpl = str_replace($fieldTags[$i],$newTag,$tpl);
@@ -864,10 +944,11 @@ function stripTagQuotes($value){
 }
 
 function buildTagPlaceholder($tag,$attributes,$name){
-	$type = stripTagQuotes($attributes["type"]);
-	$quotedValue = $attributes['value'];
+	$type = (isset($attributes["type"])) ? stripTagQuotes($attributes["type"]) : '';
+	$quotedValue = (isset($attributes['value'])) ? $attributes['value'] : '';
 	$val = stripTagQuotes($quotedValue);
 
+	$t = '';
 	foreach ($attributes as $k => $v)
 			$t .= ($k!='value' && $k!='checked' && $k!='selected')?" $k=$v":"";
 
@@ -905,7 +986,7 @@ function attr2array($tag){
 	preg_match_all($expr,$tag,$matches);
 	foreach($matches[1] as $i => $key)
 		$rt[$key]= $matches[2][$i];
-	return $rt;
+	if(isset($rt)) return $rt;
 }
 
 function validateField($value,$fld,&$vMsg,$isDebug=false){
@@ -1070,15 +1151,29 @@ function filterEformValue($value,$param){
 
 	function efLoadTemplate($key){
 		global $modx;
-		if( strlen($key)>50 ) return $key;
-		$tpl = false;
-		if( is_numeric($key) ) { //get from document id
+		
+		$tpl = '';
+		if(substr($key, 0, 5) == '@FILE')
+		{
+			$path = substr($tpl, 6);
+			$path = trim($path);
+			$path = ltrim($path,'/');
+			$path = MODX_BASE_PATH . $path;
+			$tpl = file_get_contents($path);
+		}
+		elseif(substr($key, 0, 5) == '@CODE')
+		{
+			$tpl = substr($key, 6);
+		}
+		elseif( is_numeric($key) )
+		{ //get from document id
 			//try unpublished docs first
 			$tpl = ( $doc=$modx->getDocument($key,'content',0) )? $doc['content'] :false;
 			if(!$tpl )
 				$tpl = ( $doc=$modx->getDocument($key,'content',1) )? $doc['content'] : false;
-
-		}elseif( $key ){
+		}
+		elseif($key)
+		{
 			$tpl = ( $doc=$modx->getChunk($key) )? $doc : false;
 			//try snippet if chunk is not found
             if(!$tpl) $tpl = ( $doc=$modx->runSnippet($key) )? $doc : false;
@@ -1136,4 +1231,28 @@ function hasMailHeaders( &$fields ){
 	return ($injectionAttempt)?true:false;
 }
 
-?>
+function get_default_tpl()
+{
+	$tpl = <<< EOT
+	<p class="error">[+validationmessage+]</p>
+	<form method="post" action="[~[*id*]~]">
+	<input name="formid" type="hidden" value="eform" />
+	Name : <input name="name" class="text" type="text" size="30" eform="Your Name::1:" /><br />
+	Email : <input name="email" class="text" type="text" size="30" eform="Email Address:email:1" /><br />
+	Message : <textarea name="message" rows="4" cols="20" eform="Message:textarea:1"></textarea><br />
+	<input type="submit" name="contact" class="button" value="send" />
+	</form>
+EOT;
+	return $tpl;
+}
+
+function get_default_report()
+{
+	$tpl = <<< EOT
+Name : [+name+]
+Email :  [+email+]
+Message  :
+[+message+]
+EOT;
+	return $tpl;
+}

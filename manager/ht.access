@@ -3,7 +3,7 @@
 
 RewriteEngine Off
 
-<IfModule mod_security.c>
+#<IfModule mod_security.c>
 # Turn the filtering engine Off
-SecFilterEngine Off
-</IfModule>
+#SecFilterEngine Off
+#</IfModule>

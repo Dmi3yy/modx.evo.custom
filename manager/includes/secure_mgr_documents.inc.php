@@ -10,18 +10,22 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
  *
  */
 
-function secureMgrDocument($docid='') {
+function secureMgrDocument($docid='')
+{
 	global $modx;
-		
-	$modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privatemgr = 0 WHERE ".($docid>0 ? "id='$docid'":"privatemgr = 1"));
+	$tbl_site_content       = $modx->getFullTableName('site_content');
+	$tbl_document_groups    = $modx->getFullTableName('document_groups');
+	$tbl_membergroup_access = $modx->getFullTableName('membergroup_access');
+	
+	$modx->db->query("UPDATE {$tbl_site_content} SET privatemgr = 0 WHERE ".($docid>0 ? "id='$docid'":"privatemgr = 1"));
 	$sql =  "SELECT DISTINCT sc.id 
-			 FROM ".$modx->getFullTableName("site_content")." sc
-			 LEFT JOIN ".$modx->getFullTableName("document_groups")." dg ON dg.document = sc.id
-			 LEFT JOIN ".$modx->getFullTableName("membergroup_access")." mga ON mga.documentgroup = dg.document_group
+			 FROM {$tbl_site_content} sc
+			 LEFT JOIN {$tbl_document_groups} dg ON dg.document = sc.id
+			 LEFT JOIN {$tbl_membergroup_access} mga ON mga.documentgroup = dg.document_group
 			 WHERE ".($docid>0 ? " sc.id='$docid' AND ":"")."mga.id>0";
 	$ids = $modx->db->getColumn("id",$sql);
 	if(count($ids)>0) {
-		$modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");	
+		$modx->db->query("UPDATE {$tbl_site_content} SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");	
 	}
 }
 ?>

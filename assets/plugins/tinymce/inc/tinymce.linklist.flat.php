@@ -1,11 +1,9 @@
 <?php
 define('IN_MANAGER_MODE', true);
 define('MODX_API_MODE', true);
-$manage_path = '../../../../manager/';
-include($manage_path . 'includes/config.inc.php');
-include($manage_path . 'includes/document.parser.class.inc.php');
-startCMSSession();
-$modx = new DocumentParser;
+$base_path = realpath('../../../../') . '/';
+include_once("{$base_path}includes/index.php");
+$modx->db->connect();
 
 /* only display if manager user is logged in */
 if ($modx->getLoginUserType() !== 'manager') {
@@ -32,7 +30,7 @@ echo $output;
 
 
 function getAllPages($id=0, $sort='menuindex', $dir='ASC', $fields='pagetitle, id, menutitle') {
-	global $modx, $table_prefix;		
+	global $modx, $table_prefix;
     
     $tblsc = $modx->getFullTableName("site_content");
     $tbldg = $modx->getFullTableName("document_groups");
@@ -40,8 +38,6 @@ function getAllPages($id=0, $sort='menuindex', $dir='ASC', $fields='pagetitle, i
     // modify field names to use sc. table reference
     $fields = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$fields)));
     $sort = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$sort)));
-
-    @$modx->db->query("{$GLOBALS['database_connection_method']} {$GLOBALS['database_connection_charset']}");
 
     $sql = "SELECT DISTINCT $fields FROM $tblsc sc
       LEFT JOIN $tbldg dg on dg.document = sc.id
@@ -58,4 +54,4 @@ function getAllPages($id=0, $sort='menuindex', $dir='ASC', $fields='pagetitle, i
 
     return $resourceArray;
 }
-?>
+

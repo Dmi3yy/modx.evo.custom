@@ -331,27 +331,37 @@ class MakeTable {
 	 * the $fieldsArray where the values represent the alt heading content
 	 * for each column.
 	 */
-	function create($fieldsArray, $fieldHeadersArray=array(),$linkpage="") {
-	global $_lang;
-		if (is_array($fieldsArray)) {
+	function create($fieldsArray, $fieldHeadersArray=array(),$linkpage="")
+	{
+		global $_lang;
+		if (is_array($fieldsArray))
+		{
 			$i= 0;
-			foreach ($fieldsArray as $fieldName => $fieldValue) {
+			foreach ($fieldsArray as $fieldName => $fieldValue)
+			{
 				$table .= "\t<tr".$this->determineRowClass($i).">\n";
 				$currentActionFieldValue= $fieldValue[$this->actionField];
-				if (is_array($this->selectedValues)) {
+				if (is_array($this->selectedValues))
+				{
 					$isChecked= array_search($currentActionFieldValue, $this->selectedValues)===false? 0 : 1;
-				} else {
+				}
+				else
+				{
 					$isChecked= false;
 				}
 				$table .= $this->addFormField($currentActionFieldValue, $isChecked);
 				$colPosition= 0;
-				foreach ($fieldValue as $key => $value) {
-					if (!in_array($key, $this->excludeFields)) {
+				foreach ($fieldValue as $key => $value)
+				{
+					if (!in_array($key, $this->excludeFields))
+					{
 						$table .= "\t\t<td".$this->getCellAction($currentActionFieldValue).">";
 						$table .= $this->createCellText($currentActionFieldValue, $value);
 						$table .= "</td>\n";
-						if ($i == 0) {
-							if (empty ($header) && $this->formElementType) {
+						if ($i == 0)
+						{
+							if (empty ($header) && $this->formElementType)
+							{
 								$header .= "\t\t<th style=\"width:32px\" ".($this->thClass ? 'class="'.$this->thClass.'"' : '').">". ($this->allOption ? '<a href="javascript:clickAll()">all</a>' : '')."</th>\n";
 							}
 							$headerText= array_key_exists($key, $fieldHeadersArray)? $fieldHeadersArray[$key]: $key;
@@ -367,7 +377,8 @@ class MakeTable {
 			if ($this->formElementType) {
 				$table= "\n".'<form id="'.$this->formName.'" name="'.$this->formName.'" action="'.$this->formAction.'" method="POST">'.$table;
 			}
-			if (strlen($this->pageNav) > 1) {//changed to display the pagination if exists.
+			if (strlen($this->pageNav) > 1)
+			{//changed to display the pagination if exists.
 				/* commented this part because of cookie
 				$table .= '<div id="max-display-records" ><select style="display:inline" onchange="javascript:updatePageSize(this[this.selectedIndex].value);">';
 				$pageSizes= array (10, 25, 50, 100, 250);
@@ -379,11 +390,12 @@ class MakeTable {
 				
 				$table .= '</select>'.$_lang["pagination_table_perpage"].'</div>';
 				*/
-				$table .= '<div id="pagination" class="paginate">'.$_lang["pagination_table_gotopage"].'<ul>'.$this->pageNav.'</ul></div>';
+				$pageNavBlock = '<div id="pagination" class="paginate">'.$_lang["pagination_table_gotopage"].'<ul>'.$this->pageNav.'</ul></div>';
+				$table = $pageNavBlock . $table . $pageNavBlock;
 				//$table .= '<script language="javascript">function updatePageSize(size){window.location = \''.$this->prepareLink($linkpage).'pageSize=\'+size;}</script>';
-
 			}
-			if ($this->allOption) {
+			if ($this->allOption)
+			{
 				$table .= '
 <script language="javascript">
 	toggled = 0;
@@ -398,8 +410,10 @@ class MakeTable {
 	}
 </script>';
 			}
-			if ($this->formElementType) {
-				if ($this->extra) {
+			if ($this->formElementType)
+			{
+				if ($this->extra)
+				{
 					$table.= "\n".$this->extra."\n";
 				}
 				$table.= "\n".'</form>'."\n";

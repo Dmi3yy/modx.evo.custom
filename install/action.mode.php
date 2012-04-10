@@ -1,23 +1,6 @@
 <?php
-// Determine upgradeability
-$upgradeable = 0;
-if (file_exists("../manager/includes/config.inc.php")) {
-    // Include the file so we can test its validity
-    include "../manager/includes/config.inc.php";
-    // We need to have all connection settings - tho prefix may be empty so we have to ignore it
-    if ($dbase) {
-        if (!@ $conn = mysql_connect($database_server, $database_user, $database_password)) {
-            $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
-        }
-        elseif (!@ mysql_select_db(trim($dbase, '`'), $conn)) {
-            $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
-        } else {
-            $upgradeable = 1;
-        }
-    } else {
-        $upgradeable= 2;
-    }
-}
+$upgradeable = get_upgradeable_status();
+
 ?>
 <form name="install" id="install_form" action="index.php?action=connection" method="post">
 
@@ -39,6 +22,7 @@ if (file_exists("../manager/includes/config.inc.php")) {
 			<p><strong><?php echo $_lang['installation_install_new_note']?></strong></p>
 		</div>
 	</div>
+	<div style="margin:0;padding:0;<?php if($upgradeable !== 1 && $upgradeable !== 2) echo 'display:none;'; ?>">
 	<hr />
 	<div>
 		<div class="installImg"><img src="img/install_upg.png" alt="upgrade existing install" /></div>
@@ -57,9 +41,59 @@ if (file_exists("../manager/includes/config.inc.php")) {
 			<p><?php echo $_lang['installation_upgrade_advanced_note']?></p>
 		</div>
 	</div>
+	</div>
 
     <p class="buttonlinks">
         <a href="javascript:document.getElementById('install_form').action='index.php?action=language';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
         <a style="display:inline;" href="javascript:if(document.getElementById('installmode2').checked){document.getElementById('install_form').action='index.php?action=options';}document.getElementById('install_form').submit();" title="<?php echo $_lang['btnnext_value']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
     </p>
 </form>
+
+<?php
+function get_upgradeable_status()
+{
+	if (file_exists('../manager/includes/config.inc.php'))
+	{
+		// Include the file so we can test its validity
+		include('../manager/includes/config.inc.php');
+		// We need to have all connection settings - tho prefix may be empty so we have to ignore it
+		if ((!isset($lastInstallTime) || empty($lastInstallTime)) && !isset($database_type))
+		{
+			return 0;
+		}
+		elseif($dbase)
+		{
+			if (!@ $conn = mysql_connect($database_server, $database_user, $database_password))
+			{
+				if(isset($_POST['installmode']) && $_POST['installmode'] == 'new')
+				{
+					return 0;
+				}
+				else
+				{
+					return 2;
+				}
+			}
+			elseif (!@ mysql_select_db(trim($dbase, '`'), $conn))
+			{
+				if(isset($_POST['installmode']) && $_POST['installmode'] == 'new')
+				{
+					return 0;
+				}
+				else
+				{
+					return 2;
+				}
+			}
+			else
+			{
+				return 1;
+			}
+		}
+		else
+		{
+			return 2;
+		}
+	}
+	else return 0;
+}

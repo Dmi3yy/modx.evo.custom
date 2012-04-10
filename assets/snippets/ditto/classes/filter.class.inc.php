@@ -8,30 +8,67 @@
 */
 
 class filter {
-	var $array_key, $filtertype, $filterValue, $filterArgs;
+	var $array_key, $filtertype, $filterValue, $flip_mode, $filterArgs;
 
 // ---------------------------------------------------
 // Function: execute
 // Filter documents via either a custom filter or basic filter
 // ---------------------------------------------------
-	function execute($resource, $filter) {
+	function execute($resource, $filter)
+	{
 		global $modx;
-		foreach ($filter["basic"] AS $currentFilter) {
-			if (is_array($currentFilter) && count($currentFilter) > 0) {
-				$this->array_key = $currentFilter["source"];
-				if(substr($currentFilter["value"],0,5) != "@EVAL") {
-					$this->filterValue = $currentFilter["value"];
-				} else {
-					$this->filterValue = eval(substr($currentFilter["value"],5));
+		foreach ($filter['basic'] AS $currentFilter)
+		{
+			if (is_array($currentFilter) && count($currentFilter) > 0)
+			{
+				$this->array_key = $currentFilter['source'];
+				
+				$this->flip_mode  = (substr($currentFilter['mode'],0,1)==='!' && substr($currentFilter['mode'],0,2)!=='!!') ? 1 : 0;
+				if($this->flip_mode) $currentFilter['mode'] = substr($currentFilter['mode'],1);
+				
+				switch($currentFilter['value'])
+				{
+					case '>':
+					case '>=':
+					case '<':
+					case '<=':
+					case '!=':
+					case '<>':
+					case '==':
+					case '=~':
+					case '!~':
+						$t = $currentFilter['value'];
+						$currentFilter['value'] = $currentFilter['mode'];
+						$currentFilter['mode'] = $t;
+						unset($t);
+						break;
 				}
-				if(strpos($this->filterValue,'[+') !== false) {
+				
+				if(substr($currentFilter['value'],0,5) === '@EVAL')
+				{
+					$eval_code = trim(substr($currentFilter['value'],6));
+					$eval_code = trim($eval_code,';') . ';';
+					if(strpos($eval_code,'return')===false)
+					{
+						$eval_code = 'return ' . $eval_code;
+					}
+					$this->filterValue = eval($eval_code);
+				}
+				else
+				{
+					$this->filterValue = $currentFilter['value'];
+				}
+				if(strpos($this->filterValue,'[+') !== false)
+				{
 					$this->filterValue = $modx->mergePlaceholderContent($this->filterValue);
 				}
-				$this->filtertype = (isset ($currentFilter["mode"])) ? $currentFilter["mode"] : 1;
-				$resource = array_filter($resource, array($this, "basicFilter"));
+				$this->filtertype = (isset($currentFilter['mode'])) ? $currentFilter['mode'] : 1;
+				
+				$resource = array_filter($resource, array($this, 'basicFilter'));
 			}
 		}
-		foreach ($filter["custom"] AS $currentFilter) {
+		foreach ($filter['custom'] AS $currentFilter)
+		{
 			$resource = array_filter($resource, $currentFilter);
 		}
 		return $resource;
@@ -42,66 +79,92 @@ class filter {
 // Do basic comparison filtering
 // ---------------------------------------------------
 	
-	function basicFilter ($value) {
+	function basicFilter ($options) {
 			$unset = 1;
 			switch ($this->filtertype) {
-				case "!=" :
+				case '!=' :
+				case '<>' :
+				case 'ne' :
 				case 1 :
-					if (!isset ($value[$this->array_key]) || $value[$this->array_key] != $this->filterValue)
+					if (!isset ($options[$this->array_key]) || $options[$this->array_key] != $this->filterValue)
 						$unset = 0;
 					break;
-				case "==" :
+				case '==' :
+				case 'eq' :
 				case 2 :
-					if ($value[$this->array_key] == $this->filterValue)
+					if ($options[$this->array_key] == $this->filterValue)
 						$unset = 0;
 					break;
-				case "<" :
+				case '<' :
+				case 'lt' :
 				case 3 :
-					if ($value[$this->array_key] < $this->filterValue)
+					if ($options[$this->array_key] < $this->filterValue)
 						$unset = 0;
 					break;
-				case ">" :
+				case '>' :
+				case 'gt' :
 				case 4 :
-					if ($value[$this->array_key] > $this->filterValue)
+					if ($options[$this->array_key] > $this->filterValue)
 						$unset = 0;
 					break;
-				case "<=" :
 				case 5 :
-					if (!($value[$this->array_key] < $this->filterValue))
+					if (!($options[$this->array_key] < $this->filterValue))
 						$unset = 0;
 					break;
-				case ">=" :
 				case 6 :
-					if (!($value[$this->array_key] > $this->filterValue))
+					if (!($options[$this->array_key] > $this->filterValue))
+						$unset = 0;
+					break;
+				case '<=' :
+				case 'lte' :
+				case 'le' :
+					if ($options[$this->array_key] <= $this->filterValue)
+						$unset = 0;
+					break;
+				case '>=' :
+				case 'gte' :
+				case 'ge' :
+					if ($options[$this->array_key] >= $this->filterValue)
 						$unset = 0;
 					break;
 					
 				// Cases 7 & 8 created by MODx Testing Team Member ZAP
+				case 'find':
+				case 'search':
+				case 'strpos':
+				case '=~':
 				case 7 :
-					if (strpos($value[$this->array_key], $this->filterValue)===FALSE)
+					if (strpos($options[$this->array_key], $this->filterValue)===FALSE)
 						$unset = 0;
 					break;
+				case '!~':
 				case 8 :
-					if (strpos($value[$this->array_key], $this->filterValue)!==FALSE)
+					if (strpos($options[$this->array_key], $this->filterValue)!==FALSE)
 						$unset = 0;
-					break;	
+					break;
 				
 				// Cases 9-11 created by highlander
 				case 9 : // case insenstive version of #7 - exclude records that do not contain the text of the criterion
-					if (strpos(strtolower($value[$this->array_key]), strtolower($this->filterValue))===FALSE)
+					if (strpos(strtolower($options[$this->array_key]), strtolower($this->filterValue))===FALSE)
 						$unset = 0;
 					break;
 				case 10 : // case insenstive version of #8 - exclude records that do contain the text of the criterion
-					if (strpos(strtolower($value[$this->array_key]), strtolower($this->filterValue))!==FALSE)
+					if (strpos(strtolower($options[$this->array_key]), strtolower($this->filterValue))!==FALSE)
 						$unset = 0;
 					break;
 				case 11 : // checks leading character of the field
-					$firstChr = strtoupper(substr($value[$this->array_key], 0, 1));
+					$firstChr = strtoupper(substr($options[$this->array_key], 0, 1));
 					if ($firstChr!=$this->filterValue)
 						$unset = 0;
-					break;				
+					break;
+				case 'regex':
+				case 'preg':
+					if (preg_match($options[$this->array_key], $this->filterValue)!==FALSE)
+						$unset = 0;
+					break;
 		}
-			return $unset;
+		if($this->flip_mode) $unset = ($unset===1) ? 0 : 1;
+		return $unset;
 	}
 	
 }

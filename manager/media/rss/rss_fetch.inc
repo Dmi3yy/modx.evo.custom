@@ -93,7 +93,7 @@ function fetch_rss ($url) {
     // initialize constants
     init();
     
-    if ( !isset($url) ) {
+    if ( !isset($url) || empty($url)) {
         error("fetch_rss called without a url");
         return false;
     }
@@ -359,8 +359,8 @@ function init () {
     }
 
     if ( !defined('MAGPIE_OUTPUT_ENCODING') ) {
-        global $modx_manager_charset;
-        if(empty($modx_manager_charset)) $modx_manager_charset = 'ISO-8859-1';
+    global $modx_manager_charset;
+        if(empty($modx_manager_charset)) $modx_manager_charset = 'utf-8';
         define('MAGPIE_OUTPUT_ENCODING', $modx_manager_charset);
     }
     

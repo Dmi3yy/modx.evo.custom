@@ -85,18 +85,18 @@ echo $cm->render();
 
 	<div id="actions">
 		<ul class="actionButtons">
-			<li><a href="index.php?a=107"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['new_module'] ?></a></li>
+			<li><a href="index.php?a=107"><img src="<?php echo $_style["icons_add"] ?>" /> <?php echo $_lang['new_module'] ?></a></li>
 		</ul>
 	</div>
 
 	<div>
 	<?php
 
-	$sql = "SELECT id,name,description,IF(locked,'Yes','-') as 'locked',IF(disabled,'".$_lang['yes']."','-') as 'disabled',IF(icon<>'',icon,'".$_style['icons_modules']."') as'icon' " .
+	$sql = "SELECT id,name,description,IF(locked,'".$_lang['yes']."','-') as 'locked',IF(disabled,'".$_lang['yes']."','-') as 'disabled',IF(icon<>'',icon,'".$_style['icons_modules']."') as'icon' " .
 			"FROM ".$modx->getFullTableName("site_modules")." ".
 			(!empty($sqlQuery) ? " WHERE (name LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ".
-			"ORDER BY name";
-	$ds = mysql_query($sql);
+			"ORDER BY editedon DESC, name ASC";
+	$ds = $modx->db->query($sql);
 	include_once $base_path."manager/includes/controls/datagrid.class.php";
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_records_found"];

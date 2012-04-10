@@ -79,7 +79,7 @@ class GetUploadProgress {
 <Connector command="GetUploadProgress" resourceType="<?php echo $this->type; ?>">
 	<CurrentFolder path="<?php echo $this->raw_cwd; ?>" url="<?php echo $this->actual_cwd; ?>" />
 	<Progress max="<?php echo $totalBytes; ?>" value="<?php echo $readBytes; ?>" />
-	<RefreshURL url="<?php echo htmlentities($refreshURL); ?>" />
+	<RefreshURL url="<?php echo htmlentities($refreshURL,ENT_QUOTES,'UTF-8' ?>" />
 </Connector>
 		<?php
 		xml_parser_free($parser);

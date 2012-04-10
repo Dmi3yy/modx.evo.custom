@@ -246,12 +246,11 @@ class phpSniff_core
         $regex_irix     = '/(irix)[\s]*([0-9]*)/i';
         $regex_hpux     = '/(hp-ux)[\s]*([0-9]*)/i';
         $regex_aix      = '/aix([0-9]*)/i';
-        $regex_dec      = '/dec|osfl|aletomiterver|ultrix|alphastation/i';
+        $regex_dec      = '/dec|osfl|alphaserver|ultrix|alphastation/i';
         $regex_vms      = '/vax|openvms/i';
         $regex_sco      = '/sco|unix_sv/i';
         $regex_linux    = '/x11|inux/i';
         $regex_bsd      = '/(free)?(bsd)/i';
-        $regex_amiga    = '/amiga[os]?/i';
 
         // look for Windows Box
         if(preg_match_all($regex_windows,$this->_browser_info['ua'],$match))
@@ -275,33 +274,10 @@ class phpSniff_core
             $this->_set_browser('os',strtolower($v));
             $this->_set_browser('platform','win');
         }
-        //  look for amiga OS
-        elseif(preg_match($regex_amiga,$this->_browser_info['ua'],$match))
-        {   $this->_set_browser('platform','amiga');
-            if(stristr($this->_browser_info['ua'],'morphos')) {
-                // checking for MorphOS
-                $this->_set_browser('os','morphos');
-            } elseif(stristr($this->_browser_info['ua'],'mc680x0')) {
-                // checking for MC680x0
-                $this->_set_browser('os','mc680x0');
-            } elseif(stristr($this->_browser_info['ua'],'ppc')) {
-                // checking for PPC
-                $this->_set_browser('os','ppc');
-            } elseif(preg_match('/(AmigaOS [\.1-9]?)/i',$this->_browser_info['ua'],$match)) {
-                // checking for AmigaOS version string
-                $this->_set_browser('os',$match[1]);
-            }
-        }
-        // look for OS2
-        elseif( preg_match($regex_os2,$this->_browser_info['ua']))
-        {   $this->_set_browser('os','os2');
-            $this->_set_browser('platform','os2');
-        }
         // look for mac
         // sets: platform = mac ; os = 68k or ppc
         elseif( preg_match($regex_mac,$this->_browser_info['ua'],$match) )
         {   $this->_set_browser('platform','mac');
-            $os = !empty($match[1]) ? '68k' : '';
             $os = !empty($match[2]) ? 'osx' : $os;
             $os = !empty($match[3]) ? 'ppc' : $os;
             $os = !empty($match[4]) ? 'osx' : $os;
@@ -326,20 +302,10 @@ class phpSniff_core
             $match[2] = (int) $match[2];
             $this->_set_browser('os',$match[1].$match[2]);
         }
-        //  aix sets: platform = *nix ; os = aix|aix1|aix2|aix3|...
-        elseif(preg_match($regex_aix,$this->_browser_info['ua'],$match))
-        {   $this->_set_browser('platform','*nix');
-            $this->_set_browser('os','aix'.$match[1]);
-        }
         //  dec sets: platform = *nix ; os = dec
         elseif(preg_match($regex_dec,$this->_browser_info['ua'],$match))
         {   $this->_set_browser('platform','*nix');
             $this->_set_browser('os','dec');
-        }
-        //  vms sets: platform = *nix ; os = vms
-        elseif(preg_match($regex_vms,$this->_browser_info['ua'],$match))
-        {   $this->_set_browser('platform','*nix');
-            $this->_set_browser('os','vms');
         }
         //  sco sets: platform = *nix ; os = sco
         elseif(preg_match($regex_sco,$this->_browser_info['ua'],$match))

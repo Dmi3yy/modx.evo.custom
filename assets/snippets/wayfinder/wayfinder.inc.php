@@ -90,7 +90,7 @@ class Wayfinder {
 			$docInfo['first'] = $firstItem;
 			$firstItem = 0;
 			//Determine if last item in group
-			if ($counter == ($numSubItems) && $numSubItems > 1) {
+			if ($counter == ($numSubItems)) {
 				$docInfo['last'] = 1;
 			} else {
 				$docInfo['last'] = 0;
@@ -121,7 +121,7 @@ class Wayfinder {
 			}
 			//Get the class names for the wrapper
 			$classNames = $this->setItemClass($wrapperClass);
-			if ($classNames) $useClass = ' class="' . $classNames . '"';
+			$useClass = ($classNames) ? ' class="' . $classNames . '"' : '';
 			$phArray = array($subMenuOutput,$useClass,$classNames);
 			//Process the wrapper
 			$subMenuOutput = str_replace($this->placeHolders['wrapperLevel'],$phArray,$useChunk);
@@ -170,7 +170,7 @@ class Wayfinder {
 		//Setup the new wrapper name and get the class names
         $useSub = $resource['hasChildren'] ? "[+wf.wrapper.{$resource['id']}+]" : "";
         $classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['isfolder'],$resource['type']);
-        if ($classNames) $useClass = ' class="' . $classNames . '"';
+        $useClass = ($classNames) ? $useClass = ' class="' . $classNames . '"' : '';
         //Setup the row id if a prefix is specified
         if ($this->_config['rowIdPrefix']) {
             $useId = ' id="' . $this->_config['rowIdPrefix'] . $resource['id'] . '"';
@@ -373,8 +373,38 @@ class Wayfinder {
 	        // get document groups for current user
 	        if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(",",$docgrp);
 	        // build query
-	        $access = ($modx->isFrontend() ? "sc.privateweb=0" : "1='{$_SESSION['mgrRole']}' OR sc.privatemgr=0").(!$docgrp ? "" : " OR dg.document_group IN ({$docgrp})");
-			$sql = "SELECT DISTINCT {$fields} FROM {$tblsc} sc LEFT JOIN {$tbldg} dg ON dg.document = sc.id WHERE sc.published=1 AND sc.deleted=0 AND ({$access}){$menuWhere} AND sc.id IN (".implode(',',$ids).") GROUP BY sc.id ORDER BY {$sort} {$this->_config['sortOrder']} {$sqlLimit};";
+			if($modx->isFrontend())
+			{
+				if(!$this->_config['showPrivate'])
+				{
+					$access = "sc.privateweb=0";
+				}
+			}
+			else
+			{
+				$access = "1='{$_SESSION['mgrRole']}' OR sc.privatemgr=0";
+			}
+			if($access && $docgrp)
+			{
+				$access = "AND ({$access} OR dg.document_group IN ({$docgrp}))";
+			}
+			elseif($access)
+			{
+				$access = "AND {$access}";
+			}
+			elseif($docgrp)
+			{
+				$access = "AND (sc.privateweb=0 OR dg.document_group IN ({$docgrp}))";
+			}
+			else $access = '';
+			$joind_ids = implode(',',$ids);
+			$sql = "
+				SELECT DISTINCT {$fields} FROM {$tblsc} sc
+					LEFT JOIN {$tbldg} dg ON dg.document = sc.id
+					WHERE sc.published=1 AND sc.deleted=0 {$access} {$menuWhere} AND sc.id IN ({$joind_ids})
+					GROUP BY sc.id
+					ORDER BY {$sort} {$this->_config['sortOrder']} {$sqlLimit};
+				";
 			//run the query
 			$result = $modx->dbQuery($sql);
 	        $resourceArray = array();
@@ -555,9 +585,9 @@ class Wayfinder {
 		$template = "";
 		if ($modx->getChunk($tpl) != "") {
 			$template = $modx->getChunk($tpl);
-		} else if(substr($tpl, 0, 6) == "@FILE:") {
-			$template = $this->get_file_contents(substr($tpl, 6));
-		} else if(substr($tpl, 0, 6) == "@CODE:") {
+		} else if(substr($tpl, 0, 5) == "@FILE") {
+			$template = file_get_contents(substr($tpl, 6));
+		} else if(substr($tpl, 0, 5) == "@CODE") {
 			$template = substr($tpl, 6);
 		} else {
 			$template = FALSE;
@@ -565,19 +595,6 @@ class Wayfinder {
 		return $template;
 	}
 
-	function get_file_contents($filename) {
-		// Function written at http://www.nutt.net/2006/07/08/file_get_contents-function-for-php-4/#more-210
-		// Returns the contents of file name passed
-		if (!function_exists('file_get_contents')) {
-			$fhandle = fopen($filename, "r");
-			$fcontents = fread($fhandle, filesize($filename));
-			fclose($fhandle);
-		} else	{
-			$fcontents = file_get_contents($filename);
-		}
-		return $fcontents;
-	}
-	
 	function findTemplateVars($tpl) {
 		preg_match_all('~\[\+(.*?)\+\]~', $tpl, $matches);
 		$cnt = count($matches[1]);
@@ -674,7 +691,8 @@ class Wayfinder {
 	}
 	
 	function modxPrep($value) {
-		$value = (strpos($value,"<") !== FALSE) ? htmlentities($value) : $value;
+		global $modx;
+		$value = (strpos($value,"<") !== FALSE) ? htmlentities($value,ENT_NOQUOTES,$modx->config["modx_charset"]) : $value;
 		$value = str_replace("[","&#091;",$value);
 		$value = str_replace("]","&#093;",$value);
 		$value = str_replace("{","&#123;",$value);

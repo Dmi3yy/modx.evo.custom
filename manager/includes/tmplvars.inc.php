@@ -8,25 +8,37 @@
 		global $_lang;
 		global $content;
 
+		if(!isset($modx->config['imanager_url']))
+		{
+			$modx->config['imanager_url'] = "{$base_url}manager/media/browser/mcpuk/browser.html?Type=images&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}";
+		}
+		if(!isset($modx->config['fmanager_url']))
+		{
+			$modx->config['fmanager_url'] = "{$base_url}manager/media/browser/mcpuk/browser.html?Type=files&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}";
+		}
+		
 		$field_html ='';
 		$field_value = ($field_value!="" ? $field_value : $default_text);
 
-		switch ($field_type) {
+		switch (strtolower($field_type)) {
 
 			case "text": // handler for regular text boxes
 			case "rawtext"; // non-htmlentity converted text boxes
 			case "email": // handles email input fields
 			case "number": // handles the input of numbers
-				$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:100%" />';
+				if($field_type=='text') $field_type = '';
+				$field_html .=  '<input type="text" class="text ' . $field_type . '" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" />';
 				break;
 			case "textareamini": // handler for textarea mini boxes
-				$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
+				$field_type .= " phptextarea";
+				$field_html .=  '<textarea class="' . $field_type . '" id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="5" onchange="documentDirty=true;">' . htmlspecialchars($field_value) .'</textarea>';
 				break;
 			case "textarea": // handler for textarea boxes
 			case "rawtextarea": // non-htmlentity convertex textarea boxes
 			case "htmlarea": // handler for textarea boxes (deprecated)
 			case "richtext": // handler for textarea boxes
-				$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="15" onchange="documentDirty=true;" style="width:100%;">' . htmlspecialchars($field_value) .'</textarea>';
+				$field_type .= " phptextarea";
+				$field_html .=  '<textarea class="' . $field_type . '" id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="15" onchange="documentDirty=true;">' . htmlspecialchars($field_value) .'</textarea>';
 				break;
 			case "date":
 				$field_id = str_replace(array('-', '.'),'_', urldecode($field_id));	
@@ -37,6 +49,19 @@
 				$field_html .=  '<script type="text/javascript">';
 				$field_html .=  '	window.addEvent(\'domready\', function() {';
 				$field_html .=  '   	new DatePicker($(\'tv'.$field_id.'\'), {\'yearOffset\' : '.$modx->config['datepicker_offset']. ", 'format' : " . "'" . $modx->config['datetime_format']  . ' hh:mm:00\'' . '});';
+				$field_html .=  '});';
+				$field_html .=  '</script>';
+
+				break;
+			case "dateonly":
+				$field_id = str_replace(array('-', '.'),'_', urldecode($field_id));	
+                if($field_value=='') $field_value=0;
+				$field_html .=  '<input id="tv'.$field_id.'" name="tv'.$field_id.'" class="DatePicker" type="text" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
+				$field_html .=  ' <a onclick="document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/'.($manager_theme ? "$manager_theme/":"").'images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>';
+
+				$field_html .=  '<script type="text/javascript">';
+				$field_html .=  '	window.addEvent(\'domready\', function() {';
+				$field_html .=  '   	new DatePicker($(\'tv'.$field_id.'\'), {\'yearOffset\' : '.$modx->config['datepicker_offset']. ", 'format' : " . "'" . $modx->config['datetime_format'] . "'" . '});';
 				$field_html .=  '});';
 				$field_html .=  '</script>';
 
@@ -53,8 +78,9 @@
 				$field_html .=  "</select>";
 				break;
 			case "listbox": // handler for select boxes
-				$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'" onchange="documentDirty=true;" size="8">';	
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
+				$count = (count($index_list)<8) ? count($index_list) : 8;
+				$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'" onchange="documentDirty=true;" size="' . $count . '">';	
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -64,9 +90,10 @@
 				$field_html .=  "</select>";
 				break;
 			case "listbox-multiple": // handler for select boxes where you can choose multiple items
-				$field_value = explode("||",$field_value);
-				$field_html .=  '<select id="tv'.$field_id.'[]" name="tv'.$field_id.'[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
+				$count = (count($index_list)<8) ? count($index_list) : 8;
+				$field_value = explode("||",$field_value);
+				$field_html .=  '<select id="tv'.$field_id.'[]" name="tv'.$field_id.'[]" multiple="multiple" onchange="documentDirty=true;" size="' . $count . '">';
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -96,26 +123,29 @@
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 					if (strlen($itemvalue)==0) $itemvalue = $item;
-					$field_html .=  '<input type="checkbox" value="'.htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;" /><label for="tv_'.$i.'">'.$item.'</label><br />';
+					$field_html .=  '<label for="tv_'.$i.'"><input type="checkbox" value="'.htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;" />'.$item.'</label>';
 					$i++;
 				}
 				break;
 			case "option": // handles radio buttons
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
+				static $i=0;
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 					if (strlen($itemvalue)==0) $itemvalue = $item;
-					$field_html .=  '<input type="radio" value="'.htmlspecialchars($itemvalue).'" name="tv'.$field_id.'" '.($itemvalue==$field_value ?'checked="checked"':'').' onchange="documentDirty=true;" />'.$item.'<br />';
+					$field_html .=  '<label for="tv_'.$i.'"><input type="radio" value="'.htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_id.'" '.($itemvalue==$field_value ?'checked="checked"':'').' onchange="documentDirty=true;" />'.$item.'</label>';
+					$i++;
 				}
 				break;
 			case "image":	// handles image fields using htmlarea image manager
 				global $_lang;
 				global $ResourceManagerLoaded;
 				global $content,$use_editor,$which_editor;
+				$url_convert = get_js_trim_path_pattern();
 				if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
-					$field_html .="
-					<script type=\"text/javascript\">
+					$field_html .= <<< EOT
+					<script type="text/javascript">
 							var lastImageCtrl;
 							var lastFileCtrl;
 							function OpenServerBrowser(url, width, height ) {
@@ -129,19 +159,19 @@
 								sOptions += ',top=' + iTop ;
 
 								var oWindow = window.open( url, 'FCKBrowseWindow', sOptions ) ;
-							}			
+							}
 							function BrowseServer(ctrl) {
 								lastImageCtrl = ctrl;
 								var w = screen.width * 0.7;
 								var h = screen.height * 0.7;
-								OpenServerBrowser('".$base_url."manager/media/browser/mcpuk/browser.html?Type=images&Connector=".$base_url."manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=".$base_url."', w, h);
+								OpenServerBrowser('{$modx->config['imanager_url']}', w, h);
 							}
 							
 							function BrowseFileServer(ctrl) {
 								lastFileCtrl = ctrl;
 								var w = screen.width * 0.7;
 								var h = screen.height * 0.7;
-								OpenServerBrowser('".$base_url."manager/media/browser/mcpuk/browser.html?Type=files&Connector=".$base_url."manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=".$base_url."', w, h);
+								OpenServerBrowser('{$modx->config['fmanager_url']}', w, h);
 							}
 							
 							function SetUrl(url, width, height, alt){
@@ -157,9 +187,10 @@
 									return;
 								}
 							}
-					</script>";
-					$ResourceManagerLoaded  = true;					
-				} 
+					</script>
+EOT;
+					$ResourceManagerLoaded  = true;
+				}
 				$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" />&nbsp;<input type="button" value="'.$_lang['insert'].'" onclick="BrowseServer(\'tv'.$field_id.'\')" />';
 				break;
 			case "file": // handles the input of file uploads
@@ -167,10 +198,11 @@
                 global $_lang;
 				global $ResourceManagerLoaded;
 				global $content,$use_editor,$which_editor;
+				$url_convert = get_js_trim_path_pattern();
 				if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){
 				/* I didn't understand the meaning of the condition above, so I left it untouched ;-) */ 
-					$field_html .="
-					<script type=\"text/javascript\">
+					$field_html .= <<< EOT
+					<script type="text/javascript">
 							var lastImageCtrl;
 							var lastFileCtrl;
 							function OpenServerBrowser(url, width, height ) {
@@ -190,14 +222,14 @@
 								lastImageCtrl = ctrl;
 								var w = screen.width * 0.7;
 								var h = screen.height * 0.7;
-								OpenServerBrowser('".$base_url."manager/media/browser/mcpuk/browser.html?Type=images&Connector=".$base_url."manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=".$base_url."', w, h);
+								OpenServerBrowser('{$modx->config['imanager_url']}', w, h);
 							}
 										
 							function BrowseFileServer(ctrl) {
 								lastFileCtrl = ctrl;
 								var w = screen.width * 0.7;
 								var h = screen.height * 0.7;
-								OpenServerBrowser('".$base_url."manager/media/browser/mcpuk/browser.html?Type=files&Connector=".$base_url."manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=".$base_url."', w, h);
+								OpenServerBrowser('{$modx->config['fmanager_url']}', w, h);
 							}
 							
 							function SetUrl(url, width, height, alt){
@@ -213,7 +245,8 @@
 									return;
 								}
 							}
-					</script>";
+					</script>
+EOT;
 					$ResourceManagerLoaded  = true;					
 				} 
 				$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" />&nbsp;<input type="button" value="'.$_lang['insert'].'" onclick="BrowseFileServer(\'tv'.$field_id.'\')" />';
@@ -247,7 +280,7 @@
                         $custom_output = $_lang['chunk_no_exist']
                             . '(' . $_lang['htmlsnippet_name']
                             . ':' . $chunk_name . ')';
-                    } else {
+                } else {
                         $custom_output = $chunk_body;
                     }
                 } elseif(substr($field_elements, 0, 5) == "@EVAL") {
@@ -256,13 +289,13 @@
                 } else {
                     $custom_output = $field_elements;
                 }
-                $replacements = array(
-                    '[+field_type+]'   => $field_type,
-                    '[+field_id+]'     => $field_id,
-                    '[+default_text+]' => $default_text,
-                    '[+field_value+]'  => htmlspecialchars($field_value),
-                    '[+field_style+]'  => $field_style,
-                );
+                    $replacements = array(
+                        '[+field_type+]'   => $field_type,
+                        '[+field_id+]'     => $field_id,
+                        '[+default_text+]' => $default_text,
+                        '[+field_value+]'  => htmlspecialchars($field_value),
+                        '[+field_style+]'  => $field_style,
+                        );
                 $custom_output = str_replace(array_keys($replacements), $replacements, $custom_output);
                 $modx->documentObject = $content;
                 $custom_output = $modx->parseDocumentSource($custom_output);
@@ -270,8 +303,15 @@
                 break;
             
 			default: // the default handler -- for errors, mostly
-				$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;" />';
-
+				$sname = strtolower($field_type);
+				$tbl_site_snippets = $modx->getFullTableName('site_snippets');
+				$result = $modx->db->select('snippet',$tbl_site_snippets,"name='input:{$field_type}'");
+				if($modx->db->getRecordCount($result)==1)
+				{
+					$field_html .= eval($modx->db->getValue($result));
+				}
+				else
+					$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;" />';
 		} // end switch statement
 		return $field_html;
 	} // end renderFormElement function
@@ -284,5 +324,35 @@
 		}
 		else $a = explode("||", $v);
 		return $a;
-	}	
+	}
+	
+	function get_js_trim_path_pattern()
+	{
+		global $modx;
+		$ph['surl'] = $modx->config['site_url'];
+		$ph['surl_ptn'] = '^' . $ph['surl'];
+		$ph['surl_ptn'] = str_replace('/','\\/',$ph['surl_ptn']);
+		$ph['burl'] = $modx->config['base_url'];
+		$ph['burl_ptn'] = '^' . $ph['burl'];
+		$ph['burl_ptn'] = str_replace('/','\\/',$ph['burl_ptn']);
+		$js_block[] = "var burl_ptn = new RegExp('[+burl_ptn+]');";
+		$js_block[] = "var surl_ptn = new RegExp('[+surl_ptn+]');";
+		if($modx->config['strip_image_paths']==='1')
+		{
+			$js_block[] = "if(url.match(burl_ptn)){url = url.replace(burl_ptn,'');}";
+			$js_block[] = "else if(url.match(surl_ptn)){url = url.replace(surl_ptn,'');}";
+		}
+		else
+		{
+			$js_block[] = "if(url.match(burl_ptn)){url = url.replace(burl_ptn,'[+surl+]');}";
+			$js_block[] = "else if(url.match(/^[^(http)]/)){url = surl + url;}";
+		}
+		$output = join("\n",$js_block);
+		foreach($ph as $k=>$v)
+		{
+			$k = '[+' . $k . '+]';
+			$output = str_replace($k, $v, $output);
+		}
+		return $output;
+	}
 ?>
