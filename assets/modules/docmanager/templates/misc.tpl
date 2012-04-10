@@ -1,7 +1,7 @@
-<h3>[+lang.DM_adjust_dates_header+]</h3>
-<p>[+lang.DM_adjust_dates_desc+]</p>
+<br /><h3>[+lang.DM_adjust_dates_header+]</h3><br />
+<p>[+lang.DM_adjust_dates_desc+]</p><br />
 <form id="dates" name="dates" method="post" action="">
-    <table style="margin-left:50px;margin-bottom:20px;">
+    <table style="margin-left: 50px">
 	    <tr>
 	        <td><label for="date_pubdate" id="date_pubdate_label">[+lang.DM_date_pubdate+]</label></td>
 	        <td>
@@ -34,9 +34,11 @@
 </form>
 
 
+<br />
 <h3>[+lang.DM_other_header+]</h3>
-<p>[+lang.DM_misc_desc+]</p>
-<form style="margin-left:50px;margin-bottom:20px;" name="other" method="post" action="">
+<br />
+<p>[+lang.DM_misc_desc+]</p><br />
+<form style="margin-left:50px;" name="other" method="post" action="">
     <input type="hidden" id="option1" name="option1" value="[+lang.DM_other_publish_radio1+]" />
     <input type="hidden" id="option2" name="option2" value="[+lang.DM_other_publish_radio2+]" />
     <input type="hidden" id="option3" name="option3" value="[+lang.DM_other_show_radio1+]" />
@@ -60,6 +62,6 @@
 		<option value="0">&nbsp;-</option>
   </select>
   <br /><br />
-  <input type="radio" name="choice" value = "1" id="choice_1" />&nbsp;<label for="choice_1" id="choice_label_1">[+lang.DM_other_publish_radio1+]</label>
-  <input type="radio" name="choice" value = "0" id="choice_2" />&nbsp;<label for="choice_2" id="choice_label_2">[+lang.DM_other_publish_radio2+]</label>
+  <input type="radio" name="choice" value = "1" />&nbsp;<label for="choice" id="choice_label_1">[+lang.DM_other_publish_radio1+]</label>
+  <input type="radio" name="choice" value = "0" />&nbsp;<label for="choice" id="choice_label_2">[+lang.DM_other_publish_radio2+]</label>
 </form>

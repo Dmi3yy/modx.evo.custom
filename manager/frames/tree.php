@@ -1,15 +1,25 @@
-<?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+﻿<?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-$manager_theme = $manager_theme ? "$manager_theme/":'';
-$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
+    $theme = $manager_theme ? "$manager_theme/":"";
 
+    function constructLink($action, $img, $text, $allowed) {
+        if($allowed==1) { ?>
+            <div class="menuLink" onclick="menuHandler(<?php echo $action ; ?>); hideMenu();">
+        <?php } else { ?>
+            <div class="menuLinkDisabled">
+        <?php } ?>
+                <img src="<?php echo $img; ?>" /><?php echo $text; ?>
+            </div>
+        <?php
+    }
+    $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
     <title>Document Tree</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
-    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme; ?>style.css" />
+    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -154,7 +164,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
         if (rpcNode.style.display != 'block') {
             // expand
-            if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme; ?>images/tree/plusnode.gif')>-1) {
+            if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/plusnode.gif')>-1) {
                 signImg.src = '<?php echo $_style["tree_minusnode"]; ?>';
                 folderImg.src = (privatenode == '0') ? '<?php echo $_style["tree_folderopen"]; ?>' :'<?php echo $_style["tree_folderopen_secure"]; ?>';
             }
@@ -170,8 +180,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
                 //Raymond:added getFolderState()
                 var folderState = getFolderState();
                 rpcNode.innerHTML = "<span class='emptyNode' style='white-space:nowrap;'>"+spacer+"&nbsp;&nbsp;&nbsp;"+loadText+"...<\/span>";
-                url = 'index.php?a=1&f=nodes&indent='+indent+'&parent='+parent+'&expandAll='+expandAll+folderState;
-                new Ajax(url, {method: 'get',onComplete:rpcLoadData}).request();
+                new Ajax('index.php?a=1&f=nodes&indent='+indent+'&parent='+parent+'&expandAll='+expandAll+folderState, {method: 'get',onComplete:rpcLoadData}).request();
             } else {
                 rpcNode.style.display = 'block';
                 //Jeroen set opened
@@ -180,7 +189,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
         }
         else {
             // collapse
-            if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme; ?>images/tree/minusnode.gif')>-1) {
+            if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/minusnode.gif')>-1) {
                 signImg.src = '<?php echo $_style["tree_plusnode"]; ?>';
                 folderImg.src = (privatenode == '0') ? '<?php echo $_style["tree_folder"]; ?>' : '<?php echo $_style["tree_folder_secure"]; ?>';
             }
@@ -219,21 +228,18 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
     function expandTree() {
         rpcNode = $('treeRoot');
-        url = 'index.php?a=1&f=nodes&indent=1&parent=0&expandAll=1';
-        new Ajax(url, {method: 'get',onComplete:rpcLoadData}).request();
+        new Ajax('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=1', {method: 'get',onComplete:rpcLoadData}).request();
     }
 
     function collapseTree() {
         rpcNode = $('treeRoot');
-        url = 'index.php?a=1&f=nodes&indent=1&parent=0&expandAll=0';
-        new Ajax(url, {method: 'get',onComplete:rpcLoadData}).request();
+        new Ajax('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=0', {method: 'get',onComplete:rpcLoadData}).request();
     }
 
     // new function used in body onload
     function restoreTree() {
         rpcNode = $('treeRoot');
-        url = 'index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2';
-        new Ajax(url, {method: 'get',onComplete:rpcLoadData}).request();
+        new Ajax('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2', {method: 'get',onComplete:rpcLoadData}).request();
     }
 
     function setSelected(elSel) {
@@ -272,8 +278,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
     function updateTree() {
         rpcNode = $('treeRoot');
         treeParams = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + document.sortFrm.dt.value + '&tree_sortby=' + document.sortFrm.sortby.value + '&tree_sortdir=' + document.sortFrm.sortdir.value;
-        url = 'index.php?'+treeParams;
-        new Ajax(url, {method: 'get',onComplete:rpcLoadData}).request();
+        new Ajax('index.php?'+treeParams, {method: 'get',onComplete:rpcLoadData}).request();
     }
 
     function emptyTrash() {
@@ -293,7 +298,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
         }
     }
 
-    function treeAction(id, name) {
+    function treeAction(id, name, treedisp_children) {
         if(ca=="move") {
             try {
                 parent.main.setMoveValue(id, name);
@@ -301,18 +306,17 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
                 alert('<?php echo $_lang['unable_set_parent']; ?>');
             }
         }
-        if(ca=="open" || ca=="docinfo" || ca=="") {
-            <?php $action = (!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>
+        if(ca=="open" || ca=="") {
             if(id==0) {
                 // do nothing?
                 parent.main.location.href="index.php?a=2";
-            } else if(ca=="docinfo") {
-                parent.main.location.href="index.php?a=3&id=" + id + '&tab=0';
-            } else if(ca=="open") {
-                parent.main.location.href="index.php?a=27&id=" + id;
             } else {
                 // parent.main.location.href="index.php?a=3&id=" + id + getFolderState(); //just added the getvar &opened=
-                parent.main.location.href="index.php?a=<?php echo $action; ?>&id=" + id; // edit as default action
+                if(treedisp_children==0) {
+					parent.main.location.href="index.php?a=3&id=" + id + getFolderState();
+				} else {
+					parent.main.location.href="index.php?a=<?php echo (!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>&id=" + id; // edit as default action
+				}
             }
         }
         if(ca=="parent") {
@@ -347,8 +351,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
     }
     function saveFolderState() {
         var folderState = getFolderState();
-        url = 'index.php?a=1&f=nodes&savestateonly=1'+folderState;
-        new Ajax(url, {method: 'get'}).request();
+        new Ajax('index.php?a=1&f=nodes&savestateonly=1'+folderState, {method: 'get'}).request();
     }
 
     // show state of recycle bin
@@ -387,7 +390,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
 
 </head>
-<body onclick="hideMenu(1);" class="treeframebody<?php echo $modx_textdir ? ' rtl':''?>">
+<body onClick="hideMenu(1);" class="treeframebody<?php echo $modx_textdir ? ' rtl':''?>">
 
 <div id="treeSplitter"></div>
 
@@ -407,6 +410,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
             <?php if ($modx->hasPermission('empty_trash')) { ?>
                 <td><a href="#" id="Button10" class="treeButtonDisabled" title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             <?php } ?>
+			 <td><a href="#" title="Управление элементами" onclick="window.open('/manager/index.php?a=76','gener','width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')"><img src="/manager/media/style/MODxCarbon/images/icons/comment.gif" style="margin:3px 0 0 5px"></a></td>
             </tr>
         </table>
     </td>
@@ -422,30 +426,33 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
 <div id="floater">
 <?php
-if(isset($_REQUEST['tree_sortby']))  $_SESSION['tree_sortby']  = $_REQUEST['tree_sortby'];
-else                                 $_SESSION['tree_sortby']  = 'menuindex';
-if(isset($_REQUEST['tree_sortdir'])) $_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
-else                                 $_SESSION['tree_sortdir'] = 'ASC';
+if(isset($_REQUEST['tree_sortby'])) {
+    $_SESSION['tree_sortby'] = $_REQUEST['tree_sortby'];
+}
+
+if(isset($_REQUEST['tree_sortdir'])) {
+    $_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
+}
 ?>
 <form name="sortFrm" id="sortFrm" action="menu.php">
 <table width="100%"  border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td style="padding-left: 10px;padding-top: 1px;" colspan="2">
-        <select name="sortby" style="font-size: 12px;">
-            <option value="isfolder" <?php echo select($_SESSION['tree_sortby']=='isfolder');?>><?php echo $_lang['folder']; ?></option>
-            <option value="pagetitle" <?php echo select($_SESSION['tree_sortby']=='pagetitle');?>><?php echo $_lang['pagetitle']; ?></option>
-            <option value="id" <?php echo select($_SESSION['tree_sortby']=='id');?>><?php echo $_lang['id']; ?></option>
-            <option value="menuindex" <?php echo select($_SESSION['tree_sortby']=='menuindex');?>><?php echo $_lang['resource_opt_menu_index'] ?></option>
-            <option value="createdon" <?php echo select($_SESSION['tree_sortby']=='createdon');?>><?php echo $_lang['createdon']; ?></option>
-            <option value="editedon" <?php echo select($_SESSION['tree_sortby']=='editedon');?>><?php echo $_lang['editedon']; ?></option>
+        <select name="sortby">
+            <option value="isfolder" <?php echo $_SESSION['tree_sortby']=='isfolder' ? "selected='selected'" : "" ?>><?php echo $_lang['folder']; ?></option>
+            <option value="pagetitle" <?php echo $_SESSION['tree_sortby']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
+            <option value="id" <?php echo $_SESSION['tree_sortby']=='id' ? "selected='selected'" : "" ?>><?php echo $_lang['id']; ?></option>
+            <option value="menuindex" <?php echo $_SESSION['tree_sortby']=='menuindex' ? "selected='selected'" : "" ?>><?php echo $_lang['resource_opt_menu_index'] ?></option>
+            <option value="createdon" <?php echo $_SESSION['tree_sortby']=='createdon' ? "selected='selected'" : "" ?>><?php echo $_lang['createdon']; ?></option>
+            <option value="editedon" <?php echo $_SESSION['tree_sortby']=='editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
         </select>
     </td>
   </tr>
   <tr>
     <td width="99%" style="padding-left: 10px;padding-top: 1px;">
-        <select name="sortdir" style="font-size: 12px;">
-            <option value="DESC" <?php echo select($_SESSION['tree_sortdir']=='DESC');?>><?php echo $_lang['sort_desc']; ?></option>
-            <option value="ASC" <?php echo select($_SESSION['tree_sortdir']=='ASC');?>><?php echo $_lang['sort_asc']; ?></option>
+        <select name="sortdir">
+            <option value="DESC" <?php echo $_SESSION['tree_sortdir']=='DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
+            <option value="ASC" <?php echo $_SESSION['tree_sortdir']=='ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
         </select>
         <input type='hidden' name='dt' value='<?php echo $_REQUEST['dt']; ?>' />
     </td>
@@ -538,8 +545,8 @@ function menuHandler(action) {
 <div id="mx_contextmenu" onselectstart="return false;">
     <div id="nameHolder">&nbsp;</div>
     <?php
-    constructLink(2, $_style["icons_edit_document"], $_lang["edit_resource"], $modx->hasPermission('edit_document')); // edit
     constructLink(3, $_style["icons_new_document"], $_lang["create_resource_here"], $modx->hasPermission('new_document')); // new Resource
+    constructLink(2, $_style["icons_save"], $_lang["edit_resource"], $modx->hasPermission('edit_document')); // edit
     constructLink(5, $_style["icons_move_document"] , $_lang["move_resource"], $modx->hasPermission('save_document')); // move
     constructLink(7, $_style["icons_resource_duplicate"], $_lang["resource_duplicate"], $modx->hasPermission('new_document')); // duplicate
     ?>
@@ -563,21 +570,3 @@ function menuHandler(action) {
 
 </body>
 </html>
-<?php
-function select($cond=false)
-{
-	return ($cond) ? ' selected="selected"' : '';
-}
-
-function constructLink($action, $img, $text, $allowed)
-{
-	if($allowed==1)
-	{
-		echo '<div class="menuLink" onclick="menuHandler(' . $action . '); hideMenu();">';
-	}
-	else
-	{
-		echo '<div class="menuLinkDisabled">';
-	}
-		echo '<img src="' . $img . '" />' . $text . '</div>';
-}

@@ -186,4 +186,6 @@ if($updategroupaccess==true){
 	$rs = $modx->db->query($sql);
 }
 
-header("Location: index.php?a=91");
+$header = "Location: index.php?a=91";
+header($header);
+?>

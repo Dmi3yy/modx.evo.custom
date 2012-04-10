@@ -1,5 +1,5 @@
 <script language="javascript" type="text/javascript">
-function mceOpenServerBrowser(field_name, url, type, win) {
+function modx_fb (field_name, url, type, win) {
     if (type == "media") {type = win.document.getElementById("media_type").value;}
 	var cmsURL = "[+cmsurl+]";
 	switch (type) {
@@ -10,13 +10,6 @@ function mceOpenServerBrowser(field_name, url, type, win) {
 		case "qt":
 		case "wmp":
 		case "rmp":
-		case "video":
-		case "flash":
-		case "quicktime":
-		case "shockwave":
-		case "windowsmedia":
-		case "realmedia":
-		case "iframe":
 			type = "media";
 			break;
 		case "shockwave":
@@ -39,8 +32,7 @@ function mceOpenServerBrowser(field_name, url, type, win) {
 	    cmsURL = cmsURL + "&type=" + type;
 	}
 
-	var wm = tinyMCE.activeEditor.windowManager;
-	    wm.open({
+	var windowManager = tinyMCE.activeEditor.windowManager.open({
 	    file : cmsURL,
 	    width : screen.width * 0.7,  // Your dimensions may differ - toy around with them!
 	    height : screen.height * 0.7,
@@ -51,7 +43,7 @@ function mceOpenServerBrowser(field_name, url, type, win) {
 	    window : win,
 	    input : field_name
 	});
-	if (window.focus) {wm.focus();}
+	if (window.focus) {windowManager.focus()}
 	return false;
 }
 </script>

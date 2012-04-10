@@ -5,99 +5,116 @@ if(!$modx->hasPermission('save_plugin')) {
 	$e->dumpError();
 }
 
-$tbl_site_plugin_events = $modx->getFullTableName('site_plugin_events');
-$tbl_system_eventnames  = $modx->getFullTableName('system_eventnames');
-$tbl_site_plugins       = $modx->getFullTableName('site_plugins');
+if($manager_theme) {
+    $useTheme = $manager_theme . '/';
+} else {
+    $useTheme = '';
+}
+
+$basePath = $modx->config['base_path'];
+$siteURL = $modx->config['site_url'];
 
 $updateMsg = '';
 
-if(isset($_POST['listSubmitted']))
-{
-	$updateMsg .= '<span class="warning" id="updated">Updated!<br /><br /> </span>';
-	
-	foreach ($_POST as $listName=>$listValue)
-	{
-		if ($listName == 'listSubmitted') continue;
-		$orderArray = explode(',', $listValue);
-		$listName = ltrim($listName, 'list_');
-		if (count($orderArray) > 0)
-		{
-			foreach($orderArray as $key => $item)
-			{
-				if ($item == '') continue;
-				$pluginId = ltrim($item, 'item_');
-				$field['priority'] = $key;
-				$modx->db->update($field,$tbl_site_plugin_events,"pluginid={$pluginId} and evtid={$listName}");
-			}
-		}
-	}
-	// empty cache
-	$modx->clearCache(); // first empty the cache
+if(isset($_POST['listSubmitted'])) {
+    $updateMsg .= "<span class=\"warning\" id=\"updated\">Updated!<br /><br /> </span>";
+	$tbl = $dbase.'.`'.$table_prefix.'site_plugin_events`';
+
+	foreach ($_POST as $listName=>$listValue) {
+        if ($listName == 'listSubmitted') continue;
+    	$orderArray = explode(',', $listValue);
+    	$listName = ltrim($listName, 'list_');
+    	if (count($orderArray) > 0) {
+	    	foreach($orderArray as $key => $item) {
+	    		if ($item == '') continue;
+	    		$pluginId = ltrim($item, 'item_');
+	    		$sql = "UPDATE $tbl set priority=".$key." WHERE pluginid=".$pluginId." and evtid=".$listName;
+	    		$modx->db->query($sql);
+	    	}
+    	}
+    }
+    // empty cache
+	include_once ($basePath.'manager/processors/cache_sync.class.processor.php');
+	$sync = new synccache();
+	$sync->setCachepath($basePath.'/assets/cache/');
+	$sync->setReport(false);
+	$sync->emptyCache(); // first empty the cache
 }
 
-$field = "sysevt.name as 'evtname', sysevt.id as 'evtid', pe.pluginid, plugs.name, pe.priority";
-$from  = "$tbl_system_eventnames sysevt";
-$from .= " INNER JOIN {$tbl_site_plugin_events} pe ON pe.evtid = sysevt.id";
-$from .= " INNER JOIN {$tbl_site_plugins} plugs ON plugs.id = pe.pluginid";
-$rs = $modx->db->select($field,$from,'plugs.disabled=0','sysevt.name,pe.priority');
-$total = $modx->db->getRecordCount($rs);
+$sql = "
+	SELECT sysevt.name as 'evtname', sysevt.id as 'evtid', pe.pluginid, plugs.name, pe.priority
+	FROM $dbase.`".$table_prefix."system_eventnames` sysevt
+	INNER JOIN $dbase.`".$table_prefix."site_plugin_events` pe ON pe.evtid = sysevt.id
+	INNER JOIN $dbase.`".$table_prefix."site_plugins` plugs ON plugs.id = pe.pluginid
+	WHERE plugs.disabled=0
+	ORDER BY sysevt.name,pe.priority
+";
+
+$rs = mysql_query($sql);
+$limit = mysql_num_rows($rs);
 
 $insideUl = 0;
 $preEvt = '';
 $evtLists = '';
 $sortables = array();
-if($total>1)
-{
-	for ($i=0;$i<$total;$i++)
-	{
-		$plugins = mysql_fetch_assoc($rs);
-		if ($preEvt !== $plugins['evtid'])
-		{
-			$sortables[] = $plugins['evtid'];
-			$evtLists .= $insideUl? '</ul><br />': '';
-			$evtLists .= '<strong>'.$plugins['evtname'].'</strong><br /><ul id="'.$plugins['evtid'].'" class="sortableList">';
-			$insideUl = 1;
-		}
-		$evtLists .= '<li id="item_'.$plugins['pluginid'].'">'.$plugins['name'].'</li>';
-		$preEvt = $plugins['evtid'];
-	}
+if($limit>1) {
+    for ($i=0;$i<$limit;$i++) {
+        $plugins = mysql_fetch_assoc($rs);
+        if ($preEvt !== $plugins['evtid']) {
+            $sortables[] = $plugins['evtid'];
+            $evtLists .= $insideUl? '</ul><br />': '';
+            $evtLists .= '<strong>'.$plugins['evtname'].'</strong><br /><ul id="'.$plugins['evtid'].'" class="sortableList">';
+            $insideUl = 1;
+        }
+        $evtLists .= '<li id="item_'.$plugins['pluginid'].'">'.$plugins['name'].'</li>';
+        $preEvt = $plugins['evtid'];
+    }
 }
 
 $evtLists .= '</ul>';
 
 $header = '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>MODX</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=' . $modx_manager_charset . '" />
-	<link rel="stylesheet" type="text/css" href="media/style/' . $manager_theme . '/style.css" />
+	<title>MODx</title>
+	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
+	<link rel="stylesheet" type="text/css" href="media/style/'.$useTheme.'style.css" />
 	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
 
 	<style type="text/css">
-        .topdiv {border: 0;}
-		.subdiv {border: 0;}
+        .topdiv {
+			border: 0;
+		}
+
+		.subdiv {
+			border: 0;
+		}
+
 		li {list-style:none;}
-		.tplbutton {text-align: right;}
-		ul.sortableList
-		{
+
+		.tplbutton {
+			text-align: right;
+		}
+
+		ul.sortableList {
 			padding-left: 20px;
 			margin: 0px;
 			width: 300px;
 			font-family: Arial, sans-serif;
 		}
 
-		ul.sortableList li
-		{
-			font-weight: bold;
-			cursor: move;
+		ul.sortableList li {
+            font-weight: bold;
+            cursor: move;
             color: #444444;
             padding: 3px 5px;
-			margin: 4px 0px;
+            margin: 4px 0px;
             border: 1px solid #CCCCCC;
-			background-image: url("' . $style_path . 'misc/fade.gif");
+			background-image: url("media/style/'.$useTheme.'images/misc/fade.gif");
 			background-repeat: repeat-x;
 		}
+
         #sortableListForm {display:none;}
 	</style>
     <script type="text/javascript">
@@ -120,12 +137,12 @@ foreach ($sortables as $list) {
                         });
                     }
                     ,onComplete: function() {
-           	var id = null;
-           	var list = this.serialize(function(el) {
-            id = el.getParent().id;
-           	return el.id;
-           });
-           $(\'list_\' + id).value = list;
+                       	var id = null;
+                       	var list = this.serialize(function(el) {
+                            id = el.getParent().id;
+                           	return el.id;
+                        });
+                       $(\'list_\' + id).value = list;
                     }
                 });' ."\n";
 }
@@ -136,7 +153,7 @@ foreach ($sortables as $list) {
 
 <h1>'.$_lang['plugin_priority_title'].'</h1>
 
-<div id="actions">
+<div id="actions"
    <ul class="actionButtons">
        	<li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
 		<li><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'" /> '.$_lang['cancel'].'</a></li>
@@ -150,18 +167,18 @@ foreach ($sortables as $list) {
 
 echo $header;
 
-echo $updateMsg . '<span class="warning" style="display:none;" id="updating">Updating...<br /><br /> </span>';
+echo $updateMsg . "<span class=\"warning\" style=\"display:none;\" id=\"updating\">Updating...<br /><br /> </span>";
 
 echo $evtLists;
 
 echo '<form action="" method="post" name="sortableListForm" style="display: none;">
             <input type="hidden" name="listSubmitted" value="true" />';
             
-foreach ($sortables as $list)
-{
+foreach ($sortables as $list) {
 	echo '<input type="text" id="list_'.$list.'" name="list_'.$list.'" value="" />';
 }
             
 echo '	</form>
 	</div>
 ';
+?>

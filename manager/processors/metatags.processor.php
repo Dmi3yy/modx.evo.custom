@@ -53,14 +53,14 @@ else {
 	foreach($orig_keywords as $key => $value) {
 		if($rename_keywords[$key]!=$value) {
 			$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` WHERE BINARY keyword='".addslashes($rename_keywords[$key])."'";
-			$rs = $modx->db->query($sql);
+			$rs = mysql_query($sql);
 			$limit = mysql_num_rows($rs);
 			if($limit > 0) {
 				echo "  - This keyword has already been defined!";
 				exit;
 			} else {
 				$sql = "UPDATE $dbase.`".$table_prefix."site_keywords` SET keyword='".addslashes($rename_keywords[$key])."' WHERE keyword='".addslashes($value)."'";
-				$rs = $modx->db->query($sql);
+				$rs = mysql_query($sql);
 			}
 		}
 	}
@@ -73,14 +73,14 @@ else {
 		}
 
 		$sql = "DELETE FROM $dbase.`".$table_prefix."keyword_xref` WHERE keyword_id IN(".join($keywords_array, ",").")";
-		$rs = $modx->db->query($sql);
+		$rs = mysql_query($sql);
 		if(!$rs) {
 			echo "Failure on deletion of xref keys: ".mysql_error();
 			exit;
 		}
 
 		$sql = "DELETE FROM $dbase.`".$table_prefix."site_keywords` WHERE id IN(".join($keywords_array, ",").")";
-		$rs = $modx->db->query($sql);
+		$rs = mysql_query($sql);
 		if(!$rs) {
 			echo "Failure on deletion of keywords ".mysql_error();
 			exit;
@@ -93,19 +93,25 @@ else {
 		$nk = $_POST['new_keyword'];
 
 		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` WHERE keyword='".addslashes($nk)."'";
-		$rs = $modx->db->query($sql);
+		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit > 0) {
 			echo "Keyword $nk already exists!";
 			exit;
 		} else {
 			$sql = "INSERT INTO $dbase.`".$table_prefix."site_keywords` (keyword) VALUES('".addslashes($nk)."')";
-			$rs = $modx->db->query($sql);
+			$rs = mysql_query($sql);
 		}
 	}
 }
 
 // empty cache
-$modx->clearCache();
+include_once "cache_sync.class.processor.php";
+$sync = new synccache();
+$sync->setCachepath("../assets/cache/");
+$sync->setReport(false);
+$sync->emptyCache();
 
-header("Location: index.php?a=81");
+$header="Location: index.php?a=81";
+header($header);
+?>

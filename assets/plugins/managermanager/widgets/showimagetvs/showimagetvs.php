@@ -9,8 +9,8 @@
 
 function mm_widget_showimagetvs($tvs='', $w=300, $h=100, $thumbnailerUrl='', $roles='', $templates='') {
 	
-	global $modx, $mm_current_page;
-	$e = &$modx->event;
+	global $modx, $content;
+	$e = &$modx->Event;
 	
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
 		
@@ -26,8 +26,19 @@ function mm_widget_showimagetvs($tvs='', $w=300, $h=100, $thumbnailerUrl='', $ro
  			$style = '';
 		}
 		
+		
+		// Which template is this page using?
+		if (isset($content['template'])) {
+			$page_template = $content['template'];
+		} else {
+			// If no content is set, it's likely we're adding a new page at top level. 
+			// So use the site default template. This may need some work as it might interfere with a default template set by MM?
+			$page_template = $modx->config['default_template']; 
+		}
+		
+		
         // Does this page's template use any image TVs? If not, quit now!
-		$tvs = tplUseTvs($mm_current_page['template'], $tvs, 'image');
+		$tvs = tplUseTvs($page_template, $tvs, 'image');
 		if ($tvs == false) {
 			return;
 		}			
@@ -42,13 +53,11 @@ function mm_widget_showimagetvs($tvs='', $w=300, $h=100, $thumbnailerUrl='', $ro
 			$new_html = '';
 			
 			$output .= '// Adding preview for tv'.$tv['id'].'
-			$j("#tv'.$tv['id'].'").bind( "change load", function() {
-				
+			$j("#tv'.$tv['id'].'").addClass("imageField").bind( "change load", function() {
 				// Get the new URL
-				$j(this).addClass("imageField");
 				var url = $j(this).val();
-				url = (url != "" && url.search(/^@[a-z]+/i) == -1) ? url : url.replace(new RegExp(/^@[a-z]+/i), "");
-				url = (url != "" && url.search(/http:\/\//i) == -1 && url.search(/^\//i) == -1) ? ("'.$site.'" + url) : url;
+				url = (url != "" && url.search(/http:\/\//i) == -1) ? ("'.$site.'" + url) : url;
+				
 				';
 				
 				// If we have a PHPThumb URL
@@ -70,7 +79,8 @@ function mm_widget_showimagetvs($tvs='', $w=300, $h=100, $thumbnailerUrl='', $ro
 																 });
 				}
 				
-			}).trigger("load"); // Trigger a change event on load
+			$j.data(this,"lastvalue", $j(this).val());
+            }).trigger("load"); // Trigger a change event on load
 	
 			
 			';	
@@ -79,14 +89,20 @@ function mm_widget_showimagetvs($tvs='', $w=300, $h=100, $thumbnailerUrl='', $ro
 		
 		$output .= '
 		
-			// If we have imageTVs on this page, modify the SetUrl function so it triggers a "change" event on the URL field
-			if (typeof(SetUrl) != "undefined") {
-				OriginalSetUrl = SetUrl; // Copy the existing Image browser SetUrl function						
-				SetUrl = function(url, width, height, alt) {	// Redefine it to also tell the preview to update
-					OriginalSetUrl(url, width, height, alt);
-					$j(".imageField").trigger("change");
-				}
-			}
+		
+			// Monitor the image TVs for changes
+			checkImageTVupdates = function () {
+					$j(".imageField").each( function() {
+						var $this = $j(this);
+						if ($this.val() != $this.data("lastvalue") ) {
+							$this.trigger("change").data("lastvalue", $this.val());
+						}						
+					});
+			}	
+			
+			setInterval ( "checkImageTVupdates();", 250 );
+		
+	
 		';
 		
 		

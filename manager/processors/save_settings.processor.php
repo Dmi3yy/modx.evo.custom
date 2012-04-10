@@ -56,13 +56,19 @@ if (isset($_POST) && count($_POST) > 0) {
 		$oldtemplate = $_POST['old_template'];
 		$tbl = $dbase.".`".$table_prefix."site_content`";
 		$reset = $_POST['reset_template'];
-		if($reset==1) $modx->db->query("UPDATE $tbl SET template = '$template' WHERE type='document'");
-		else if($reset==2) $modx->db->query("UPDATE $tbl SET template = '$template' WHERE template = $oldtemplate");
+		if($reset==1) mysql_query("UPDATE $tbl SET template = '$template' WHERE type='document'");
+		else if($reset==2) mysql_query("UPDATE $tbl SET template = '$template' WHERE template = $oldtemplate");
 	}
 	// lose the POST now, gets rid of quirky issue with Safari 3 - see FS#972
 	unset($_POST);
 	
 	// empty cache
-	$modx->clearCache(); // first empty the cache
+	include_once "cache_sync.class.processor.php";
+	$sync = new synccache();
+	$sync->setCachepath("../assets/cache/");
+	$sync->setReport(false);
+	$sync->emptyCache(); // first empty the cache
 }
-header("Location: index.php?a=7&r=10");
+$header="Location: index.php?a=7&r=10";
+header($header);
+?>

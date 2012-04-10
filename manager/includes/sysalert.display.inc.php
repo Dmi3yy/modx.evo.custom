@@ -13,7 +13,7 @@
 	$sysMsgs = "";
 	$limit = count($SystemAlertMsgQueque);
 	for($i=0;$i<$limit;$i++) {
-		$sysMsgs .= $SystemAlertMsgQueque[$i]."<hr />";
+		$sysMsgs .= $SystemAlertMsgQueque[$i]."<hr sys/>";
 	}
 	// reset message queque
 	unset($_SESSION['SystemAlertMsgQueque']);

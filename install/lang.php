@@ -10,20 +10,31 @@
  * Filename:       /install/lang.php
  */
 
-$default_language = 'japanese-utf8';
+$_lang = array ();
 
-if    (isset($_POST['language'])) $install_language = $_POST['language'];
-elseif(isset($_GET['language']))  $install_language = $_GET['language'];
-else                              $install_language = $default_language;
+#default fallback language file - english
+require_once("lang/english.inc.php");
 
-if    (isset($_POST['managerlanguage'])) $manager_language = $_POST['managerlanguage'];
-elseif(isset($_GET['managerlanguage']))  $manager_language = $_GET['managerlanguage'];
-else                                     $manager_language = $default_language;
+$install_language = "english";
+
+if (isset($_POST['language'])) {
+	$install_language = $_POST['language'];
+} else {
+	if (isset($_GET['language'])) 
+		$install_language = $_GET['language'];
+}
+
+$manager_language = "english";
+
+if (isset($_POST['managerlanguage'])) {
+	$manager_language = $_POST['managerlanguage'];
+} else {
+	if (isset($_GET['managerlanguage'])) 
+		$manager_language = $_GET['managerlanguage'];
+}
 
 # load language file
-$_lang = array ();
-if($install_language!==$default_language && file_exists("lang/{$install_language}.inc.php"))
-{
-	 require_once("lang/{$install_language}.inc.php");
+if($install_language!="english" && file_exists("lang/".$install_language.".inc.php")) {
+    include_once "lang/".$install_language.".inc.php";
 }
-else require_once("lang/{$default_language}.inc.php");
+?>

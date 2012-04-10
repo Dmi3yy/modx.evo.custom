@@ -36,14 +36,13 @@
     </script>
     <style type="text/css">        
         li {
-            cursor:move;
-            border: 1px solid #ccc;
+            cursor: pointer;
+            border: 1px solid #666;
             background: #eee no-repeat 2px center;
-            margin: 2px 0 5px;
+            margin: 2px 0;
             list-style: none;
             padding: 1px 4px 1px 24px;
             min-height: 20px;
-            width:50%;
         }
         li.noChildren {
             background-image: url(media/style[+theme+]/images/tree/page.gif);
@@ -51,8 +50,6 @@
         li.hasChildren {
             background-image: url(media/style[+theme+]/images/tree/folder.gif);
         }
-        li.inMenuNode      {font-weight:bold;}
-        li.unpublishedNode {background-color:#f6f3ea;}
     </style>
 </head>
 <body>
@@ -62,7 +59,7 @@
     </form>
     <div id="actions">
         <ul class="actionButtons">
-            <li id="Button1"><a href="#" onclick="document.location.href='index.php?a=2';"><img src="media/style[+theme+]/images/icons/stop.png" align="absmiddle"> [+lang.DM_close+]</a></li>
+            <li id="Button1"><a href="#" onclick="reset();"><img src="media/style[+theme+]/images/icons/stop.png" align="absmiddle"> [+lang.DM_close+]</a></li>
             <li id="Button2" style="display:[+sort.save+]"><a href="#" onclick="save();"><img src="media/style[+theme+]/images/icons/save.png" align="absmiddle"> [+lang.DM_save+]</a></li>
             <li id="Button4"><a href="#" onclick="reset();"><img src="media/style[+theme+]/images/icons/cancel.png" align="absmiddle"> [+lang.DM_cancel+]</a></li>
         </ul>

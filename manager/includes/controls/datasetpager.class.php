@@ -19,33 +19,33 @@ class DataSetPager {
 	var $pager;
 	var $id;
 	
-	// normal page
+	// normal page 
 	var $pageStyle;
 	var $pageClass;
 	
 	// selected page
-	var $selPageStyle;
+	var $selPageStyle;	
 	var $selPageClass;
 
-	function DataSetPager($id,$ds,$pageSize=10,$pageNumber=-1) {
+	function DataSetPager($id,$ds,$pageSize=10,$pageNumber=-1) {		
 		global $_PAGE; // use view state object
 		
 		global $__DataSetPagerCnt;
 		
 		// set id
-		$__DataSetPagerCnt++;
+		$__DataSetPagerCnt++;		
 		$this->id = !empty($id) ? $id:"dsp".$__DataSetPagerCnt;
 		
 		// get pagenumber
 		// by setting pager to -1 cause pager to load it's last page number
 		if($pageNumber==-1){
-			$pageNumber = 1;
+			$pageNumber = 1;				
 			if (isset($_GET["dpgn".$this->id])) $pageNumber = $_GET["dpgn".$this->id];
 			elseif (isset($_PAGE['vs'][$id.'_dpgn'])) {
 				$pageNumber = $_PAGE['vs'][$id.'_dpgn'];
 			}
 		}
-		if (!is_numeric($pageNumber)) $pageNumber = 1;
+		if (!is_numeric($pageNumber)) $pageNumber = 1;	
 
 		$this->ds = $ds; // datasource
 		$this->pageSize = $pageSize;
@@ -83,14 +83,14 @@ class DataSetPager {
 	}
 
 	function render(){
-		global $modx,$_PAGE;
+		global $_PAGE;
 			
 		$isDataset = is_resource($this->ds);
 		
 		if (!$this->selPageStyle) $this->selPageStyle = "font-weight:bold";
 		
-		// get total number of rows
-		$tnr = ($isDataset)? $modx->db->getRecordCount($this->ds):count($this->ds);
+		// get total number of rows		
+		$tnr = ($isDataset)? mysql_num_rows($this->ds):count($this->ds); 
 
 		// render: no records found
 		if($tnr<=0) {
@@ -111,10 +111,10 @@ class DataSetPager {
 		$p = $this->pageNumber;
 
 		// save page number to view state if available
-		if (isset($_PAGE['vs'])) $_PAGE['vs'][$this->id.'_dpgn'] = $p;
+		if (isset($_PAGE['vs'])) $_PAGE['vs'][$this->id.'_dpgn'] = $p;		
 
 		// render pager : renderPagerFnc($cuurentPage,$pagerNumber,$arguments="");
-		if($tp>1) {
+		if($tp>1) {	
 			$fnc = $this->renderPagerFnc;
 			$args = $this->renderPagerFncArgs;
 			if (!isset($fnc)){
@@ -143,7 +143,7 @@ class DataSetPager {
 			$fncObject = is_object($fnc);
 			$minitems = (($p-1)*$this->pageSize)+1;
 			$maxitems = (($p-1)*$this->pageSize)+$this->pageSize;
-			while ($i<=$maxitems && ($row = ($isDataset)? $modx->db->getRow($this->ds):$this->ds[$i-1])) {
+			while ($i<=$maxitems && ($row = ($isDataset)? mysql_fetch_assoc($this->ds):$this->ds[$i-1])) {
 				if ($i>=$minitems && $i<=$maxitems){
 					if($fncObject) {
 						if($args!="") $this->rows .= $fnc->RenderRowFnc($i,$row,$args);
@@ -156,8 +156,8 @@ class DataSetPager {
 
 				}
 				$i++;
-			}
-		}
+			}			
+		}	
 	}
 }
 

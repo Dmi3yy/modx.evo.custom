@@ -8,30 +8,29 @@ if(!$modx->hasPermission('messages')) {
 $id=$_REQUEST['id'];
 
 // check the user is allowed to delete this message
-$tbl_user_messages = $modx->getFullTableName('user_messages');
-$rs = $modx->db->select('recipient',$tbl_user_messages,"id={$id}");
-if($modx->db->getRecordCount($rs)!=1)
-{
-	echo 'Wrong number of messages returned!';
+$sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$table_prefix."user_messages`.id=$id";
+$rs = mysql_query($sql);
+$limit = mysql_num_rows($rs);
+if($limit!=1) {
+	echo "Wrong number of messages returned!";
 	exit;
-}
-else
-{
-	$row = $modx->db->getRow($rs);
-	if($row['recipient']!=$modx->getLoginUserID())
-	{
-		echo 'You are not allowed to delete this message!';
+} else {
+	$message=mysql_fetch_assoc($rs);
+	if($message['recipient']!=$modx->getLoginUserID()) {
+		echo "You are not allowed to delete this message!";
 		exit;
-	}
-	else
-	{
+	} else {
 		// delete message
-		$rs = $modx->db->delete($tbl_user_messages,"id={$id}");
-		if(!$rs)
-		{
-			echo 'Something went wrong while trying to delete the message!';
+		$sql = "DELETE FROM $dbase.`".$table_prefix."user_messages` WHERE id=$id;";
+		$rs = mysql_query($sql);
+		if(!$rs) {
+			echo "Something went wrong while trying to delete the message!";
 			exit;
 		} 
 	}
 }
-header('Location: index.php?a=10');
+
+$header = "Location: index.php?a=10";
+header($header);
+
+?>

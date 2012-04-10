@@ -24,11 +24,11 @@ $user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // check to see the snippet editor isn't locked
 $sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=88 AND $dbase.`".$table_prefix."active_users`.id=$user";
-$rs = $modx->db->query($sql);
+$rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
-		$lock = $modx->db->getRow($rs);
+		$lock = mysql_fetch_assoc($rs);
 		if($lock['internalKey']!=$modx->getLoginUserID()) {
 			$msg = sprintf($_lang["lock_msg"],$lock['username'],"web user");
 			$e->setError(5, $msg);
@@ -41,7 +41,7 @@ if($limit>1) {
 if($_REQUEST['a']=='88') {
 	// get user attributes
 	$sql = "SELECT * FROM $dbase.`".$table_prefix."web_user_attributes` WHERE $dbase.`".$table_prefix."web_user_attributes`.internalKey = ".$user.";";
-	$rs = $modx->db->query($sql);
+	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>1) {
 		echo "More than one user returned!<p>";
@@ -51,22 +51,19 @@ if($_REQUEST['a']=='88') {
 		echo "No user returned!<p>";
 		exit;
 	}
-	$userdata = $modx->db->getRow($rs);
+	$userdata = mysql_fetch_assoc($rs);
 
 	// get user settings
-	$tbl_web_user_settings = $modx->getFullTableName('web_user_settings');
-	$rs = $modx->db->select('*',$tbl_web_user_settings,"webuser={$user}");
+	$sql = "SELECT wus.* FROM $dbase.`".$table_prefix."web_user_settings` wus WHERE wus.webuser = ".$user.";";
+	$rs = mysql_query($sql);
 	$usersettings = array();
-	while($row = $modx->db->getRow($rs))
-	{
-		$usersettings[$row['setting_name']]=$row['setting_value'];
-	}
+	while($row=mysql_fetch_assoc($rs)) $usersettings[$row['setting_name']]=$row['setting_value'];
 	extract($usersettings, EXTR_OVERWRITE);
 
 	// get user name
-	$tbl_web_users = $modx->getFullTableName('web_users');
-	$rs = $modx->db->select('*',$tbl_web_users,"id={$user}");
-	$limit = $modx->db->getRecordCount($rs);
+	$sql = "SELECT * FROM $dbase.`".$table_prefix."web_users` WHERE $dbase.`".$table_prefix."web_users`.id = ".$user.";";
+	$rs = mysql_query($sql);
+	$limit = mysql_num_rows($rs);
 	if($limit>1) {
 		echo "More than one user returned while getting username!<p>";
 		exit;
@@ -75,7 +72,7 @@ if($_REQUEST['a']=='88') {
 		echo "No user returned while getting username!<p>";
 		exit;
 	}
-	$usernamedata = $modx->db->getRow($rs);
+	$usernamedata = mysql_fetch_assoc($rs);
 	$_SESSION['itemname']=$usernamedata['username'];
 } else {
 	$userdata = array();
@@ -96,6 +93,13 @@ if($modx->manager->hasFormValues()) {
 	$usersettings = array_merge($usersettings,$userdata);
 	$usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",",$_POST['allowed_days']):"";
 	extract($usersettings, EXTR_OVERWRITE);
+}
+
+// converts date format dd-mm-yyyy to php date
+function ConvertDate($date) {
+	global $modx;
+	if ($date == "") {return "0";}
+	else {}          {return $modx->toTimeStamp($date);}
 }
 
 // include the country list language file
@@ -211,7 +215,7 @@ function showHide(what, onoff){
 </script>
 
 
-<form action="index.php?a=89" method="post" name="userform" enctype="multipart/form-data">
+<form action="index.php?a=89" method="post" name="userform">
 <?php
 	// invoke OnWUsrFormPrerender event
 	$evtOut = $modx->invokeEvent("OnWUsrFormPrerender",array("id" => $user));
@@ -248,7 +252,7 @@ function showHide(what, onoff){
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="webUserPane">
 	<script type="text/javascript">
-		tpUser = new WebFXTabPane(document.getElementById( "webUserPane" ), <?php echo (($modx->config['remember_last_tab'] == 2) || ($_GET['stay'] == 2 )) ? 'true' : 'false'; ?> );
+		tpUser = new WebFXTabPane(document.getElementById( "webUserPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 	</script>
     <div class="tab-page" id="tabGeneral">
     	<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
@@ -262,7 +266,7 @@ function showHide(what, onoff){
 		  <?php if(!empty($userdata['id'])) { ?>
 		  <tr id="showname" style="display: <?php echo ($_GET['a']=='88' && (!isset($usernamedata['oldusername'])||$usernamedata['oldusername']==$usernamedata['username'])) ? $displayStyle : 'none';?> ">
 			<td colspan="3">
-				<img src="<?php echo $_style['icons_user'] ?>" alt="." />&nbsp;<b><?php echo !empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']; ?></b> - <span class="comment"><a href="#" onclick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
+				<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/user.gif" alt="." />&nbsp;<b><?php echo !empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']; ?></b> - <span class="comment"><a href="#" onclick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
 				<input type="hidden" name="oldusername" value="<?php echo htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']); ?>" />
 				<hr />
 			</td>
@@ -386,11 +390,7 @@ function showHide(what, onoff){
 		  <tr>
 			<td><?php echo $_lang['user_prevlogin']; ?>:</td>
 			<td>&nbsp;</td>
-			<?php
-				if(!empty($userdata['lastlogin'])) $lastlogin = $modx->toDateFormat($userdata['lastlogin']+$server_offset_time);
-				else                               $lastlogin = '-';
-			?>
-			<td><?php echo $lastlogin; ?></td>
+			<td><?php echo $modx->toDateFormat($userdata['lastlogin']+$server_offset_time) ?></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_failedlogincount']; ?>:</td>
@@ -515,57 +515,46 @@ function showHide(what, onoff){
           </tr>
 		</table>
 	</div>
+</div>
+
+</div>
+
 <?php
-if($use_udperms==1)
-{
-	$groupsarray = array();
-	
-	if($_GET['a']=='88')
-	{ // only do this bit if the user is being edited
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."web_groups` where webuser=".$_GET['id']."";
-		$rs = $modx->db->query($sql);
-		$limit = mysql_num_rows($rs);
-		for ($i = 0; $i < $limit; $i++)
-		{
-			$currentgroup=$modx->db->getRow($rs);
-			$groupsarray[$i] = $currentgroup['webgroup'];
-		}
+if($use_udperms==1) {
+$groupsarray = array();
+
+if($_GET['a']=='88') { // only do this bit if the user is being edited
+	$sql = "SELECT * FROM $dbase.`".$table_prefix."web_groups` where webuser=".$_GET['id']."";
+	$rs = mysql_query($sql);
+	$limit = mysql_num_rows($rs);
+	for ($i = 0; $i < $limit; $i++) {
+		$currentgroup=mysql_fetch_assoc($rs);
+		$groupsarray[$i] = $currentgroup['webgroup'];
 	}
-	// retain selected user groups between post
-	if(is_array($_POST['user_groups']))
-	{
-		foreach($_POST['user_groups'] as $n => $v) $groupsarray[] = $v;
-	}
+}
+
+// retain selected user groups between post
+if(is_array($_POST['user_groups'])) {
+	foreach($_POST['user_groups'] as $n => $v) $groupsarray[] = $v;
+}
+
 ?>
-	<!-- Access -->
-    <div class="tab-page" id="tabAccess">
-    	<h2 class="tab"><?php echo $_lang["web_access_permissions"] ?></h2>
-    	<script type="text/javascript">tpUser.addTabPage( document.getElementById( "tabAccess" ) );</script>
-		<div class="sectionHeader"><?php echo $_lang['web_access_permissions']; ?></div>
-		<div class="sectionBody">
+
+<div class="sectionHeader"><?php echo $_lang['web_access_permissions']; ?></div><div class="sectionBody">
 <?php
 	echo "<p>" . $_lang['access_permissions_user_message'] . "</p>";
 	$sql = "SELECT name, id FROM $dbase.`".$table_prefix."webgroup_names` ORDER BY name";
-	$rs = $modx->db->query($sql);
-	$tpl = '<input type="checkbox" name="user_groups[]" value="[+id+]" [+checked+] />[+name+]<br />';
-	while($row=$modx->db->getRow($rs))
-	{
-		$echo = $tpl;
-		$echo = str_replace('[+id+]',$row['id'],$echo);
-		$echo = str_replace('[+checked+]', (in_array($row['id'], $groupsarray) ? 'checked="checked"' : ''), $echo);
-		$echo = str_replace('[+name+]', $row['name'], $echo);
-		echo $echo;
+	$rs = mysql_query($sql);
+	$limit = mysql_num_rows($rs);
+	for($i=0; $i<$limit; $i++) {
+		$row=mysql_fetch_assoc($rs);
+		echo "<input type='checkbox' name='user_groups[]' value='".$row['id']."'".(in_array($row['id'], $groupsarray) ? " checked='checked'" : "")." />".$row['name']."<br />";
 	}
 ?>
-	</div>
+</div>
 <?php
 }
 ?>
-</div>
-
-</div>
-
-</div>
 <input type="submit" name="save" style="display:none">
 <?php
 	// invoke OnWUsrFormRender event
@@ -573,10 +562,3 @@ if($use_udperms==1)
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
-<?php
-// converts date format dd-mm-yyyy to php date
-function ConvertDate($date) {
-	global $modx;
-	if ($date == "") {return "0";}
-	else {}          {return $modx->toTimeStamp($date);}
-}

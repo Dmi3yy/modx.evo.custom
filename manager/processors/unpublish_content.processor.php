@@ -6,7 +6,6 @@ if(!$modx->hasPermission('save_document')||!$modx->hasPermission('publish_docume
 }
 
 $id = $_REQUEST['id'];
-$tbl_site_content = $modx->getFullTableName('site_content');
 
 // check permissions on the document
 include_once "./processors/user_documents_permissions.class.php";
@@ -26,25 +25,22 @@ if(!$udperms->checkPermissions()) {
 }
 
 // update the document
-$field['published']   = 0;
-$field['pub_date']    = 0;
-$field['unpub_date']  = 0;
-$field['publishedby'] = 0;
-$field['publishedon'] = 0;
-$rs = $modx->db->update($field,$tbl_site_content,"id={$id}");
-if(!$rs)
-{
+$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET published=0, pub_date=0, unpub_date=0, editedby=".$modx->getLoginUserID().", editedon=".time().", publishedby=0, publishedon=0 WHERE id=$id;";
+
+$rs = mysql_query($sql);
+if(!$rs){
 	echo "An error occured while attempting to unpublish the document.";
 }
 
 // invoke OnDocUnPublished  event
 $modx->invokeEvent("OnDocUnPublished",array("docid"=>$id));
 
-$modx->clearCache();
+include_once "cache_sync.class.processor.php";
+$sync = new synccache();
+$sync->setCachepath("../assets/cache/");
+$sync->setReport(false);
+$sync->emptyCache(); // first empty the cache
 
-$pid = $modx->db->getValue($modx->db->select('parent',$tbl_site_content,"id='{$id}'"));
-$page = (isset($_GET['page'])) ? "&page={$_GET['page']}" : '';
-if($pid!=='0') $header="Location: index.php?r=1&a=3&id={$pid}&tab=0{$page}";
-else           $header="Location: index.php?a=2&r=1";
-
+$header="Location: index.php?r=1&id=$id&a=7";
 header($header);
+?>

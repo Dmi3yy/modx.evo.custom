@@ -1,71 +1,17 @@
-<?php
+<?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_chunk')) {
 	$e->setError(3);
-	$e->dumpError();
+	$e->dumpError();	
 }
+?>
+<?php
+
 $id = intval($_POST['id']);
 $snippet = $modx->db->escape($_POST['post']);
 $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
-$editor_type = $_POST['editor_type']=='1' ? 1 : 0 ;
-$published = $_POST['published']=='1' ? 1 : 0 ;
-$pub_date    = $_POST['pub_date'];
-$unpub_date  = $_POST['unpub_date'];
-
-// determine published status
-$currentdate = time();
-
-if(empty($pub_date))
-{
-	$pub_date = 0;
-}
-else
-{
-	$pub_date = $modx->toTimeStamp($pub_date);
-	if(empty($pub_date))
-	{
-		$modx->manager->saveFormValues(78);
-		$url = "index.php?a=78&id={$id}";
-		include_once "header.inc.php";
-		$modx->webAlert($_lang["mgrlog_dateinvalid"],$url);
-		include_once "footer.inc.php";
-		exit;
-	}
-	elseif($pub_date < $currentdate)
-	{
-		$published = 1;
-	}
-	elseif ($pub_date > $currentdate)
-	{
-		$published = 0;
-	}
-}
-
-if(empty($unpub_date))
-{
-	$unpub_date = 0;
-}
-else
-{
-	$unpub_date = $modx->toTimeStamp($unpub_date);
-	if(empty($unpub_date))
-	{
-		$modx->manager->saveFormValues(78);
-		$url = "index.php?a=78&id={$id}";
-		include_once "header.inc.php";
-		$modx->webAlert($_lang["mgrlog_dateinvalid"],$url);
-		include_once "footer.inc.php";
-		exit;
-	}
-	elseif ($unpub_date < $currentdate)
-	{
-		$published = 0;
-	}
-}
-
-$tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
@@ -95,39 +41,35 @@ switch ($_POST['mode']) {
 								));
 
 		// disallow duplicate names for new chunks
-		$rs = $modx->db->select('COUNT(id)',$tbl_site_htmlsnippets,"name='{$name}'");
+		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_htmlsnippets` WHERE name = '{$name}'";
+		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
-		if($count > 0)
-		{
-			$url = "index.php?a=77";
-			$msg = sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name);
-			$modx->manager->saveFormValues(77);
-			include_once "header.inc.php";
-			$modx->webAlert($msg, $url);
-			include_once "footer.inc.php";
+		if($count > 0) {
+			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name));
+
+			// prepare a few variables prior to redisplaying form...
+			$content = array();
+			$_REQUEST['id'] = 0;
+			$_REQUEST['a'] = '77';
+			$_GET['stay'] = $_POST['stay'];
+			$content['id'] = 0;
+			$content['locked'] = $_POST['locked'] == 'on' ? 1 : 0;
+			$content['category'] = $_POST['categoryid'];
+
+			include 'header.inc.php';
+			include(dirname(dirname(__FILE__)).'/actions/mutate_htmlsnippet.dynamic.php');
+			include 'footer.inc.php';
+			
 			exit;
 		}
 		//do stuff to save the new doc
-		$field = array();
-		$field['name'] = $name;
-		$field['description'] = $description;
-		$field['published'] = $published;
-		$field['pub_date'] = $pub_date;
-		$field['unpub_date'] = $unpub_date;
-		$field['snippet'] = $snippet;
-		$field['locked'] = $locked;
-		$field['editor_type'] = $editor_type;
-		$field['category'] = $categoryid;
-		$rs = $modx->db->insert($field,$tbl_site_htmlsnippets);
-		if(!$rs)
-		{
+		$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name, description, snippet, locked, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."', ".$categoryid.");";
+		$rs = $modx->db->query($sql);
+		if(!$rs){
 			echo "\$rs not set! New Chunk not saved!";
-		}
-		else
-		{
+		} else {	
 			// get the id
-			if(!$newid=$modx->db->getInsertId())
-			{
+			if(!$newid=mysql_insert_id()) {
 				echo "Couldn't get last insert key!";
 				exit;
 			}
@@ -140,17 +82,22 @@ switch ($_POST['mode']) {
 									));
 
 			// empty cache
-			$modx->clearCache(); // first empty the cache		
+			include_once "cache_sync.class.processor.php";
+			$sync = new synccache();
+			$sync->setCachepath("../assets/cache/");
+			$sync->setReport(false);
+			$sync->emptyCache(); // first empty the cache		
 			
 			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
-				$a = ($_POST['stay']=='2') ? "78&id={$newid}":"77";
-				$header="Location: index.php?a={$a}&stay={$_POST['stay']}";
+				$a = ($_POST['stay']=='2') ? "78&id=$newid":"77";
+				$header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay'];
+				header($header);
 			} else {
-				$header="Location: index.php?a=76";
+				$header="Location: index.php?a=76&r=2";
+				header($header);
 			}
-			header($header);
-		}
+		}		
         break;
     case '78':
 
@@ -161,74 +108,43 @@ switch ($_POST['mode']) {
 									"id"	=> $id
 								));
 		
-		if(check_exist_name($name)!==false)
-		{
-			$url = "index.php?a=78&id={$id}";
-			$msg = sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name);
-			$modx->manager->saveFormValues(78);
-			include_once "header.inc.php";
-			$modx->webAlert($msg, $url);
-			include_once "footer.inc.php";
-			exit;
-		}
-		
 		//do stuff to save the edited doc
-		$was_name = $modx->db->getValue($modx->db->select('name',$tbl_site_htmlsnippets,"id='{$id}'"));
-		$field = array();
-		$field['name'] = $name;
-		$field['description'] = $description;
-		$field['published'] = $published;
-		$field['pub_date'] = $pub_date;
-		$field['unpub_date'] = $unpub_date;
-		$field['snippet'] = $snippet;
-		$field['locked'] = $locked;
-		$field['editor_type'] = $editor_type;
-		$field['category'] = $categoryid;
-		$rs = $modx->db->update($field,$tbl_site_htmlsnippets,"id='{$id}'");
-		if(!$rs)
-		{
+		$sql = "UPDATE $dbase.`".$table_prefix."site_htmlsnippets` SET name='".$name."', description='".$description."', snippet='".$snippet."', locked='".$locked."', category=".$categoryid." WHERE id='".$id."';";
+		$rs = $modx->db->query($sql);
+		if(!$rs){
 			echo "\$rs not set! Edited htmlsnippet not saved!";
-		}
-		else
-		{
-			$modx->db->update("content=REPLACE(content,'{{{$was_name}}}','{{{$name}}}')",$modx->getFullTableName('site_content'));
-			$modx->db->update("content=REPLACE(content,'{{{$was_name}}}','{{{$name}}}')",$modx->getFullTableName('site_templates'));
-			$modx->db->update("snippet=REPLACE(snippet,'{{{$was_name}}}','{{{$name}}}')",$modx->getFullTableName('site_htmlsnippets'));
-			$modx->db->update("content=REPLACE(content,'{{{$was_name}:','{{{$name}:')",  $modx->getFullTableName('site_content'));
-			$modx->db->update("content=REPLACE(content,'{{{$was_name}:','{{{$name}:')",  $modx->getFullTableName('site_templates'));
-			$modx->db->update("snippet=REPLACE(snippet,'{{{$was_name}:','{{{$name}:')",  $modx->getFullTableName('site_htmlsnippets'));
-			
+		} else {		
 			// invoke OnChunkFormSave event
 			$modx->invokeEvent("OnChunkFormSave",
 									array(
 										"mode"	=> "upd",
 										"id"	=> $id
 									));
-			
+
 			// empty cache
-			$modx->clearCache(); // first empty the cache		
+			include_once "cache_sync.class.processor.php";
+			$sync = new synccache();
+			$sync->setCachepath("../assets/cache/");
+			$sync->setReport(false);
+			$sync->emptyCache(); // first empty the cache		
 
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {
-				$a = ($_POST['stay']=='2') ? "78&id={$id}":"77";
-				$header="Location: index.php?a={$a}&stay={$_POST['stay']}";
+				$a = ($_POST['stay']=='2') ? "78&id=$id":"77";
+				$header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay'];
+				header($header);
 			} else {
-				$header="Location: index.php?a=76";
+				$header="Location: index.php?a=76&r=2";
+				header($header);
 			}
-			header($header);
-		}
+		}		
+
+		
+		
         break;
     default:
+	?>
+	Erm... You supposed to be here now?
+	<?php
 }
-
-function check_exist_name($name)
-{	// disallow duplicate names for new chunks
-	global $modx;
-	$tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
-	$where = "name='{$name}'";
-	if($_POST['mode']==78) {$where = $where . " AND id!={$_POST['id']}";}
-	$rs = $modx->db->select('COUNT(id)',$tbl_site_htmlsnippets,$where);
-	$count = $modx->db->getValue($rs);
-	if($count > 0) return true;
-	else           return false;
-}
+?>

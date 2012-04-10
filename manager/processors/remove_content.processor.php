@@ -5,13 +5,13 @@ if(!$modx->hasPermission('delete_document')) {
 	$e->dumpError();
 }
 
-$tbl_site_content = $modx->getFullTableName('site_content');
-$rs = $modx->db->select('id',$tbl_site_content,'deleted=1');
+$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
+$rs = mysql_query($sql);
+$limit = mysql_num_rows($rs);
 $ids = array();
-if($modx->db->getRecordCount($rs)>0)
-{
-	while($row=$modx->db->getRow($rs))
-	{
+if($limit>0) {
+	for($i=0;$i<$limit;$i++) {
+		$row=mysql_fetch_assoc($rs);
 		array_push($ids, @$row['id']);
 	}
 }
@@ -23,23 +23,22 @@ $modx->invokeEvent("OnBeforeEmptyTrash",
 						));
 
 // remove the document groups link.
-$tbl_document_groups = $modx->getFullTableName('document_groups');
-$sql = "DELETE {$tbl_document_groups}
-		FROM {$tbl_document_groups}
-		INNER JOIN {$tbl_site_content} ON {$tbl_site_content}.id = {$tbl_document_groups}.document
-		WHERE {$tbl_site_content}.deleted=1";
-$modx->db->query($sql);
+$sql = "DELETE $dbase.`".$table_prefix."document_groups`
+		FROM $dbase.`".$table_prefix."document_groups`
+		INNER JOIN $dbase.`".$table_prefix."site_content` ON $dbase.`".$table_prefix."site_content`.id = $dbase.`".$table_prefix."document_groups`.document
+		WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
+@mysql_query($sql);
 
 // remove the TV content values.
-$tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
-$sql = "DELETE {$tbl_site_tmplvar_contentvalues}
-		FROM {$tbl_site_tmplvar_contentvalues}
-		INNER JOIN {$tbl_site_content} ON {$tbl_site_content}.id = {$tbl_site_tmplvar_contentvalues}.contentid
-		WHERE {$tbl_site_content}.deleted=1";
-$modx->db->query($sql);
+$sql = "DELETE $dbase.`".$table_prefix."site_tmplvar_contentvalues`
+		FROM $dbase.`".$table_prefix."site_tmplvar_contentvalues`
+		INNER JOIN $dbase.`".$table_prefix."site_content` ON $dbase.`".$table_prefix."site_content`.id = $dbase.`".$table_prefix."site_tmplvar_contentvalues`.contentid
+		WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
+@mysql_query($sql);
 
 //'undelete' the document.
-$rs = $modx->db->delete($tbl_site_content,'deleted=1');
+$sql = "DELETE FROM $dbase.`".$table_prefix."site_content` WHERE deleted=1;";
+$rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to remove deleted documents!";
 	exit;
@@ -51,7 +50,13 @@ if(!$rs) {
 						));
 
 	// empty cache
-	$modx->clearCache(); // first empty the cache
+	include_once "cache_sync.class.processor.php";
+	$sync = new synccache();
+	$sync->setCachepath("../assets/cache/");
+	$sync->setReport(false);
+	$sync->emptyCache(); // first empty the cache
 	// finished emptying cache - redirect
-	header("Location: index.php?r=1&a=7");
+	$header="Location: index.php?r=1&a=7";
+	header($header);
 }
+?>

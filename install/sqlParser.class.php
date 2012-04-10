@@ -4,33 +4,45 @@
 // SNUFFKIN/ Alex 2004
 
 class SqlParser {
-	var $prefix, $mysqlErrors;
+	var $host, $dbname, $prefix, $user, $password, $mysqlErrors;
 	var $conn, $installFailed, $sitename, $adminname, $adminemail, $adminpass, $managerlanguage;
-	var $mode;
+	var $mode, $fileManagerPath, $imgPath, $imgUrl;
 	var $dbVersion;
-    var $connection_charset, $connection_collation, $autoTemplateLogic,$ignoreDuplicateErrors;
+    var $connection_charset, $connection_method;
 
-	function SqlParser() {
-		$this->prefix = 'modx_';
-		$this->adminname = 'admin';
-		$this->adminpass = 'password';
-		$this->adminemail = 'example@example.com';
-		$this->connection_charset = 'utf8';
-		$this->connection_collation = 'utf8_general_ci';
+	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english', $connection_method = 'SET CHARACTER SET', $auto_template_logic = 'parent') {
+		$this->host = $host;
+		$this->dbname = $db;
+		$this->prefix = $prefix;
+		$this->user = $user;
+		$this->password = $password;
+		$this->adminpass = $adminpass;
+		$this->adminname = $adminname;
+		$this->adminemail = $adminemail;
+		$this->connection_charset = $connection_charset;
+		$this->connection_method = $connection_method;
 		$this->ignoreDuplicateErrors = false;
-		$this->managerlanguage = 'english';
-		$this->autoTemplateLogic = 'system';
+		$this->managerlanguage = $managerlanguage;
+        $this->autoTemplateLogic = $auto_template_logic;
 	}
 
-	function process($filename) {
-	    global $modx,$modx_version;
+	function connect() {
+		$this->conn = mysql_connect($this->host, $this->user, $this->password);
+		mysql_select_db($this->dbname, $this->conn);
 
 		$this->dbVersion = 3.23; // assume version 3.23
 		if(function_exists("mysql_get_server_info")) {
 			$ver = mysql_get_server_info();
+			$this->dbMODx 	 = version_compare($ver,"4.0.2");
 			$this->dbVersion = (float) $ver; // Typecasting (float) instead of floatval() [PHP < 4.2]
 		}
-		
+
+        mysql_query("{$this->connection_method} {$this->connection_charset}");
+	}
+
+	function process($filename) {
+	    global $modx_version;
+
 		// check to make sure file exists
 		if (!file_exists($filename)) {
 			$this->mysqlErrors[] = array("error" => "File '$filename' not found");
@@ -38,8 +50,14 @@ class SqlParser {
 			return false;
 		}
 
-		$idata = file_get_contents($filename);
+		$fh = fopen($filename, 'r');
+		$idata = '';
 
+		while (!feof($fh)) {
+			$idata .= fread($fh, 1024);
+		}
+
+		fclose($fh);
 		$idata = str_replace("\r", '', $idata);
 
 		// check if in upgrade mode
@@ -49,38 +67,40 @@ class SqlParser {
 			$e = strpos($idata,"]]non-upgrade-able")+17;
 			if($s && $e) $idata = str_replace(substr($idata,$s,$e-$s)," Removed non upgradeable items",$idata);
 		}
-		
-		if(version_compare($this->dbVersion,'4.1.0', '>='))
-		{
-			$char_collate = "DEFAULT CHARSET={$this->connection_charset} COLLATE {$this->connection_collation}";
-			$idata = str_replace('ENGINE=MyISAM', "ENGINE=MyISAM {$char_collate}", $idata);
-		}
-		
+
 		// replace {} tags
-		$ph = array();
-		$ph['PREFIX']            = $this->prefix;
-		$ph['ADMINNAME']         = $this->adminname;
-		$ph['ADMINFULLNAME']     = substr($this->adminemail,0,strpos($this->adminemail,'@'));
-		$ph['ADMINEMAIL']        = $this->adminemail;
-		$ph['ADMINPASS']         = $this->adminpass;
-		$ph['MANAGERLANGUAGE']   = $this->managerlanguage;
-		$ph['AUTOTEMPLATELOGIC'] = $this->autoTemplateLogic;
-		$ph['DATE_NOW']          = time();
-		$idata = parse($idata,$ph,'{','}');
-		
-		$sql_array = preg_split('@;[ \t]*\n@', $idata);
-		
+		$idata = str_replace('{PREFIX}', $this->prefix, $idata);
+		$idata = str_replace('{ADMIN}', $this->adminname, $idata);
+		$idata = str_replace('{ADMINEMAIL}', $this->adminemail, $idata);
+		$idata = str_replace('{ADMINPASS}', $this->adminpass, $idata);
+		$idata = str_replace('{IMAGEPATH}', $this->imagePath, $idata);
+		$idata = str_replace('{IMAGEURL}', $this->imageUrl, $idata);
+		$idata = str_replace('{FILEMANAGERPATH}', $this->fileManagerPath, $idata);
+		$idata = str_replace('{MANAGERLANGUAGE}', $this->managerlanguage, $idata);
+		$idata = str_replace('{AUTOTEMPLATELOGIC}', $this->autoTemplateLogic, $idata);
+		/*$idata = str_replace('{VERSION}', $modx_version, $idata);*/
+
+		$sql_array = explode("\n\n", $idata);
+
 		$num = 0;
-		foreach($sql_array as $sql_entry)
-		{
+		foreach($sql_array as $sql_entry) {
 			$sql_do = trim($sql_entry, "\r\n; ");
-			$num++;
-			if ($sql_do) mysql_query($sql_do);
-			if(mysql_error())
-			{
+
+			if (preg_match('/^\#/', $sql_do)) continue;
+
+			// strip out comments and \n for mysql 3.x
+			if ($this->dbVersion <4.0) {
+				$sql_do = preg_replace("~COMMENT.*[^']?'.*[^']?'~","",$sql_do);
+				$sql_do = str_replace('\r', "", $sql_do);
+				$sql_do = str_replace('\n', "", $sql_do);
+			}
+
+
+			$num = $num + 1;
+			if ($sql_do) mysql_query($sql_do, $this->conn);
+			if(mysql_error()) {
 				// Ignore duplicate and drop errors - Raymond
-				if ($this->ignoreDuplicateErrors)
-				{
+				if ($this->ignoreDuplicateErrors){
 					if (mysql_errno() == 1060 || mysql_errno() == 1061 || mysql_errno() == 1091) continue;
 				}
 				// End Ignore duplicate
@@ -90,4 +110,9 @@ class SqlParser {
 		}
 	}
 
+	function close() {
+		mysql_close($this->conn);
+	}
 }
+
+?>

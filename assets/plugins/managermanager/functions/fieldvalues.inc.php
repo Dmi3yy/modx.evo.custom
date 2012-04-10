@@ -9,7 +9,7 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 	
 	
 	global $mm_fields, $modx;
-	$e = &$modx->event;
+	$e = &$modx->Event;
 		
 	// if we aren't creating a new document or folder, we don't want to do this
 	// Which action IDs so we want to do this for?
@@ -20,7 +20,7 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 	$allowed_actions = array('85','4','72');
 	if (!in_array($modx->manager->action, $allowed_actions)) {
 		return;
-	}
+	} 
 	
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)) {
 		
@@ -31,16 +31,27 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 		
 		
 		// Work out the correct date time format based on the config setting
-		$date_format = $modx->toDateFormat(null, 'formatOnly');
+		switch($modx->config['datetime_format']) {
+			case 'dd-mm-YYYY':
+				$date_format = 'd-m-Y';
+			break;	
+			case 'mm/dd/YYYY':
+				$date_format = 'm-d-Y';
+			break;
+			case 'YYYY/mm/dd':
+				$date_format = 'Y-m-d';
+			break;
+		}
+		
 		
 		switch ($field) {
 			case 'pub_date':
-				$new_value = ($new_value=='') ? strftime($date_format . ' %H:%M:%S') : $new_value;
+				$new_value = ($new_value=='') ? date("$date_format H:i:s") : $new_value;
 				$output .= '$j("input[name=pub_date]").val("'.jsSafe($new_value).'"); '."\n";
 			break;
 			
 			case 'unpub_date':
-				$new_value = ($new_value=='') ? strftime($date_format . ' %H:%M:%S') : $new_value;
+				$new_value = ($new_value=='') ? date("$date_format H:i:s") : $new_value;
 				$output .= '$j("input[name=unpub_date]").val("'.jsSafe($new_value).'"); '."\n";
 			break;
 			
@@ -61,7 +72,7 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 					$output .= '$j("input[name=hidemenucheck]").attr("checked", "checked"); '."\n";
 				} else {
 					$output .= '$j("input[name=hidemenucheck]").removeAttr("checked"); '."\n";
-				}
+				}					
 			break;
 			
 			case 'show_in_menu':
@@ -126,12 +137,16 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 					$output .= '
 					$j("input[name=richtextcheck]").removeAttr("checked");
 					// Make the RTE displayed match the default value that has been set here
+					if (originalRichtextValue != "none") {
+						$j("#which_editor").val("none");
+						changeRTE();
+					}				
 					
 					';
 					$output .= ''."\n";
 					
 				}
-			break;
+			break;			
 			
 			
 			case 'log':
@@ -146,7 +161,7 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 			
 			
 			case 'content_type':
-				$output .= '$j("select[name=contentType]").val("'.$new_value.'");' . "\n";
+				$output .= '$j("select[name=contentType]").val("'.$new_value.'");' . "\n";			
 			break;
 			
 			
@@ -155,7 +170,7 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 				$output .= '$j("*[name='.$field.']").val("'.$new_value.'");' . "\n"; //return;
 			break;
 		}	
-		$e->output($output . "\n");
+		$e->output($output . "\n");	
 	
 	} 
 	
@@ -170,9 +185,9 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 function mm_inherit($fields, $roles='', $templates='') {
 
 	global $mm_fields, $modx;
-	$e = &$modx->event;
+	$e = &$modx->Event;
 	
-	// if we've been supplied with a string, convert it into an array
+	// if we've been supplied with a string, convert it into an array 
 	$fields = makeArray($fields);
 	
 	// if we aren't creating a new document or folder, we don't want to do this
@@ -184,16 +199,17 @@ function mm_inherit($fields, $roles='', $templates='') {
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)) {
 		
 		// Get the parent info
-		if (isset($_REQUEST['pid']) && is_numeric($_REQUEST['pid'])){
-			$parentID = intval($_REQUEST['pid']);
-		} else if (isset($_REQUEST['parent']) && is_numeric($_REQUEST['parent'])){
-			$parentID = intval($_REQUEST['parent']);
+		if (isset($_REQUEST['pid'])){
+			$parentID = $modx->getPageInfo($_REQUEST['pid'],0,'id');
+			$parentID = $parentID['id'];
 		} else {
 			$parentID = 0;
 		}
 	
 		$output = " // ----------- Inherit (from page $parentID)-------------- \n";
-			
+	
+		
+		
 		foreach ($fields as $field) {
 			
 			// get some info about the field we are being asked to use
@@ -204,20 +220,16 @@ function mm_inherit($fields, $roles='', $templates='') {
 						
 						// Get this field data from the parent
 						$newArray = $modx->getDocument($parentID, $dbname);
-						if ( empty($newArray)) { // If no results, check if there is an unpublished doc
-							$newArray = $modx->getDocument($parentID, $dbname, 0);
-						}
 						$newvalue = $newArray[$dbname];
 			} else {
 				break;	 // If it's not something stored in the database, don't get the value
 			}
 			
-			$output .= "// fieldtype $fieldtype
-			// fieldname $fieldname
-			// dbname $dbname
-			// newvalue $newvalue
+			$output .= "// fieldtype $fieldtype		
+			// fieldname $fieldname			
+			// dbname $dbname			
+			// newvalue $newvalue 	
 				";
-			$date_format = $modx->toDateFormat(null, 'formatOnly');
  						 
 			switch ($field) {
 				
@@ -231,14 +243,14 @@ function mm_inherit($fields, $roles='', $templates='') {
 				case 'is_richtext':
 				case 'searchable':
 				case 'cacheable':
-				case 'published':
+				case 'published':			
 					$output .=  '$j("input[name='.$fieldname.']").attr("checked", "'.($newvalue?'checked':'').'"); ';
-				break;
+				break;	
 				
 				case 'pub_date':
 				case 'unpub_date':
-					$output .=  '$j("input[name='.$fieldname.']").val("'.strftime($date_format . ' %H:%M:%S', $newvalue).'"); ';
-				break;
+					$output .=  '$j("input[name='.$fieldname.']").val("'.date('d-m-Y H:i:s', $newvalue).'"); ';
+				break;					
 						
 				default:
 					
@@ -247,16 +259,16 @@ function mm_inherit($fields, $roles='', $templates='') {
 							$output .=  '$j("textarea[name='.$fieldname.']").html("' . jsSafe($newvalue) . '"); ';
 						break;
 						
-						default:
+						default: 
 							$output .=  '$j("'.$fieldtype.'[name='.$fieldname.']").val("' . jsSafe($newvalue) . '"); ';
-						break;
+						break;	
 					}
-				break;
-			}
+				break;	
+			}	
 			
 		}
 		
-		$e->output($output . "\n");
+		$e->output($output . "\n");		
 	}
 }
 
@@ -268,13 +280,13 @@ function mm_inherit($fields, $roles='', $templates='') {
 //---------------------------------------------------------------------------------
 // mm_synch_fields
 // Synch two fields in real time
-//---------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------- 
 function mm_synch_fields($fields, $roles='', $templates='') {
 
 	global $modx, $mm_fields;
-	$e = &$modx->event;
+	$e = &$modx->Event;
 	
-	// if we've been supplied with a string, convert it into an array
+	// if we've been supplied with a string, convert it into an array 
 	$fields = makeArray($fields);
 	
 	// We need at least 2 values
@@ -293,7 +305,7 @@ function mm_synch_fields($fields, $roles='', $templates='') {
 	
 		foreach ($fields as $field) {
 		
-			if (isset($mm_fields[$field])) {
+			if (isset($mm_fields[$field])) { 	
 				$fieldtype = $mm_fields[$field]['fieldtype'];
 				$fieldname = $mm_fields[$field]['fieldname'];
 				
@@ -310,7 +322,7 @@ function mm_synch_fields($fields, $roles='', $templates='') {
 				';
 			
 			// Or we don't recognise it
-			} else {break;}
+			} else {break;}	
 
 			
 
@@ -321,7 +333,7 @@ function mm_synch_fields($fields, $roles='', $templates='') {
 			$j.each(synch_field[mm_sync_field_count], function(i,n) {
 				$j.each(synch_field[mm_sync_field_count], function(j,m) {
 					if (i!=j) {
-						n.keyup( function() {
+						n.keyup( function() { 
 							m.val($j(this).val());
 						 } );
 					}
@@ -335,3 +347,8 @@ function mm_synch_fields($fields, $roles='', $templates='') {
 		
 	}	// end if
 }	// end function
+
+
+
+
+?>

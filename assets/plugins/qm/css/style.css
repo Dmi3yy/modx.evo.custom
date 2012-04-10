@@ -35,8 +35,7 @@
     padding: 0 !important;
 }
 
-.qm-new a, .qm-tv a,
-.qm-new a:link, .qm-tv a:visited
+.qm-new a, .qm-tv a
 {
     display: block;
     color: #3b454f;
@@ -294,14 +293,10 @@
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
 	-webkit-text-shadow: 1px 1px 0 #fff;
-	-moz-text-shadow: 1px 1px 0 #fff;
-	text-shadow: 1px 1px 0 #fff;
+	-moz-text-shadow: 0 1px 1px #fff;
+	text-shadow: 0 1px 1px #fff;
 	border: 1px solid #8ea4be;
 	outline: none;
-}
-
-div#qmEditor span {
-	font-weight: bold;
 }
 
 #qmEditor .qmButton:hover, .qm-edit:hover, .qm-new:hover, .qm-tv:hover, .qm-save:hover, .qm-cancel:hover  

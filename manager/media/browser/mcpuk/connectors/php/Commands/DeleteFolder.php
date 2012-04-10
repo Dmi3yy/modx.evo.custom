@@ -50,11 +50,11 @@ class DeleteFolder {
 		<?php
 	}
 	
-	function delDir($dir)
-	{
-		$files = scandir($dir);
-		if ($files) {
-			foreach($files as $entry) {
+	
+	function delDir($dir) {
+		$dh=opendir($dir);
+		if ($dh) {
+			while ($entry=readdir($dh)) {
 				if (($entry!=".")&&($entry!="..")) {
 					if (is_dir($dir.'/'.$entry)) {
 						$this->delDir($dir.'/'.$entry);	
@@ -65,6 +65,7 @@ class DeleteFolder {
 					}
 				}
 			}	
+			closedir($dh);
 			return rmdir($dir);
 		} else {
 			return false;

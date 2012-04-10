@@ -20,26 +20,52 @@
 
 // ** START FOR MODx
 
-$base_path = str_replace('\\','/',realpath('../../../../../../')) . '/';
+require_once('../../../../../includes/protect.inc.php');
+
 // load configuration file
 // initialize the variables prior to grabbing the config file
-define('IN_MANAGER_MODE', 'true'); // set this so that user_settings will trust us.
-define('MODX_API_MODE',true);
-include_once("{$base_path}index.php");
+$database_type = '';
+$database_server = '';
+$database_user = '';
+$database_password = '';
+$dbase = '';
+$table_prefix = '';
+$base_url = '';
+$base_path = '';
+include("../../../../../includes/config.inc.php");
 
 /** 
  * Security check user MUST be logged into manager 
  * before being able to run this script
  */
+startCMSSession(); 
+if(!isset($_SESSION['mgrValidated'])) {
+	if(!isset($_SESSION['webValidated'])){
+		die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+	}
+}
 
 // connect to the database
-$modx->db->connect();
+if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
+	die("Failed to create the database connection!");
+} else {
+	mysql_select_db($dbase);
+    @mysql_query("{$database_connection_method} {$database_connection_charset}");
+}
+
 // Override system settings with user settings
-$modx->getSettings();
-extract($modx->config);
-$settings = &$modx->config;
+define('IN_MANAGER_MODE', 'true'); // set this so that user_settings will trust us.
+include("../../../../../includes/settings.inc.php");
+include("../../../../../includes/user_settings.inc.php");
+
 if($settings['use_browser'] != 1){
 	die("<b>PERMISSION DENIED</b><br /><br />You do not have permission to access this file!");
+}
+
+if(!isset($_SESSION['mgrValidated'])){
+	if($_SESSION['webValidated'] && $settings['rb_webuser'] != 1 ){
+		die("<b>PERMISSION DENIED</b><br /><br />You do not have permission to access this file!");
+	}
 }
 
 // make arrays from the file upload settings
@@ -51,7 +77,7 @@ $upload_flash = explode(',',$upload_flash);
 // avoid problems when passing strings into CHMOD
 $fckphp_config['modx']['file_permissions'] = octdec($new_file_permissions);
 $fckphp_config['modx']['folder_permissions'] = octdec($new_folder_permissions);
-$fckphp_config['modx']['charset'] = $modx->config['modx_charset'];
+$fckphp_config['modx']['charset'] = $settings['modx_charset'];
 // ** END FOR MODx
 
 
@@ -68,7 +94,7 @@ $baseurl = $rb_base_url;
 $rb_base_url_parse = parse_url($rb_base_url);
 if(empty($rb_base_url_parse['host'])){
     $base_url_parse = parse_url($base_url);
-    if($rb_base_url!=='/') $rb_base_url = str_replace($base_url_parse['path'], "", $rb_base_url);
+    $rb_base_url = str_replace($base_url_parse['path'], "", $rb_base_url);
     $rb_base_url = (substr($rb_base_url, 0, 1) == "/" ? substr($rb_base_url, 1) : $rb_base_url);  
     if($_GET['editor'] == 'fckeditor2' && $strip_image_paths == 1){
     	$baseurl = $base_url.$rb_base_url;     
@@ -201,7 +227,7 @@ $fckphp_config['ResourceAreas']['media'] =array(
 	'AllowImageEditing'	=>	false
 	);
 	
-/*==============================================================================*/
+/*==============================================================================*/		
 
 
 /*------------------------------------------------------------------------------*/
@@ -284,3 +310,5 @@ $fckphp_config['Commands'] = array(
 				"RenameFolder"
 				);
 /*==============================================================================*/
+
+?>

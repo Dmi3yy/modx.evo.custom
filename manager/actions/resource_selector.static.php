@@ -15,6 +15,18 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	<title><?php echo $content["name"]." ".$_lang['element_selector_title']; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
+<?php
+if($_SESSION['browser']=='ie') {
+?>   
+	<style>
+	/* stupid box model hack for equally stupid MSIE */
+	.sectionHeader, .sectionBody {
+		width:100%;
+	}
+	</style>
+<?php
+}
+?>
 </head>
 <body ondragstart="return false">
 
@@ -144,7 +156,8 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <input type="hidden" name="cb" value="<?php echo $cb; ?>" />
 <div class="sectionHeader" style="margin:0px"><?php echo $title." - ".$_lang['element_selector_title']; ?></div>
 <div class="sectionBody" style="margin-top:5px;margin-right:0px;margin-left:0px;border:0px;">
-<p><?php echo $_lang['element_selector_msg']; ?></p>
+<p><img src="<?php echo $_style["icons_right_arrow"] ?>" alt="." width="32" height="32" align="left" /><?php echo $_lang['element_selector_msg']; ?></p>
+<br />
 <!-- resources -->
 	 <table width="100%" border="0" cellspacing="1" cellpadding="2">
 	 <tr>
@@ -153,19 +166,16 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		<table border="0" width="100%">
 			<tr>
 			<td nowrap="nowrap">
-				<table border="0">
-				<tr>
-				<td><?php echo $_lang["search"]; ?></td>
-				<td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
-				<td class="actionButtons"><a href="#" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
-				<td class="actionButtons"><a href="#" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="<?php echo $_style['icons_refresh']?>" /></a></td>
-				<td class="actionButtons"><a href="#" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="<?php echo $_style['icons_table']?>" /></a></td>
+				<table border="0"><tr><td><?php echo $_lang["search"]; ?></td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
+				<td><a href="#" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
+				<td><a href="#" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="<?php echo $_style['icons_refresh']?>" width="16" height="16"/></a></td>
+				<td><a href="#" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="<?php echo $_style['icons_table']?>" width="16" height="16"/></a></td>
 				</tr>
 				</table>
 			</td>
-			<td width="200" class="actionButtons">
-				<a href="#" style="float:right;margin-left:2px;" onclick="window.close()"><img src="<?php echo $_style['icons_cancel']?>" /> <?php echo $_lang['cancel']; ?></a>
-				<a href="#" style="float:right;margin-left:2px;" onclick="saveSelection()"><img src="<?php echo $_style['icons_add']?>" /> <?php echo $_lang['insert']; ?></a>				
+			<td width="200">
+				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="window.close()"><img src="<?php echo $_style['icons_cancel']?>" /> <?php echo $_lang['cancel']; ?></a>
+				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="saveSelection()"><img src="<?php echo $_style['icons_add']?>" /> <?php echo $_lang['insert']; ?></a>				
 			</td>
 			</tr>
 		</table>
@@ -175,7 +185,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	  <tr>
 		<td valign="top" align="left">
 		<?php
-			$ds = $modx->db->query($sql);
+			$ds = $modx->dbQuery($sql);
 			if (!$ds){
 				echo "An error occured while loading records.";
 				exit;
@@ -189,7 +199,8 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 				$grd->itemClass="gridItem"; 
 				$grd->altItemClass="gridAltItem"; 
 				$grd->columns=$_lang["name"]." ,".$_lang["description"];
-				$grd->colTypes = "template:<label><input type='".($sm=='m'? 'checkbox':'radio')."' name='id[]' value='[+id+]' onclick='setCheckbox(this);'> [+value+]</label>";
+				$grd->colTypes = "template:<input type='".($sm=='m'? 'checkbox':'radio')."' name='id[]' value='[+id+]' onclick='setCheckbox(this);'> [+value+]";
+				$grd->colWidths = "45%";
 				$grd->fields="name,description";
 				if($_REQUEST['listmode']=='1') $grd->pageSize=0;
 				echo $grd->render();

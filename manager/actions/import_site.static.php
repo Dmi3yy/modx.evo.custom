@@ -1,13 +1,13 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('import_static'))
-{
+if(!$modx->hasPermission('import_static')) {
     $e->setError(3);
     $e->dumpError();
 }
 
 // Files to upload
 $allowedfiles = array('html','htm','shtml','xml');
+
 ?>
 
 <script type="text/javascript">
@@ -15,10 +15,10 @@ $allowedfiles = array('html','htm','shtml','xml');
     function setParent(pId, pName) {
         document.importFrm.parent.value=pId;
         document.getElementById('parentName').innerHTML = pId + " (" + pName + ")";
-        if(pId!=0)
-        document.getElementById('reset').disabled=true;
-        else
-        document.getElementById('reset').disabled=false;
+    }
+    function reloadTree() {
+        // redirect to welcome
+        document.location.href = "index.php?r=1&a=7";
     }
 </script>
 
@@ -43,28 +43,11 @@ if(!isset($_POST['import'])) {
     <td><b><span id="parentName">0 (<?php echo $site_name; ?>)</span></b></td>
   </tr>
   <tr>
-    <td nowrap="nowrap" valign="top"><b><?php echo $_lang['import_site_maxtime']; ?></b></td>
+    <td valign="top"><b><?php echo $_lang['import_site_maxtime']; ?></b></td>
     <td>&nbsp;</td>
     <td><input type="text" name="maxtime" value="30" />
         <br />
         <small><?php echo $_lang['import_site_maxtime_message']; ?></small>
-    </td>
-  </tr>
-  <tr>
-	<td nowrap="nowrap" valign="top"><b>リソースツリーをリセットする</b></td>
-    <td>&nbsp;</td>
-    <td><input type="checkbox" id="reset" name="reset" value="on" />
-        <br />
-		リソースツリー上のリソースを全削除してからインポートします。リソースIDも初期化されます。
-    </td>
-  </tr>
-  <tr>
-    <td nowrap="nowrap" valign="top"><b>インポート対象</b></td>
-    <td>&nbsp;</td>
-    <td>
-    <label><input type="radio" name="object" value="body" checked="checked" /> body要素のみ</label>
-    <label><input type="radio" name="object" value="all" /> htmlファイルまるごと</label>
-        <br />
     </td>
   </tr>
 </table>
@@ -75,327 +58,152 @@ if(!isset($_POST['import'])) {
 </fieldset>
 
 <?php
-}
-else
-{
-	run();
-	$modx->clearCache();
+} else {
+
+    $maxtime = $_POST['maxtime'];
+    if(!is_numeric($maxtime)) {
+        $maxtime = 30;
+    }
+
+    @set_time_limit($maxtime);
+    $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $importstart = $mtime;
+
+    $parent = $_POST['parent'];
+    $filepath = "../assets/import/";
+    $filesfound = 0;
+
+    $files = getFiles($filepath);
+
+    // no. of files to import
+    printf($_lang['import_files_found'], $filesfound);
+
+    // import files
+    if(count($files)>0) {
+        importFiles($parent,$filepath,$files);
+    }
+
+    $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $importend = $mtime;
+    $totaltime = ($importend - $importstart);
+    printf ("<p>".$_lang['import_site_time']."</p>", round($totaltime, 3));
 ?>
 <ul class="actionButtons">
-    <li><a href="#" onclick="document.location.href='index.php?a=2';"><img src="<?php echo $_style["icons_close"] ?>" /> <?php echo $_lang["close"]; ?></a></li>
+    <li><a href="#" onclick="reloadTree();"><img src="<?php echo $_style["icons_close"] ?>" /> <?php echo $_lang["close"]; ?></a></li>
 </ul>
 <script type="text/javascript">
-top.mainMenu.reloadtree();
-    parent.tree.ca = 'open';
+    parent.tree.ca = "";
 </script>
 <?php
 }
 
-function run()
-{
-	global $modx;
-	$tbl_site_content = $modx->getFullTableName('site_content');
-	$output = '';
-	
-	$maxtime = $_POST['maxtime'];
-	if(!is_numeric($maxtime)) $maxtime = 30;
-	@set_time_limit($maxtime);
-	
-	$mtime = microtime(); $mtime = explode(' ', $mtime); $mtime = $mtime[1] + $mtime[0];
-	$importstart = $mtime;
-	
-	if ($_POST['reset']=='on')
-	{
-		$modx->db->query("DELETE FROM {$tbl_site_content}");
-		$modx->db->query("ALTER TABLE {$tbl_site_content} AUTO_INCREMENT = 1");
-	}
-	
-	$parent = intval($_POST['parent']);
-	$filedir = MODX_BASE_PATH . 'assets/import/';
-	$filesfound = 0;
-	
-	$files = getFiles($filedir);
-	$files = pop_index($files);
-	
-	// no. of files to import
-	$output .= sprintf('<p>' . $_lang['import_files_found'] . '</p>', $filesfound);
-	
-	// import files
-	if(0 < count($files))
-	{
-		$rs = $modx->db->update(array('isfolder'=>1),$tbl_site_content,"id={$parent}");
-		importFiles($parent,$filedir,$files,'root');
-	}
-	
-	$mtime = microtime(); $mtime = explode(' ', $mtime); $mtime = $mtime[1] + $mtime[0];
-	$importend = $mtime;
-	$totaltime = ($importend - $importstart);
-	$output .= sprintf ('<p>'.$_lang['import_site_time'].'</p>', round($totaltime, 3));
-	
-	return $output;
-}
+function importFiles($parent,$filepath,$files) {
 
-function importFiles($parent,$filedir,$files,$mode) {
     global $modx;
     global $_lang, $allowedfiles;
-    global $search_default, $cache_default, $publish_default;
-    
-    $tbl_site_content = $modx->getFullTableName('site_content');
+    global $dbase, $table_prefix;
+    global $default_template, $search_default, $cache_default, $publish_default;
+
 
     $createdon = time();
     $createdby = $modx->getLoginUserID();
     if (!is_array($files)) return;
-	if ($_POST['object']=='all')
-	{
-		$modx->config['default_template'] = '0';
-		$richtext         = '0';
-	}
-	else
-	{
-		$richtext         = '1';
-	}
-	
-	foreach($files as $id => $value)
-	{
-		if(is_array($value))
-		{
-			// create folder
-			$alias = $id;
-			$modx->documentListing[$alias] = true;
-			printf('<span>'.$_lang['import_site_importing_document'].'</span>', $alias);
-			foreach(array('index.html','index.htm') as $filename)
-			{
-				$filepath = $filedir . $alias . '/' . $filename;
-				if(file_exists($filepath))
-				{
-					$file = getFileContent($filepath);
-					$file = mb_convert_encoding($file, $modx->config['modx_charset'], 'UTF-8,SJIS,EUC-JP,ASCII');
-					if (preg_match("@<title>(.*)</title>@i",$file,$matches))
-					{
-						$pagetitle = ($matches[1]!=='') ? $matches[1] : $filename;
-						$pagetitle = str_replace('[*pagetitle*]','',$pagetitle);
-					}
-					else $pagetitle = $alias;
-					
-					if (preg_match('@<meta[^>]+"description"[^>]+content=[\'"](.*)[\'"].+>@i',$file,$matches))
-					{
-						$description = ($matches[1]!=='') ? $matches[1] : $filename;
-						$description = str_replace('[*description*]','',$description);
-					}
-					else $description = '';
-			
-					if ((preg_match("@<body[^>]*>(.*)[^<]+</body>@is",$file,$matches)) && $_POST['object']=='body')
-					{
-					$content = $matches[1];
-					}
-					else
-					{
-						$content = $file;
-						$pattern = '/(<meta[^>]+charset\s*=)[^>"\'=]+(.+>)/i';
-						$replace = '$1' . $modx->config['modx_charset'] . '$2';
-						$content = preg_replace($pattern, $replace, $content);
-						$content = preg_replace('@<title>.*</title>@i', "<title>[*pagetitle*]</title>", $content);
-					}
-					$content = str_replace('[*content*]','[ *content* ]',$content);
-					$pagetitle = $modx->db->escape($pagetitle);
-					$date = filemtime($filepath);
-					$field = array();
-					$field['type'] = 'document';
-					$field['contentType'] = 'text/html';
-					$field['pagetitle'] = $pagetitle;
-					$field['longtitle'] = $pagetitle;
-					$field['description'] = $description;
-					$field['alias'] = $modx->stripAlias($alias);
-					$field['published'] = $publish_default;
-					$field['parent'] = $parent;
-					$field['isfolder'] = 1;
-					$field['content'] = $modx->db->escape($content);
-					$field['richtext'] = $richtext;
-					$field['template'] = $modx->config['default_template'];
-					$field['menuindex'] = 1;
-					$field['searchable'] = $search_default;
-					$field['cacheable'] = $cache_default;
-					$field['createdby'] = $createdby;
-					$field['createdon'] = $date;
-					$field['editedon'] = $date;
-					$rs = $modx->db->insert($field,$tbl_site_content);
-					if($rs) $new_parent = mysql_insert_id(); // get new parent id
-					else
-					{
-						echo '<span class="fail">'.$_lang["import_site_failed"]."</span> "
-						.$_lang["import_site_failed_db_error"].mysql_error();
-						exit;
-					}
-					echo ' - <span class="success">'.$_lang['import_site_success'] . '</span><br />' . "\n";
-					importFiles($new_parent, $filedir . $alias . '/',$value,'sub');
-					break;
-				}
-			}
-		}
-		else
-		{
-			// create document
-			if($mode=='sub' && $value == 'index.html') continue;
-			$filename = $value;
-			$fparts = explode('.',$value);
-			$alias = $fparts[0];
-			$ext = (count($fparts)>1)? $fparts[count($fparts)-1]:"";
-			printf("<span>".$_lang['import_site_importing_document']."</span>", $filename);
-			$modx->documentListing[$alias] = true;
-			
-			if(!in_array($ext,$allowedfiles)) echo ' - <span class="fail">'.$_lang["import_site_skip"].'</span><br />' . "\n";
-			else
-			{
-				$filepath = $filedir . $filename;
-				$file = getFileContent($filepath);
-				$file = mb_convert_encoding($file, $modx->config['modx_charset'], 'UTF-8,SJIS,EUC-JP,ASCII');
-				if (preg_match("@<title>(.*)</title>@i",$file,$matches))
-				{
-					$pagetitle = ($matches[1]!=='') ? $matches[1] : $filename;
-					$pagetitle = str_replace('[*pagetitle*]','',$pagetitle);
-				}
-				else $pagetitle = $alias;
-				if(!$pagetitle) $pagetitle = $alias;
-				if (preg_match('@<meta[^>]+"description"[^>]+content=[\'"](.*)[\'"].+>@i',$file,$matches))
-				{
-					$description = ($matches[1]!=='') ? $matches[1] : $filename;
-					$description = str_replace('[*description*]','',$description);
-				}
-				else $description = '';
-				if ((preg_match("@<body[^>]*>(.*)[^<]+</body>@is",$file,$matches)) && $_POST['object']=='body')
-				{
-					$content = $matches[1];
-				}
-				else
-				{
-					$content = $file;
-					$pattern = '/(<meta[^>]+charset\s*=)[^>"\'=]+(.+>)/i';
-					$replace = '$1' . $modx->config['modx_charset'] . '$2';
-					$content = preg_replace($pattern, $replace, $content);
-					$content = preg_replace('@<title>.*</title>@i', "<title>[*pagetitle*]</title>", $content);
-				}
-				$content = str_replace('[*content*]','[ *content* ]',$content);
-				$content = $modx->db->escape($content);
-				$date = filemtime($filepath);
-				$alias = $modx->stripAlias($alias);
-				$menuindex = ($alias=='index') ? 0 : 2;
-				$field = array();
-				$field['type'] = 'document';
-				$field['contentType'] = 'text/html';
-				$field['pagetitle'] = $modx->db->escape($pagetitle);;
-				$field['longtitle'] = $pagetitle;
-				$field['description'] = $description;
-				$field['alias'] = $alias;
-				$field['published'] = $publish_default;
-				$field['parent'] = $parent;
-				$field['isfolder'] = 0;
-				$field['content'] = $content;
-				$field['richtext'] = $richtext;
-				$field['template'] = $modx->config['default_template'];
-				$field['menuindex'] = $menuindex;
-				$field['searchable'] = $search_default;
-				$field['cacheable'] = $cache_default;
-				$field['createdby'] = $createdby;
-				$field['createdon'] = $date;
-				$field['editedon'] = $date;
-				$rs = $modx->db->insert($field,$tbl_site_content);
-				if(!$rs)
-				{
-					echo '<span class="fail">'.$_lang["import_site_failed"]."</span> "
-					.$_lang["import_site_failed_db_error"].mysql_error();
-					exit;
-				}
-				
-				$is_site_start = false;
-				if($filename == 'index.html') $is_site_start = true;
-				if($is_site_start==true && $_POST['reset']=='on')
-				{
-					$newid = mysql_insert_id();
-					$tbl_system_settings = $modx->getFullTableName('system_settings');
-					$sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('site_start', '{$newid}')";
-					$modx->db->query($sql);
-					$sql = "UPDATE {$tbl_site_content} SET menuindex=0 WHERE id={$newid}";
-					$modx->db->query($sql);
-				}
-				echo ' - <span class="success">'.$_lang['import_site_success'] . '</span><br />' . "\n";
-			}
-		}
-	}
+    foreach($files as $id => $value){
+        if(is_array($value)) {
+            // create folder
+            $alias = !isset($modx->documentListing[$id]) ? $id:$id.'-'.substr(uniqid(''),-3);
+            $modx->documentListing[$alias] = true;
+            printf("<p>".$_lang['import_site_importing_document']."</p>", $id);
+            $sql = "INSERT INTO $dbase.`".$table_prefix."site_content`
+                   (type, contentType, pagetitle, alias, published, parent, isfolder, content, template, menuindex, searchable, cacheable, createdby, createdon) VALUES
+                   ('document', 'text/html', '".$modx->db->escape($id)."', '".$modx->stripAlias($alias)."', ".$publish_default.", '$parent', 1, '', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
+            $rs = mysql_query($sql);
+            if($rs) $new_parent = mysql_insert_id(); // get new parent id
+            else {
+				echo "<p>".$_lang["import_site_failed_db_error"].mysql_error()."</p>";
+                exit;
+            }
+            echo "<p class=\"success\">".$_lang["import_site_success"]."</p>";
+            importFiles($new_parent,$filepath."/$id/",$value);
+        }
+        else {
+            // create dcoument
+            $filename = $value;
+            $fparts = explode(".",$value);
+            $value = $fparts[0];
+            $ext = (count($fparts)>1)? $fparts[count($fparts)-1]:"";
+            printf("<p>".$_lang['import_site_importing_document']."</p>", $filename);
+            $alias = !isset($modx->documentListing[$value]) ? $value:$value.'-'.substr(uniqid(''),-3);
+            $modx->documentListing[$alias] = true;
+            if(!in_array($ext,$allowedfiles)) echo "<p class=\"success\">".$_lang["import_site_skip"]."</p>";
+            else {
+                $file = getFileContent("$filepath/$filename");
+                if (preg_match("/<title>(.*)<\/title>/i",$file,$matches)) {
+                    $pagetitle = $matches[1];
+                } else $pagetitle = $value;
+                if(!$pagetitle) $pagetitle = $value;
+                if (preg_match("/<body[^>]*>(.*)[^<]+<\/body>/is",$file,$matches)) {
+                    $content = $matches[1];
+
+                } else $content = $file;
+                $sql = "INSERT INTO $dbase.`".$table_prefix."site_content`
+                       (type, contentType, pagetitle, alias, published, parent, isfolder, content, template, menuindex, searchable, cacheable, createdby, createdon) VALUES
+                       ('document', 'text/html', '".$modx->db->escape($pagetitle)."', '".$modx->stripAlias($alias)."', ".$publish_default.", '$parent', 0, '".$modx->db->escape($content)."', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
+                $rs = mysql_query($sql);
+                if(!$rs) {
+                    echo "<p><span class=\"fail\">".$_lang["import_site_failed"]."</span> ".$_lang["import_site_failed_db_error"].mysql_error()."</p>";
+                    exit;
+                }
+                echo "<p class=\"success\">".$_lang["import_site_success"]."</p>";
+            }
+        }
+    }
 }
 
-function getFiles($directory,$listing = array(), $count = 0)
-{
-	global $_lang;
-	global $filesfound;
-	$dummy = $count;
-	if ($files = scandir($directory))
-	{
-		foreach($files as $file)
-		{
-			if ($file=='.' || $file=='..') continue;
-			elseif ($h = @opendir($directory.$file."/"))
-			{
-				closedir($h);
-				$count = -1;
-				$listing[$file] = getFiles($directory.$file."/",array(), $count + 1);
-			}
-			else
-			{
-				$listing[$dummy] = $file;
-				$dummy = $dummy + 1;
-				$filesfound++;
-			}
-		}
-	}
-	else
-	{
-		echo '<p><span class="fail">'.$_lang["import_site_failed"]."</span> "
-		.$_lang["import_site_failed_no_open_dir"].$directory.".</p>";
-	}
-	return ($listing);
+function getFiles($directory,$listing = array(), $count = 0){
+    global $_lang;
+    global $filesfound;
+    $dummy = $count;
+    if (@$handle = opendir($directory)) {
+        while ($file = readdir($handle)) {
+            if ($file=='.' || $file=='..') continue;
+            else if ($h = @opendir($directory.$file."/")) {
+                closedir($h);
+                $count = -1;
+                $listing["$file"] = getFiles($directory.$file."/",array(), $count + 1);
+            }
+            else {
+                $listing[$dummy] = $file;
+                $dummy = $dummy + 1;
+                $filesfound++;
+            }
+        }
+    }
+    else {
+        echo "<p><span class=\"fail\">".$_lang["import_site_failed"]."</span> ".$_lang["import_site_failed_no_open_dir"].$directory.".</p>";
+    }
+    @closedir($handle);
+    return ($listing);
 }
 
-function getFileContent($filepath)
-{
-	global $_lang;
-	// get the file
-	if(!$buffer=file_get_contents($filepath))
-	{
-		echo '<p><span class="fail">' . $_lang['import_site_failed']."</span> "
-		.$_lang["import_site_failed_no_retrieve_file"].$filepath.".</p>";
-	}
-	else return $buffer;
+function getFileContent($file) {
+    global $_lang;
+    // get the file
+    if(@$handle = fopen($file, "r")) {
+        $buffer = "";
+        while (!feof ($handle)) {
+           $buffer .= fgets($handle, 4096);
+        }
+        fclose ($handle);
+    }
+    else {
+        echo "<p><span class=\"fail\">".$_lang['import_site_failed']."</span> ".$_lang["import_site_failed_no_retrieve_file"].$file.".</p>";
+    }
+    return $buffer;
 }
 
 /**
-* @deprecated Use $modx->stripAlias()
-*/
-function stripAlias($alias)
-{
-	global $modx;
-	return $modx->stripAlias($alias);
+ * @deprecated Use $modx->stripAlias()
+ */
+function stripAlias($alias) {
+    return $GLOBALS['modx']->stripAlias($alias);
 }
-
-function pop_index($array)
-{
-	$new_array = array();
-	foreach($array as $k=>$v)
-	{
-		if($v!=='index.html' && $v!=='index.htm' && !is_array($v))
-		{
-			$new_array[$k] = $v;
-		}
-		else
-		{
-			array_unshift($new_array, $v);
-		}
-	}
-	foreach($array as $k=>$v)
-	{
-		if(is_array($v))
-		{
-			$new_array[$k] = $v;
-		}
-	}
-	return $new_array;
-}
+?>

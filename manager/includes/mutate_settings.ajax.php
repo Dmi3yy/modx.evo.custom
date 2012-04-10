@@ -24,15 +24,15 @@ if($action == 'get') {
         $str = getLangStringFromFile($langfile, $key);
     }
 } elseif($action == 'setsetting') {
-	if(!empty($key) && !empty($value)) {
+    if(!empty($key) && !empty($value)) {
         $sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value) VALUES('{$key}', '{$value}');";
-		$str = "true";
-		if(!@$rs = $modx->db->query($sql)) {
-			$str = "false";
+        $str = "true";
+        if(!@$rs = $modx->db->query($sql)) {
+            $str = "false";
         } else {
             $emptyCache = true;
-		}
-	}
+        }
+    }
 } elseif($action == 'updateplugin') {
 
     if($key == '_delete_' && !empty($lang)) {
@@ -55,7 +55,11 @@ if($action == 'get') {
 }
 
 if($emptyCache) {
-    $modx->clearCache();
+    include_once dirname(dirname(__FILE__)) . "/processors/cache_sync.class.processor.php";
+    $sync = new synccache();
+    $sync->setCachepath("../assets/cache/");
+    $sync->setReport(false);
+    $sync->emptyCache();
 }
 
 echo $str;

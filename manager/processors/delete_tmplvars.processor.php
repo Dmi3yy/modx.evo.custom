@@ -1,16 +1,19 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('delete_template')) {
+if(!$modx->hasPermission('delete_template')) {	
 	$e->setError(3);
-	$e->dumpError();
+	$e->dumpError();	
 }
+?>
+<?php
+
 	$id = isset($_GET['id'])? intval($_GET['id']):0;
 	$forced = isset($_GET['force'])? $_GET['force']:0;
 
 	// check for relations
 	if(!$forced) {
 		$sql="SELECT sc.id, sc.pagetitle,sc.description FROM $dbase.`".$table_prefix."site_content` sc INNER JOIN $dbase.`".$table_prefix."site_tmplvar_contentvalues` stcv ON stcv.contentid=sc.id WHERE stcv.tmplvarid=".$id.";";
-		$drs = $modx->db->query($sql);
+		$drs = mysql_query($sql);
 		$count = mysql_num_rows($drs);
 		if($count>0){
 			include_once "header.inc.php";
@@ -35,7 +38,7 @@ if(!$modx->hasPermission('delete_template')) {
 			echo "<p>".$_lang['tmplvar_inuse']."</p>";
 			echo "<ul>";
 			for($i=0;$i<$count;$i++) {
-				$row = $modx->db->getRow($drs);
+				$row = mysql_fetch_assoc($drs);
 				echo '<li><span style="width: 200px"><a href="index.php?id='.$row['id'].'&a=27">'.$row['pagetitle'].'</a></span>'.($row['description']!='' ? ' - '.$row['description'] : '').'</li>';
 			}
 			echo "</ul>";
@@ -53,25 +56,27 @@ if(!$modx->hasPermission('delete_template')) {
 						
 	// delete variable
 	$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvars` WHERE id=".$id.";";
-	$rs = $modx->db->query($sql);
+	$rs = mysql_query($sql);
 	if(!$rs) {
 		echo "Something went wrong while trying to delete the field...";
 		exit;
 	} else {		
-		header("Location: index.php?a=76");
+		$header="Location: index.php?a=76&r=2";
+		header($header);
 	}
 
 	// delete variable's content values
-	$modx->db->query("DELETE FROM $dbase.`".$table_prefix."site_tmplvar_contentvalues` WHERE tmplvarid=".$id.";");
+	mysql_query("DELETE FROM $dbase.`".$table_prefix."site_tmplvar_contentvalues` WHERE tmplvarid=".$id.";");
 	
 	// delete variable's template access
-	$modx->db->query("DELETE FROM $dbase.`".$table_prefix."site_tmplvar_templates` WHERE tmplvarid=".$id.";");
+	mysql_query("DELETE FROM $dbase.`".$table_prefix."site_tmplvar_templates` WHERE tmplvarid=".$id.";");
 	
 	// delete variable's access permissions
-	$modx->db->query("DELETE FROM $dbase.`".$table_prefix."site_tmplvar_access` WHERE tmplvarid=".$id.";");
+	mysql_query("DELETE FROM $dbase.`".$table_prefix."site_tmplvar_access` WHERE tmplvarid=".$id.";");
 
 	// invoke OnTVFormDelete event
 	$modx->invokeEvent("OnTVFormDelete",
 							array(
 								"id"	=> $id
-							));
+							));								
+?>

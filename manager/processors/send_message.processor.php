@@ -33,10 +33,10 @@ if($sendto=='g') {
 		$e->dumpError();
 	}
 	$sql = "SELECT internalKey FROM $dbase.`".$table_prefix."user_attributes` WHERE $dbase.`".$table_prefix."user_attributes`.role=$groupid";
-	$rs = $modx->db->query($sql);
+	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	for( $i=0; $i<$limit; $i++ ){
-		$row=$modx->db->getRow($rs);
+		$row=mysql_fetch_assoc($rs);
 		if($row['internalKey']!=$modx->getLoginUserID()) {
 			$sql2 = "INSERT INTO $dbase.`".$table_prefix."user_messages` (recipient, sender, subject, message, postdate, type, private)
 					values(".$row['internalKey'].", ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 0);";
@@ -48,10 +48,10 @@ if($sendto=='g') {
 
 if($sendto=='a') {
 	$sql = "SELECT id FROM $dbase.`".$table_prefix."manager_users`";
-	$rs = $modx->db->query($sql);
+	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	for( $i=0; $i<$limit; $i++ ){
-		$row=$modx->db->getRow($rs);
+		$row=mysql_fetch_assoc($rs);
 		if($row['id']!=$modx->getLoginUserID()) {
 			$sql2 = "INSERT INTO $dbase.`".$table_prefix."user_messages` (recipient, sender, subject, message, postdate, type, private)
 					values(".$row['id'].", ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 0);";
@@ -62,4 +62,7 @@ if($sendto=='a') {
 
 //exit;
 
-header("Location: index.php?a=10");
+
+$header = "Location: index.php?a=10";
+header($header);
+?>

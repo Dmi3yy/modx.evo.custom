@@ -1,9 +1,9 @@
-<?php
+<?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-if(!$modx->hasPermission('save_plugin')) {
+if(!$modx->hasPermission('save_plugin')) {  
     $e->setError(3);
-    $e->dumpError();
+    $e->dumpError();    
 }
 
 $id = intval($_POST['id']);
@@ -77,7 +77,7 @@ switch ($_POST['mode']) {
         $rs = $modx->db->query($sql);
         if(!$rs){
             echo "\$rs not set! New plugin not saved!";
-        } else {
+        } else {    
             // get the id
             if(!$newid=$modx->db->getInsertId()) {
                 echo "Couldn't get last insert key!";
@@ -95,16 +95,21 @@ switch ($_POST['mode']) {
                                     ));
             
             // empty cache
-            $modx->clearCache(); // first empty the cache
+            include_once "cache_sync.class.processor.php";
+            $sync = new synccache();
+            $sync->setCachepath("../assets/cache/");
+            $sync->setReport(false);
+            $sync->emptyCache(); // first empty the cache       
             // finished emptying cache - redirect
             if($_POST['stay']!='') {
                 $a = ($_POST['stay']=='2') ? "102&id=$newid":"101";
-                $header="Location: index.php?a=".$a."&stay=".$_POST['stay'];
+                $header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay'];
+                header($header);
             } else {
-                $header="Location: index.php?a=76";
+                $header="Location: index.php?a=76&r=2";
+                header($header);
             }
-            header($header);
-        }
+        }       
         break;
     case '102':
 
@@ -115,13 +120,13 @@ switch ($_POST['mode']) {
                                     "id"    => $id
                                 ));
      
-        //do stuff to save the edited plugin
+        //do stuff to save the edited plugin    
         $sql = "UPDATE {$tblSitePlugins} SET name='{$name}', description='{$description}', plugincode='{$plugincode}', disabled={$disabled}, moduleguid='{$moduleguid}', locked={$locked}, properties='{$properties}', category={$categoryid}  WHERE id={$id}";
         $rs = $modx->db->query($sql);
         if(!$rs){
             echo "\$rs not set! Edited plugin not saved!";
-        }
-        else {
+        } 
+        else {      
             // save event listeners
             saveEventListeners($id,$sysevents,$_POST['mode']);
 
@@ -133,20 +138,25 @@ switch ($_POST['mode']) {
                                     ));
             
             // empty cache
-            $modx->clearCache(); // first empty the cache
-            // finished emptying cache - redirect
+            include_once "cache_sync.class.processor.php";
+            $sync = new synccache();
+            $sync->setCachepath("../assets/cache/");
+            $sync->setReport(false);
+            $sync->emptyCache(); // first empty the cache
+            // finished emptying cache - redirect   
             if($_POST['stay']!='') {
                 $a = ($_POST['stay']=='2') ? "102&id=$id":"101";
-                $header="Location: index.php?a=".$a."&stay=".$_POST['stay'];
+                $header="Location: index.php?a=".$a."&r=2&stay=".$_POST['stay'];
+                header($header);
             } else {
-                $header="Location: index.php?a=76";
+                $header="Location: index.php?a=76&r=2";
+                header($header);
             }
-            header($header);
-        }
+        }       
         break;
     default:
-    ?>
-        Erm... You supposed to be here now?
+    ?>  
+        Erm... You supposed to be here now?     
     <?php
 }
 
@@ -176,3 +186,5 @@ function saveEventListeners($id,$sysevents,$mode) {
     $modx->db->query("DELETE FROM {$tblSitePluginEvents} WHERE pluginid={$id}");
     if (count($sysevents)>0) $modx->db->query($sql);
 }
+
+?>

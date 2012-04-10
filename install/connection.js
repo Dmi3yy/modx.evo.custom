@@ -97,7 +97,7 @@ function setDefaults(){
 		Slider2FX.start({'opacity':[0,1]});
 		window.setTimeout("$('AUH').style.backgroundColor = '#ffffff';", 1000);
 		Slider2Scroll = new Fx.Scroll(window);
-		Slider2Scroll.toElement('cmspassword');
+		Slider2Scroll.toElement('managerlanguage_select');
 	}
 }
 
@@ -108,13 +108,15 @@ function setColor(){
 	ssv = ss.innerHTML;
 	if ($('server_pass') !== null) {
 		col.setStyle('background-color', '#9CCD00');
+//        col.setStyle('color', '#0000CD');
 		col.setStyle('font-weight','bold');
+
 		window.Slider1.slideIn(); //toggle the slider up and down.
 		var Slider1FX = new Fx.Styles('collationMask', {duration: 997,transition: Fx.Transitions.linear});
 		Slider1FX.start({'opacity':[0,1]});
 		window.setTimeout("$('setCollation').style.backgroundColor = '#ffffff';", 1000);
 		Slider1Scroll = new Fx.Scroll(window);
 		Slider1Scroll.toElement('databasestatus');
-//		$('database_name').focus();
+		$('database_name').focus();
     }
 }
