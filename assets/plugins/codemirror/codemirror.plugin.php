@@ -3,8 +3,8 @@
  * @name        CodeMirror
  * @description JavaScript library that can be used to create a relatively pleasant editor interface
  *
- * @released    Mar 29, 2012
- * @CodeMirror  2.23
+ * @released    Apr 15, 2012
+ * @CodeMirror  2.23 b
  *
  * @required    MODx 0.9.6.3+
  *              CodeMirror  2.23 : pl
@@ -98,7 +98,6 @@ HEREDOC;
     <script src="{$_CM_URL}codemirror.plugin.js"></script>
 
     <script type="text/javascript">
-
         /*
          * Custom event handler
          */
@@ -162,13 +161,11 @@ HEREDOC;
 
         var myCodeMirror = [];
 
-        // when editing a snippet a chunk or else
-        if (document.getElementById('tv_body') === null) {
-            var myTextArea = document.getElementsByName('$textarea_name')[0];
-            myCodeMirror.push(CodeMirror.fromTextArea(myTextArea, config));
-        }
-        // pages with one or more TVs
-        else {
+        var myTextArea = document.getElementsByName('$textarea_name')[0];
+        myCodeMirror.push(CodeMirror.fromTextArea(myTextArea, config));
+
+
+        if (document.getElementById('tv_body') !== null) {
             var tv_textareas = $$('#tv_body textarea');
             if (tv_textareas.length != 0) {
                 tv_textareas.each(function(el,t){
