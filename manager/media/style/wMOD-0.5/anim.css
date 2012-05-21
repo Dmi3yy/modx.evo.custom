@@ -1,0 +1,115 @@
+#topbar a,
+#topbar a:link,
+#topbar a:visited{
+	-webkit-transition:0.33s;
+	-moz-transition:0.33s;
+	-o-transition: .33s;
+	transition:0.33s;
+}
+#newMail a img,
+#topMenu{
+	-webkit-animation-name: lightAnimation;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;	
+	-moz-animation-name: lightAnimation;
+	-moz-animation-duration: 1s;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;	
+	animation-name: lightAnimation;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+@-webkit-keyframes lightAnimation{
+	from{opacity: 0;}
+	50%{opacity: 1;}
+	to{opacity: 0;}
+}
+@-moz-keyframes lightAnimation{
+	from{opacity: 0;}
+	50%{opacity: 1;}
+	to{opacity: 0;}
+}
+@keyframes lightAnimation{
+	from{opacity: 0;}
+	50%{opacity: 1;}
+	to{opacity: 0;}
+}
+#topMenu{	
+	-webkit-animation-name: movAnimation;
+	-webkit-animation-duration:500s;
+	-moz-animation-name: movAnimation;
+	-moz-animation-duration:500s;
+	animation-name: movAnimation;
+	animation-duration: 500s;	
+}
+@-webkit-keyframes movAnimation{
+	from{background-position:0px -21px;}
+	50%{background-position:3000px -21px;}
+	to{background-position:0px -21px;}
+}
+@-moz-keyframes movAnimation{
+	from{background-position:0px -21px;}
+	50%{background-position:3000px -21px;}
+	to{background-position:0px -21px;}
+}
+@keyframes movAnimation{
+	from{background-position:0px -21px;}
+	50%{background-position:3000px -21px;}
+	to{background-position:0px -21px;}
+}
+#actions{
+	-webkit-transition:1s;
+	-moz-transition:1s;
+	-o-transition:1s;
+	transition:1s;
+}
+#nav li a{
+	-webkit-transition:background 1s;
+	-moz-transition:background 1s;
+	-o-transition:background 1s;
+	transition:background 1s;
+}
+a.treeButton{
+	-webkit-transition: border 1s;
+	-moz-transition: border 1s;
+	-o-transition: 1s;
+	transition: border 1s;
+}
+input, textarea,
+form#mutate input.inputBox,
+form#mutate textarea,
+div.tmplvars input,
+form#mutate input.inputBox:focus,
+form#mutate textarea:focus,
+div.tmplvars input:focus,
+form#mutate input.inputBox:hover,
+form#mutate textarea:hover,
+div.tmplvars input:hover{
+	-webkit-transition:0.5s;
+	-moz-transition:0.5s;
+	-o-transition:0.5s;
+	transition:0.5s;
+}
+#nav li.active ul.subnav a,
+.dynamic-tab-pane-control .tab-row .tab{
+	-webkit-transition:background 0.5s;
+	-moz-transition:background 0.5s;
+	-o-transition-property: background-color;
+	-o-transition-duration: .33s;
+	transition:background 0.5s;	
+}
+
+.grid tt,
+.grid tr td,
+.grid tbody tr td.gridItem input,
+.grid tbody tr td.gridAltItem input,
+.grid tbody tr:hover td.gridItem input,
+.grid tbody tr:hover td.gridAltItem input{
+	-webkit-transition:none;
+	-moz-transition:none;
+	-o-transition-property: none;
+	-o-transition:none;
+	transition:none;
+}

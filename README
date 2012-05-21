@@ -9,6 +9,7 @@
 -fancybox
 -ie6nomore
 -swfobject
+- добавленны темы  EvoRevo и wMOD
 
 --------------Инсталл изменение настроек----------------
 -изменил setup.sql (поправил настройки по умолчанию)  (http://e-kao.ru/ownmodx)
