@@ -888,7 +888,7 @@ REPLACE INTO `{PREFIX}user_roles`
 
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
-('manager_theme','MODxCarbon'),
+('manager_theme','MODxCarbonEvoRevo'),
 ('settings_version',''),
 ('show_meta','0'),
 ('server_offset_time','0'),
@@ -937,7 +937,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('upload_images','bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff'),
 ('upload_media','au,avi,mp3,mp4,mpeg,mpg,wav,wmv'),
 ('upload_flash','fla,flv,swf'),
-('upload_files','aac,au,avi,css,cache,doc,docx,gz,gzip,htaccess,htm,html,js,mp3,mp4,mpeg,mpg,ods,odp,odt,pdf,ppt,pptx,rar,tar,tgz,txt,wav,wmv,xls,xlsx,xml,z,zip'),
+('upload_files','aac,au,avi,css,cache,doc,docx,gz,gzip,htaccess,htm,html,js,mp3,mp4,mpeg,mpg,ods,odp,odt,pdf,ppt,pptx,rar,tar,tgz,txt,wav,wmv,xls,xlsx,xml,z,zip,JPG,JPEG,PNG,GIF'),
 ('upload_maxsize','1048576'),
 ('new_file_permissions','0644'),
 ('new_folder_permissions','0755'),
