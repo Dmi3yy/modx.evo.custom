@@ -50,6 +50,9 @@ foreach ($eoptions as $opt) {
 }
 if (empty($ptOptions['f'])) $ptOptions['f'] = 'jpg';
 
+/* if need add filter */
+//$ptOptions['fltr'][] = 'ric|85|85'; 
+
 /* load phpthumb */
 $assetsPath = $modx->config['base_path'].'assets/cache/phpthumbof';
 $phpThumb = new modPhpThumb($modx, $ptOptions);
