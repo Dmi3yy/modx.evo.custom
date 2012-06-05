@@ -30,7 +30,7 @@ $mode = 'htmlmixed';
 $theme                  = (isset($theme)                    ? $theme                    : 'default');
 $indentUnit             = (isset($indentUnit)               ? $indentUnit               : 4);
 $tabSize                = (isset($tabSize)                  ? $tabSize                  : 4);
-
+$lineWrapping           = (isset($lineWrapping)             ? $lineWrapping             : false);
 /*
  * This plugin is only valid in "text" mode. So check for the current Editor
  */
@@ -156,6 +156,7 @@ HEREDOC;
             lineNumbers: true,
             matchBrackets: true,
             onKeyEvent: myEventHandler,
+            lineWrapping: '{$lineWrapping}',
             // onCursorActivity: positionHolder
         };
 
