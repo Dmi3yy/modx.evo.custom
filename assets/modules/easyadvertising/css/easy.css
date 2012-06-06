@@ -1,0 +1,49 @@
+ul.actionButtons  {
+	margin-top: 5px;
+}
+.actionButtons a img {
+    padding: 0 5px 0 0;
+}
+.dright {
+    float: right;
+}
+.bad {
+	color: #FF0000;
+}
+.ok {
+	color: green;
+}
+.long {
+	width: 625px;
+}
+textarea {
+	resize: vertical;
+}
+.longimg {
+	width: 465px;
+	height: 24px;
+	margin-right:10px !important;
+}
+.top td {
+	vertical-align: top;
+	padding-top: 20px;
+}
+.pub {
+	float: right;
+	margin-right:20px !important;
+	margin-left: 3px !important;
+}
+input[type='checkbox'] {
+	margin-left: 0;
+	margin-right: 0;
+}
+input.DatePicker {
+	width: 137px !important;
+	padding-left: 20px !important;	
+}
+#mhelp-cont, #eadvt_preview {
+	display: none;
+}
+#ef-link {
+	margin-right: 5px;
+}	

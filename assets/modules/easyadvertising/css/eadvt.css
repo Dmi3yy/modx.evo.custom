@@ -1,0 +1,21 @@
+@charset "utf-8";
+
+[id^="eadvt_wrapper"] {
+    position: relative;
+}
+[id^="eadvt_wrapper"] a {
+    background: url("images/blank.gif") repeat scroll 0 0 transparent;
+    display: block;
+    height: 100%;
+	width: 100%;
+    left: 0;
+	top: 0;
+    overflow: hidden;
+    position: absolute;
+    text-indent: -9999px;
+    z-index: 2;
+}
+[id^="eadvt_wrapper"] object {
+    position: relative;
+    z-index: 1;
+}
