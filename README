@@ -1,4 +1,4 @@
-текущая версии 0.8.1
+текущая версии 0.8.2
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -108,7 +108,7 @@
 -search(https://github.com/yama/MODx-Ditto-Extenders/)
 -jotdatesort (http://community.modx-cms.ru/blog/addons/6532.html)
 -level (вывод документов определенного уровня http://community.modx-cms.ru/blog/questions/6534.html#comment31029)
-
+-andFilter
 
 ----------------------------setup.sql----------------------
 -Default admin account -> admin
