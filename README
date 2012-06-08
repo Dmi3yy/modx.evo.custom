@@ -1,4 +1,4 @@
-текущая версии 0.8.2
+текущая версии 0.8.3
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -90,6 +90,8 @@
 -managermanager 0.3.11 (http://modx.com/extras/package/managermanager)
 -Easy Advertising управление рекламой(http://community.modx-cms.ru/blog/addons/7197.html)
 -Ajax submit 1.0 (http://wdevblog.net.ru/blog/ajaxsubmit-1.0-otpravka-ajax-zaprosom-dannyix-lyuboj-formyi-modx.html)
+-customSettings 1.0 (http://community.modx-cms.ru/blog/addons/1778.html)
+-systemField (http://community.modx-cms.ru/blog/addons/1225.html)
 
 
 

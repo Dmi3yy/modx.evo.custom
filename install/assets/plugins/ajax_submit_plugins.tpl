@@ -11,7 +11,7 @@
  * @author      Andchir
  * @internal    @properties &post_signal=Post signal name;string;ajax_submit &check_referer=Check referer;list;yes,no;yes
  * @internal    @events OnLoadWebDocument,OnLoadWebPageCache
- * @internal    @modx_category Forms
+ * @internal    @modx_category
  */
 
 if(!isset($post_signal)) $post_signal = 'ajax_submit';

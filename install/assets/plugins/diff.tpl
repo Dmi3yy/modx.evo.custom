@@ -1,20 +1,20 @@
-//<?
-/**************************************/
-/** Diff plugin for Modx Evo
-*
-* @version 2.2
-* @author Borisov Evgeniy aka Agel Nash (agel_nash@xaker.ru)
-* @date 06.06.2012
-* @copyright 2012 Agel Nash
-* @link http://agel-nash.ru
-* @license http://www.opensource.org/licenses/lgpl-3.0.html LGPL 3.0
-*
-* @category plugin
-* @internal @event OnTempFormDelete,OnTempFormSave,OnTempFormRender,OnSnipFormDelete,OnSnipFormSave,OnSnipFormRender,OnPluginFormDelete,OnPluginFormSave,OnPluginFormRender,OnModFormDelete,OnModFormSave,OnModFormRender,OnChunkFormDelete,OnChunkFormSave,OnChunkFormRender,OnDocFormDelete,OnDocFormRender,OnDocFormSave
-* @internal @properties &idBlock=ID блока;text;Version &folderPlugin=Папка плагина;text;diff &which_jquery=Подключить jQuery;list;Не подключать,/assets/js/,google code,custom url;/assets/js/ &js_src_type=Свой url к библиотеке jQuery;text; &jqname=Имя Jquery переменной в noConflict;text;j &lang=Локализация;list;en,ru;ru
-*
-* @todo Добавить в параметры возможность выбрать историю каких элементов сохранять
-* @todo Автоматическое определение локализации
+//<?php
+/**
+ * Diff
+ * 
+ * Плагин сохранения истории изменений сниппетов, чанков, плагинов, модулей и шаблонов в modx evolution
+ *
+ * @category    plugin
+ * @version     2.2
+ * @author      Borisov Evgeniy aka Agel Nash (agel_nash@xaker.ru)
+ * @internal @properties &idBlock=ID блока;text;Version &folderPlugin=Папка плагина;text;diff &which_jquery=Подключить jQuery;list;Не подключать,/assets/js/,google code,custom url;/assets/js/ &js_src_type=Свой url к библиотеке jQuery;text; &jqname=Имя Jquery переменной в noConflict;text;j &lang=Локализация;list;en,ru;ru
+ * @internal @event OnTempFormDelete,OnTempFormSave,OnTempFormRender,OnSnipFormDelete,OnSnipFormSave,OnSnipFormRender,OnPluginFormDelete,OnPluginFormSave,OnPluginFormRender,OnModFormDelete,OnModFormSave,OnModFormRender,OnChunkFormDelete,OnChunkFormSave,OnChunkFormRender,OnDocFormDelete,OnDocFormRender,OnDocFormSave
+ * @internal    @modx_category
+ */
+ 
+/* 
+* todo Добавить в параметры возможность выбрать историю каких элементов сохранять
+* todo Автоматическое определение локализации
 */
 /*************************************/
 include($modx->config['base_path'].'assets/plugins/'.$folderPlugin.'/lang_'.$lang.'.inc.php');
@@ -128,4 +128,3 @@ switch($modx->Event->name){
 		break;
 	}
 }
-//?>
