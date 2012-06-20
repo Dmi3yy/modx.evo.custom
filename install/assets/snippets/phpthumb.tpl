@@ -12,7 +12,11 @@
  * @author      Karandash
  */
 
-$replace  = Array("," => "&", "_" => "=");
+//[[phpthumb? &input=`[+tvimagename+]` &options=`h_170,w_255`]]
+if($input == '')
+    {echo 'assets/snippets/phpthumbof/noimage.png';}
+else{   
+     $replace  = Array("," => "&", "_" => "=");
     $options  = strtr($options, $replace);
     $options .= "&f=jpg&q=85";
     $opt = $options;
@@ -32,3 +36,4 @@ $replace  = Array("," => "&", "_" => "=");
     $res = explode("/assets", $outputFilename); 
     $res = "/assets".$res[1];
     return $res;
+}

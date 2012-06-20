@@ -1,4 +1,4 @@
-текущая версии 0.8.3
+текущая версии 1.0.6-84
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -64,7 +64,6 @@
 -sitemap.xml 1.0.8  (есть новее надо обновить) (http://modx.com/extras/package/sitemap)
 -splitPagination 2.0 - красивая пагинация для Ditto   (http://modx.com/extras/package/splitpagination)
 -YouTube 0.1  
--phpthumbof как модификатор   (http://community.modx-cms.ru/blog/addons/2156.html) + обновил phpthumb.function.php для нормальной работы с php 5.3
 -include
 -EvoGallery (http://modx.com/extras/package/evogallery) 
 -phpthumb by Karandash (http://community.modx-cms.ru/blog/6217.html)
