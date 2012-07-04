@@ -26,21 +26,20 @@ $is = isset($is) ? $is : ''; //ожидается значение с чем с�
 $then = isset($then) ? $then : ''; //код или чанк в виде @CHUNK
 $else = isset($else) ? $else : ''; //код или чанк в виде @CHUNK
 
-if (substr($then, 0, 6) == '@CHUNK') {
-  $then = $modx->getChunk(trim(substr($then, 7)));
-}
-
-if (substr($else, 0, 6) == '@CHUNK') {
-  $else = $modx->getChunk(trim(substr($else, 7)));
-}
 
 //echo substr($in,1);
 
 //выводим код, в зависимости от пустоты TV
 if (trim($if) ==  trim($is)) { //уточнить условия
+  if (substr($then, 0, 6) == '@CHUNK') {
+     $then = $modx->getChunk(trim(substr($then, 7)));
+  }  
   $then = str_replace('@eq', '=', $then);
   return $then;
 } else {
+	if (substr($else, 0, 6) == '@CHUNK') {
+	  $else = $modx->getChunk(trim(substr($else, 7)));
+	}
   $else = str_replace('@eq', '=', $else);
   return $else;
 }

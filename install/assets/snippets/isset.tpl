@@ -25,21 +25,20 @@ $in = isset($in) ? $in : ''; //ожидается значение TV в вид�
 $yes = isset($yes) ? $yes : ''; //код или чанк в виде @CHUNK
 $no = isset($no) ? $no : ''; //код или чанк в виде @CHUNK
 
-if (substr($yes, 0, 6) == '@CHUNK') {
-  $yes = $modx->getChunk(trim(substr($yes, 7)));
-}
-
-if (substr($no, 0, 6) == '@CHUNK') {
-  $no = $modx->getChunk(trim(substr($no, 7)));
-}
 
 //echo substr($in,1);
 
 //выводим код, в зависимости от пустоты TV
 if (trim($in) != '' && $in != '0') { //уточнить условия
+  if (substr($yes, 0, 6) == '@CHUNK') {
+     $yes = $modx->getChunk(trim(substr($yes, 7)));
+  }
   $yes = str_replace('@eq', '=', $yes);
   return $yes;
 } else {
+  if (substr($no, 0, 6) == '@CHUNK') {
+	$no = $modx->getChunk(trim(substr($no, 7)));
+  }
   $no = str_replace('@eq', '=', $no);
   return $no;
 }
