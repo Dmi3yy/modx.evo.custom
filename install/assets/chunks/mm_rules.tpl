@@ -32,6 +32,6 @@ mm_widget_tags('keyw',','); // Give blog tag editing capabilities to the 'docume
 
 //mm_hideTabs('settings, access', '2');
 
-//mm_widget_evogallery(1, Галерея, 1, 3);   // подключаем галерею 
+//mm_widget_evogallery(1, Галерея, '1,2,3', 3);   // подключаем галерею 
 //mm_galleryLink($fields, $roles, $templates, $moduleid);
 //mm_widget_evogallery($moduleid, $title, $roles, $templates);
