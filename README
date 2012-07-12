@@ -1,4 +1,4 @@
-текущая версии 1.0.6-85
+текущая версии 1.0.6-86
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -70,8 +70,7 @@
 обновил веблогин и вебсингап (http://modx-shopkeeper.ru/forum/viewtopic.php?id=226)
 -Easy Advertising управление рекламой(http://community.modx-cms.ru/blog/addons/7197.html)
 -Ajax submit 1.0 (http://wdevblog.net.ru/blog/ajaxsubmit-1.0-otpravka-ajax-zaprosom-dannyix-lyuboj-formyi-modx.html)
--if
--isset
+-if, isset (http://community.modx-cms.ru/blog/addons/7801.html)
 
 ------------------------Плагины-------------------------
 -добавил плагин seo_strict_urls       (http://modx.com/extras/package/?id=seostricturls)
@@ -93,6 +92,7 @@
 -Ajax submit 1.0 (http://wdevblog.net.ru/blog/ajaxsubmit-1.0-otpravka-ajax-zaprosom-dannyix-lyuboj-formyi-modx.html)
 -customSettings 1.0 (http://community.modx-cms.ru/blog/addons/1778.html)
 -systemField (http://community.modx-cms.ru/blog/addons/1225.html)
+-alwaysStay (http://habrahabr.ru/post/112813/)
 
 
 
