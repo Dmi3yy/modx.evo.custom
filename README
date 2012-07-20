@@ -1,4 +1,4 @@
-текущая версии 1.0.6-88
+текущая версии 1.0.6-89
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -37,7 +37,7 @@
 - instprocessor.php - если плагин без категории то инстлируем его отключенным
 - добавил свое оформления странички входа
 - document.parser.class.inc.php - http://community.modx-cms.ru/blog/fast-solution/6964.html
-
+- заменил файловый менеджер на KCFinder (http://community.modx-cms.ru/blog/tips_and_tricks/932.html)
 
 
 
