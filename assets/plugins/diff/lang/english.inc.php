@@ -11,9 +11,9 @@ interface langVer
 	const form_nameblock = 'Versions';
 	const form_descver = 'Description of changes';
 	const form_savever = 'Save this version';
-	const form_beforever = 'The previous version of the snippet';
-	const form_noversion = 'Other versions of this snippet is not';
-	const form_nodesc = 'no description';
+	const form_beforever = 'The previous version of the element';
+	const form_noversion = 'Other versions of this element is not';
+	const form_nodesc = 'No description';
 	
 	const word_del = 'Remove';
 	const word_load = 'Load';

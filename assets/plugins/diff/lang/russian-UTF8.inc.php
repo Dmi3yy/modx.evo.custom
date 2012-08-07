@@ -10,10 +10,10 @@ interface langVer
 	
 	const form_nameblock = 'Версии';
 	const form_descver = 'Описание изменений';
-	const form_savever = 'сохранить эту версию';
-	const form_beforever = 'Предыдущая версия сниппета';
-	const form_noversion = 'Других версий этого сниппета нет';
-	const form_nodesc = 'без описания';
+	const form_savever = 'Сохранить эту версию';
+	const form_beforever = 'Предыдущая версия элемента';
+	const form_noversion = 'Других версий этого элемента нет';
+	const form_nodesc = 'Без описания';
 	
 	const word_del = 'Удалить';
 	const word_load = 'Загрузить';

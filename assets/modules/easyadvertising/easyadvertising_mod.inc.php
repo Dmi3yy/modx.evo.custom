@@ -80,7 +80,7 @@ switch($action) {
 		$s = "show tables from ".$dbname." like '".$mod_table."'";
 		if ($modx->db->getRecordCount($modx->db->query("show tables from ".$dbname." like '".$mod_table."'"))==0)
 		
-			echo '<ul class="actionButtons"><li><a href="#" onclick="postForm(\'install\',null);return false;"><img src="media/style/'.$theme.'/images/icons/save.png" align="absmiddle" />Установить модуль</a></li></ul>'.$s;
+			echo '<ul class="actionButtons"><li><a href="#" onclick="postForm(\'install\',null);return false;"><img src="media/style/'.$theme.'/images/icons/save.png" align="absmiddle" />Установить модуль</a></li></ul>';
 		
 		else {
 		

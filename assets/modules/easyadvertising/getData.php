@@ -13,7 +13,7 @@ $mod_table = $modx->getFullTableName("site_easyadvt");
 
 function GetTimeStamp($date) {
     if ($date != "") {
-		$a = explode('+',$date);
+		$a = explode(' ',$date);
 		$b = explode('.', $a[0]);
 		$c[] = substr($a[1],0,2);	
 		$c[] = substr($a[1],-2);	

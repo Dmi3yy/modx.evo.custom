@@ -7,9 +7,9 @@
 * en: Class to work with the history of changes in snippets, chunks, templates, modules and plugins
 * ru: Класс для работы с историей изменений в сниппетах, чанках, шаблонах, модулях и плагинах
 *
-* @version 2.0
+* @version 2.6
 * @author Borisov Evgeniy aka Agel Nash (agel_nash@xaker.ru)
-* @date 30.05.2012
+* @date 20.07.2012
 * @copyright 2012 Agel Nash
 * @link http://agel-nash.ru
 * 

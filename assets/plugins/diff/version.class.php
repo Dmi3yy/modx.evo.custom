@@ -25,20 +25,18 @@
 * $modx->Event->output($out);
 * </code>
 *
-* @version 2.2
+* @version 2.6
 * @author Borisov Evgeniy aka Agel Nash (agel_nash@xaker.ru)
-* @date 06.06.2012
+* @date 20.07.2012
 * @copyright 2012 Agel Nash
 * @link http://agel-nash.ru
 * @license http://www.opensource.org/licenses/lgpl-3.0.html LGPL 3.0
 *
 * @category plugin
 * @internal @event OnTempFormDelete,OnTempFormSave,OnTempFormRender,OnSnipFormDelete,OnSnipFormSave,OnSnipFormRender,OnPluginFormDelete,OnPluginFormSave,OnPluginFormRender,OnModFormDelete,OnModFormSave,OnModFormRender,OnChunkFormDelete,OnChunkFormSave,OnChunkFormRender,OnDocFormDelete,OnDocFormRender,OnDocFormSave
-* @internal @properties &idBlock=ID блока;text;Version &folderPlugin=Папка плагина;text;diff &which_jquery=Подключить jQuery;list;Не подключать,/assets/js/,google code,custom url;/assets/js/ &js_src_type=Свой url к библиотеке jQuery;text; &jqname=Имя Jquery переменной в noConflict;text;j &lang=Локализация;list;en,ru;ru
+* @internal @properties &idBlock=ID блока;text;Version &folderPlugin=Папка плагина;text;diff &which_jquery=Подключить jQuery;list;Не подключать,/assets/js/,google code,custom url;/assets/js/ &js_src_type=Свой url к библиотеке jQuery;text; &jqname=Имя Jquery переменной в noConflict;text;j &ignoredChunk=ID игнорируемых чанков;text; &ignoredSnippet=ID игнорируемых сниппетов;text; &ignoredPlugin=ID игнорируемых плагинов;text; &ignoredDoc=ID игнорируемых документов;text; &ignoredModule=ID игнорируемых модулей;text; &ignoredTPL=ID игнорируемых шаблонов;text; &countTPL=Кол-во версий одного шаблона;text; &countChunk=Кол-во версий одного чанка;text; &countPlugin=Кол-во версий одного плагина;text; &countModule=Кол-во версий одного модуля;text; &countSnippet=Кол-во версий одного сниппета;text; &countDoc=Кол-во версий одного документа;text;
 * @internal @modx_category Manager and Admin
 *
-* @todo Добавить в параметры возможность выбрать историю каких элементов сохранять
-* @todo Автоматическое определение локализации
 * @todo Вынести папки с историей в /assets/cache/
 */
 /*************************************/
@@ -55,6 +53,8 @@ class ElementVer implements langVer{
 	private $jqname='';
 	/** @var string Текущий элемент с которым работаем */
 	private $ver=0;
+	/** @var integer Сколько значений одного элемента максимум можно сохранять*/
+	public $countVer=0;
 	
 	/**
 	* Конструктор класса
@@ -90,7 +90,80 @@ class ElementVer implements langVer{
 		$this->dir=$dir;
 		$this->verfile=$ver;
 	}
-
+	
+	/*
+	* Определяем нужно ли игнорировать этот элемент
+	* @param string $idList список id элементов через запятую
+	* @return bool игнорировать ли текущий документ
+	* @see DocManagerBackend::processRange() в файле dm_backend.class.php из модуля Doc Manager
+	*/
+	public function ignored($idList=''){
+		if(trim($idList)!=''){
+			$list=$this->processRange($idList);
+			if(in_array($this->modx->Event->params['id'],$list)){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	* Формируем массив с списком ID элементов которые нужно игнорировать
+	* @param string $pids список id элементов через запятую. Формат как в DocManager
+	* @return array Список ID элементов
+	* @see DocManagerBackend::processRange() в файле dm_backend.class.php из модуля Doc Manager
+	*
+	* Можно использовать следующий синтаксис при задании диапазона (вместо "n" указывайте число ID ресурса):
+	* n* - изменить свойства ресурса с ID=n и непосредственных дочерних ресурсов;
+	* n** - изменить свойства ресурса с ID=n и ВСЕХ его дочерних ресурсов;
+	* n-n2 - изменить свойства для всех ресурсов, ID которых находятся в указанном диапазоне;
+	* n - изменить свойства для одного ресурса с ID=n;
+	* n*,n**,n-n2,n - можно сразу указать несколько диапазонов, разделяя их запятыми.
+	* 
+	*
+	* Пример: 1*,4**,2-20,25 - будут изменены свойства для ресурса с ID=1 и его непосредственных дочерних ресурсов, ресурса с ID=4 и всех его дочерних ресурсов, ресурсов с ID в диапазоне от 2 до 20, и ресурса с ID=25.
+	*
+    */
+	private function processRange($pids) {
+		$values = explode(',', $pids);
+		
+		foreach ($values as $key => $value) {
+			$value=trim($value);
+			if (preg_match('/^[\d]+\-[\d]+$/', $value)){
+				$tmp=explode('-', $value);
+				$range=$tmp[1]-$tmp[0];
+				for ($i=0; $i<=$range; $i++) {
+					$idarray[] = ($i + $tmp[0]);
+				}
+			}elseif(preg_match('/^[\d]+$/', $value, $match)){
+				$idarray[] = ($i + $match[0]);
+			}
+			elseif(preg_match('/^[\d]+\*$/', $value, $match) && $this->active=='document') {
+				$match = rtrim($match[0], '*');
+				$group = $this->modx->db->select('id', $this->modx->getFullTablename('site_content'), 'parent=' . $match);
+				$idarray[] = $match;
+				if ($this->modx->db->getRecordCount($group) > 0){
+					while ($row = $this->modx->db->getRow($group)) {
+						$idarray[] = ($row['id']);
+					}
+				}
+			}elseif(preg_match('/^[\d]+\*\*$/', $value, $match) && $this->active=='document'){
+				$match = rtrim($match[0], '**');
+				$idarray[] = $match;
+				for ($i = 0; $i < count($idarray); $i++){
+					$where = 'parent=' . $idarray[$i];
+					$rs = $this->modx->db->select('id', $this->modx->getFullTableName('site_content'), $where);
+					if ($this->modx->db->getRecordCount($rs) > 0) {
+						while ($row = $this->modx->db->getRow($rs)) {
+							$idarray[] = $row['id'];
+						}
+					}
+				}
+			}
+		}
+		return $idarray;
+	}
+	
 	/**
 	* Функция генирации пути к папки 
 	* @param bool $full какой путь к папке получить: с http или относительно корня веб-сервера. По умолчанию относительно корня.
@@ -165,9 +238,9 @@ class ElementVer implements langVer{
 		}
 		
 		$flag=false;
-		$file=md5($put);
-		if(!file_exists($dir.$id.'/'.md5($put))){
-			$count=file_put_contents($dir.$id.'/'.md5($put),$put);
+		$file=md5($put.time());
+		if(!file_exists($dir.$id.'/'.$file)){
+			$count=file_put_contents($dir.$id.'/'.$file,$put);
 			if($count<=0){
 				return false;
 			}
@@ -178,24 +251,69 @@ class ElementVer implements langVer{
 				$data=unserialize(file_get_contents($dir.'/'.$this->verfile));
 				$ver=$data[$id]['last'];
 				if($flag){
-					$data[$id]['last']++;
 					$ver++;
-					$data[$id][$ver]['file']=$file;
 				}
-				$data[$id][$ver]['desc']=$desc;
 			}else{
-				$data[$id]['last']=1;
-				$data[$id][1]['desc']=$desc;
-				$data[$id][1]['file']=$file;
+				$ver=1;
 			}
+			$data[$id]['last']=$ver;
+			$data[$id][]=array('last'=>$ver,'desc'=>$desc,'file'=>$file,'time'=>time(),'ver'=>$ver);
+			
+			//En: Remove the old version too
+			//Ru: Удаляем слишком старые версии
+			$data[$id]=$this->delVersion($data[$id],$id);
+			
 			$count=file_put_contents($dir.$this->verfile,serialize($data));
 			if($count<=0){
 				return false;
 			}
 		}
+		
 		return true;
 	}
-	
+	/**
+	* Удаление самой старой версии элемента
+	* @param array $data массив с версиями текущего элемента
+	* @param int $idElem ID обрабатываемого элемента
+	* @return array массив версий элемента
+	*
+	*/
+	private function delVersion($data,$idElem){
+		$dir=$this->GVD(true,true);
+		if($this->countVer!=0){
+			//Отсортировать массив по дате (старые вверху)
+			$last=$data['last'];
+			unset($data['last']);
+			$tmp=array();
+			foreach($data as $item){
+				$tmp[]=$item['time'];
+			}
+			array_multisort($tmp,SORT_DESC,$data);
+
+			$count=0;
+			$tmp=array();
+			foreach($data as $i=>$item){
+				if($count>=$this->countVer && isset($data[$i])){
+					if(file_exists($dir.$idElem.'/'.$item['file'])){
+						unlink($dir.$idElem.'/'.$item['file']);
+					}
+					unset($data[$i]);
+				}else{
+					$tmp[]=$item['time'];
+					$count++;
+				}
+			}
+			//отсортировать массив по дате (старые внизу)
+			array_multisort($tmp,SORT_ASC,$data);
+			$tmp=array();
+			$tmp['last']=$last;
+			foreach($data as $item){
+				$tmp[]=$item;
+			}
+			$data=$tmp;
+		}
+		return $data;
+	}
 	/**
 	* Во время удаления элемента удаляем всю его историю
 	* @param int $id ID элемента
@@ -257,11 +375,11 @@ class ElementVer implements langVer{
 				}else{
 					$tmp=htmlspecialchars($desc['desc']);
 				}
-				if($iditem!=$this->ver){
-					$out[$iditem]=langVer::word_ver.' '.$iditem.': <i>'.$tmp.'</i> ';
-					$out[$iditem].=' &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="delversion" rel="'.$desc['file'].'">'.langVer::word_del.'</a> | <a href="#" class="loadversion" rel="'.$desc['file'].'">'.langVer::word_load.' </a> ';
+				if($desc['ver']!=$this->ver){
+					$out[$desc['ver']]=date('Y-m-d H:i:s',$desc['time']).' ['.langVer::word_ver.' '.$desc['ver'].']: <i>'.$tmp.'</i> ';
+					$out[$desc['ver']].=' &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="delversion" rel="'.$desc['file'].'">'.langVer::word_del.'</a> | <a href="#" class="loadversion" rel="'.$desc['file'].'">'.langVer::word_load.' </a> ';
 				}else{
-					$out[$iditem]='<strong>'.langVer::word_ver.' '.$iditem.': <i>'.$tmp.'</i></strong>';
+					$out[$desc['ver']]='<strong>'.date('Y-m-d H:i:s',$desc['time']).' ['.langVer::word_ver.' '.$desc['ver'].']: <i>'.$tmp.'</i></strong>';
 				}
 			}
 		}
