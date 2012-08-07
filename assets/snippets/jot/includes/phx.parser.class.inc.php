@@ -2,9 +2,11 @@
 /*####
 #
 #	Name: PHx (Placeholders Xtended)
-#	Version: 2.1.2
+#	Version: 2.1.3 
+#	Modified by Nick to include external files
+#	Modified by Anton Kuzmin for using of modx snippets cache
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
-#	Date: Feb 13, 2007 8:52 CET
+#	Date: July 13, 2007
 #
 ####*/
 
@@ -14,7 +16,7 @@ class PHxParser {
 	function PHxParser($debug=0,$maxpass=50) {
 		global $modx;
 		$this->name = "PHx";
-		$this->version = "2.1.2";
+		$this->version = "2.1.3";
 		$this->user["mgrid"] = intval($_SESSION['mgrInternalKey']);
 		$this->user["usrid"] = intval($_SESSION['webInternalKey']);
 		$this->user["id"] = ($this->user["usrid"] > 0 ) ? (-$this->user["usrid"]) : $this->user["mgrid"];
@@ -285,19 +287,34 @@ class PHxParser {
 						$grps = (strlen($modifier_value) > 0 ) ? explode(",",$modifier_value[$i]) :array();
 						$output = intval($this->isMemberOfWebGroupByUserId($output,$grps));
 						break;
-					default:
-						if (!array_key_exists($modifier_cmd[$i], $this->cache["cm"])) {
-							$sql = "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='phx:" . $modifier_cmd[$i] . "';";
-			             	$result = $modx->dbQuery($sql);
-			             	if ($modx->recordCount($result) == 1) {
-								$row = $modx->fetchRow($result);
-						 		$cm = $this->cache["cm"][$modifier_cmd[$i]] = $row["snippet"];
-						 		$this->Log("  |--- DB -> Custom Modifier");
-						 	}
-						 } else {
-						 	$cm = $this->cache["cm"][$modifier_cmd[$i]];
-						 	$this->Log("  |--- Cache -> Custom Modifier");
-						 }
+					default: 
+						// modified by Anton Kuzmin (23.06.2010) //
+						$snippetName = 'phx:'.$modifier_cmd[$i];
+						if( isset($modx->snippetCache[$snippetName]) ) {
+							$snippet = $modx->snippetCache[$snippetName];
+						} else { // not in cache so let's check the db
+							$sql= "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='" . $modx->db->escape($snippetName) . "';";
+							$result= $modx->dbQuery($sql);
+							if ($modx->recordCount($result) == 1) {
+								$row= $modx->fetchRow($result);
+								$snippet= $modx->snippetCache[$row['name']]= $row['snippet'];
+								$this->Log("  |--- DB -> Custom Modifier");
+							} else if ($modx->recordCount($result) == 0){ // If snippet not found, look in the modifiers folder
+								$filename = $modx->config['rb_base_dir'] . 'plugins/phx/modifiers/'.$modifier_cmd[$i].'.phx.php';
+								if (@file_exists($filename)) {
+									$file_contents = @file_get_contents($filename);
+									$file_contents = str_replace('<'.'?php', '', $file_contents);
+									$file_contents = str_replace('?'.'>', '', $file_contents);
+									$file_contents = str_replace('<?', '', $file_contents);
+									$snippet = $modx->snippetCache[$snippetName] = $file_contents;
+									$modx->snippetCache[$snippetName.'Props'] = '';
+									$this->Log("  |--- File ($filename) -> Custom Modifier");
+								}
+							}
+						}
+						$cm = $snippet;
+						// end //
+
 						 ob_start();
 						 $options = $modifier_value[$i];
 		        	     $custom = eval($cm);

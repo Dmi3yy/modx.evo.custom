@@ -1,0 +1,102 @@
+.jot-err {border: 1px solid red; color: red; font-weight: bold; padding: 5px; margin-bottom: 10px;}
+.jot-cfm {border: 1px solid green; color: green; font-weight: bold; padding: 5px; margin-bottom: 10px;}
+.jot-nav {margin: 10px 0; padding: 0px; text-align: center;}
+.jot-list ul {list-style-position: inside; margin-bottom: 10px; padding: 0; text-align: left;}
+.jot-subscribe {margin-bottom: 10px;}
+
+/* form */
+.jot-form-wrap {clear: both; font: 13px/1.2 Tahoma,Arial,sans-serif; padding: 10px 0;}
+.jot-reply-title {background: none; border: 0; color: #000; display: block; font: 18px/1.2 Tahoma,Arial,sans-serif; padding:0; margin: 0 0 10px; text-align: left; text-transform: none;}
+.jot-reply-cancel {color:#2B587A; display: block; float:right;  font: 11px/1.2 Tahoma,Arial,sans-serif; text-decoration: underline;}
+.jot-reply-cancel:hover {text-decoration: none;}
+.jot-info {background: #f5f5f5; border: 1px solid #ccc; border-radius: 3px; font-size:11px; margin-bottom: 12px; padding: 4px; width: 400px;}
+.jot-form {margin-bottom: 6px;}
+.jot-input-prepend {display: inline-block; *display: inline; *zoom: 1; margin-right: 5px;}
+.jot-controls {margin-bottom: 6px;}
+.jot-controls textarea,
+.jot-controls input {
+  background-color: #fff; border: 1px solid #ccc; color: #555; display: inline-block; font-size: 13px; height: 18px; line-height: 18px; margin: 0; padding: 4px; width: 400px;
+  border-radius: 3px; box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.jot-controls input:-moz-placeholder,
+.jot-controls textarea:-moz-placeholder{color: #999;}
+.jot-controls textarea {height:auto; overflow: auto; vertical-align: top;}
+.jot-input-prepend input {position: relative; vertical-align: middle; width: 165px; border-radius: 0 3px 3px 0;}
+.jot-controls textarea:focus,
+.jot-controls input[type="text"]:focus {border-color: rgba(82, 168, 236, 0.8); outline: 0; z-index: 2; box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);}
+.jot-input-prepend .jot-add-on {
+  background-color: #eee; border: 1px solid #ccc; display: inline-block; font-weight: normal; height: 18px; line-height: 18px; margin: 0 -1px; min-width: 16px; padding: 5px 5px 3px; 
+  text-align: center; text-shadow: 0 1px 0 #fff; vertical-align: middle; width: auto; border-radius: 0;
+}
+.jot-input-prepend .jot-add-on:first-child {border-radius: 3px 0 0 3px;}
+
+/* comment */
+.jot-row .jot-comment-entry {border: 1px solid #ddd; border-radius:5px; background-color: #f9f9f9; margin-bottom: 10px; padding:7px;}
+.jot-row-alt .jot-comment-entry {background-color: #f5f5f5;}
+.jot-row-author .jot-comment-entry {background-color: #FFFFE1;}
+.jot-row-me .jot-comment-entry {background-color: #FDF5E6;}
+.jot-row-up .jot-comment-entry {border: 1px solid red;}
+.jot-row-new .jot-comment-entry {border: 1px solid green;}
+.jot-comment {font: 11px/1.2 Tahoma,Arial,sans-serif; margin-bottom: 15px;}
+.jot-comment-head {padding: 5px 0;}
+.jot-avatar {float: left; margin-right: 5px;}
+.jot-subject {font-size: 12px; font-weight: bold; display: block; margin:0 0 5px;}
+.jot-name {font-size: 11px; font-weight: bold; display: block;}
+.jot-date {color:#666; font-size: 10px; margin-right: 5px;}
+.jot-perma {margin-right: 5px;}
+.jot-perma a {color: #666; font-size: 10px; text-decoration: none;}
+.jot-extra a {color:#666; font-size: 10px; font-weight:normal; text-decoration:none;}
+.jot-perma a:hover,
+.jot-extra a:hover {color: #f00;}
+.jot-message {font-size: 12px; line-height: 1.4;}
+.jot-reply a {color:#2B587A; font-size: 10px; text-decoration: underline;}
+.jot-reply a:hover {text-decoration: none;}
+.jot-children {padding: 0 0 0 20px;}
+
+/* moderation buttons */
+.jot-mod {float: right; text-align: right; margin-top: 3px;}
+.jot-btn {
+  background-color: #f5f5f5;  *background-color: #e6e6e6; background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6); 
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6)); background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6); 
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6); background-image: linear-gradient(top, #ffffff, #e6e6e6); 
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6); background-repeat: repeat-x; border: 1px solid #cccccc;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  color: #333; cursor: pointer; display: inline-block; font: 12px/16px Tahoma,Arial,sans-serif; margin-bottom: 0; min-width: 14px; padding: 3px 5px; 
+  text-align: center; text-decoration: none; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75); vertical-align: middle; white-space:nowrap;
+  border-radius: 4px;  *border:0; *display: inline; *zoom: 1; *line-height: 18px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.jot-btn-active,
+.jot-btn:active {
+  background-color: #e6e6e6; *background-color: #d9d9d9;
+  background-image: none; outline: 0; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.jot-btn-submit {
+  background-color: #0074cc; *background-color: #0055cc; background-image: -ms-linear-gradient(top, #0088cc, #0055cc);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0055cc)); background-image: -webkit-linear-gradient(top, #0088cc, #0055cc);
+  background-image: -o-linear-gradient(top, #0088cc, #0055cc); background-image: -moz-linear-gradient(top, #0088cc, #0055cc);
+  background-image: linear-gradient(top, #0088cc, #0055cc); background-repeat: repeat-x; border-color: #0055cc #0055cc #003580;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25); color: #fff; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); min-width:auto;
+}
+.jot-btn:hover {color: #333; background-color: #e6e6e6; *background-color: #d9d9d9; background-position: 0 -15px; text-decoration: none;}
+.jot-btn-submit:hover {color: #fff; background-color: #0055cc; *background-color: #004ab3; background-position: 0 -15px; text-decoration: none;}
+.jot-btn-pub,
+.jot-btn-unpub {width:71px;}
+.jot-icon-del,
+.jot-icon-pub,
+.jot-icon-unpub,
+.jot-icon-user,
+.jot-icon-mail,
+.jot-icon-edit {background-image: url("../img/glyphicons-halflings.png");  background-repeat: no-repeat; display: inline-block;  height: 14px; *margin-right: .3em; line-height: 14px; vertical-align: text-top; width: 14px;}
+.jot-icon-del {background-position: -456px 0;}
+.jot-icon-pub {background-position: -192px -96px;}
+.jot-icon-unpub {background-position: -216px -96px;}
+.jot-icon-edit {background-position: 0 -72px;}
+.jot-icon-user {background-position: -168px 0;}
+.jot-icon-mail {background-position: -72px 0;}
+
+.jot-checkbox {display: inline-block; font-size: 13px; font-weight: normal; line-height: 18px; margin:0; min-height: 18px; padding: 0 0 0 5px; vertical-align: middle;}
+.jot-checkbox input {background: transparent; border:0; cursor:pointer; display: inline-block; float: left; font-size: 13px; font-weight: normal; height:auto; line-height: normal; margin: 3px 3px 0 0; *margin-top: 0; padding:0; vertical-align: middle; width: auto;}
+.jot-show-all {float:right;}
+
+.jot-rss {float:left;}
+.jot-icon-rss {background: url("../img/icon-rss.gif") no-repeat; display: inline-block; height: 14px; *margin-right: .3em; line-height: 14px; vertical-align: text-top; width: 14px;}

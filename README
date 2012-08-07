@@ -1,4 +1,4 @@
-текущая версии 1.0.6-89
+текущая версии 1.0.6-90
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -27,7 +27,7 @@
 -ditto замена ?=& при работе с @CODE на |xq|','|xe|','|xa| (template.class.inc.php)
 -transalias - правильная транслитерация по умолчанию
 -FirstChildRedirect - баг с Яндексом (http://community.modx-cms.ru/blog/questions/627.html#comment6754)
--Jot исправлен баг с доп полями: (http://forums.modx.com/index.php/topic,38282.msg234226.html#msg234226)
+-JotX (https://github.com/Temus/JotX/)
 -phpmailer - патч (http://forums.modx.com/index.php/topic,36046.0.html)
 -ditto исправлен баг в get масивом (http://community.modx-cms.ru/blog/2760.html#comment21973)
 -хак дерева документов для редактирования дочерних ресурсов(http://community.modx-cms.ru/blog/tips_and_tricks/848.html)

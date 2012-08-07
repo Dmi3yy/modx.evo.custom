@@ -4,6 +4,9 @@ class CJotDataDb {
 	var $cfields = array();
 	var $isNew;
 	var $tbl = array();
+	var $events = array();
+	var $path;
+	var $event;
 	
 	function CJotDataDb() {
 		global $modx;
@@ -11,7 +14,6 @@ class CJotDataDb {
 		$this->tbl["content"] = $modx->getFullTableName('jot_content');
 		$this->tbl["subscriptions"] = $modx->getFullTableName('jot_subscriptions');
 		$this->tbl["fields"] = $modx->getFullTableName('jot_fields');
-		$this->cache["userpostcount"] = array();
 		$this->isNew = false;
 	}
 	
@@ -39,6 +41,10 @@ class CJotDataDb {
 	
 	function FirstRun($path) {
 		global $modx;
+		
+		//onBeforeFirstRun event
+		if (null !== ($output = $this->doEvent("onBeforeFirstRun"))) return;
+		
 		$jot = $this->tbl["check"];
 		$rs = $modx->db->query("SHOW TABLES LIKE '".$jot."'");
 		$count = $modx->db->getRecordCount($rs);
@@ -58,6 +64,9 @@ class CJotDataDb {
 				$modx->db->query($sql_do);	
 			}
 		}
+		
+		//onFirstRun event
+		$this->doEvent("onFirstRun");
 	}
 	
 	function getCustomFieldsArray($id_values) {
@@ -115,7 +124,9 @@ class CJotDataDb {
 				'publishedon' => 0,
 				'publishedby' => 0
 		    );
-		}	
+		}
+		//onGetCommentFields event
+		$this->doEvent("onGetCommentFields",array("id"=>$id));
 	}
 	
 	function Save(){
@@ -126,6 +137,10 @@ class CJotDataDb {
 		if($this->isNew){
 
 			$this->fields['id'] = $modx->db->insert($this->fields,$this->tbl["content"]);
+			
+			//onBeforeSaveComment event
+			$this->doEvent("onBeforeSaveComment");
+			
 			foreach($this->cfields as $n=>$v) { 
 				$insert = array(
 					'id' => $this->fields['id'],
@@ -140,6 +155,9 @@ class CJotDataDb {
 			$id=$this->fields['id'];
 			$modx->db->update($this->fields, $this->tbl["content"], "id=$id");
 			
+			//onBeforeSaveComment event
+			$this->doEvent("onBeforeSaveComment");
+			
 			foreach($this->cfields as $n=>$v) { 
 				$update = array(
 					'id' => $id,
@@ -147,24 +165,28 @@ class CJotDataDb {
 					'content' => $modx->db->escape($v)
 				);
 				//if (!$modx->db->update($update, $this->tbl["fields"], "id=$id and label='".$update["label"]."'")) $modx->db->insert($update,$this->tbl["fields"]);
+				
 				$modx->db->update($update,$this->tbl["fields"], "id=$id and label='".$update["label"]."'");
 				$query=$modx->db->query("SELECT * FROM ".$this->tbl["fields"]." WHERE id=$id and label='".$update["label"]."'");
 				$limit = $modx->db->getRecordCount($query); 
 				if ($limit<1) {$modx->db->insert($update,$this->tbl["fields"]);}
 			}
-			
-			
-			
 		}
+		
+		//onSaveComment event
+		$this->doEvent("onSaveComment");
 	}
 	
 	function Delete(){
 		global $modx;
 		if($this->isNew) return;
 		$id=$this->fields['id'];
-		$modx->db->delete($this->tbl["content"],"id=$id");
-		// add
-		$modx->db->delete($this->tbl["fields"],"id=$id");
+		
+		//onDeleteComment event
+		if (null === $this->doEvent("onDeleteComment")) {
+			$modx->db->delete($this->tbl["content"],"id=$id");
+			$modx->db->delete($this->tbl["fields"],"id=$id");
+		}
 		$this->isNew=true;
 	}
 	
@@ -176,33 +198,38 @@ class CJotDataDb {
 		if ($returnValue > 0 ) { return true; } else { return false; }
 	}
 	
-	function getUserPostCount($userid, $docid,$tagid) {
+	function getUserPostCount($docid,$tagid) {
 		global $modx;
-		$key = $userid . "&" . $docid . "&" . $tagid;
-		if (array_key_exists($key, $this->cache["userpostcount"])) {
-			$count = $this->cache["userpostcount"][$key];
-		} else {
-			$sql = 'SELECT count(id) FROM '.$this->tbl["content"].' WHERE createdby = "'.$userid.'" AND uparent = "'.$docid.'" AND tagid = "' . $tagid . '"';			
-			$count = intval($modx->db->getValue($sql));
-			$this->cache["userpostcount"][$key] = $count;
-		}
-		return $count;
+		
+		//onBeforeGetUserPostCount event
+		if (null !== ($output = $this->doEvent("onBeforeGetUserPostCount",array("docid"=>$docid,"tagid"=>$tagid)))) return $output;
+		
+		$sql = $modx->db->query('SELECT createdby,COUNT(id) FROM ' . $this->tbl["content"] . ' WHERE published = 1 ' . $this->sqlPart($docid,$tagid) . ' GROUP BY createdby');
+		$counts = $modx->db->makeArray($sql);
+		$userpostcount = array();
+		foreach($counts as $v) $userpostcount[$v['createdby']] = $v['COUNT(id)'];
+		
+		return $userpostcount;
 	}
 	
 	function GetCommentCount($docid,$tagid,$viewtype) {
 		global $modx;
+		
+		//onBeforeGetCommentCount event
+		if (null !== ($output = $this->doEvent("onBeforeGetCommentCount",array("docid"=>$docid,"tagid"=>$tagid,"viewtype"=>$viewtype)))) return $output;
+		
 		switch ($viewtype) {
 			case 2:
-				$where = " and published >= 0 "; // Mixed
+				$where = "published >= 0 "; // Mixed
 				break;
 			case 0:
-				$where = " and published = 0 "; // Unpublished
+				$where = "published = 0 "; // Unpublished
 				break;
 			case 1:
 			default:
-				$where = " and published = 1 "; // Published
+				$where = "published = 1 "; // Published
 		}
-		$sql = 'SELECT count(id) FROM '.$this->tbl["content"].' WHERE uparent = '.$docid.' AND tagid = "' . $tagid .'"'.$where;
+		$sql = 'SELECT count(id) FROM ' . $this->tbl["content"] . ' WHERE ' . $where . $this->sqlPart($docid,$tagid);
 		return intval($modx->db->getValue($sql));
 	}
 			
@@ -215,7 +242,7 @@ class CJotDataDb {
 		}
 	}
 	
-	function GetComments($docid,$tagid,$viewtype,$sort,$offset,$length) {
+	function GetComments($docid,$tagid,$viewtype,$upc,$sort,$offset,$length) {
 		global $modx;
 		$tbl = $this->tbl["content"];
 		$where = NULL;
@@ -254,12 +281,25 @@ class CJotDataDb {
 			default:
 				$where = " and published = 1 "; // Published
 		}
-		$sql = "select a.* from " . $tbl . " as a " . $tblcustom . " where uparent = '" . $docid . "' and tagid = '" . $tagid ."' and mode = '0' " . $where . $orderby . $limit;
-		#print $sql;
-		return $this->GetCommentsArray($sql);
+		
+		$user_data_tbl="left join " . $modx->getFullTableName('manager_users') . " as mu on mu.id=a.createdby "
+			."left join " . $modx->getFullTableName('user_attributes') . " as mua on mua.internalKey=mu.id ";
+		$webuser_data_tbl="left join " . $modx->getFullTableName('web_users') . " as wu on wu.id=-a.createdby "
+			."left join " . $modx->getFullTableName('web_user_attributes') . " as wua on wua.internalKey=wu.id ";
+		
+		$sql = "(select a.*,mu.username,mua.fullname,mua.email,mua.role,mua.gender,mua.country,mua.photo
+		from " . $tbl . " as a " .$user_data_tbl." ".$tblcustom. " where a.createdby>=0 " . $this->sqlPart($docid,$tagid) . "and mode = '0' " . $where . ") 
+		union (select a.*,wu.username,wua.fullname,wua.email,wua.role,wua.gender,wua.country,wua.photo  
+		from " . $tbl . " as a " .$webuser_data_tbl." ".$tblcustom. " where a.createdby<0 " . $this->sqlPart($docid,$tagid) . "and mode = '0' " . $where . ")"
+		. $orderby . $limit;
+		
+		//onBeforeGetComments event
+		if (null !== ($output = $this->doEvent("onBeforeGetComments",array("docid"=>$docid,"tagid"=>$tagid,"viewtype"=>$viewtype,"upc"=>$upc,"sort"=>$sort,"offset"=>$offset,"length"=>$length,"sql"=>&$sql)))) return $output;
+		
+		return $this->GetCommentsArray($sql,$docid,$tagid,$upc);
 	}
 	
-	function GetCommentsArray($query) {
+	function GetCommentsArray($query,$docid,$tagid,$upc) {
 		global $modx;
 		$rs = $modx->db->query($query);	
 		$comments = array();
@@ -271,32 +311,59 @@ class CJotDataDb {
 		
 		$custom = $this->getCustomFieldsArray($ids);
 		
+		switch ($upc) {
+			case 2:
+				$userpostcount = $this->getUserPostCount($docid,$tagid);
+				break;
+			case 0:
+				$userpostcount = array();
+				break;
+			case 1:
+			default:
+				$userpostcount = $this->getUserPostCount("*",$tagid);
+		}
+		
 		$arrComments = array();
 		foreach($comments as $comment) {
 			$comment["custom"] = $custom[$comment["id"]];
-			$comment["userpostcount"] = $this->getUserPostCount($comment["createdby"],$comment["uparent"],$comment["tagid"]);
+			$comment["userpostcount"] = intval($userpostcount[$comment["createdby"]]);
 			$arrComments[] = $comment;
 		}
-
+		
+		//onGetComments event
+		if (null !== ($output = $this->doEvent("onGetComments",array("arrComments"=>$arrComments,"docid"=>$docid,"tagid"=>$tagid,"upc"=>$upc)))) return $output;
+		
 		return $arrComments;
 	}
 	
 	function hasSubscription($docid = 0,$tagid = '', $user = array()) {
 		global $modx;
+		
 		$sql = 'SELECT count(id) as subscription FROM '.$this->tbl["subscriptions"].' WHERE userid = "'.$user['id'].'" AND uparent = "'.$docid.'" AND tagid = "'.$tagid.'"';
 		$returnValue = intval($modx->db->getValue($sql));
+		
+		//onSubscriptionCheck event
+		if (null !== ($output = $this->doEvent("onSubscriptionCheck",array("docid"=>$docid,"tagid"=>$tagid,"user"=>$user)))) return $output;
+		
 		if ($returnValue > 0 ) { return true; } else { return false; }
 	}
 	
 	
 	function getSubscriptions($docid = 0,$tagid = '') {
 		global $modx;
+		
+		//onBeforeGetSubscriptions event
+		if (null !== ($output = $this->doEvent("onBeforeSubscriptions",array("docid"=>$docid,"tagid"=>$tagid)))) return $output;
+		
 		$tbl = $this->tbl["subscriptions"];
-		$rs = $modx->db->query("select userid from $tbl where uparent = $docid and tagid = '$tagid'");	
 		$subscriptions = array();
-		while ($row = $modx->db->getRow($rs)) {
-			$subscriptions[] = $row;
-		}
+		$rs = $modx->db->query("select userid from $tbl where id>0 ". $this->sqlPart($docid,$tagid));	
+		$usrRows = $modx->db->getColumn("userid", $rs);
+		foreach ($usrRows as $v) $subscriptions[] = intval($v);
+		
+		//onGetSubscriptions event
+		if (null !== ($output = $this->doEvent("onGetSubscriptions",array("docid"=>$docid,"tagid"=>$tagid,"subscriptions"=>$subscriptions)))) return $output;
+		
 		return $subscriptions;
 	}
 	
@@ -305,14 +372,18 @@ class CJotDataDb {
 		$tbl=$this->tbl["subscriptions"];
 		$fields["uparent"] = $docid;
 		$fields["tagid"] = $tagid;
-		$fields["userid"] = $user["id"] ;
-		$modx->db->insert($fields,$tbl);
+		$fields["userid"] = $user["id"];
+		//onBeforeSubscribe event
+		if (null === $this->doEvent("onBeforeSubscribe",array("docid"=>$docid,"tagid"=>$tagid,"user"=>$user)))
+			$modx->db->insert($fields,$tbl);
 	}
 	
 	function Unsubscribe($docid = 0,$tagid = '', $user = array()) {
 		global $modx;
 		$userid = $user["id"];
-		$modx->db->delete($this->tbl["subscriptions"],"userid='$userid' and uparent='$docid' and tagid = '$tagid'");
+		//onBeforeUnsubscribe event
+		if (null === $this->doEvent("onBeforeUnsubscribe",array("docid"=>$docid,"tagid"=>$tagid,"user"=>$user)))
+			$modx->db->delete($this->tbl["subscriptions"],"userid='$userid' and uparent='$docid' and tagid = '$tagid'");
 	}
 	
 	function isValidComment($docid = 0,$tagid = '', $commentid = 0) {
@@ -321,6 +392,50 @@ class CJotDataDb {
 		return intval($modx->db->getValue($sql));
 	}
 	
-
+	// invoke events
+	function doEvent($event,$params=array()) {
+		global $modx;
+		$this->event = $event;
+		$event = $this->events[$event];
+		if (!$event) return null;
+		$plugins=explode(',',$event);
+		$object = & $this;
+		$result = null;
+		foreach ($plugins as $plugin) {
+			if(function_exists($plugin)) {
+				if (null !== ($output = $plugin($object,$params))) $result = $output;
+			} else {
+				$pluginPath = $this->path . 'plugins/' . $plugin . '.inc.php';
+				if(is_file($pluginPath)) {
+					include $pluginPath;
+					if(function_exists($plugin)) {
+						if (null !== ($output = $plugin($object,$params))) $result = $output;
+					}
+				}
+			}
+		}
+		$this->event = '';
+		return $result;
+	}
+	
+	function sqlPart($docid,$tagid) {
+		if (is_array($docid)) {
+			$docids = "and uparent IN (" . implode(",",$docid) . ") ";
+		} elseif ($docid != "*") {
+			$docids = "and uparent = " . $docid . " ";
+		} else {
+			$docids = "";
+		}
+		if (is_array($tagid)) {
+			$tagids = "and tagid IN ('" . implode("','",$tagid) . "') ";
+		} elseif ($tagid == "") {
+			$tagids = "and tagid = '' ";
+		} elseif ($tagid != "*") {
+			$tagids = "and tagid = '" . $tagid . "' ";
+		} else {
+			$tagids = "";
+		}
+		return $docids.$tagids;
+	}
 }
 ?>

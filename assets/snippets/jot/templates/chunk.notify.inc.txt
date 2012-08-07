@@ -1,11 +1,18 @@
-Dear [+recipient.username+],
+Уважаемый(ая) [+recipient.username+],
 
-A reply has been posted to a topic you are watching.
+В раздел, на который вы подписаны, добавлен новый комментарий.
 
-View the reply at: [+siteurl+][+jot.link.current+]
+-----
+Имя: [+comment.custom.name+]
+Email: [+comment.custom.email+] 
+Тема: [+comment.title+]
+Сообщение:
 
-Unsubscribe to this topic by clicking here: [+siteurl+][+jot.link.unsubscribe+].
+[+comment.content+]
+-----
 
-Regards,
-Site Administrator
+Отписаться от уведомлений: [+siteurl+][+jot.link.unsubscribe+]
+
+С уважением,
+Администратор сайта
 

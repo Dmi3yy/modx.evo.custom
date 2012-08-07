@@ -1,21 +1,21 @@
-Dear [+recipient.fullname+],
+Уважаемый(ая) [+recipient.fullname+],
 
-A new comment has been posted to your post: 
-"[+jot.title+]"
+К вашему материалу "[+jot.title+]"
+добавлен новый комментарий.
 
 -----
-Name: [+comment.custom.name+]
+Имя: [+comment.custom.name+]
 Email: [+comment.custom.email+] 
-Subject: [+comment.title+]
-Message:
+Тема: [+comment.title+]
+Сообщение:
 
 [+comment.content+]
 -----
 
-View the published replies at: [+siteurl+][+jot.link.view+][+jot.querykey.view+]=1
-View the unpublished replies at: [+siteurl+][+jot.link.view+][+jot.querykey.view+]=0
-(You must log in first)
+Посмотреть все опубликованные комментарии: [+siteurl+][+jot.link.view+][+jot.querykey.view+]=1
+Посмотреть все неопубликованные комментарии:: [+siteurl+][+jot.link.view+][+jot.querykey.view+]=0
+(Необходимо авторизоваться)
 
-Regards,
-Site Administrator
+С уважением,
+Администратор сайта
 

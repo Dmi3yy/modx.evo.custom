@@ -1,47 +1,25 @@
-﻿	<a name="jc[+jot.link.id+][+comment.id+]"></a>
+<div class="jot-comment">
+	<a name="jc[+jot.link.id+][+comment.id+]"></a>
 	<div class="jot-row [+chunk.rowclass+] [+comment.published:is=`0`:then=`jot-row-up`+]">
-	 <div class="jot-comment">
- 		 
-		 <div class="jot-user">
-		 [+comment.createdby:isnt=`0`:then=`<b>`+][+comment.createdby:userinfo=`username`:ifempty=`[+comment.custom.name:ifempty=`[+jot.guestname+]`:esc+]`+][+comment.createdby:isnt=`0`:then=`</b>`+]
-		 <br />Ответов: [+comment.userpostcount+]
-		 </div> 
-		
-		 <div class="jot-content">
-			 
-			 <div class="jot-posticon">
-					[+phx:userinfo=`lastlogin`:ifempty=`9999999999`:lt=`[+comment.createdon+]`:then=`
-				 <img src="[(base_url)]manager/media/style/MODx/images/icons/folder_page_add.gif" width="18" height="18" alt="Новый комментарий" border="0" />
-				 `:else=`
-				 <img src="[(base_url)]manager/media/style/MODx/images/icons/newdoc.gif" width="16" height="16" alt="Комментарий" border="0" />
-				 `:strip+]
-			 </div>		 
-			 
-			 <div class="jot-mod">
-			 [+jot.moderation.enabled:is=`1`:then=`
-				<a href="[+jot.link.delete:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" onclick="return confirm('Действительно хотите удалить комментарий?')" title="Delete Comment"><img src="[(base_url)]manager/media/style/MODxCarbon/images/icons/event3.gif" width="16" height="16" alt="Удалить" border="0" /></a>
-				[+comment.published:is=`0`:then=`
-				<a href="[+jot.link.publish:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" onclick="return confirm('Если разрешить комментарий он будет доступен для просмотра пользователям, уверены, что хотите этого?')" title="Publish Comment"><img src="[(base_url)]manager/media/style/MODxCarbon/images/icons/add.png" width="16" height="16" alt="Опубликовать" border="0" /></a>
-				`+]
-				[+comment.published:is=`1`:then=`
-				<a href="[+jot.link.unpublish:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" onclick="return confirm('Если запретить комментарий он не будет доступен для просмотра пользователями, уверены, что хотите этого?')" title="Unpublish Comment"><img src="[(base_url)]manager/media/style/MODxCarbon/images/icons/delete.png" width="16" height="16" alt="Запретить" border="0" /></a>
-				`+]
-			 `:strip+]
-			 [+jot.user.canedit:is=`1`:and:if=`[+comment.createdby+]`:is=`[+jot.user.id+]`:or:if=`[+jot.moderation.enabled+]`:is=`1`:then=`
-				 <a href="[+jot.link.edit:esc+][+jot.querykey.id+]=[+comment.id+]#jf[+jot.link.id+]" onclick="return confirm('Вы хотите отредактировать этот комментарий?')" title="Отредактировать комментарий"><img src="[(base_url)]manager/media/style/MODxCarbon/images/icons/logging.gif" width="16" height="16" alt="Отредактировать комментарий" border="0" /></a>
-   		 `:strip+]
-			 </div>	
-			  
-			 <span class="jot-subject">[+comment.title:limit:esc+]</span><br />
-			 <span class="jot-poster"><b>Ответ #[+comment.postnumber+] дата :</b> [+comment.createdon:date=`%a %B %d, %Y, %H:%M:%S`+]</span>
-			 <hr />
-			 <div class="jot-message">[+comment.content:wordwrap:esc:nl2br+]</div>
-			 <div class="jot-extra">
-			 [+comment.editedon:isnt=`0`:then=`
-			  <span class="jot-editby">Последняя правка: [+comment.editedon:date=`%B %d, %Y, %H:%M:%S`+] пользователем [+comment.editedby:userinfo=`username`:ifempty=` * `+]</span>
-			  &nbsp;`+] [+jot.moderation.enabled:is=`1`:then=`<a target="_blank" href="http://www.ripe.net/perl/whois?searchtext=[+comment.secip+]">[+comment.secip+]</a>`+]</div>
-		 </div>
-		 
-	 </div>
-	
+		<div class="jot-comment-head">
+			<div class="jot-mod">
+				[+jot.user.canedit:is=`1`:and:if=`[+comment.createdby+]`:is=`[+jot.user.id+]`:or:if=`[+jot.moderation.enabled+]`:is=`1`:then=`
+					<a class="jot-btn jot-btn-edit" href="[+jot.link.edit:esc+][+jot.querykey.id+]=[+comment.id+]#jf[+jot.link.id+]" title="Изменить"><i class="jot-icon-edit"></i> Изменить</a>
+				`:strip+]
+				[+jot.moderation.enabled:is=`1`:then=`
+					[+comment.published:is=`0`:then=`<a class="jot-btn jot-btn-pub" href="[+jot.link.publish:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" title="Показать"><i class="jot-icon-pub"></i> Показать</a>`+]
+					[+comment.published:is=`1`:then=`<a class="jot-btn jot-btn-unpub" href="[+jot.link.unpublish:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" title="Скрыть"><i class="jot-icon-unpub"></i> Скрыть</a>`+]
+					<a class="jot-btn jot-btn-del" href="[+jot.link.delete:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" onclick="return confirm('Вы действительно хотите удалить это сообщение?')" title="Удалить"><i class="jot-icon-del"></i> Удалить</a>
+				`:strip+]
+			</div>
+			<div class="jot-avatar" [+comment.createdby:ne=`0`:then=`title="Ответов: [+comment.userpostcount+]"`+]><img src="http://www.gravatar.com/avatar/[+comment.email:ifempty=`[+comment.custom.email+]`:lcase:md5+]?s=24&amp;d=mm&amp;r=g" alt="" /></div>
+			<span class="jot-name">[+comment.username:ifempty=`[+comment.custom.name:ifempty=`[+jot.guestname+]`:esc+]`+] [+jot.moderation.enabled:is=`1`:then=`<span class="jot-extra"><a target="_blank" href="http://www.ripe.net/perl/whois?searchtext=[+comment.secip+]">([+comment.secip+])</a></span>`+]</span>
+			<span class="jot-date">[+comment.createdon:date=`%d %b %Y в %H:%M`+]</span>
+			<span class="jot-perma"><a rel="nofollow" title="Ссылка на комментарий" href="[+jot.link.current+]#jc[+jot.link.id+][+comment.id+]">#<!--[+comment.postnumber+]--></a></span>
+		</div>
+		<div class="jot-comment-entry">
+			[+comment.title:length:ne=`0`:then=`<div class="jot-subject">[+comment.title:esc+]</div>`+]
+			<div class="jot-message">[+comment.content:wordwrap:esc:nl2br+]</div>
+		</div>
 	</div>
+</div>

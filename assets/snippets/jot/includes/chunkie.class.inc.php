@@ -4,6 +4,7 @@
 #	Name: Chunkie
 #	Version: 1.0
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
+#	Modified by Temus for JotX
 #	Date: Oct 8, 2006 00:00 CET
 #
 ####
@@ -41,6 +42,10 @@ class CChunkie {
 		$template = "";
 		if ($modx->getChunk($tpl) != "") {
 			$template = $modx->getChunk($tpl);
+		} else if(substr($tpl, 0, 6) == "@CODE:") {
+			$template = substr($tpl, 6);
+		} else if(substr($tpl, 0, 6) == "@FILE:") {
+			$template = $this->get_file_contents(substr($tpl, 6));
 		} else if(is_file($tpl)) {
 			$template = file_get_contents($tpl);
 		} else {

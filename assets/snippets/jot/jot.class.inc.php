@@ -1,20 +1,6 @@
 <?php
-/*####
-#
-#	Name: Jot
-#	Version: 1.1.4
-#	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
-#	Date: Aug 04, 2008
-#
-# Latest Version: http://modxcms.com/Jot-998.html
-# Jot Demo Site: http://projects.zerobarrier.nl/modx/
-# Documentation: http://wiki.modxcms.com/index.php/Jot (wiki)
-#
-####*/
-
 class CJot {
 	var $name;
-	var $version;
 	var $config = array();
 	var $parameters = array();
 	var $_ctime;
@@ -22,6 +8,8 @@ class CJot {
 	var $_instance;
 	var $templates = array();
 	var $_link = array();
+	var $output;
+	var $event;
 	
 	function CJot() {
 		global $modx;
@@ -30,18 +18,11 @@ class CJot {
 		if (!class_exists('CChunkie'))
 			include_once($path . '/includes/chunkie.class.inc.php');
 		$this->name = $this->config["snippet"]["name"] = "Jot";
-		$this->version = $this->config["snippet"]["version"] = "1.1.4"; //
-		$this->config["snippet"]["versioncheck"] = "Unknown";
 		$this->client = $modx->getUserData();
 		$this->_ctime = time();
 		$this->_check = 0;
 		$this->provider = new CJotDataDb;
 		$this->form = array();
-	}
-	
-	function VersionCheck($version) {	
-		if ($version == $this->version) $this->_check = 1;
-		$this->config["snippet"]["versioncheck"] = $version;
 	}
 	
 	function Get($field) {
@@ -61,46 +42,75 @@ class CJot {
 
 	function Run() {
 		global $modx;
-
-		// Check version		
+		
 		$this->config["path"] = $this->Get("path");
-		if (!$this->_check) {
-			$output = '<div style="border: 1px solid red;font-weight: bold;margin: 10px;padding: 5px;">
-			Jot cannot load because the snippet code version ('.$this->config["snippet"]["versioncheck"].') isn\'t the same as the snippet included files version ('.$this->config["snippet"]["version"].').
-			Possible cause is that you updated the jot files in the modx directory but didn\'t update the snippet code from the manager. The content for the updated snippet code can be found in jot.snippet.txt
-			</div>';
-			return $output;
-		}
+		$this->provider->path = $this->Get("path");
+		
+		//onBeforeConfiguration event
+		$this->doEvent("onBeforeConfiguration");
+		
+		//DB events
+		$this->provider->events["onBeforeFirstRun"] = $this->Get("onBeforeFirstRun");
+		$this->provider->events["onFirstRun"] = $this->Get("onFirstRun");
+		$this->provider->events["onDeleteComment"] = $this->Get("onDeleteComment");
+		$this->provider->events["onGetCommentFields"] = $this->Get("onGetCommentFields");
+		$this->provider->events["onBeforeSaveComment"] = $this->Get("onBeforeSaveComment");
+		$this->provider->events["onSaveComment"] = $this->Get("onSaveComment");
+		$this->provider->events["onSubscriptionCheck"] = $this->Get("onSubscriptionCheck");
+		$this->provider->events["onGetSubscriptions"] = $this->Get("onGetSubscriptions");
+		$this->provider->events["onBeforeSubscribe"] = $this->Get("onBeforeSubscribe");
+		$this->provider->events["onBeforeUnsubscribe"] = $this->Get("onBeforeUnsubscribe");
+		$this->provider->events["onBeforeGetUserPostCount"] = $this->Get("onBeforeGetUserPostCount");
+		$this->provider->events["onBeforeGetCommentCount"] = $this->Get("onBeforeGetCommentCount");
+		$this->provider->events["onBeforeGetComments"] = $this->Get("onBeforeGetComments");
+		$this->provider->events["onGetComments"] = $this->Get("onGetComments");
 		
 		// Add input parameters (just for debugging purposes)
 		$this->config["snippet"]["input"] = $this->parameters; 
 				
 		// General settings
-		// TODO Add docid/tagid from all
 		$this->config["docid"] = !is_null($this->Get("docid")) ? intval($this->Get("docid")):$modx->documentIdentifier;
 		$this->config["tagid"] = !is_null($this->Get("tagid")) ? preg_replace("/[^A-z0-9_\-]/",'',$this->Get("tagid")):'';
+		$this->config["docids"] = !is_null($this->Get("docids")) ? $this->processDocs($this->Get("docids")) : $this->config["docid"];
+		$this->config["tagids"] = !is_null($this->Get("tagids")) ? $this->processTags($this->Get("tagids")) : $this->config["tagid"];
 		$this->config["pagination"] = !is_null($this->Get("pagination")) ? $this->Get("pagination") : 10; // Set pagination (0 = disabled, # = comments per page)
 		$this->config["captcha"] = !is_null($this->Get("captcha")) ? intval($this->Get("captcha")) : 0; // Set captcha (0 = disabled, 1 = enabled, 2 = enabled for not logged in users)
 		$this->config["postdelay"] = !is_null($this->Get("postdelay")) ? $this->Get("postdelay") : 15; // Set post delay in seconds
-		$this->config["guestname"] = !is_null($this->Get("guestname")) ? $this->Get("guestname") : "Anonymous"; // Set guestname if none is specified
+		$this->config["guestname"] = !is_null($this->Get("guestname")) ? $this->Get("guestname") : "Гость"; // Set guestname if none is specified
+		$this->config["subscriber"] = !is_null($this->Get("subscriber")) ? $this->Get("subscriber") : "подписчик";
 		$this->config["subscribe"] = !is_null($this->Get("subscribe")) ? intval($this->Get("subscribe")) : 0;
 		$this->config["numdir"] = !is_null($this->Get("numdir")) ? intval($this->Get("numdir")) : 1;
 		$this->config["placeholders"] = !is_null($this->Get("placeholders")) ? intval($this->Get("placeholders")) : 0;
-		$this->config["authorid"] = !is_null($this->Get("authorid")) ? intval($this->Get("authorid")) : $modx->documentObject["createdby"];
-		$this->config["title"] = !is_null($this->Get("title")) ? $this->Get("title") : $modx->documentObject["longtitle"];
-		$this->config["subject"]["subscribe"] = !is_null($this->Get("subjectSubscribe")) ? $this->Get("subjectSubscribe") : "New reply to a topic you are watching";
-		$this->config["subject"]["moderate"] = !is_null($this->Get("subjectModerate")) ? $this->Get("subjectModerate") : "New reply to a topic you are moderating";
-		$this->config["subject"]["author"] = !is_null($this->Get("subjectAuthor")) ? $this->Get("subjectAuthor") : "New comment on your post";
+		$this->config["authorid"] = !is_null($this->Get("authorid")) ? intval($this->Get("authorid")) : intval($modx->documentObject["createdby"]);
+		$this->config["title"] = !is_null($this->Get("title")) ? $this->Get("title") : '';
+		$this->config["subject"]["subscribe"] = !is_null($this->Get("subjectSubscribe")) ? $this->Get("subjectSubscribe") : "Новый комментарий";
+		$this->config["subject"]["moderate"] = !is_null($this->Get("subjectModerate")) ? $this->Get("subjectModerate") : "Новый комментрий в модерируемом разделе";
+		$this->config["subject"]["author"] = !is_null($this->Get("subjectAuthor")) ? $this->Get("subjectAuthor") : "Новый комментарий на ваш материал";
+		$this->config["subject"]["emails"] = !is_null($this->Get("subjectEmails")) ? $this->Get("subjectEmails") : $this->config["subject"]["subscribe"];
 		$this->config["debug"] = !is_null($this->Get("debug")) ? intval($this->Get("debug")) : 0;
 		$this->config["output"] = !is_null($this->Get("output")) ? intval($this->Get("output")) : 1;
-		$this->config["validate"] = !is_null($this->Get("validate")) ? $this->Get("validate") : "content:You forgot to enter a comment.";
+		$this->config["validate"] = !is_null($this->Get("validate")) ? $this->Get("validate") : "content:Вы не заполнили поле сообщения";
+		$this->config["upc"] = !is_null($this->Get("upc")) ? intval($this->Get("upc")) : 1;
+		$this->config["limit"] = !is_null($this->Get("limit")) ? intval($this->Get("limit")) : 0;
+		$this->config["depth"] = !is_null($this->Get("depth")) ? intval($this->Get("depth")) : 10;
+		$notifyEmails = !is_null($this->Get("notifyEmails")) ? explode(",",$this->Get("notifyEmails")) : array();
+		foreach($notifyEmails as $notifyEmail) {
+			$notifyProp = explode(":",$notifyEmail,2);
+			$notifyProp[0] = trim($notifyProp[0]);
+			$this->config["notifyEmails"][] = $notifyProp[0];
+			$this->config["notifyNames"][$notifyProp[0]] = isset($notifyProp[1]) ? $notifyProp[1] : $this->config["subscriber"];
+		}
 		
 		// CSS Settings (basic)
 		$this->config["css"]["include"] = !is_null($this->Get("css")) ? intval($this->Get("css")) : 1;
-		$this->config["css"]["file"] = !is_null($this->Get("cssFile")) ? $this->Get("cssFile") : "assets/snippets/jot/templates/jot.css";
+		$this->config["css"]["file"] = !is_null($this->Get("cssFile")) ? $this->Get("cssFile") : "assets/snippets/jot/css/jot.css";
 		$this->config["css"]["rowalt"] = !is_null($this->Get("cssRowAlt")) ? $this->Get("cssAltRow") : "jot-row-alt";
 		$this->config["css"]["rowme"] = !is_null($this->Get("cssRowMe")) ? $this->Get("cssRowMe") : "jot-row-me";
 		$this->config["css"]["rowauthor"] = !is_null($this->Get("cssRowAuthor")) ? $this->Get("cssRowAuthor") : "jot-row-author";
+		
+		// JS Settings
+		$this->config["js"]["include"] = !is_null($this->Get("js")) ? intval($this->Get("js")) : 0;
+		$this->config["js"]["file"] = !is_null($this->Get("jsFile")) ? $this->Get("jsFile") : "";
 		
 		// Security
 		$this->config["user"]["mgrid"] = intval($_SESSION['mgrInternalKey']);
@@ -116,11 +126,11 @@ class CJot {
 		$this->_instance = $this->config["id"] = $this->UniqueId($this->config["docid"],$this->config["tagid"]);
 		$this->_idshort = substr($this->_instance,0,8);
 		if($this->config["captcha"] == 2) { if ($this->config["user"]["id"]) {	$this->config["captcha"] = 0;} else { $this->config["captcha"] = 1;} }
-		$this->config["seed"] = rand();
+		$this->config["seed"] = rand(1000,10000);
 		$this->config["doc.pagetitle"] = $modx->documentObject["pagetitle"];
 		$this->config["customfields"] = $this->Get("customfields") ? explode(",",$this->Get("customfields")):array("name","email"); // Set names of custom fields
-		$this->config["sortby"] = !is_null($this->Get("sortby")) ? $this->Get("sortby") : "createdon:d";		
-		$this->config["sortby"] = $this->validateSortString($this->config["sortby"]);
+		$this->config["sortby"] = !is_null($this->Get("sortby")) ? strtolower($this->Get("sortby")) : "createdon:d";		
+		if ($this->config["sortby"] != 'rand()') $this->config["sortby"] = $this->validateSortString($this->config["sortby"]);
 								
 		// Set access groups
 		$this->config["permissions"]["post"] = !is_null($this->Get("canpost")) ? explode(",",$this->Get("canpost")):array();
@@ -151,6 +161,10 @@ class CJot {
 		$this->templates["notify"] = !is_null($this->Get("tplNotify")) ? $this->Get("tplNotify") : $this->config["path"]."/templates/chunk.notify.inc.txt";				
 		$this->templates["notifymoderator"] = !is_null($this->Get("tplNotifyModerator")) ? $this->Get("tplNotifyModerator") : $this->config["path"]."/templates/chunk.notify.moderator.inc.txt";
 		$this->templates["notifyauthor"] = !is_null($this->Get("tplNotifyAuthor")) ? $this->Get("tplNotifyAuthor") : $this->config["path"]."/templates/chunk.notify.author.inc.txt";
+		$this->templates["notifyemails"] = !is_null($this->Get("tplNotifyEmails")) ? $this->Get("tplNotifyEmails") : $this->templates["notify"];
+		$this->templates["navPage"] = !is_null($this->Get("tplNavPage")) ? $this->Get("tplNavPage") : $this->config["path"]."/templates/chunk.nav.page.inc.html";
+		$this->templates["navPageCur"] = !is_null($this->Get("tplNavPageCur")) ? $this->Get("tplNavPageCur") : $this->config["path"]."/templates/chunk.nav.pagecur.inc.html";
+		$this->templates["navPageSpl"] = !is_null($this->Get("tplNavPageSpl")) ? $this->Get("tplNavPageSpl") : '';
 		
 		// Querystring keys
 		$this->config["querykey"]["action"] = "jot".$this->_idshort;
@@ -184,6 +198,9 @@ class CJot {
 		}
 		$this->config["form"]["validation"] = $valFields;
 		
+		//onConfiguration event
+		$this->doEvent("onConfiguration");
+		
 		//-- Initialize form array()
 		$this->form = array();
 		$this->form["source"] = $this->config["query"]["id"];
@@ -194,12 +211,13 @@ class CJot {
 		$this->form["published"] = 0;
 		$this->form["badwords"] = 0;
 		$this->form["edit"] = 0;
-		$this->form["save"] = 0;		
+		$this->form["save"] = 0;
+		$this->form["field"]["parent"] = intval($_GET['parent']);
 		
 		// Modes
 		$this->config["mode"]["type"] = "comments";
 		$this->config["mode"]["active"] = $this->config["query"]["action"];
-		$this->config["mode"]["passive"] = $this->Get("action");
+		$this->config["mode"]["passive"] = str_replace('-','',$this->Get("action"));
 		
 		// Generated links
 		$this->_link = array($this->config["querykey"]["action"]=>NULL,$this->config["querykey"]["id"]=>NULL);
@@ -215,8 +233,7 @@ class CJot {
 		$this->config["link"]["publish"] = $this->preserveUrl($modx->documentIdentifier,'',array_merge($this->_link,array($this->config["querykey"]["action"]=>'publish')),true);
 		$this->config["link"]["unpublish"] = $this->preserveUrl($modx->documentIdentifier,'',array_merge($this->_link,array($this->config["querykey"]["action"]=>'unpublish')),true);
 		
-		// Check for first run
-		$this->provider->FirstRun($this->config["path"]);
+		$this->provider->FirstRun($this->config["path"]); // Check for first run
 		
 		// Badwords
 		$this->config["badwords"]["enabled"] = !is_null($this->Get("badwords")) ? 1 : 0;
@@ -225,7 +242,7 @@ class CJot {
 			$badwords = $this->Get("badwords");
 			$badwords = preg_replace("~([\n\r\t\s]+)~","",$badwords);
 			$this->config["badwords"]["words"] = explode(",",$badwords);
-			$this->config["badwords"]["regexp"] = "~" . implode("|",$this->config["badwords"]["words"]) . "~i";
+			$this->config["badwords"]["regexp"] = "~" . implode("|",$this->config["badwords"]["words"]) . "~iu";
 		}
 				
 		// Moderation
@@ -241,9 +258,11 @@ class CJot {
 			$isSubscribed = $this->provider->hasSubscription($this->config["docid"],$this->config["tagid"], $this->config["user"]);
 			if ($isSubscribed) $this->config["subscription"]["status"] = 1;
 		}
-					
 		
 		$commentId = $this->config["query"]["id"];
+		
+		//onBeforeRunActions event
+		$this->doEvent("onBeforeRunActions");
 		
 		// Active action
 		switch ($this->config["mode"]["active"]) {
@@ -263,63 +282,75 @@ class CJot {
 				} else {
 					$this->form["edit"] = 1;
 				}
-			case "save": 
-			 		if ($this->isModerator) {
-						$this->doModerate('save',$commentId);
-						break;
-					} else {
-						$this->form["edit"] = 1;
-						$this->form["save"] = 1;
-					}
+			case "save":
+			 	if ($this->isModerator) {
+					$this->doModerate('save',$commentId);
+					break;
+				} else {
+					$this->form["edit"] = 1;
+					$this->form["save"] = 1;
+				}
 			case "move":
 				break;
 			case "subscribe":
-					if ($this->config["subscription"]["enabled"] == 1) {
-						if ($this->config["subscription"]["status"] == 0) {
-							$this->provider->Subscribe($this->config["docid"],$this->config["tagid"],$this->config["user"]);
-							$this->config["subscription"]["status"] = 1;
-						}
+				if ($this->config["subscription"]["enabled"] == 1) {
+					if ($this->config["subscription"]["status"] == 0) {
+						$this->provider->Subscribe($this->config["docid"],$this->config["tagid"],$this->config["user"]);
+						$this->config["subscription"]["status"] = 1;
 					}
-					break;
+				}
+				break;
 			case "unsubscribe":
-					if ($this->config["subscription"]["enabled"] == 1) {
-						if ($this->config["subscription"]["status"] == 1) {
-							$this->provider->Unsubscribe($this->config["docid"],$this->config["tagid"],$this->config["user"]);
-							$this->config["subscription"]["status"] = 0;
-						}
+				if ($this->config["subscription"]["enabled"] == 1) {
+					if ($this->config["subscription"]["status"] == 1) {
+						$this->provider->Unsubscribe($this->config["docid"],$this->config["tagid"],$this->config["user"]);
+						$this->config["subscription"]["status"] = 0;
 					}
-			break;
+				}
+				break;
 		}
+		
+		//onRunActions event
+		$this->doEvent("onRunActions");
 		
 		// Form Processing
 		$frmCommentId = ($this->form["edit"]) ? $commentId : 0;
 		$this->processForm($frmCommentId);	
 	
+		//onBeforeProcessPassiveActions event
+		$this->doEvent("onBeforeProcessPassiveActions");
+		
 		// Passive Action					
-		switch ($this->config["mode"]["passive"]) {
-		  case "count-comments" : $output = $this->getCommentCount(); break;
-		  case "count-subscriptions": $output = $this->SubscriptionCount(); break;
-		  case "comments": $output = $this->getOutputComments(); break;
-		  case "form": $output = $this->getOutputForm(); break;
-		  case "blank": break;
-			case "default":
-		  default: $output = $this->getOutputDefault(); break;
+		$actionPath = $this->config["path"].'actions/' . $this->config["mode"]["passive"] . '.inc.php';
+		$object = & $this;
+		if(is_file($actionPath)) {
+			include_once $actionPath;
+			$modeName = $this->config["mode"]["passive"] . '_mode';
+			if(function_exists($modeName)) $this->output = $modeName($object);
 		}
 		
+		//onProcessPassiveActions event
+		$this->doEvent("onProcessPassiveActions");
+		
 		if ($this->config["debug"]) {
-			$output .= '<br /><hr /><b>'.$this->name.' '.$this->version.': Debug</b><hr /><pre style="overflow: auto;background-color: white;font-weight: bold;">';
-			$output .= $this->getOutputDebug($this->config,"jot");
-			$output .= '</pre><hr />';
+			$this->output .= '<br /><hr /><b>'.$this->name.' : Debug</b><hr /><pre style="overflow: auto;background-color: white;font-weight: bold;">';
+			$this->output .= $this->getOutputDebug($this->config,"jot");
+			$this->output .= '</pre><hr />';
 	  }
 		
 		// Dump config into placeholders?
 		if ($this->config["placeholders"]) $this->setPlaceholders($this->config,"jot");
 		
 		// Include stylesheet if needed
-		$src = '<link rel="stylesheet" type="text/css" href="'.$modx->config["base_url"].$this->config["css"]["file"].'" />';
-		if ($this->config["css"]["include"]) $modx->regClientCSS($src);
+		if ($this->config["css"]["include"]) $modx->regClientCSS($modx->config["base_url"].$this->config["css"]["file"]);
 		
-		return $output;
+		// Include JS if needed
+		if ($this->config["js"]["include"]) $modx->regClientStartupScript($modx->config["base_url"].$this->config["js"]["file"]);
+		
+		//onReturnOutput event
+		$this->doEvent("onReturnOutput");
+		
+		return $this->output;
 	}
 	
 	// Output snippet values in debug format
@@ -351,107 +382,7 @@ class CJot {
 		}
 	}
 	
-	// Display default
-	function getOutputDefault() {
-		global $modx;
-		$output = $this->getOutputForm();
-		$output .= $this->getOutputComments();
-		return $output;
-	}
-	
-	// Display comments
-	function getOutputComments() {
-		// Check if viewing is allowed
-		if($this->canView) {
-				
-				// View (Moderation)
-				$view = 1;
-				if ($this->isModerator) { 
-					$view = $this->config["moderation"]["view"];
-					$this->config["moderation"]["unpublished"] = $this->getCommentCount(0);
-					$this->config["moderation"]["published"] = $this->getCommentCount(1);
-					$this->config["moderation"]["mixed"] = $this->getCommentCount(2);
-				}
-				
-				// Get total number of comments
-				$commentTotal = $this->getCommentCount($view);
-				$pagination = $this->config["pagination"];
-				
-				// Apply pagination if enabled
-				if ($pagination > 0) {
-					$pageLength = $pagination;
-					$pageTotal = ceil($commentTotal / $pageLength);
-					$pageCurrent = isset($_GET[$this->config["querykey"]["navigation"]]) ? $_GET[$this->config["querykey"]["navigation"]]: 1;
-					if ( ($pageCurrent < 1) || ($pageCurrent > $pageTotal) ) { $pageCurrent = 1; };
-					$pageOffset = (($pageCurrent*$pageLength)-$pageLength);
-					$navStart = ($pageOffset+1);
-					$navEnd = ($pageOffset+$pageLength) > $commentTotal ? $commentTotal : ($pageOffset+$pageLength);
-				} else {
-					$pageLength = 0;
-					$pageOffset = 0;
-					$pageTotal = 1;
-					$pageCurrent = 1;
-					$navStart = 0;
-					$navEnd = $commentTotal;
-				}
-				
-				// Navigation
-				$this->config['nav'] = array('total'=>$commentTotal,'start'=>$navStart,'end'=> $navEnd);
-				$this->config['page'] = array('length'=>$pageLength,'total'=>$pageTotal,'current'=>$pageCurrent);
-				
-				// Render Moderation Options
-				$output_moderate = NULL;
-				if ($this->isModerator) { 
-					$tpl = new CChunkie($this->templates["moderate"]);
-					$tpl->AddVar('jot',$this->config);
-					$this->config["html"]["moderate"] = $output_moderate = $tpl->Render();
-				}
-					
-				// Get comments
-				$array_comments = $this->provider->GetComments($this->config["docid"],$this->config["tagid"],$view,$this->config["sortby"],$pageOffset,$pageLength);
-								
-				// Render navigation
-				$output_navigation = NULL;
-				if (($pagination > 0) && ($pageTotal > 1) ) {
-						$tpl = new CChunkie($this->templates["navigation"]);
-						$tpl->AddVar('jot',$this->config);
-						$output_navigation = $tpl->Render();
-				}	
-				
-				// Render subscription options
-				$output_subscribe = NULL;
-				$tpl = new CChunkie($this->templates["subscribe"]);
-				$tpl->AddVar('jot',$this->config);
-				$this->config["html"]["subscribe"] = $output_subscribe = $tpl->Render();
-				
-				// Render comments
-				$count = count($array_comments);
-				$comments = array();
-				
-				// Comment Numbering
-				for ($i = 0; $i < $count; $i++) {
-					$num = ($this->config["numdir"]) ? $commentTotal - ($pageOffset + $i) :  $pageOffset + ($i+1);
-					$array_comments[$i]["postnumber"] = $num;			
-				}
-	
-				
-				
-				for ($i = 0; $i < $count; $i++) {
-					$chunk["rowclass"] = $this->getChunkRowClass($i+1,$array_comments[$i]["createdby"]);
-					$tpl = new CChunkie($this->templates["comments"]);
-					$tpl->AddVar('jot',$this->config);
-					$tpl->AddVar('comment',$array_comments[$i]);
-					$tpl->AddVar('chunk',$chunk);
-					$comments[] = $tpl->Render();
-				}
 
-				$this->config["html"]["comments"] = $output_comments = join("",$comments);
-				$this->config["html"]["navigation"] = $output_navigation;
-				$output_comments = $output_subscribe.$output_moderate.$output_navigation.$output_comments.$output_navigation;
-		}		
-		if ($this->config["output"]) return $output_comments;
-	}
-		
 	function processForm($id=0) {
 		global $modx;
 		
@@ -462,18 +393,18 @@ class CJot {
 		$saveComment = 1;
 		$this->form["action"] = $this->config["link"]["current"];
 		if ($id && $pObj->isValidComment($this->config["docid"],$this->config["tagid"],$id) && $this->canEdit) {
-				$pObj->Comment($id);
-				if (($pObj->Get("createdby") == $this->config["user"]["id"]) || $this->isModerator) {
-					$this->form["action"] = $this->config["link"]["save"];
-					$this->form['guest'] = ($pObj->Get("createdby") == 0) ? 1 : 0;
-					$this->form["field"] = $pObj->getFields();
-					$this->config["mode"]["passive"] =  "form";
-				} else {
-					$this->form['edit'] = 0;
-					$this->form['save'] = 0;
-					$saveComment = 0;
-				}
+			$pObj->Comment($id);
+			if (($pObj->Get("createdby") == $this->config["user"]["id"]) || $this->isModerator) {
+				$this->form["action"] = $this->config["link"]["save"];
+				$this->form['guest'] = ($pObj->Get("createdby") == 0 && $this->form["save"] != 1) ? 1 : 0;
+				$this->form["field"] = $pObj->getFields();
+				$this->config["mode"]["passive"] =  "form";
 			} else {
+				$this->form['edit'] = 0;
+				$this->form['save'] = 0;
+				$saveComment = 0;
+			}
+		} else {
 			$pObj->Comment(0); // fix for update/new problem
 		}
 	
@@ -484,41 +415,52 @@ class CJot {
 		$this->config["mode"]["passive"] = $formMode;
 						
 		//-- Get Post Objects
-			$chkPost = array();
-			$valFields = array();
-			// For every field posted loop
-			foreach($_POST as $n=>$v) {
+		$chkPost = array();
+		$valFields = array();
+		
+		//onBeforePOSTProcess event
+		if (null !== ($output = $this->doEvent("onBeforePOSTProcess",array("id"=>$id,"pObj"=>&$pObj,"saveComment"=>&$saveComment)))) return;
+		
+		// For every field posted loop
+		foreach($_POST as $n=>$v) {
 			
-						// Stripslashes if needed
-						if (get_magic_quotes_gpc()) { $v = stripslashes($v); }
-						
-						// Validate fields and store error level + msg in array
-						$valFields[] = $this->validateFormField($n,$v);
-						
-						// Store field data
-						switch($n) {
-							case 'title': // Title field
-								if ($v == '') $v = "Re: " . $this->config["title"];
-								$this->form["field"]["title"] = $v;
-								$pObj->Set("title",$v); 
-								break;
-							case 'content': // Content field
-								$this->form["field"]["content"] = $v;
-								$pObj->Set("content",$v); 
-								break;
-							default: // Custom fields
-								if (in_array($n, $this->config["customfields"])) {
-									$this->form["field"]["custom"][$n] = $v;
-									$pObj->SetCustom($n,$v);
-								} else {
-									$this->form["field"][$n] = $v;
-								}
-						}
-					//-- Detect bad words
-				if ($this->config["badwords"]["enabled"]) $this->form['badwords'] = $this->form['badwords'] + preg_match_all($this->config["badwords"]["regexp"],$v,$matches);
-				//-- 
-				$chkPost[] = $n.'='.($v);
-			} // --	
+			// Stripslashes if needed
+			if (get_magic_quotes_gpc()) { $v = stripslashes($v); }
+			
+			// Validate fields and store error level + msg in array
+			$valFields[] = $this->validateFormField($n,$v);
+			
+			// Store field data
+			switch($n) {
+				case 'title': // Title field
+					if ($v == '' && $this->config["title"]) $v = "Re: " . $this->config["title"];
+					$this->form["field"]["title"] = $v;
+					$pObj->Set("title",$v); 
+					break;
+				case 'content': // Content field
+					$this->form["field"]["content"] = $v;
+					$pObj->Set("content",$v); 
+					break;
+ 				case 'parent': // Parent field
+					$this->form["field"]["parent"] = intval($v);
+					$pObj->Set("parent",intval($v)); 
+					break;
+				default: // Custom fields
+					if (in_array($n, $this->config["customfields"])) {
+						$this->form["field"]["custom"][$n] = $v;
+						$pObj->SetCustom($n,$v);
+					} else {
+						$this->form["field"][$n] = $v;
+					}
+			}
+			
+			//-- Detect bad words
+			if ($this->config["badwords"]["enabled"]) $this->form['badwords'] = $this->form['badwords'] + preg_match_all($this->config["badwords"]["regexp"],$v,$matches);
+			
+			//-- 
+			$chkPost[] = $n.'='.($v);
+			
+		} // --	
 		
 		//-- Double Post Capture
 		$chkPost = md5(join('&',$chkPost));
@@ -584,6 +526,7 @@ class CJot {
 					break;
 				}
 		}
+		
 		// If published or unpublished save the comment, else do nothing.
 		if (!$id) {
 			// this is a new post
@@ -613,136 +556,93 @@ class CJot {
 		if ($this->form["edit"]) { $this->config["mode"]["passive"] = "form"; }
 		
 		// Notify Subscribers
-		if ($saveComment && $this->form['published']>0) $this->doNotifySubscribers($pObj->Get("id"));
+		if ($saveComment && $this->form['published']>0 && $this->config["subscription"]["enabled"]) $this->doNotify($pObj->Get("id"),"notify");
 		
 		// Notify Moderators
-		if ($saveComment && (($this->form['published']==0) || ($this->form['published'] >0 && $this->config["moderation"]["notify"]==2))) $this->doNotifyModerators($pObj->Get("id"));
+		if ($saveComment && (($this->form['published']==0 && $this->config["moderation"]["notify"]==1) || ($this->form['published'] >0 && $this->config["moderation"]["notify"]==2)))
+			$this->doNotify($pObj->Get("id"),"notifymoderator");
 		
 		// Notify Author
-		if ($saveComment && $this->config["moderation"]["notifyAuthor"]) $this->doNotifyAuthor($pObj->Get("id"));
+		if ($saveComment && $this->config["moderation"]["notifyAuthor"]) $this->doNotify($pObj->Get("id"),"notifyauthor");
+		
+		// Notify Emails
+		if ($saveComment && !empty($this->config["notifyEmails"])) $this->doNotify($pObj->Get("id"),"notifyemails");
 		
 		// If no error occured clear fields.
 		if ($this->form['error'] <= 0 ) $this->form["field"] = array();
+		
+		//onProcessForm event
+		if (null !== ($output = $this->doEvent("onProcessForm",array("id"=>$id,"pObj"=>&$pObj,"saveComment"=>$saveComment)))) return;
 		
 		// Destroy Comment Object and return form array()
 		unset($pObj);
 		return;
 	}
 	
-	// Display Form
-	function getOutputForm() {
-		global $modx;
-		$output_form = NULL;
-
-		//----  Allow post?
-		if ($this->canPost) {
-															
-			// Render Form
-			$tpl = new CChunkie($this->templates["form"]);
-			$tpl->AddVar('jot',$this->config);
-			$tpl->AddVar('form',$this->form);
-			$this->config["html"]["form"] = $output_form = $tpl->Render();
-			
-		} // -----
-		
-		// Output or placeholder?
-		if ($this->config["output"]) return $output_form;
-	}
-		
 	// Notifications
-	function doNotifySubscribers($commentid=0) {
+	function doNotify($commentid=0,$action="notify") {
 		global $modx;
-		if ($this->config["subscription"]["enabled"]) {
-				
-				// Get comment fields
-				$cObj = $this->provider;
-				$cObj->Comment($commentid);
-				$comment = $cObj->getFields();
-				unset($cObj);
-																
-				$subscriptions = $this->provider->getSubscriptions($this->config["docid"],$this->config["tagid"]);
-				$count = count($subscriptions);
-				for ($i = 0; $i < $count; $i++) {
-						if ($this->config["user"]["id"] != $subscriptions[$i]["userid"] ) {
-							$user = $this->getUserInfo($subscriptions[$i]["userid"]);
-							$tpl = new CChunkie($this->templates["notify"]);
-							$tpl->AddVar('jot',$this->config);
-							$tpl->AddVar('comment',$comment);
-							$tpl->AddVar('siteurl',"http://".$_SERVER["SERVER_NAME"]);
-							$tpl->AddVar('recipient',$user);
-							$message = $tpl->Render();
-							mail($user["email"], $this->config["subject"]["subscribe"], $message, "From: ".$modx->config['emailsender']."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
-						}
-				}
+		
+		// Get comment fields
+		$cObj = $this->provider;
+		$cObj->Comment($commentid);
+		$comment = $cObj->getFields();
+		unset($cObj);
+		
+		switch ($action) {
+			case "notify":
+				$user_ids = $this->provider->getSubscriptions($this->config["docid"],$this->config["tagid"]);
+				$subject = $this->config["subject"]["subscribe"];
+				break;
+			case "notifymoderator":
+				$user_ids = $this->getMembersOfWebGroup($this->config["permissions"]["moderate"]);
+				$subject = $this->config["subject"]["moderate"];
+				break;
+			case "notifyauthor":
+				$user_ids = array($this->config["authorid"]);
+				$subject = $this->config["subject"]["author"];
+				break;
+			case "notifyemails":
+				$user_ids = $this->config["notifyEmails"];
+				$subject = $this->config["subject"]["emails"];
+				break;
 		}
-	}
-	
-	// Moderator Notification
-	function doNotifyModerators($commentid=0) {
-		global $modx;
-		if ($this->config["moderation"]["notify"]) {
 
-		  // Get comment fields
-			$cObj = $this->provider;
-			$cObj->Comment($commentid);
-			$comment = $cObj->getFields();
-			unset($cObj);
-					
-			$moderators = $this->getMembersOfWebGroup($this->config["permissions"]["moderate"]);
-			foreach ($moderators as $moderator){
-				$user = $modx->getWebUserInfo($moderator);
-				$tpl = new CChunkie($this->templates["notifymoderator"]);
-				$tpl->AddVar('jot',$this->config);
-				$tpl->AddVar('comment',$comment);
-				$tpl->AddVar('siteurl',"http://".$_SERVER["SERVER_NAME"]);
-				$tpl->AddVar('recipient',$user);
-				$message = $tpl->Render();
-				mail($user["email"], $this->config["subject"]["moderate"], $message, "From: ".$modx->config['emailsender']."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
+		include_once MODX_BASE_PATH . "manager/includes/controls/class.phpmailer.php";
+		
+		foreach ($user_ids as $user_id){
+			if ($this->config["user"]["id"] !== $user_id) {
+				if ($action == "notifyemails") {
+					$user = array();
+					$user["email"] = $user_id;
+					$user["username"] = $this->config["notifyNames"][$user_id];
+				} else {
+					$user = $this->getUserInfo($user_id);
+				}
+
+				$tpl = new CChunkie($this->templates[$action]);
+				$tpl->AddVar("siteurl","http://".$_SERVER["SERVER_NAME"]);
+				
+				//onBeforeNotify event
+				if (null === $this->doEvent("onBeforeNotify",array("commentid"=>$commentid,"action"=>$action,"tpl"=>&$tpl,"subject"=>&$subject,"comment"=>&$comment,"user"=>&$user))) {
+					$tpl->AddVar("jot",$this->config);
+					$tpl->AddVar("comment",$comment);
+					$tpl->AddVar("recipient",$user);
+					$mail = new PHPMailer();
+					$mail->IsMail();
+					$mail->CharSet = $modx->config["modx_charset"]; 
+					$mail->IsHTML(false);
+					$mail->From = $modx->config["emailsender"];
+					$mail->FromName = $modx->config["site_name"];
+					$mail->Subject = $subject;
+					$mail->Body = $tpl->Render();
+					$mail->AddAddress($user["email"]);
+					$mail->Send();
+				}
 			}
 		}
 	}
 	
-	// Author Notification
-	function doNotifyAuthor($commentid=0) {
-		
-		echo '<!-- notifying author -->';
-		
-		global $modx;
-		
-		if ($this->config["moderation"]["notifyAuthor"]) {
-			
-			// What is the e-mail address of the article author?
-			$author_id = $this->config['authorid'];		
-			$res = $modx->db->select('*',  $modx->getFullTableName('user_attributes'), 'id = '.$author_id);
-			$results_array = $modx->db->makeArray($res);
-			$user = $results_array[0]; // Assume there is only one result			
-			
-			// Get comment fields (copied from doNotifyModerators)
-			$cObj = $this->provider;
-			$cObj->Comment($commentid);
-			$comment = $cObj->getFields();
-			unset($cObj);
-			
-			$tpl = new CChunkie($this->templates["notifyauthor"]);
-			$tpl->AddVar('jot',$this->config);
-			$tpl->AddVar('comment',$comment);
-			$tpl->AddVar('siteurl',"http://".$_SERVER["SERVER_NAME"]);
-			$tpl->AddVar('recipient',$user);
-			$message = $tpl->Render();
-			
-			mail($user["email"], $this->config["subject"]["author"], $message, "From: ".$modx->config['emailsender']."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
-			
-		}
-		
-		
-		
-	}
-	
-	// Returns comment count
-	function getCommentCount($view=1) {
-		return $this->provider->GetCommentCount($this->config["docid"],$this->config["tagid"],$view);
-	}
-
 	// Moderation
 	function doModerate($action = '',$id = 0) {
 		$output = NULL;
@@ -759,7 +659,7 @@ class CJot {
 					$pObj->Set("publishedby",$this->config["user"]["id"]);
 					$pObj->Set("published",1);
 					$pObj->Save();
-					$this->doNotifySubscribers($id);
+					if ($this->config["subscription"]["enabled"]) $this->doNotify($id,"notify");
 					break;
 				case "edit":
 					$this->form["moderation"] = 1;
@@ -800,6 +700,9 @@ class CJot {
 		$returnValue = array(1,"");
 		$validateFields = $this->config["form"]["validation"];
 		
+		//onBeforeValidateFormField event
+		if (null !== ($output = $this->doEvent("onBeforeValidateFormField",array("name"=>$name,"value"=>$value)))) return $output;
+		
 		// Validation Exists?
 		if (!array_key_exists($name, $validateFields))
 			return $returnValue;
@@ -809,19 +712,23 @@ class CJot {
 		
 		// Loop validation array
 		foreach($validations as $validation) {
-				switch ($validation["validation"]) {
-					// email validation
-					case "email": $re = "~^(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,5}$~i"; break;
-					// simple required field validation
-					case "required": $re = "~.+~s";break;
-					// simple number validation
-					case "number": $re = "~^\d+$~";break;
-					// custom regexp pattern
-					default: $re = $validation["validation"]; break;
-				}
-				// if not a match return error msg
-				if (!preg_match($re,$value))
-					return array(0,$validation["msg"]);
+			switch ($validation["validation"]) {
+				// email validation
+				case "email": $re = "~^(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,5}$~i"; break;
+				// simple required field validation
+				case "required": $re = "~.+~s";break;
+				// simple number validation
+				case "number": $re = "~^\d+$~";break;
+				// custom regexp pattern
+				default: $re = $validation["validation"]; break;
+			}
+			
+			// if not a match return error msg
+			if (!preg_match($re,$value)) {
+				//onValidateFormFieldFail event
+				if (null !== ($output = $this->doEvent("onValidateFormFieldFail",array("name"=>$name,"value"=>$value,"validation"=>$validation)))) return $output;
+				return array(0,$validation["msg"]);
+			}
 		}
 		return $returnValue;					
 	}
@@ -864,13 +771,17 @@ class CJot {
 						FROM $tbl wgn
 						INNER JOIN $tbl2 wg ON wg.webgroup=wgn.id AND wgn.name IN ('" . implode("','",$groupNames) . "')";
 		$usrRows = $modx->db->getColumn("webuser", $sql);
-		foreach ($usrRows as $k => $v) $usrIDs[] = intval($v);
+		foreach ($usrRows as $v) $usrIDs[] = -intval($v);
 		return $usrIDs;
 	}	
 	
 	// MODx UserInfo enhanced
 	function getUserInfo($userid = 0,$field = NULL) {
 		global $modx;
+		
+		//onBeforeGetUserInfo event
+		if (null !== ($output = $this->doEvent("onBeforeGetUserInfo",array("userid"=>$userid,"field"=>$field)))) return $output;
+		
 		if (intval($userid) < 0) {
 			$user = $modx->getWebUserInfo(-($userid));
 		} else {
@@ -905,5 +816,84 @@ class CJot {
 		return $modx->makeUrl($docid, $alias, $url);
 	}
 	
+	// invoke events
+	function doEvent($event,$params=array()) {
+		global $modx;
+		$this->event = $event;
+		$event = $this->Get($event);
+		if (!$event) return null;
+		$plugins=explode(',',$event);
+		$object = & $this;
+		$result = null;
+		foreach ($plugins as $plugin) {
+			if(function_exists($plugin)) {
+				if (null !== ($output = $plugin($object,$params))) $result = $output;
+			} else {
+				$pluginPath = $this->config["path"].'plugins/' . $plugin . '.inc.php';
+				if(is_file($pluginPath)) {
+					include $pluginPath;
+					if(function_exists($plugin)) {
+						if (null !== ($output = $plugin($object,$params))) $result = $output;
+					}
+				}
+			}
+		}
+		$this->event = '';
+		return $result;
+	}
+	
+	function processDocs($docids) {
+		global $modx;
+		$idarray = array();
+		if ($docids != '*') $values = explode(',',$docids);
+		else return $docids;
+		
+		/* parse values, and check for invalid entries */
+		foreach ($values as $value) {
+			/* value is a range */
+			if (preg_match('/^[\d]+\-[\d]+$/', trim($value))) {
+				$match = explode('-', $value);
+				$loop = $match[1] - $match[0];
+				for ($i = 0; $i <= $loop; $i++) {
+					$idarray[] = $i + intval($match[0]);
+				}
+			}
+			/* value is a group for immediate children */
+			elseif (preg_match('/^[\d]+\*$/', trim($value), $match)) {
+				$match = rtrim($match[0], '*');
+				$idarray[] = intval($match);
+				$children = $modx->getChildIds($match,1);
+				foreach ($children as $v) $idarray[] =  intval($v);
+			}
+			/* value is a group for ALL children */
+			elseif (preg_match('/^[\d]+\*\*$/', trim($value), $match)) {
+				$match = rtrim($match[0], '**');
+				$idarray[] = intval($match);
+				$children = $modx->getChildIds($match);
+				foreach ($children as $v) $idarray[] =  intval($v);
+			}
+			/* value is a single document */
+			elseif (preg_match('/^[\d]+$/', trim($value), $match)) {
+				$idarray[] = intval($match[0]);
+			}
+		}
+		if (empty($idarray)) return $modx->documentIdentifier;
+		return $idarray;
+	}
+	
+	function processTags($tagids) {
+		global $modx;
+		$idarray = array();
+		if ($tagids != '*') $values = explode(',',$tagids);
+		else return $tagids;
+		
+		foreach ($values as $value) {
+			$value = preg_replace("/[^A-z0-9_\-]/",'',$value);
+			if (!empty($value)) $idarray[] = $value;
+		}
+		
+		if (empty($idarray)) return '';
+		return $idarray;
+	}
 }
 ?>
