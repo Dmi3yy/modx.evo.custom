@@ -1,7 +1,8 @@
 //<?
-/**************************************/
-/** Diff plugin for Modx Evo
-*
+/** 
+* Diff
+* 
+* Diff
 * @version 2.6
 * @author Borisov Evgeniy aka Agel Nash (agel-nash@xaker.ru)
 * @date 20.07.2012
@@ -12,7 +13,7 @@
 * @internal @modx_category
 *
 */
-/*************************************/
+
 if(file_exists($modx->config['base_path'].'assets/plugins/'.$folderPlugin.'/lang/'.$modx->config['manager_language'].'.inc.php')){
   include($modx->config['base_path'].'assets/plugins/'.$folderPlugin.'/lang/'.$modx->config['manager_language'].'.inc.php');
 }else{
