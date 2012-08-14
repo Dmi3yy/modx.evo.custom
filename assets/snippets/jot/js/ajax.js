@@ -9,7 +9,6 @@
 	}
 	jotAjax = function(id) {
 		var hist;
-		
 		$(document).delegate('.jot-nav a','click',function(event) {
 			hist = $(this).attr('href');
 			$.get($(this).attr('href'), function(data) {setData(data,id);});
@@ -21,7 +20,11 @@
 		});
 		$(document).delegate('.jot-form','submit',function(event) {
 			event.preventDefault();
-			$.post($(this).attr('action'), $(this).serialize(), function(data) {setData(data,id);});
+			var parent = $('#comment-parent-'+id).val();
+			$.post($(this).attr('action'), $(this).serialize(), function(data) {
+				setData(data,id);
+				if (parent && addComment) {addComment.moveForm(id,parent);}
+			});
 		});
 		$(document).delegate('.jot-form .jot-btn-cancel','click',function(event) {
 			event.preventDefault();

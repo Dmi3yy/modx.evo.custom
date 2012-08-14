@@ -212,7 +212,7 @@ class CJotDataDb {
 		return $userpostcount;
 	}
 	
-	function GetCommentCount($docid,$tagid,$viewtype) {
+	function GetCommentCount($docid,$tagid,$viewtype,$userid='*') {
 		global $modx;
 		
 		//onBeforeGetCommentCount event
@@ -229,7 +229,7 @@ class CJotDataDb {
 			default:
 				$where = "published = 1 "; // Published
 		}
-		$sql = 'SELECT count(id) FROM ' . $this->tbl["content"] . ' WHERE ' . $where . $this->sqlPart($docid,$tagid);
+		$sql = 'SELECT count(id) FROM ' . $this->tbl["content"] . ' WHERE ' . $where . $this->sqlPart($docid,$tagid,$userid);
 		return intval($modx->db->getValue($sql));
 	}
 			
@@ -242,7 +242,7 @@ class CJotDataDb {
 		}
 	}
 	
-	function GetComments($docid,$tagid,$viewtype,$upc,$sort,$offset,$length) {
+	function GetComments($docid,$tagid,$viewtype,$upc,$sort,$offset,$length,$userid='*') {
 		global $modx;
 		$tbl = $this->tbl["content"];
 		$where = NULL;
@@ -288,18 +288,18 @@ class CJotDataDb {
 			."left join " . $modx->getFullTableName('web_user_attributes') . " as wua on wua.internalKey=wu.id ";
 		
 		$sql = "(select a.*,mu.username,mua.fullname,mua.email,mua.role,mua.gender,mua.country,mua.photo
-		from " . $tbl . " as a " .$user_data_tbl." ".$tblcustom. " where a.createdby>=0 " . $this->sqlPart($docid,$tagid) . "and mode = '0' " . $where . ") 
+		from " . $tbl . " as a " .$user_data_tbl." ".$tblcustom. " where a.createdby>=0 " . $this->sqlPart($docid,$tagid,$userid) . "and mode = '0' " . $where . ") 
 		union (select a.*,wu.username,wua.fullname,wua.email,wua.role,wua.gender,wua.country,wua.photo  
-		from " . $tbl . " as a " .$webuser_data_tbl." ".$tblcustom. " where a.createdby<0 " . $this->sqlPart($docid,$tagid) . "and mode = '0' " . $where . ")"
+		from " . $tbl . " as a " .$webuser_data_tbl." ".$tblcustom. " where a.createdby<0 " . $this->sqlPart($docid,$tagid,$userid) . "and mode = '0' " . $where . ")"
 		. $orderby . $limit;
 		
 		//onBeforeGetComments event
-		if (null !== ($output = $this->doEvent("onBeforeGetComments",array("docid"=>$docid,"tagid"=>$tagid,"viewtype"=>$viewtype,"upc"=>$upc,"sort"=>$sort,"offset"=>$offset,"length"=>$length,"sql"=>&$sql)))) return $output;
+		if (null !== ($output = $this->doEvent("onBeforeGetComments",array("docid"=>$docid,"tagid"=>$tagid,"viewtype"=>$viewtype,"upc"=>$upc,"sort"=>$sort,"offset"=>$offset,"length"=>$length,"sql"=>&$sql,"userid"=>$userid)))) return $output;
 		
-		return $this->GetCommentsArray($sql,$docid,$tagid,$upc);
+		return $this->GetCommentsArray($sql,$docid,$tagid,$upc,$userid);
 	}
 	
-	function GetCommentsArray($query,$docid,$tagid,$upc) {
+	function GetCommentsArray($query,$docid,$tagid,$upc,$userid='*') {
 		global $modx;
 		$rs = $modx->db->query($query);	
 		$comments = array();
@@ -331,7 +331,7 @@ class CJotDataDb {
 		}
 		
 		//onGetComments event
-		if (null !== ($output = $this->doEvent("onGetComments",array("arrComments"=>$arrComments,"docid"=>$docid,"tagid"=>$tagid,"upc"=>$upc)))) return $output;
+		if (null !== ($output = $this->doEvent("onGetComments",array("arrComments"=>$arrComments,"docid"=>$docid,"tagid"=>$tagid,"upc"=>$upc,"userid"=>$userid)))) return $output;
 		
 		return $arrComments;
 	}
@@ -357,7 +357,7 @@ class CJotDataDb {
 		
 		$tbl = $this->tbl["subscriptions"];
 		$subscriptions = array();
-		$rs = $modx->db->query("select userid from $tbl where id>0 ". $this->sqlPart($docid,$tagid));	
+		$rs = $modx->db->query("select userid from $tbl where id>0 ". $this->sqlPart($docid,$tagid,$userid));	
 		$usrRows = $modx->db->getColumn("userid", $rs);
 		foreach ($usrRows as $v) $subscriptions[] = intval($v);
 		
@@ -418,7 +418,7 @@ class CJotDataDb {
 		return $result;
 	}
 	
-	function sqlPart($docid,$tagid) {
+	function sqlPart($docid,$tagid,$userid="*") {
 		if (is_array($docid)) {
 			$docids = "and uparent IN (" . implode(",",$docid) . ") ";
 		} elseif ($docid != "*") {
@@ -435,7 +435,14 @@ class CJotDataDb {
 		} else {
 			$tagids = "";
 		}
-		return $docids.$tagids;
+		if (is_array($userid)) {
+			$userids = "and createdby IN (" . implode(",",$userid) . ") ";
+		} elseif ($userid != "*" && $userid != "") {
+			$userids = "and createdby = " . $userid . " ";
+		} else {
+			$userids = "";
+		}
+		return $docids.$tagids.$userids;
 	}
 }
 ?>

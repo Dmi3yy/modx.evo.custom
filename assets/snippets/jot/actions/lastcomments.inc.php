@@ -9,7 +9,7 @@
 			
 			// Get comments
 			$limit = ($object->config["limit"]>0) ? $object->config["limit"] : 3;
-			$array_comments = $object->provider->GetComments("*",$object->config["tagids"],1,$object->config["upc"],$object->config["sortby"],0,$limit);
+			$array_comments = $object->provider->GetComments("*",$object->config["tagids"],1,$object->config["upc"],$object->config["sortby"],0,$limit,$object->config["userids"]);
 			
 			// Render comments
 			$count = count($array_comments);

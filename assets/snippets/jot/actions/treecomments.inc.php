@@ -11,9 +11,9 @@
 			$view = 1;
 			if ($object->isModerator) { 
 				$view = $object->config["moderation"]["view"];
-				$object->config["moderation"]["unpublished"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],0);
-				$object->config["moderation"]["published"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],1);
-				$object->config["moderation"]["mixed"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],2);
+				$object->config["moderation"]["unpublished"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],0,$object->config["userids"]);
+				$object->config["moderation"]["published"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],1,$object->config["userids"]);
+				$object->config["moderation"]["mixed"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],2,$object->config["userids"]);
 			}
 			
 			// Render Moderation Options
@@ -29,7 +29,7 @@
 			$object->config["html"]["subscribe"] = $tpl->Render();
 			
 			// Get comments
-			$array_comments = $object->provider->GetComments($object->config["docids"],$object->config["tagids"],$view,$object->config["upc"],$object->config["sortby"],0,0);	
+			$array_comments = $object->provider->GetComments($object->config["docids"],$object->config["tagids"],$view,$object->config["upc"],$object->config["sortby"],0,0,$object->config["userids"]);	
 			
 			// Get comments count
 			$count = count($array_comments);

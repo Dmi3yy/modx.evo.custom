@@ -29,6 +29,7 @@ $Jot->Set("docid", $docid);
 $Jot->Set("tagid", $tagid);
 $Jot->Set("docids", $docids);
 $Jot->Set("tagids", $tagids);
+$Jot->Set("userids", $userids);
 $Jot->Set("subscribe", $subscribe);
 $Jot->Set("subscriber", $subscriber);
 $Jot->Set("moderated", $moderated);

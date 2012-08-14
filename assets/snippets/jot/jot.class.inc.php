@@ -73,6 +73,7 @@ class CJot {
 		$this->config["tagid"] = !is_null($this->Get("tagid")) ? preg_replace("/[^A-z0-9_\-]/",'',$this->Get("tagid")):'';
 		$this->config["docids"] = !is_null($this->Get("docids")) ? $this->processDocs($this->Get("docids")) : $this->config["docid"];
 		$this->config["tagids"] = !is_null($this->Get("tagids")) ? $this->processTags($this->Get("tagids")) : $this->config["tagid"];
+		$this->config["userids"] = !is_null($this->Get("userids")) ? $this->processUsers($this->Get("userids")) : '*';
 		$this->config["pagination"] = !is_null($this->Get("pagination")) ? $this->Get("pagination") : 10; // Set pagination (0 = disabled, # = comments per page)
 		$this->config["captcha"] = !is_null($this->Get("captcha")) ? intval($this->Get("captcha")) : 0; // Set captcha (0 = disabled, 1 = enabled, 2 = enabled for not logged in users)
 		$this->config["postdelay"] = !is_null($this->Get("postdelay")) ? $this->Get("postdelay") : 15; // Set post delay in seconds
@@ -888,11 +889,25 @@ class CJot {
 		else return $tagids;
 		
 		foreach ($values as $value) {
-			$value = preg_replace("/[^A-z0-9_\-]/",'',$value);
+			$value = preg_replace('/[^A-z0-9_\-]/','',$value);
 			if (!empty($value)) $idarray[] = $value;
 		}
 		
 		if (empty($idarray)) return '';
+		return $idarray;
+	}
+	function processUsers($userids) {
+		global $modx;
+		$idarray = array();
+		if ($userids != '*') $values = explode(',',$userids);
+		else return $userids;
+		
+		foreach ($values as $value) {
+			$value = preg_replace('/[^0-9\-]/','',$value);
+			if (!empty($value)) $idarray[] = $value;
+		}
+		
+		if (empty($idarray)) return '*';
 		return $idarray;
 	}
 }

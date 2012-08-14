@@ -10,7 +10,7 @@
 	//$pagination=0;
 	
 	$onBeforePOSTProcess='antispam';
-	$onSetFormOutput='antispam';
+	$onSetFormOutput='antispam,ajax';
 	$onBeforeValidateFormField='nolink';
 
 	$onBeforeFirstRun='subscribe';
@@ -20,6 +20,9 @@
 	$onGetSubscriptions='subscribe';
 	$onBeforeGetUserInfo='subscribe';
 	$onBeforeNotify='subscribe';
+	
+	$onSetCommentsOutput='ajax';
+	$onReturnOutput='ajax';
 	
 	$tplForm = '@CODE:
 <div id="respond-[+jot.link.id+]" class="jot-form-wrap">

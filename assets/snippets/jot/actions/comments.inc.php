@@ -11,13 +11,13 @@
 			$view = 1;
 			if ($object->isModerator) { 
 				$view = $object->config["moderation"]["view"];
-				$object->config["moderation"]["unpublished"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],0);
-				$object->config["moderation"]["published"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],1);
-				$object->config["moderation"]["mixed"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],2);
+				$object->config["moderation"]["unpublished"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],0,$object->config["userids"]);
+				$object->config["moderation"]["published"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],1,$object->config["userids"]);
+				$object->config["moderation"]["mixed"] = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],2,$object->config["userids"]);
 			}
 			
 			// Get total number of comments
-			$commentTotal = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],$view);
+			$commentTotal = $object->provider->GetCommentCount($object->config["docids"],$object->config["tagids"],$view,$object->config["userids"]);
 			$limit = $object->config["limit"];
 			$commentTotal = ($limit>0 && $limit<$commentTotal) ? $limit : $commentTotal;
 			$pagination = (isset($_GET[$object->config["querykey"]["navigation"]]) && $_GET[$object->config["querykey"]["navigation"]] == 0) ? 0 : $object->config["pagination"];
@@ -52,7 +52,7 @@
 			}
 			
 			// Get comments
-			$array_comments = $object->provider->GetComments($object->config["docids"],$object->config["tagids"],$view,$object->config["upc"],$object->config["sortby"],$pageOffset,$pageLength);
+			$array_comments = $object->provider->GetComments($object->config["docids"],$object->config["tagids"],$view,$object->config["upc"],$object->config["sortby"],$pageOffset,$pageLength,$object->config["userids"]);
 			
 			// Render navigation
 			if (($pagination > 0) && ($pageTotal > 1) ) {

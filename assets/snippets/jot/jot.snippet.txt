@@ -4,7 +4,7 @@
  * User comments with moderation and email subscription
  *
  * @category 	snippet
- * @version 	1.0
+ * @version 	1.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Content
@@ -29,6 +29,7 @@ $Jot->Set("docid", $docid);
 $Jot->Set("tagid", $tagid);
 $Jot->Set("docids", $docids);
 $Jot->Set("tagids", $tagids);
+$Jot->Set("userids", $userids);
 $Jot->Set("subscribe", $subscribe);
 $Jot->Set("subscriber", $subscriber);
 $Jot->Set("moderated", $moderated);
