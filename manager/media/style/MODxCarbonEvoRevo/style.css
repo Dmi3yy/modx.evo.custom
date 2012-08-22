@@ -488,7 +488,7 @@ input.submit {
 		text-shadow: 0px 1px 0px #FFF;
 }
 	.tab-page .sectionHeader {
-		margin: 2px 3px 15px;
+		margin: 2px 3px 0px;
 	}
 	.rtl .sectionHeader {
 		direction: rtl;
@@ -504,7 +504,7 @@ input.submit {
 		background: none repeat scroll 0 0 #F7F7F7;
 		border: 1px solid #CCCCCC;
 		margin: 0 3px 15px;
-		padding: 15px;
+		padding: 7px;
 	}
 	.rtl .sectionBody, .layerVisible {
 		direction: rtl;
@@ -609,14 +609,14 @@ a img {
 }
 #treeHolder {
 	cursor: default;
-	font-size: 88%;
+/*	font-size: 88%; */
 	height: 100%;
 	padding: 5px 0 0 10px;
 	border-top: 1px solid #fff;
 	background: #f5f5f5;
 }
 #treeHolder div {
-	margin: 0 0 2px;
+	margin: 0 0 1px;
 }
 	.rtl #treeRoot div img {
 		margin: 0 -6px 0 0;
