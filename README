@@ -1,4 +1,4 @@
-текущая версии 1.0.6-90
+текущая версии 1.0.6-91
 
 Сборка выложенная для ознакомления!
 для того что б последовать примеру и если нужно собрать под себя
@@ -73,6 +73,7 @@
 -if, isset (http://community.modx-cms.ru/blog/addons/7801.html)
 -alterTitle  вывод pagetitle если longtitle пустой 
 -DocInfo    (http://community.modx-cms.ru/blog/fast-solution/6543.html#comment43842)
+-truncate (http://minyta.ru/modx/snippet/usechenie.html)
 
 ------------------------Плагины-------------------------
 -добавил плагин seo_strict_urls       (http://modx.com/extras/package/?id=seostricturls)
