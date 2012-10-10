@@ -149,6 +149,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `privatemgr` tinyint(1) NOT NULL default '0' COMMENT 'Private manager document',
   `content_dispo` tinyint(1) NOT NULL default '0' COMMENT '0-inline, 1-attachment',
   `hidemenu` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Hide document from menu',
+  `alias_visible` INT(2) NOT NULL DEFAULT '1',
   PRIMARY KEY  (`id`),
   KEY `id` (`id`),
   KEY `parent` (`parent`),
@@ -858,10 +859,11 @@ REPLACE INTO `{PREFIX}site_templates`
 (id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Home','','0','0','','0','<!DOCTYPE html>\r\n<html>\r\n<head>\r\n  <title>[*titl*]</title>\r\n  [*noIndex*]\r\n  <meta name="keywords" content="[*keyw*]" />\r\n  <meta name="description" content="[*desc*]" />\r\n  <meta http-equiv="Content-Type" content="text/html; charset=[(modx_charset)]" />\r\n  <base href="[(site_url)]" />\r\n</head>\r\n<body>\r\n\r\n[*content*]\r\n\r\n<!-- MySQL: [^qt^], query: [^q^], PHP: [^p^], total: [^t^], document from: [^s^]. -->\r\n\r\n</body>\r\n</html>','0');
 
 
+
 # Default Site Documents
 
 
-REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','Home','','','index','',1,0,0,0,0,'','',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'',0,0,0,0,0,0,0);
+REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','Home','','','index','',1,0,0,0,0,'','',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'',0,0,0,0,0,0,0,1);
 
 
 REPLACE INTO `{PREFIX}manager_users` 

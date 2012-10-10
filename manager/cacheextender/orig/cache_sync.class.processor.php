@@ -37,11 +37,13 @@ class synccache{
                 while ($row = $modx->db->getRow($qh)) {
                     $this->aliases[$row['id']] = $row['alias'];
                     $this->parents[$row['id']] = $row['parent'];
+					$this->aliasVisible[$row['id']] = $row['alias_visible'];
+
                 }
             }
         }
         if (isset($this->aliases[$id])) {
-            $path = $this->aliases[$id] . ($path != '' ? '/' : '') . $path;
+            $path = ($this->aliasVisible[$id] == 1 ? $this->aliases[$id] . ($path != '' ? '/' : '') . $path : $path);
             return $this->getParents($this->parents[$id], $path);
         }
         return $path;

@@ -11,6 +11,8 @@
 $modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 setlocale (LC_ALL, 'ru_RU.UTF-8');
+$_lang["resource_opt_alvisibled"] = 'Участвует в URL'; 
+$_lang["resource_opt_alvisibled_help"] = 'Для участия данного документа в адресной строке поставьте галку, и наоборот - снимите, если псевдоним этого документа нужно убрать из URL.';
 
 $_lang["about_msg"] = 'MODx - это <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework и Content Management System</a>, распространяемая по лицензии <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'О MODx';
