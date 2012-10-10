@@ -12,6 +12,10 @@
 $modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
+$_lang["resource_opt_alvisibled"] = 'in URL'; 
+$_lang["resource_opt_alvisibled_help"] = 'alias in url';
+
+
 $_lang["about_msg"] = 'MODx is a <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'About MODx';
 $_lang["access_permission_denied"] = 'You do not have the correct permissions for this Resource.';
