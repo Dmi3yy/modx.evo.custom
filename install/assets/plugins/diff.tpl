@@ -1,16 +1,17 @@
-/** 
-* Diff
-* 
-* Diff
-* 
-* @version 2.6
-* @author Borisov Evgeniy aka Agel Nash (agel-nash@xaker.ru)
-* @date 20.07.2012
-* @category plugin
-* @internal @event OnTempFormDelete,OnTempFormSave,OnTempFormRender,OnSnipFormDelete,OnSnipFormSave,OnSnipFormRender,OnPluginFormDelete,OnPluginFormSave,OnPluginFormRender,OnModFormDelete,OnModFormSave,OnModFormRender,OnChunkFormDelete,OnChunkFormSave,OnChunkFormRender,OnDocFormDelete,OnDocFormRender,OnDocFormSave
-* @internal @properties &idBlock=ID блока;text;Version &folderPlugin=Папка плагина;text;diff &which_jquery=Подключить jQuery;list;Не подключать,/assets/js/,google code,custom url;/assets/js/ &js_src_type=Свой url к библиотеке jQuery;text; &jqname=Имя Jquery переменной в noConflict;text;j &ignoredChunk=ID игнорируемых чанков;text; &ignoredSnippet=ID игнорируемых сниппетов;text; &ignoredPlugin=ID игнорируемых плагинов;text; &ignoredDoc=ID игнорируемых документов;text; &ignoredModule=ID игнорируемых модулей;text; &ignoredTPL=ID игнорируемых шаблонов;text; &countTPL=Кол-во версий одного шаблона;text; &countChunk=Кол-во версий одного чанка;text; &countPlugin=Кол-во версий одного плагина;text; &countModule=Кол-во версий одного модуля;text; &countSnippet=Кол-во версий одного сниппета;text; &countDoc=Кол-во версий одного документа;text;
-* @internal @modx_category
-*
+//<?php
+/**
+ * diff
+ * 
+ * Diff
+ *
+ * @category 	plugin
+ * @version 2.6
+ * @author Borisov Evgeniy aka Agel Nash (agel-nash@xaker.ru)
+ * @date 20.07.2012
+ * @internal @event OnTempFormDelete,OnTempFormSave,OnTempFormRender,OnSnipFormDelete,OnSnipFormSave,OnSnipFormRender,OnPluginFormDelete,OnPluginFormSave,OnPluginFormRender,OnModFormDelete,OnModFormSave,OnModFormRender,OnChunkFormDelete,OnChunkFormSave,OnChunkFormRender,OnDocFormDelete,OnDocFormRender,OnDocFormSave
+ * @internal @properties &idBlock=ID блока;text;Version &folderPlugin=Папка плагина;text;diff &which_jquery=Подключить jQuery;list;Не подключать,/assets/js/,google code,custom url;/assets/js/ &js_src_type=Свой url к библиотеке jQuery;text; &jqname=Имя Jquery переменной в noConflict;text;j &ignoredChunk=ID игнорируемых чанков;text; &ignoredSnippet=ID игнорируемых сниппетов;text; &ignoredPlugin=ID игнорируемых плагинов;text; &ignoredDoc=ID игнорируемых документов;text; &ignoredModule=ID игнорируемых модулей;text; &ignoredTPL=ID игнорируемых шаблонов;text; &countTPL=Кол-во версий одного шаблона;text; &countChunk=Кол-во версий одного чанка;text; &countPlugin=Кол-во версий одного плагина;text; &countModule=Кол-во версий одного модуля;text; &countSnippet=Кол-во версий одного сниппета;text; &countDoc=Кол-во версий одного документа;text;
+ * @internal @modx_category
+ *
 */
 
 if(file_exists($modx->config['base_path'].'assets/plugins/'.$folderPlugin.'/lang/'.$modx->config['manager_language'].'.inc.php')){
