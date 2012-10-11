@@ -314,7 +314,7 @@ class DocumentParser {
         $docIdentifier= $this->config['site_start'];
         switch ($method) {
             case 'alias' :
-                $docIdentifier= $this->db->escape($_REQUEST['q']);
+                $docIdentifier= $this->db->escape((string) $_REQUEST['q']);
 				
 				/*
                 
