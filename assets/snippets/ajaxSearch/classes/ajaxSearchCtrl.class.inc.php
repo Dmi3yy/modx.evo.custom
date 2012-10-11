@@ -147,7 +147,11 @@ class AjaxSearchCtrl {
                         }
                         else $this->searchString = strip_tags($_POST['search']);
                     } else {
-                        $this->searchString = strip_tags(urldecode($_GET['search']));
+                            if (is_array($_GET['search'])) {
+                                    foreach($_GET['search'] as $key => $value) $_GET['search'][$key] = strip_tags($value);
+                                    $this->searchString = implode(' ', $_GET['search']);
+                            }
+                            else $this->searchString = strip_tags(urldecode($_GET['search']));
                     }
                     if (isset($_POST['advsearch'])) $this->advSearch = strip_tags($_POST['advsearch']);
                     else if (isset($_GET['advsearch'])) $this->advSearch = strip_tags(urldecode($_GET['advsearch']));
