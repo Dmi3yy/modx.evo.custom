@@ -856,7 +856,7 @@ UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/html' W
 
 
 REPLACE INTO `{PREFIX}site_templates` 
-(id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Home','','0','0','','0','<!DOCTYPE html>\r\n<html>\r\n<head>\r\n  <title>[*titl*]</title>\r\n  [*noIndex*]\r\n  <meta name="keywords" content="[*keyw*]" />\r\n  <meta name="description" content="[*desc*]" />\r\n  <meta http-equiv="Content-Type" content="text/html; charset=[(modx_charset)]" />\r\n  <base href="[(site_url)]" />\r\n</head>\r\n<body>\r\n\r\n[*content*]\r\n\r\n<!-- MySQL: [^qt^], query: [^q^], PHP: [^p^], total: [^t^], memory: [^m^],  document from: [^s^]. -->\r\n\r\n</body>\r\n</html>','0');
+(id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Home','','0','0','','0','{{header}}\r\n[*content*]\r\n\{{footer}}','0');
 
 
 
