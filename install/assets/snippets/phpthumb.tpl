@@ -18,9 +18,9 @@ if($input == '' || !file_exists($_SERVER['DOCUMENT_ROOT'].$input))
 else{   
      $replace  = Array("," => "&", "_" => "=");
     $options  = strtr($options, $replace);
-    $options .= "&f=jpg&q=85";
+    $options .= "&f=jpg&q=96";
     $opt = $options;
-    $pt = $modx->getPageInfo($modx->documentIdentifier);
+    //$pt = $modx->getPageInfo($modx->documentIdentifier);
     require_once $_SERVER['DOCUMENT_ROOT']."/assets/snippets/phpthumbof/phpthumb.class.php";
     $phpThumb = new phpthumb();
     $phpThumb->setSourceFilename($input); 
@@ -29,7 +29,7 @@ else{
        $thumb = explode("=", $value);
        $phpThumb->setParameter($thumb[0], $thumb[1]);
     }
-    $outputFilename = $_SERVER['DOCUMENT_ROOT']."/assets/cache/phpthumbof/".md5($input.$pt['id'].$opt).".jpg";
+    $outputFilename = $_SERVER['DOCUMENT_ROOT']."/assets/cache/phpthumbof/".md5($input.$opt).".jpg";
     if (!file_exists($outputFilename))
        if ($phpThumb->GenerateThumbnail())
            $phpThumb->RenderToFile($outputFilename) ;
