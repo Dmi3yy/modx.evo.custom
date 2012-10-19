@@ -39,6 +39,19 @@
 ** Выводить акцию только для товаров с ценой в диапазоне >300$     <=700$
 ** [[if?is=`[*price*]:>:300:and:[*price*]:<=:700` &then=`@TPL:akcia`]]
 **
+**
+**  Пример №6
+**  Выводить при кратности записи дитто 3
+**  [[if?is=`[+ditto_itteration+]:%:3` &then=`true` &else=`false`]]
+**
+**  Пример №7
+**  Выводить при кратности записи дитто 3 но с умножением значения
+**  [[if?is=`[+ditto_itteration+]*2:%:3` &then=`true` &else=`false` &math=`on`]]
+**
+**  Пример №8
+**  Выводить значение математического выражения
+**  [[if?is=`[+ditto_itteration+]*2` &math=`on`]]
+**
 **  только с пропатченым парсером MODx:
 **  [[if?is=`[*id*]:>:2` &then=`<a href="[~[*id*]~]">[*pagetitle*]</a>`]]
 **
@@ -74,13 +87,19 @@ for ($i=1;$i<count($opers);$i++){
       continue;
     }
 	if ($and) {$subject=$opers[$i];$and=false;continue;}
+	
 	$operator = $opers[$i];
 	$operand  = $opers[$i+1];
-  
+  if ($math=='on') {eval('$subject='.$subject.';');}
 	if (isset($subject)) {
 		if (!empty($operator)) {
 			$operator = strtolower($operator);
 			switch ($operator) {
+   
+        case '%':
+        $output = ($subject %$operand==0) ? true: false;$i++;
+        break;
+       
 				case '!=':
 				case 'not':$output = ($subject != $operand) ? true: false;$i++;
 					break;
@@ -152,6 +171,10 @@ if (substr($output,0,6) == "@eval:") {
 	eval(substr($output,6));
 	$output = ob_get_contents();  
 	ob_end_clean(); 
+}
+if (empty($then)&&empty($else)) {
+  if ($math=='on') {eval('$subject='.$subject.';');}
+  echo $subject;
 }
 echo $output;
 unset($is,$then,$else,$output,$opers,$subject,$eq,$operand,$chunk,$part_eq);
