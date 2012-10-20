@@ -12,7 +12,7 @@
  * @author      Karandash
  */
 
-//[[phpthumb? &input=`[+tvimagename+]` &options=`h_170,w_255`]]
+//[[phpthumb? &input=`[+tvimagename+]` &options=`w_255,h=200`]]
 if($input == '' || !file_exists($_SERVER['DOCUMENT_ROOT']."/".$input))
     {echo 'assets/snippets/phpthumbof/noimage.png';}
 else{   

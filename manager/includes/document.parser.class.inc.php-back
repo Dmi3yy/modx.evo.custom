@@ -433,8 +433,10 @@ class DocumentParser {
     }
 
     function checkCache($id) {
-	    
-		if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
+	    $gets = $_GET;
+		if(!empty($gets['id'])) unset($gets['id']);
+		if(!empty($gets)) $md5_hash = '_' . md5(join('&',$gets));
+		
         $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
 
         if (file_exists($cacheFile)) {
@@ -569,6 +571,7 @@ class DocumentParser {
         $queryTime= sprintf("%2.4f s", $queryTime);
         $totalTime= sprintf("%2.4f s", $totalTime);
         $phpTime= sprintf("%2.4f s", $phpTime);
+        $phpMemory = (memory_get_peak_usage(true) / 1024 / 1024) . " МБ";
         $source= $this->documentGenerated == 1 ? "database" : "cache";
         $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
 
@@ -581,6 +584,8 @@ class DocumentParser {
         $out= str_replace("[^p^]", $phpTime, $out);
         $out= str_replace("[^t^]", $totalTime, $out);
         $out= str_replace("[^s^]", $source, $out);
+        $out= str_replace("[^m^]", $phpMemory, $out);
+        
         //$this->documentOutput= $out;
 
         // invoke OnWebPagePrerender event
@@ -672,8 +677,10 @@ class DocumentParser {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
 			
-			
-			if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
+			$gets = $_GET;
+			if(!empty($gets['id'])) unset($gets['id']);
+			if(!empty($gets)) $md5_hash = '_' . md5(join('&',$gets));
+		
             if ($fp= @ fopen($basepath . "/docid_" . $this->documentIdentifier . $md5_hash .".pageCache.php", "w")) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
                 $sql= "SELECT document_group FROM " . $this->getFullTableName("document_groups") . " WHERE document='" . $this->documentIdentifier . "'";
