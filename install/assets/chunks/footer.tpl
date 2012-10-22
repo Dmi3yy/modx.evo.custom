@@ -1,7 +1,7 @@
 /**
  * footer
  * 
- * форма обратной связи 
+ * низ сайта 
  * 
  * @category	chunk
  * @version 	1.0

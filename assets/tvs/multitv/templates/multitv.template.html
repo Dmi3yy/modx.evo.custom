@@ -1,0 +1,21 @@
+<div class="multitv">
+[+cssfiles+]
+[+scriptfiles+]
+	<style type="text/css">
+		[+tvcss+]
+	</style>
+	<script type="text/javascript">
+		$j(document).ready(function() {
+			TransformField('[+tvid+]', '[+tvmode+]', [+tvfields+], [+tvlanguage+]);
+		});
+		
+	</script>
+	<textarea style="width:100%;" onchange="documentDirty=true;" name="[+tvid+]" id="[+tvid+]">[+tvvalue+]</textarea>
+	[+clear+]
+	[+paste+]
+	[+tvheading+]
+	<ul id="[+tvid+]list" class="list sortable">
+		[+tvelement+]
+	</ul>
+</div>
+<div style="clear: left"></div>
