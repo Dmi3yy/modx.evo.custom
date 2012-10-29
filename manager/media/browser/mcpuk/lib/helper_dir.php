@@ -132,11 +132,8 @@ class dir {
 
             if ((($type === "dir") && (($file == ".") || ($file == ".."))) ||
                 !preg_match($options['pattern'], $file)
-            ) 
+            )
                 continue;
-				
-			if (preg_match('(^\.)', $file)) 
-                continue;	
 
             if (($options['types'] === "all") || ($type === $options['types']) ||
                 ((is_array($options['types'])) && in_array($type, $options['types']))

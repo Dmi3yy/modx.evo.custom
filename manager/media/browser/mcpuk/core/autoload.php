@@ -28,10 +28,7 @@ startCMSSession();
 if(!isset($_SESSION['mgrValidated'])) {
         die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 }
-$_SESSION['KCFINDER'] = array();
-$_SESSION['KCFINDER']['disabled'] = false;
-$_SESSION['KCFINDER']['uploadURL'] = MODX_BASE_URL  . 'assets';
-$_SESSION['KCFINDER']['uploadDir'] = MODX_BASE_PATH . 'assets';
+
 
 // PHP VERSION CHECK
 if (substr(PHP_VERSION, 0, strpos(PHP_VERSION, '.')) < 5)

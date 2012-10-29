@@ -11,7 +11,7 @@
 			return params;
 		}
 		var params = getUrlParams();
-		window.location.href = "browse.php?opener=tinymce&type=" + params.type + "&langCode=ru&dir=" + params.type;
+		window.location.href = "browse.php?opener=tinymce&type=" + params.type + "&langCode=ru";
 	</script>
 </head>
 

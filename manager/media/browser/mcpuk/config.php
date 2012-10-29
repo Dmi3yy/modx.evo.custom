@@ -18,7 +18,7 @@
 
 $_CONFIG = array(
 
-    'disabled' => true,
+    'disabled' => false,
     'denyZipDownload' => false,
     'denyUpdateCheck' => false,
     'denyExtensionRename' => false,
@@ -73,8 +73,8 @@ $_CONFIG = array(
 
     'mime_magic' => "",
 
-    'maxImageWidth' => 1200,
-    'maxImageHeight' => 1000,
+    'maxImageWidth' => 1600,
+    'maxImageHeight' => 1050,
 
     'thumbWidth' => 100,
     'thumbHeight' => 100,
