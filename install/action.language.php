@@ -14,7 +14,7 @@ sort( $langs );
 <?php
 foreach ($langs as $language) {
     $abrv_language = explode('-',$language);
-	echo '<option value="' . $language . '"'. ( ($abrv_language[0] == 'english') ? ' selected="selected"' : null ) .'>' . ucwords( $abrv_language[0] ). '</option>'."\n";
+	echo '<option value="' . $language . '"'. ( ($abrv_language[0] == 'russian') ? ' selected="selected"' : null ) .'>' . ucwords( $abrv_language[0] ). '</option>'."\n";
 }
 ?>
     </select></h2>
