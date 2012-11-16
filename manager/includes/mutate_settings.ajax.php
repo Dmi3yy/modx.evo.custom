@@ -3,6 +3,8 @@
  * mutate_settings.ajax.php
  * 
  */
+ 
+ if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 require_once(dirname(__FILE__) . '/protect.inc.php');
 
 $action = preg_replace('/[^A-Za-z0-9_\-\.\/]/', '', $_POST['action']);
