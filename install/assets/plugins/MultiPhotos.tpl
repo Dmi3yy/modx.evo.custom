@@ -224,4 +224,3 @@ foreach ($tvIds as $tvid) {
 	$tmplvars[$tvid][1]=str_replace('\\/', '/', json_encode($fotoArr));
 }
 }
-//?>

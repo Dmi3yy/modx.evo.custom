@@ -117,4 +117,3 @@ window.addEvent('domready', function(){
 OUT;
 $e->output($output);
 }
-//?>

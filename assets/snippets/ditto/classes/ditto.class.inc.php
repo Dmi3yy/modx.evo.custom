@@ -1134,7 +1134,7 @@ class ditto {
 			$previousplaceholder = "";
 			$nextplaceholder = "";
 		}
-		$split = "";
+	$split = "";
 		if ($previous > -1 && $next < $total)
 			$split = $paginateSplitterCharacter;
 		if ($previous > -1)
@@ -1150,9 +1150,25 @@ class ditto {
 		}
 		$totalpages = ceil($total / $summarize);
 
+		$max_paginate = 10;
+		$max_previous = 5;
+		$cur_x = floor($start / $summarize);
+		$min_x = $cur_x - $max_previous;
+
+		if ($min_x < 0)  $min_x = 0;
+
+		$max_x = $min_x + $max_paginate - 1;
+		if ($max_x > $totalpages - 1) {
+			$max_x = $totalpages - 1;
+			$min_x = $max_x - $max_paginate + 1;
+		}
+
 		for ($x = 0; $x <= $totalpages -1; $x++) {
 			$inc = $x * $summarize;
 			$display = $x +1;
+
+			if (($x < $min_x) || ($x > $max_x)) continue;
+
 			if ($inc != $start) {
 				$pages .= $this->template->replace(array('url'=>$this->buildURL("start=$inc"),'page'=>$display),$tplPaginatePage);
 			} else {

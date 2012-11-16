@@ -14,21 +14,6 @@
  * @internal    @properties &theme=Theme;list;,cobalt,ecllipse,elegant,monokai,neat,night,rubyblue; &indentUnit=Indent unit;int;2 &tabSize=The width of a tab character;int;2 &lineWrapping=lineWrapping;list;true,false;true
  */
 
-/**
- * @name: CodeMirror
- * @description: <b>2.23 b</b> JavaScript library that can be used to create a relatively pleasant editor interface
- *
- * @events:
- * - OnDocFormRender
- * - OnChunkFormRender
- * - OnModFormRender
- * - OnPluginFormRender
- * - OnSnipFormRender
- * - OnTempFormRender
- *
- */
-
 $_CM_BASE = 'assets/plugins/codemirror/';
 $_CM_URL = $modx->config['site_url'] . $_CM_BASE;
 require(MODX_BASE_PATH. $_CM_BASE .'codemirror.plugin.php');
-

@@ -11,9 +11,7 @@
  * @internal	@modx_category add
  */
 
-/*
-[[alterTitle? &id = `[+id+]`]] к примеру для вывода в Ditto
-*/
+//[[alterTitle? &id = `[+id+]`]] к примеру для вывода в Ditto
 $id = isset($id) ? $id : $modx->documentIdentifier;  
 $arr = $modx->getPageInfo($id,1,'pagetitle,longtitle');
 $title = (strlen($arr["longtitle"])>0) ? $arr["longtitle"] : $arr["pagetitle"]; 

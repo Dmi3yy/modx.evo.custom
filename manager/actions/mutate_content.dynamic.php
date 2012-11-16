@@ -333,14 +333,14 @@ function templateWarning() {
     }
     if (curTemplate == newTemplate) {return;}
 
-    if (confirm('<?php echo $_lang['tmplvar_change_template_msg']?>')) {
+    //if (confirm('<?php echo $_lang['tmplvar_change_template_msg']?>')) {
         documentDirty=false;
         document.mutate.a.value = <?php echo $action?>;
         document.mutate.newtemplate.value = newTemplate;
         document.mutate.submit();
-    } else {
-        dropTemplate[curTemplateIndex].selected = true;
-    }
+    //} else {
+    //    dropTemplate[curTemplateIndex].selected = true;
+    //}
 }
 
 // Added for RTE selection
