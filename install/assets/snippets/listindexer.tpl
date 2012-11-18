@@ -12,4 +12,4 @@
  * @internal    @installset base
  */
 
-return require MODX_BASE_PATH.'assets/snippets/jot/snippet.jot.php';
+return require MODX_BASE_PATH.'assets/snippets/listindexer/snippet.listindexer.php';
