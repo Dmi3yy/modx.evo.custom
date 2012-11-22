@@ -179,6 +179,6 @@ if (empty($then)&&empty($else)) {
   if ($math=='on') {eval('$subject='.$subject.';');}
   return $subject;
 }
+unset($is,$then,$else,$opers,$subject,$eq,$operand,$chunk,$part_eq);
 return $output;
-unset($is,$then,$else,$output,$opers,$subject,$eq,$operand,$chunk,$part_eq);
 ?>
