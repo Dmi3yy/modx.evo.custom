@@ -36,14 +36,14 @@ EOD;
             $user_id = $user_id == false ? false : $modx->db->escape($user_id);
             $username = $modx->db->escape($username);
             $email = $modx->db->escape($email);
-            $emaail = $modx->db->escape($hash);
+            $hash = $modx->db->escape($hash);
 
-			$pre = $modx->db->config['table_prefix'];
-			$site_id = $modx->config['site_id'];
-			$today = date('Yz'); // Year and day of the year
-			$wheres = array();
-			$where = '';
-			$user = null;
+            $pre = $modx->db->config['table_prefix'];
+            $site_id = $modx->config['site_id'];
+            $today = date('Yz'); // Year and day of the year
+            $wheres = array();
+            $where = '';
+            $user = null;
   
             if($user_id !== false) { $wheres[] = "usr.id = '{$user_id}'"; }
             if(!empty($username)) { $wheres[] = "usr.username = '{$username}'"; }
@@ -79,7 +79,7 @@ EOD;
             $subject = $_lang['password_change_request'];
             $headers  = "MIME-Version: 1.0\r\n".
                 "Content-type: text/html; charset=\"{$modx->config['modx_charset']}\"\r\n".
-		"From: MODx <{$modx->config['emailsender']}>\r\n".
+        "From: MODx <{$modx->config['emailsender']}>\r\n".
                 "Reply-To: no-reply@{$_SERVER['HTTP_HOST']}\r\n".
                 "X-Mailer: PHP/".phpversion();
 
@@ -170,7 +170,7 @@ if($event_name == 'OnManagerLoginFormRender') {
     if($forgot->errors) { $output = $forgot->getErrorOutput() . $forgot->getLink(); }
 }
 
-if($event_name == 'OnBeforeManagerLogin') {
+if($event_name == 'OnBeforeManagerLogin' && $hash && $username) {
     $user = $forgot->getUser(false, $username, '', $hash);
     if($user && is_array($user) && !$forgot->errors) {
         $forgot->unblockUser($user['id']);
