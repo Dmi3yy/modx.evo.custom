@@ -46,9 +46,9 @@ EOD;
             $user = null;
   
             if($user_id !== false) { $wheres[] = "usr.id = '{$user_id}'"; }
-            if(!empty($username)) { $wheres[] = "usr.username = '{$username}'"; }
-            if(!empty($email)) { $wheres[] = "attr.email = '{$email}'"; }
-            if(!empty($hash)) { $wheres[] = "MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) = '{$hash}'"; } 
+            if($username!='') { $wheres[] = "usr.username = '{$username}'"; }
+            if($email!='') { $wheres[] = "attr.email = '{$email}'"; }
+            if($hash!='') { $wheres[] = "MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) = '{$hash}'"; } 
 
             if($wheres) {
                 $where = ' WHERE '.implode(' AND ',$wheres);
@@ -148,10 +148,10 @@ global $_lang;
 
 $output = '';
 $event_name = $modx->Event->name;
-$action = (empty($_GET['action']) ? '' : $_GET['action']);
-$username = (empty($_GET['username']) ? false : $_GET['username']);
-$to = (empty($_GET['email']) ? '' : $_GET['email']);
-$hash = (empty($_GET['hash']) ? false : $_GET['hash']);
+$action = ((isset($_GET['action']) && !is_array($_GET['action']) && $_GET['action']!='') ? $_GET['action'] : '');
+$username = ((isset($_GET['username']) && !is_array($_GET['username']) && $_GET['username']!='') ? $_GET['username'] : '');
+$to = ((isset($_GET['email']) &&  !is_array($_GET['email']) && $_GET['email']!='') ?  $_GET['email'] : '');
+$hash = ((isset($_GET['hash']) && !is_array($_GET['hash']) && $_GET['hash']!='') ? $_GET['hash'] : '');
 $forgot = new ForgotManagerPassword();
 
 if($event_name == 'OnManagerLoginFormRender') {
@@ -170,14 +170,14 @@ if($event_name == 'OnManagerLoginFormRender') {
     if($forgot->errors) { $output = $forgot->getErrorOutput() . $forgot->getLink(); }
 }
 
-if($event_name == 'OnBeforeManagerLogin' && $hash && $username) {
+if($event_name == 'OnBeforeManagerLogin' && $hash!='' && $username!='') {
     $user = $forgot->getUser(false, $username, '', $hash);
     if($user && is_array($user) && !$forgot->errors) {
         $forgot->unblockUser($user['id']);
     }
 }
 
-if($event_name == 'OnManagerAuthentication' && $hash && $username) {
+if($event_name == 'OnManagerAuthentication' && $hash!='' && $username!='') {
     $user = $forgot->getUser(false, $username, '', $hash);
     $output = ($user !== null && count($forgot->errors) == 0) ? true : false;
 }
