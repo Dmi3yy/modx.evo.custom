@@ -1,18 +1,6 @@
 <?php
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 /**
- * if
- * 
- * if проверка по условию
- *
- * @category 	snippet
- * @version 	1.2
- * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal	@properties 
- * @internal	@modx_category add
- */
- 
-/**
 ** if snippet
 ** [[if&is=`[*id*]:=:4:or:[*parent*]:in:5,6,5,7,8,9` &then=`[[if&is=`0||=||0` &then=`true` &else=`false` &separator=`||`]]` &else=`@TPL:else`]]
 ** [[if?is=`[*id*]:is:1:or:[*id*]:is:2:and:[*parent*]:is:5:or:[*parent*]:in:2,3,4` &then=`true` &else=`false`]]
@@ -83,6 +71,7 @@ for ($i=1;$i<count($opers);$i++){
     if ($or) {$subject=$opers[$i];$or=false;continue;}
   
     if ($opers[$i]=='and') {
+      $lp=1;
       $and=true;
       if (!empty($part_eq)){if ($part_eq||$eq){$left_part=true;}} else {$left_part=$eq?true:false;}
       $eq=true;unset($part_eq);
@@ -97,6 +86,7 @@ for ($i=1;$i<count($opers);$i++){
 		if (!empty($operator)) {
       if ($math=='on' && !empty($subject)) {eval('$subject='.$subject.';');}
 			$operator = strtolower($operator);
+      
 			switch ($operator) {
    
         case '%':
@@ -147,19 +137,29 @@ for ($i=1;$i<count($opers);$i++){
 				case '=':
 				case 'eq':
 				case 'is':
-				default:$output = ($subject == $operand) ? true : false;$i++;
-					break;
+				default:
+        $output = ((string)$subject == (string)$operand) ? true : false;
+        $i++;
+				break;
 			}     
+     
 			$eq=$output?$eq:false;
+   
 		}
 	}
 }
-if (!empty($left_part)){
+if ($lp==1){
   if ($left_part) {
-	if (!empty($part_eq)){if ($part_eq||$eq){$output=$then;}} else {$output=$eq?$then:$else;}
+	if (!empty($part_eq)){
+    	if ($part_eq||$eq){$output=$then;}
+  	} else {
+    	$output=$eq?$then:$else;
+  	}
   } 
   else 
-  {$output=$else;}
+  {
+    $output=$else;
+  }
 } else {
 	if (!empty($part_eq)){
 		if ($part_eq||$eq){
@@ -179,6 +179,6 @@ if (empty($then)&&empty($else)) {
   if ($math=='on') {eval('$subject='.$subject.';');}
   return $subject;
 }
-unset($is,$then,$else,$opers,$subject,$eq,$operand,$chunk,$part_eq);
+
 return $output;
 ?>
