@@ -780,7 +780,7 @@ a img {
 	height:100%;
 	padding:5px 0 0;
 /* 	background: #f7f7f7; */
-/*	width: 299px !important; */
+    width: 100% !important;
 	line-height:1.3em;
 }
 
