@@ -1,9 +1,11 @@
 <?php
 /** 
  * ddSetFieldValue
- * @version 1.0.2 (2012-02-12)
+ * @version 1.0.3 (2012-11-13)
  * 
  * Жёстко выставляет необходимые значения заданному полю
+ * 
+ * @uses ManagerManager plugin 0.4.
  * 
  * @todo Основан на mm_default
  * 
@@ -12,12 +14,13 @@
  * @param roles {comma separated string} - Id ролей. По умолчанию: для всех ролей.
  * @param templates {comma separated string} - Id шаблонов. По умолчанию: для всех шаблонов.
  * 
+ * @link http://code.divandesign.biz/modx/mm_ddsetfieldvalue/1.0.3
+ * 
  * @copyright 2012, DivanDesign
- * http://www.DivanDesign.ru
+ * http://www.DivanDesign.biz
  */
 
-function mm_ddSetFieldValue($field, $value='', $roles='', $templates=''){
-
+function mm_ddSetFieldValue($field, $value = '', $roles = '', $templates = ''){
 	global $modx, $content, $mm_fields;
 	$e = &$modx->Event;
 	
@@ -73,9 +76,21 @@ function mm_ddSetFieldValue($field, $value='', $roles='', $templates=''){
 					$output .= '$j("input[name=hidemenucheck]").removeAttr("checked"); '."\n";
 				}
 								
-				$output .= '$j("input[name=hidemenu]").val("'.$value.'"); '."\n";
+				$output .= '$j("input[name=hidemenu]").val("'.(($value == '1') ? '0' : '1').'"); '."\n"; // Note these are reversed from what you'd think
 			break;
 			
+			//Признак скрытия из меню (аналогично show_in_menu, только наоборот)
+			case 'hide_menu':
+				if ($value == '0'){
+					$output .= '$j("input[name=hidemenucheck]").attr("checked", "checked"); '."\n";
+				}else{
+					$value = '1';
+					$output .= '$j("input[name=hidemenucheck]").removeAttr("checked"); '."\n";
+				}
+				
+				$output .= '$j("input[name=hidemenu]").val("'.$value.'"); '."\n";
+			break;
+					
 			//Признак доступности для поиска
 			case 'searchable':
 				if ($value == '1'){
@@ -147,7 +162,7 @@ function mm_ddSetFieldValue($field, $value='', $roles='', $templates=''){
 			
 			//Признак логирования
 			case 'log':
-				//TODO Note these are reversed from what you'd think
+				//Note these are reversed from what you'd think
 				$value = ($value) ? '0' : '1';
 				
 				if ($value == '1'){
@@ -163,7 +178,6 @@ function mm_ddSetFieldValue($field, $value='', $roles='', $templates=''){
 			case 'content_type':
 				$output .= '$j("select[name=contentType]").val("'.$value.'");' . "\n";
 			break;
-			
 			
 			//TV
 			default:

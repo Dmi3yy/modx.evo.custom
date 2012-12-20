@@ -1,6 +1,17 @@
 текущая версии 1.0.7-d2
 
 ========================================================
+1.0.7-d3 (20.12.2012)
+- обновлен ManagerManager до 0.4 (http://code.divandesign.biz/modx/managermanager)
+- добавлен модуль ddMMEditor 1.2.3 (http://code.divandesign.biz/modx/ddmmeditor)
+- добавлен сниппет ddGetMultipleField 2.13 (http://code.divandesign.ru/modx/ddgetmultiplefield)
+- вернул тему EvoRevo (только чуть украсил)
+- обновлен снипет IF до 1.2
+- удалил модуль EasyAdvertising 
+- удален снипет Youtube 
+
+
+========================================================
 1.0.7-d2 (26.11.2012)
 - обновлен modx до версии 1.0.7 
 - исправленно пару ошибок в снипете IF

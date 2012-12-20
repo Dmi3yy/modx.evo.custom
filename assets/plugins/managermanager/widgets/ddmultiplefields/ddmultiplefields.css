@@ -1,0 +1,64 @@
+.ddMultipleField {
+	display: block;
+	border-collapse: collapse;
+	position: relative;
+}
+
+.ddMultipleField input {
+	border: 1px solid #C8C8C8 !important;
+	font: 12px/1.2em Verdana,Helvetica,sans-serif;
+	height: 1.2em;
+	padding: 0.2em 0.533em 0.333em !important;
+	margin-right: 5px;
+}
+
+.ddMultipleField input:focus {border-color: #E1A020 !important;}
+
+.ddMultipleField tr th, .ddMultipleField tr td {
+	min-height: 23px;
+	padding: 5px 0 5px 7px;
+	vertical-align: top;
+	white-space: nowrap;
+}
+
+.ddMultipleField tr th {text-align: left;}
+
+.ddMultipleField tr td {
+	border: 2px solid #FFFFFF;
+	background: #D9F1FF;
+}
+
+.ddMultipleField tr td:first-child {border-radius: 7px 0 0 7px;}
+.ddMultipleField tr td:last-child {border-radius: 0 7px 7px 0;}
+
+.ddMultipleField tr .ddSortHandle {
+	border-right: none;
+	width: 16px;
+	padding: 0;
+	vertical-align: middle;
+}
+
+.ddMultipleField tr td:nth-child(2) {border-left: none;}
+
+.ddMultipleField tr .ddSortHandle div {
+	border-radius: 0 12px 12px 0;
+	background: #007CC3;
+	width: 10px;
+	height: 23px;
+	opacity: .3;
+	cursor: n-resize;
+}
+
+.ddMultipleField tr:hover td {background: #B2E3FF;}
+
+.ddMultipleField tr:hover .ddSortHandle div {opacity: 1;}
+
+.ddMultipleField .ui-state-highlight td {padding: 0;}
+
+.ddMultipleField .ui-state-highlight div {
+	border: 1px solid #84c225;
+	border-radius: 3px;
+	background: #f0f0f0;
+	width: 100%;
+	height: 100%;
+}

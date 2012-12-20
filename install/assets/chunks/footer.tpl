@@ -10,5 +10,3 @@
  */
  
 <!--  Mem : [^m^], MySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document from [^s^]. -->
-</body>
-</html>
