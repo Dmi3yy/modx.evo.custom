@@ -9,7 +9,7 @@ if(!class_exists('ForgotManagerPassword')) {
 
         function getLink() {
             global $_lang;
-
+  
             $link = <<<EOD
 <a id="ForgotManagerPassword-show_form" href="index.php?action=show_form">{$_lang['forgot_your_password']}</a>
 EOD;
@@ -44,19 +44,19 @@ EOD;
             $wheres = array();
             $where = '';
             $user = null;
-
+  
             if($user_id !== false) { $wheres[] = "usr.id = '{$user_id}'"; }
-            if(!empty($username)) { $wheres[] = "usr.username = '{$username}'"; }
-            if(!empty($email)) { $wheres[] = "attr.email = '{$email}'"; }
-            if(!empty($hash)) { $wheres[] = "MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) = '{$hash}'"; }
+            if($username!='') { $wheres[] = "usr.username = '{$username}'"; }
+            if($email!='') { $wheres[] = "attr.email = '{$email}'"; }
+            if($hash!='') { $wheres[] = "MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) = '{$hash}'"; } 
 
             if($wheres) {
                 $where = ' WHERE '.implode(' AND ',$wheres);
                 $sql = "SELECT usr.id, usr.username, attr.email, MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) AS hash
                     FROM `{$pre}manager_users` usr
                     INNER JOIN `{$pre}user_attributes` attr ON usr.id = attr.internalKey
-                    {$where}
-                    LIMIT 1;";
+                    {$where}      
+                    LIMIT 1;"; 
 
                 if($result = $modx->db->query($sql)){
                     if($modx->db->getRecordCount($result)==1) {
@@ -79,12 +79,12 @@ EOD;
             $subject = $_lang['password_change_request'];
             $headers  = "MIME-Version: 1.0\r\n".
                 "Content-type: text/html; charset=\"{$modx->config['modx_charset']}\"\r\n".
-                "From: MODx <{$modx->config['emailsender']}>\r\n".
+        "From: MODx <{$modx->config['emailsender']}>\r\n".
                 "Reply-To: no-reply@{$_SERVER['HTTP_HOST']}\r\n".
                 "X-Mailer: PHP/".phpversion();
 
             $user = $this->getUser(0, '', $to);
-
+  
             if($user['username']) {
                 $body = <<<EOD
 <p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_url']}manager/processors/login.processor.php?username={$user['username']}&hash={$user['hash']}">{$_lang['forgot_password_email_link']}</a></p>
@@ -94,8 +94,8 @@ EOD;
 
                 $mail = mail($to, $subject, $body, $headers);
                 if(!$mail) { $this->errors[] = $_lang['error_sending_email']; }
-
-                return $mail;
+   
+                return $mail;  
             }
         }
 
@@ -129,7 +129,7 @@ EOD;
 
             foreach($eng as $key=>$value) {
                 if(empty($_lang[$key])) { $_lang[$key] = $value; }
-            }
+            }  
         }
 
         function getErrorOutput() {
@@ -138,7 +138,7 @@ EOD;
             if($this->errors) {
                 $output = '<span class="error">'.implode('</span><span class="errors">', $this->errors).'</span>';
             }
-
+  
             return $output;
         }
     }
@@ -148,10 +148,10 @@ global $_lang;
 
 $output = '';
 $event_name = $modx->Event->name;
-$action = (empty($_GET['action']) ? '' : (is_string($_GET['action']) ? $_GET['action'] : ''));
-$username = (empty($_GET['username']) ? false : (is_string($_GET['username']) ? $_GET['username'] : ''));
-$to = (empty($_GET['email']) ? '' : (is_string($_GET['email']) ? $_GET['email'] : ''));
-$hash = (empty($_GET['hash']) ? false : (is_string($_GET['hash']) ? $_GET['hash'] : ''));
+$action = ((isset($_GET['action']) && !is_array($_GET['action']) && $_GET['action']!='') ? $_GET['action'] : '');
+$username = ((isset($_GET['username']) && !is_array($_GET['username']) && $_GET['username']!='') ? $_GET['username'] : '');
+$to = ((isset($_GET['email']) &&  !is_array($_GET['email']) && $_GET['email']!='') ?  $_GET['email'] : '');
+$hash = ((isset($_GET['hash']) && !is_array($_GET['hash']) && $_GET['hash']!='') ? $_GET['hash'] : '');
 $forgot = new ForgotManagerPassword();
 
 if($event_name == 'OnManagerLoginFormRender') {
@@ -170,14 +170,14 @@ if($event_name == 'OnManagerLoginFormRender') {
     if($forgot->errors) { $output = $forgot->getErrorOutput() . $forgot->getLink(); }
 }
 
-if($event_name == 'OnBeforeManagerLogin' && $hash && $username) {
+if($event_name == 'OnBeforeManagerLogin' && $hash!='' && $username!='') {
     $user = $forgot->getUser(false, $username, '', $hash);
     if($user && is_array($user) && !$forgot->errors) {
         $forgot->unblockUser($user['id']);
     }
 }
 
-if($event_name == 'OnManagerAuthentication' && $hash && $username) {
+if($event_name == 'OnManagerAuthentication' && $hash!='' && $username!='') {
     $user = $forgot->getUser(false, $username, '', $hash);
     $output = ($user !== null && count($forgot->errors) == 0) ? true : false;
 }
