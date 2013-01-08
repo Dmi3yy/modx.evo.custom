@@ -20,10 +20,10 @@
 		});
 		$(document).delegate('.jot-form','submit',function(event) {
 			event.preventDefault();
-			var parent = $('#comment-parent-'+id).val();
+			//var parent = $('#comment-parent-'+id).val();
 			$.post($(this).attr('action'), $(this).serialize(), function(data) {
 				setData(data,id);
-				if (parent && addComment) {addComment.moveForm(id,parent);}
+				//if (parent && addComment) {addComment.moveForm(id,parent);}
 			});
 		});
 		$(document).delegate('.jot-form .jot-btn-cancel','click',function(event) {

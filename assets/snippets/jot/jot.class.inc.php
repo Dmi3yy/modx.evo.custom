@@ -904,7 +904,7 @@ class CJot {
 		
 		foreach ($values as $value) {
 			$value = preg_replace('/[^0-9\-]/','',$value);
-			if (!empty($value)) $idarray[] = $value;
+			if ($value != '') $idarray[] = $value;
 		}
 		
 		if (empty($idarray)) return '*';

@@ -96,6 +96,7 @@
 				$object->config["html"]["navigation"] = $tpl->Render();
 			}
 			
+			if(!function_exists('treeRender')){
 			function treeRender($tree, $pid, &$object, $depth) {
 				global $modx;
 				if (empty($tree[$pid])) return;
@@ -110,10 +111,13 @@
 					$tpl->AddVar('chunk',$chunk);
 					if (isset($tree[$row['id']]) &&  $object->config["depth"] > $depth) {
 						$tpl->AddVar('jot.wrapper',treeRender($tree, $row['id'], $object, $depth+1));
+					}else{
+						$tpl->AddVar('jot.wrapper','');
 					}
 					$res .= $tpl->Render();
 				}
 				return $res;
+			}
 			}
 			
 			/* Render comments */

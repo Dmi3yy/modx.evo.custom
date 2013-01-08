@@ -89,7 +89,7 @@ function subscribe(&$object,$params){
 			if (intval($_POST["subscribe"]) == 1 || (isset($_COOKIE['jot-hash']) && $_COOKIE['jot-hash'] == $hash) ) return true;
 			/* добавить хэш в шаблон */
 			if ($hash) $params["tpl"]->template = str_replace('[+jot.link.unsubscribe+]','[+jot.link.unsubscribe+]&hash='.$hash,$params["tpl"]->template);
-			elseif (!$object->config["subscribe"]) return true;
+			elseif (!$object->config["subscribe"] && $params["action"]=="notify") return true;
 			break;
 	}
 }

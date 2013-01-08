@@ -8,6 +8,7 @@
 	$js=1;
 	$jsFile='assets/snippets/jot/js/tree.js';
 	//$pagination=0;
+	$onDeleteComment='delthread';
 	
 	$onBeforePOSTProcess='antispam';
 	$onSetFormOutput='antispam,ajax';

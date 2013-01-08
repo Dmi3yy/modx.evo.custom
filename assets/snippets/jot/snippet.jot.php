@@ -1,5 +1,5 @@
 <?php
-if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
+if(!defined('MODX_BASE_PATH')) die();
 $jotPath = MODX_BASE_PATH . 'assets/snippets/jot/';
 $config = (isset($config)) ? $jotPath.'configs/'.$config.'.config.php' : $jotPath.'configs/default.config.php';
 if (is_file($config)) include $config;
@@ -101,4 +101,3 @@ $Jot->Set("onSetFormOutput", $onSetFormOutput);
 $Jot->Set("onSetCommentsOutput", $onSetCommentsOutput);
 
 return $Jot->Run();
-?>

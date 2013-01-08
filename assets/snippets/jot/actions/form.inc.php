@@ -10,6 +10,7 @@
 			$tpl->AddVar('jot',$object->config);
 			$tpl->AddVar('form',$object->form);
 			$object->config["html"]["form"] = $tpl->Render();
+			$object->config["html"]["form"] = preg_replace('~\[\+(.*?)\+\]~s', '', $object->config["html"]["form"]);
 			
 			//onSetFormOutput event
 			if (null !== ($output = $object->doEvent("onSetFormOutput"))) return $output;
