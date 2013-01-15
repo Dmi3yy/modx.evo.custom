@@ -8,6 +8,7 @@ else{
     $options  = strtr($options, $replace);
     $options .= "&f=jpg&q=96";
     $opt = $options;
+    $path_parts=pathinfo($input);
     //$pt = $modx->getPageInfo($modx->documentIdentifier);
     require_once $_SERVER['DOCUMENT_ROOT']."/assets/snippets/phpthumbof/phpthumb.class.php";
     $phpThumb = new phpthumb();
@@ -16,8 +17,13 @@ else{
     foreach ($options as $value) {
        $thumb = explode("=", $value);
        $phpThumb->setParameter($thumb[0], $thumb[1]);
+       $op[$thumb[0]]=$thumb[1];
     }
-    $outputFilename = $_SERVER['DOCUMENT_ROOT']."/assets/cache/phpthumbof/".md5($input.$opt).".jpg";
+  if ($seourl==1) {$outputFilename = $_SERVER['DOCUMENT_ROOT']."/assets/cache/phpthumbof/".md5($input.$opt).'.'.$op['f'];}
+  else {
+            $outputFilename = $_SERVER['DOCUMENT_ROOT']."/assets/cache/phpthumbof/".$path_parts['filename']."_w".$op['w'].'-h'.$op['h'].'.'.$op['f'];}
+  
+  
     if (!file_exists($outputFilename))
        if ($phpThumb->GenerateThumbnail())
            $phpThumb->RenderToFile($outputFilename) ;

@@ -16,6 +16,7 @@
 - update ajaxSearch 193b (http://www.evo.wangba.fr/index.php?id=502)
 - удален Getfiled  вместо него есть DocInfo (быстрее и меньше запросов)
 - fix EXACTPHRASE in AjaxSearch (http://tracker.modx.com/issues/3729)
+- fix phpthumb for seo image name
 
 
 ========================================================
