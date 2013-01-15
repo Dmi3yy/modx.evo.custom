@@ -15,6 +15,8 @@
 - add multiTV (https://github.com/Jako/multiTV)
 - update ajaxSearch 193b (http://www.evo.wangba.fr/index.php?id=502)
 - удален Getfiled  вместо него есть DocInfo (быстрее и меньше запросов)
+- fix EXACTPHRASE in AjaxSearch (http://tracker.modx.com/issues/3729)
+
 
 ========================================================
 1.0.7-d2 (26.11.2012)

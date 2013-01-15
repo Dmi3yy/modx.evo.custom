@@ -529,7 +529,15 @@ class AjaxSearchResults {
                 $wordLength = $mbStrlen($searchTerm);
                 $wordLength2 = $wordLength / 2;
                 // $pattern = '/' . preg_quote($searchTerm, '/') . $lookAhead . '/' . $pcreModifier;
-                if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
+                if ($advSearch EXACTPHRASE) {
+                    if ($this->asCfg->dbCharset 'utf8') {
+                        $pattern = '/\P{L}' . preg_quote($searchTerm, '/') . '\P{L}/' . $pcreModifier;
+                    } else {
+                        $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
+                    }
+                }
+
+
                 else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
                 $matches = array();
                 $nbr = preg_match_all($pattern, $text, $matches, PREG_OFFSET_CAPTURE);
