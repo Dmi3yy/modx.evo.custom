@@ -13,11 +13,7 @@
 - update TinyMce + добавлен плагин Youtube и кнопка justifyFull (http://modx.im/blog/addons/234.html)
 - add MarkitUp! плагин (http://modx.im/blog/addons/65.html)
 - add multiTV (https://github.com/Jako/multiTV)
-
-
-
-
-
+- update ajaxSearch 193b (http://www.evo.wangba.fr/index.php?id=502)
 
 ========================================================
 1.0.7-d2 (26.11.2012)
@@ -161,15 +157,4 @@ ALTER TABLE  `modx_site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT 
 -запоминать вкладки ДА
 -изменен шаблон по умолчанию
 -тема по умолчанию MOdxCarbonEvoRevo
-
-----------------в планах добавить-----------------------------------
-
-tinymce: добавление в xconfig.js тегов iframe с параметрами (для видео ютуба) и nowrap  (http://community.modx-cms.ru/blog/2760.html#comment21971)
-
-добавить paramEditFull
-CustomSetting(http://community.modx-cms.ru/blog/addons/1778.html) - только доработать для отображения на главной
-
-
-
-
 

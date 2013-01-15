@@ -1,49 +1,35 @@
 
-                              AjaxSearch - version 1.9.2
+                              AjaxSearch - version 1.9.3b
 
-                           Coroico - http://www.modx.wangba.fr
+                           Coroico - http://www.evo.wangba.fr
 
-                                05th of December 2010
+                                20th of november 2012
 
-The release 1.9.2 provide the correction of the following issues:
-
-==== AJAXSEARCH-75 : exactphrase doesn't work when the value is passed thru snippet call
-See http://modxcms.com/forums/index.php/topic,55236.0.html
-
-
-==== AJAXSEARCH-76 : TV names not protected in sql request
-See http://modxcms.com/forums/index.php/topic,56696.msg330844.html#msg330844l
-
-
-==== AJAXSEARCH-77 : where clause for search terms restriction when the searchstring is empty
-
-
-==== AJAXSEARCH-78 : failed searched never logged
-See http://modxcms.com/forums/index.php/topic,53897.msg331714.html#msg331714
-
-
-==== AJAXSEARCH-79 : tag list now interpreted as tv input list
-
-
-==== AJAXSEARCH-80 : Incorrect strip function for MODx tags
-See http://modxcms.com/forums/index.php/topic,57332.msg331855.html#msg331855
-
-
-==== AJAXSEARCH-81 : orderBy issue when orderBy field not in sc.content table
-
+The release 1.9.3 provide the correction of the following issues:
 
 ==== AJAXSEARCH-82 : can't define configuration file name with "@FILE:" prefix
+See http://bugs.modx.com/issues/3533
 
 
-==== AJAXSEARCH-83 : Searchstring not escaped when logging search request and results
-See http://modxcms.com/forums/index.php/topic,57916.0.html
+==== AJAXSEARCH-84 : Unquoted field name in orderby clause
+See http://bugs.modx.com/issues/3697
 
 
-No new features are provided with this release.
+==== AJAXSEARCH-85 : Wrong URL construction when using an array of values (checkboxes)
+See http://bugs.modx.com/issues/3698
+
+
+==== AJAXSEARCH-86 : number of characters not checked when a form with filters is submitted
+
+
+&minChars=2 (less than the default) is now allowed for the search.
+
 
 =====================================================================================
 
 Previous versions :
+ - 1.9.3 delivered the 26th of september 2012
+ - 1.9.2 delivered the 5th of December 2010 (provided with MODx 1.0.4)
  - 1.9.1 delivered the 30th of August 2010
  - 1.9.0 delivered the 18th of May 2010 (provided with MODx 1.0.4)
  - 1.8.5 delivered the 20th of March 2010 (provided with MODx 1.0.3)
