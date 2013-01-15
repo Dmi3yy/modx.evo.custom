@@ -10,6 +10,8 @@
  * @internal    description: <strong>1.4.7</strong> Transform template variables into a sortable multi item list.
  * @internal    snippet code: return include(MODX_BASE_PATH.'assets/tvs/multitv/multitv.snippet.php');
  */
+
+// @INCLUDE/assets/tvs/multitv/multitv.customtv.php
 if (MODX_BASE_PATH == '') {
 	die('<h1>ERROR:</h1><p>Please use do not access this file directly.</p>');
 }

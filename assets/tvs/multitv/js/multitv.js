@@ -188,7 +188,8 @@ function TransformField(tvid, tvmode, tvfields, tvlanguage) {
 		var thumbName = thumbPath.pop();
 		var thumbId = fieldName.replace(/^(.*?)(\d*)$/, '#$1preview$2');
 		if (thumbName != '') {
-			listElement.find(thumbId).html('<img src="../'+thumbPath.join("/")+'/.thumb_'+thumbName+'" />');
+            thumbPath[0] = '/assets/.thumbs';
+			listElement.find(thumbId).html('<img src="'+thumbPath.join("/")+'/'+thumbName+'" />');
 		} else {
 			listElement.find(thumbId).html('');
 		}
