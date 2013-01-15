@@ -14,6 +14,7 @@
 - add MarkitUp! плагин (http://modx.im/blog/addons/65.html)
 - add multiTV (https://github.com/Jako/multiTV)
 - update ajaxSearch 193b (http://www.evo.wangba.fr/index.php?id=502)
+- удален Getfiled  вместо него есть DocInfo (быстрее и меньше запросов)
 
 ========================================================
 1.0.7-d2 (26.11.2012)
@@ -120,9 +121,7 @@ ALTER TABLE  `modx_site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT 
 -DirectResize 0.8  - автосоздание мелких картинок в контенте и не только
 -CacheAccelerator    - кешируем все что можно :) (http://community.modx-cms.ru/blog/addons/1621.html)
 -CacheExtender 0.4b - (http://community.modx-cms.ru/blog/dev/1625.html)
-- diff - сохранение версий (https://github.com/AgelxNash/diffplugin4modx)
 -managermanager 0.3.11 (http://modx.com/extras/package/managermanager)
--Easy Advertising управление рекламой(http://community.modx-cms.ru/blog/addons/7197.html)
 -Ajax submit 1.0 (http://wdevblog.net.ru/blog/ajaxsubmit-1.0-otpravka-ajax-zaprosom-dannyix-lyuboj-formyi-modx.html)
 -customSettings 1.0 (http://community.modx-cms.ru/blog/addons/1778.html)
 -systemField (http://community.modx-cms.ru/blog/addons/1225.html)
@@ -132,9 +131,6 @@ ALTER TABLE  `modx_site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT 
 
 -------------------------Модули----------------------------
 -Модуль doc finder    (http://habrahabr.ru/blogs/modx/102635/)
--Модуль Massive Move  (http://forums.modx.com/?action=thread&thread=62489)
--Easy Advertising управление рекламой(http://community.modx-cms.ru/blog/addons/7197.html)
-
 
 ----------------Экстендеры для Ditto-----------------------
 -distinct  (http://modx.com/extras/package/distinctdittoextender)
