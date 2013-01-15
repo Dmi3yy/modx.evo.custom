@@ -1,15 +1,19 @@
-текущая версии 1.0.7-d2
+текущая версии 1.0.8-d3
 
 ========================================================
-1.0.7-d3 (20.12.2012)
+1.0.8-d3 (15.01.2013)
 - обновлен JotX до 1.1 (https://github.com/Temus/JotX/)
 - обновлен ManagerManager до 0.4 (http://code.divandesign.biz/modx/managermanager)
 - добавлен модуль ddMMEditor 1.2.3 (http://code.divandesign.biz/modx/ddmmeditor)
-- добавлен сниппет ddGetMultipleField 2.13 (http://code.divandesign.ru/modx/ddgetmultiplefield)
-- вернул тему EvoRevo (только чуть украсил)
+- добавлен сниппет ddGetMultipleField 2.13 (http://code.divandesign.ru/modx ddgetmultiplefield)
+- вернул тему EvoRevo и немного доработал
 - обновлен снипет IF до 1.2
 - удалил модуль EasyAdvertising 
 - удален снипет Youtube 
+- update TinyMce + добавлен плагин Youtube и кнопка justifyFшан
+
+
+
 
 
 
