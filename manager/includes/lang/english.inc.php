@@ -1085,4 +1085,20 @@ $_lang["yourinfo_role"] = 'Your role is:';
 $_lang["yourinfo_title"] = 'Your info';
 $_lang["yourinfo_total_logins"] = 'Total number of logins:';
 $_lang["yourinfo_username"] = 'You are logged in as:';
+// bkmanager.static.php
+$_lang["bkmgr_alert_mkdir"] = 'Фаил не может быть создан.  Праверьте права на папку assets/backup';
+$_lang["bkmgr_restore_msg"] = '<p>Сайт может быть восстановление с помощью файла SQL. </p>';
+$_lang["bkmgr_restore_title"] = 'Восстановить';
+$_lang["bkmgr_import_ok"] = 'SQL восстановление было выполнено нормально.';
+$_lang["bkmgr_snapshot_ok"] = 'Бекап был сохранен.';
+$_lang["bkmgr_run_sql_file_label"] = 'Выполнить SQL файл';
+$_lang["bkmgr_run_sql_direct_label"] = 'Выполнить произвольную комманду SQL';
+$_lang["bkmgr_run_sql_submit"] = 'Отправить';
+$_lang["bkmgr_run_sql_result"] = 'Результат';
+$_lang["bkmgr_snapshot_title"] = 'Резервное копирование';
+$_lang["bkmgr_snapshot_msg"] = '<p>Содержимое базы данных сохраняются и восстанавливаются на сервер.<br />Путь для бекапов : /assets/backup/</p>';
+$_lang["bkmgr_snapshot_submit"] = 'Создать бекап';
+$_lang["bkmgr_snapshot_list_title"] = 'Список бекапов';
+$_lang["bkmgr_restore_submit"] = 'Восстановить эти данные';
+$_lang["bkmgr_snapshot_nothing"] = 'Нет бекапов';
 ?>

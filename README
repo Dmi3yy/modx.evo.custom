@@ -17,6 +17,7 @@
 - удален Getfiled  вместо него есть DocInfo (быстрее и меньше запросов)
 - fix EXACTPHRASE in AjaxSearch (http://tracker.modx.com/issues/3729)
 - fix phpthumb for seo image name
+- резервное копирование и востановление из modx.jp форка
 
 
 ========================================================
