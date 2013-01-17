@@ -1,4 +1,6 @@
 <?php
+
+include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
 require_once(strtr(realpath(dirname(__FILE__)), '\\', '/').'/../includes/protect.inc.php');
 
 // set the include_once path
