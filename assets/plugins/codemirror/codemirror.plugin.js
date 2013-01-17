@@ -1,7 +1,7 @@
-function setCookie(key, value)
+function setCookie(pathURL,key, value)
 {
     days = 1;
-    path = "/manager/";
+    path = "/"+pathURL+"/";
     domain = "";
     secure = false;
 

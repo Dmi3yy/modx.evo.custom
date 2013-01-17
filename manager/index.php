@@ -48,6 +48,7 @@
  *          depending on the request, will branch different
  *          content
  */
+include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;

@@ -1,5 +1,7 @@
 <?php
-$path_to_modx_config = '../../../manager/includes/config.inc.php';
+include_once(dirname(__FILE__)."/../../cache/siteManager.php");
+
+$path_to_modx_config = '../../../'.MGR_DIR.'/includes/config.inc.php';
 
 include_once($path_to_modx_config);
 
@@ -8,7 +10,7 @@ if (isset($_REQUEST[$site_sessionname]))
 
 startCMSSession();
 
-include_once "../../../manager/includes/document.parser.class.inc.php";
+include_once "../../../".MGR_DIR."/includes/document.parser.class.inc.php";
 $modx = new DocumentParser;
 $modx->loadExtension("ManagerAPI");
 $modx->getSettings();

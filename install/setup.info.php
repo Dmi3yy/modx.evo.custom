@@ -1,7 +1,8 @@
 <?php
 //:: MODx Installer Setup file 
 //:::::::::::::::::::::::::::::::::::::::::
-require_once('../manager/includes/version.inc.php');
+include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+require_once('../'.MGR_DIR.'/includes/version.inc.php');
 
 $moduleName = "MODx";
 $moduleVersion = $modx_branch.' '.$modx_version;

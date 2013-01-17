@@ -609,7 +609,7 @@ class CJot {
 				break;
 		}
 
-		include_once MODX_BASE_PATH . "manager/includes/controls/class.phpmailer.php";
+		include_once MODX_MANAGER_PATH . "/includes/controls/class.phpmailer.php";
 		
 		foreach ($user_ids as $user_id){
 			if ($this->config["user"]["id"] !== $user_id) {

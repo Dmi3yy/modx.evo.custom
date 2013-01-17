@@ -85,11 +85,11 @@ $cookieKey = substr(md5($site_id."Web-User"),0,15);
 # Start processing
 require $snipPath."weblogin/lang/russian-UTF-8.php";
 require_once $snipPath."weblogin/weblogin.common.inc.php";
-require_once $modx->config['base_path'] . "manager/includes/crypt.class.inc.php";
+require_once MODX_MANAGER_PATH . "/includes/crypt.class.inc.php";
 
 if ($isPWDActivate || $isPWDReminder || $isLogOut || $isPostBack) {
 	# include the logger class
-	include_once $modx->config['base_path'] . "manager/includes/log.class.inc.php";
+	include_once MODX_MANAGER_PATH . "/includes/log.class.inc.php";
 	include_once $snipPath."weblogin/weblogin.processor.inc.php";
 }
 

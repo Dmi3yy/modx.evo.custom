@@ -19,7 +19,7 @@ function get_markitup_init($params, $mode='')
 		$ph['textarea'] = 'textarea';
 	}
 	$ph['markitup_url'] = $params['markitup_url'];
-	$ph['modx_browser_url'] = MODX_BASE_URL .'manager/media/browser/mcpuk/';
+	$ph['modx_browser_url'] = MODX_MANAGER_URL.'/media/browser/mcpuk/';
 	
 	foreach($ph as $name => $value)
 	{

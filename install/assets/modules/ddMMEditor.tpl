@@ -168,7 +168,7 @@ $output .= "var templatesJSON = '".$templates."';";
 $output .= "var tvsAutocomplite = '".$fields."';";
 $output .= '
 </script>
-<link rel="stylesheet" type="text/css" href="'.$site_url.'/manager/media/style'.$theme.'/style.css" />
+<link rel="stylesheet" type="text/css" href="'.$modx->config['site_manager_url'].'/media/style'.$theme.'/style.css" />
 <link rel="stylesheet" type="text/css" href="'.$site_url.'/assets/modules/ddmmeditor/css/general.css" />
 <script src="'.$site_url.'assets/modules/ddmmeditor/js/jquery-1.7.1.min.js" type="text/javascript"></script>
 <script src="'.$site_url.'assets/modules/ddmmeditor/js/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
