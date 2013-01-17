@@ -383,8 +383,9 @@ define("IN_PARSER_MODE", "false");
 define("IN_MANAGER_MODE", "false");
 define('MODX_API_MODE', true);
 
-require_once('../../../../manager/includes/protect.inc.php');
-include ("../../../../manager/includes/config.inc.php");
+include_once(dirname(__FILE__)."/../../../cache/siteManager.php");
+require_once('../../../../'.MGR_DIR.'/includes/protect.inc.php');
+include ('../../../../'.MGR_DIR.'/includes/config.inc.php');
 include_once(MODX_MANAGER_PATH.'/includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
 $engine = new CacheAcceleratorInstaller();

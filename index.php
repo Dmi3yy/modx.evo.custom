@@ -44,12 +44,13 @@
  * Initialize Document Parsing
  * -----------------------------
  */
+include_once(dirname(__FILE__)."/assets/cache/siteManager.php");
 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 
 // harden it
-require_once(dirname(__FILE__).'/manager/includes/protect.inc.php');
+require_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/protect.inc.php');
 
 // set some settings, and address some IE issues
 @ini_set('url_rewriter.tags', '');
@@ -86,7 +87,7 @@ $base_path = '';
 
 // get the required includes
 if($database_user=="") {
-	$rt = @include_once(dirname(__FILE__).'/manager/includes/config.inc.php');
+	$rt = @include_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/config.inc.php');
 	// Be sure config.inc.php is there and that it contains some important values
 	if(!$rt || !$database_type || !$database_server || !$database_user || !$dbase) {
 	echo "

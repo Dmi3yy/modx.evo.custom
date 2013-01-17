@@ -379,11 +379,11 @@ $sql = "INSERT INTO $tbl_site_content (introtext,content, pagetitle, longtitle, 
 		));
 
 		// secure web documents - flag as private
-		include $base_path . "manager/includes/secure_web_documents.inc.php";
+		include MODX_MANAGER_PATH . "/includes/secure_web_documents.inc.php";
 		secureWebDocument($key);
 
 		// secure manager documents - flag as private
-		include $base_path . "manager/includes/secure_mgr_documents.inc.php";
+		include MODX_MANAGER_PATH . "/includes/secure_mgr_documents.inc.php";
 		secureMgrDocument($key);
 
 		if ($syncsite == 1) {
@@ -617,11 +617,11 @@ $sql = "UPDATE $tbl_site_content SET introtext='$introtext', content='$content',
 		));
 
 		// secure web documents - flag as private
-		include $base_path . "manager/includes/secure_web_documents.inc.php";
+		include MODX_MANAGER_PATH . "/includes/secure_web_documents.inc.php";
 		secureWebDocument($id);
 
 		// secure manager documents - flag as private
-		include $base_path . "manager/includes/secure_mgr_documents.inc.php";
+		include MODX_MANAGER_PATH . "/includes/secure_mgr_documents.inc.php";
 		secureMgrDocument($id);
 
 		if ($syncsite == 1) {

@@ -1,4 +1,6 @@
 <?php
+include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+
 global $moduleName;
 global $moduleVersion;
 global $moduleSQLBaseFile;
@@ -226,15 +228,15 @@ if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'ba
     } else {
         $script_name= $_SERVER[\'SCRIPT_NAME\'];
     }
-    $a= explode("/manager", str_replace("\\\\", "/", dirname($script_name)));
+    $a= explode("/".MGR_DIR, str_replace("\\\\", "/", dirname($script_name)));
     if (count($a) > 1)
         array_pop($a);
-    $url= implode("manager", $a);
+    $url= implode(MGR_DIR, $a);
     reset($a);
-    $a= explode("manager", str_replace("\\\\", "/", dirname(__FILE__)));
+    $a= explode(MGR_DIR, str_replace("\\\\", "/", dirname(__FILE__)));
     if (count($a) > 1)
         array_pop($a);
-    $pth= implode("manager", $a);
+    $pth= implode(MGR_DIR, $a);
     unset ($a);
     $base_url= $url . (substr($url, -1) != "/" ? "/" : "");
     $base_path= $pth . (substr($pth, -1) != "/" && substr($pth, -1) != "\\\\" ? "/" : "");
@@ -250,8 +252,8 @@ $site_url .= $base_url;
 if (!defined(\'MODX_BASE_PATH\')) define(\'MODX_BASE_PATH\', $base_path);
 if (!defined(\'MODX_BASE_URL\')) define(\'MODX_BASE_URL\', $base_url);
 if (!defined(\'MODX_SITE_URL\')) define(\'MODX_SITE_URL\', $site_url);
-if (!defined(\'MODX_MANAGER_PATH\')) define(\'MODX_MANAGER_PATH\', $base_path.\'manager/\');
-if (!defined(\'MODX_MANAGER_URL\')) define(\'MODX_MANAGER_URL\', $site_url.\'manager/\');
+if (!defined(\'MODX_MANAGER_PATH\')) define(\'MODX_MANAGER_PATH\', $base_path.MGR_DIR.\'/\');
+if (!defined(\'MODX_MANAGER_URL\')) define(\'MODX_MANAGER_URL\', $site_url.MGR_DIR.\'/\');
 
 // start cms session
 if(!function_exists(\'startCMSSession\')) {
@@ -276,7 +278,7 @@ if(!function_exists(\'startCMSSession\')) {
     }
 }';
 $configString .= "\n?>";
-$filename = '../manager/includes/config.inc.php';
+$filename = '../'.MGR_DIR.'/includes/config.inc.php';
 $configFileFailed = false;
 if (@ !$handle = fopen($filename, 'w')) {
     $configFileFailed = true;
@@ -295,7 +297,7 @@ if ($configFileFailed == true) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
     $errors += 1;
 ?>
-    <p><?php echo $_lang['cant_write_config_file']?><span class="mono">manager/includes/config.inc.php</span></p>
+    <p><?php echo $_lang['cant_write_config_file']?><span class="mono"><?php echo MGR_DIR; ?>/includes/config.inc.php</span></p>
     <textarea style="width:400px; height:160px;">
     <?php echo $configString; ?>
     </textarea>
@@ -710,11 +712,11 @@ define('MODX_API_MODE', true);
 define('MODX_BASE_PATH', $base_path);
 $database_type = 'mysql';
 // initiate a new document parser
-include_once('../manager/includes/document.parser.class.inc.php');
+include_once('../'.MGR_DIR.'/includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
 $modx->db->connect();
 // always empty cache after install
-include_once "../manager/processors/cache_sync.class.processor.php";
+include_once "../".MGR_DIR."/processors/cache_sync.class.processor.php";
 $sync = new synccache();
 $sync->setCachepath("../assets/cache/");
 $sync->setReport(false);

@@ -69,7 +69,7 @@ class DocumentParser {
         switch ($extname) {
             // Database API
             case 'DBAPI' :
-                if (!include_once MODX_BASE_PATH . 'manager/includes/extenders/dbapi.' . $database_type . '.class.inc.php')
+                if (!include_once MODX_MANAGER_PATH . '/includes/extenders/dbapi.' . $database_type . '.class.inc.php')
                     return false;
                 $this->db= new DBAPI;
                 return true;
@@ -77,7 +77,7 @@ class DocumentParser {
 
                 // Manager API
             case 'ManagerAPI' :
-                if (!include_once MODX_BASE_PATH . 'manager/includes/extenders/manager.api.class.inc.php')
+                if (!include_once MODX_MANAGER_PATH . '/includes/extenders/manager.api.class.inc.php')
                     return false;
                 $this->manager= new ManagerAPI;
                 return true;
@@ -225,7 +225,7 @@ class DocumentParser {
                 $included= include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
             }
             if (!$included || !is_array($this->config) || empty ($this->config)) {
-                include_once MODX_BASE_PATH . "/manager/processors/cache_sync.class.processor.php";
+                include_once MODX_MANAGER_PATH . "/processors/cache_sync.class.processor.php";
                 $cache = new synccache();
                 $cache->setCachepath(MODX_BASE_PATH . "/assets/cache/");
                 $cache->setReport(false);
@@ -249,6 +249,8 @@ class DocumentParser {
             $this->config['base_url']= MODX_BASE_URL;
             $this->config['base_path']= MODX_BASE_PATH;
             $this->config['site_url']= MODX_SITE_URL;
+            $this->config['site_manager_url']=MODX_MANAGER_URL;
+            $this->config['site_manager_path']=MODX_MANAGER_PATH;
 
             // load user setting if user is logged in
             $usrSettings= array ();
@@ -732,7 +734,7 @@ class DocumentParser {
         $replace= array ();
         preg_match_all('~\[\*(.*?)\*\]~', $template, $matches);
         $variableCount= count($matches[1]);
-        $basepath= $this->config["base_path"] . "manager/includes";
+        $basepath= MODX_MANAGER_PATH . "/includes";
         for ($i= 0; $i < $variableCount; $i++) {
             $key= $matches[1][$i];
             $key= substr($key, 0, 1) == '#' ? substr($key, 1) : $key; // remove # for QuickEdit format
@@ -1425,7 +1427,7 @@ function evalSnippets($documentSource)
                     $this->sendErrorPage();
                 } else {
                     // Inculde the necessary files to check document permissions
-                    include_once ($this->config['base_path'] . '/manager/processors/user_documents_permissions.class.php');
+                    include_once ($this->config['site_manager_path'] . '/processors/user_documents_permissions.class.php');
                     $udperms= new udperms();
                     $udperms->user= $this->getLoginUserID();
                     $udperms->document= $this->documentIdentifier;
@@ -1881,7 +1883,7 @@ function evalSnippets($documentSource)
     }
 
     function getVersionData() {
-        include $this->config["base_path"] . "manager/includes/version.inc.php";
+        include MODX_MANAGER_PATH . "/includes/version.inc.php";
         $v= array ();
         $v['version']= $modx_version;
         $v['branch']= $modx_branch;
@@ -2026,7 +2028,7 @@ function evalSnippets($documentSource)
     }
 
     function getUserData() {
-        include $this->config["base_path"] . "manager/includes/extenders/getUserData.extender.php";
+        include MODX_MANAGER_PATH . "/includes/extenders/getUserData.extender.php";
         return $tmpArray;
     }
 
@@ -2238,7 +2240,7 @@ function evalSnippets($documentSource)
             if ($result == false)
                 return false;
             else {
-		$baspath= $this->config["base_path"] . "manager/includes";
+		$baspath= MODX_MANAGER_PATH . "/includes";
 		include_once $baspath . "/tmplvars.format.inc.php";
 		include_once $baspath . "/tmplvars.commands.inc.php";
 		for ($i= 0; $i < count($result); $i++) {
@@ -2289,9 +2291,7 @@ function evalSnippets($documentSource)
 
     # returns the virtual relative path to the manager folder
     function getManagerPath() {
-        global $base_url;
-        $pth= $base_url . 'manager/';
-        return $pth;
+        return MODX_MANAGER_URL;
     }
 
     # returns the virtual relative path to the cache folder

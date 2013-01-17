@@ -92,7 +92,7 @@
 			$tmpPHP .= '$cacheFileNameUrl = "'.$cacheFileNameUrl.'";'."\n";
 		}
 		$tmpPHP .= '$cacheMode = "'.$cacheMode.'";'."\n";
-		$tmpPHP .= "\n"."include(MODX_BASE_PATH.'manager/processors/cache_sync.wrapper.class.php');"."\n";
+		$tmpPHP .= "\n"."include(MODX_MANAGER_PATH . '/processors/cache_sync.wrapper.class.php');"."\n";
         if($report && $modx->checkSession()){
    			$totalTime= ($this->getMicroTime() - $start);
         	$totalTime= sprintf("%2.4f s", $totalTime);

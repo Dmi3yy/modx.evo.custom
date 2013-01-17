@@ -42,7 +42,7 @@ class GalleryManagement
 
 		$this->galleriesTable = 'portfolio_galleries';
 
-		$this->current = (($_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $modx->config['base_url'] . 'manager/index.php';
+		$this->current = (($_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $modx->config['base_url'] . MGR_DIR.'/index.php';
 		$this->a = $_GET['a'];
 		$this->id = $_GET['id'];
 		

@@ -10,7 +10,7 @@
  * @internal    description: <strong>1.4.7</strong> Transform template variables into a sortable multi item list.
  */
 if (!function_exists('renderFormElement')) {
-	include MODX_BASE_PATH . 'manager/includes/tmplvars.inc.php';
+	include MODX_MANAGER_PATH . '/includes/tmplvars.inc.php';
 }
 
 class multiTV {

@@ -8,7 +8,6 @@ Disallow: /assets/modules/
 Disallow: /assets/plugins/
 Disallow: /assets/snippets/
 Disallow: /install/
-Disallow: /manager/	
 
 # For sitemaps.xml autodiscovery. Uncomment if you have one:
 # Sitemap: http://example.com/sitemap.xml
