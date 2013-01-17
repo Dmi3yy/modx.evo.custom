@@ -242,40 +242,16 @@ class asPHxParser {
 
                     #####  Special functions
                     // img modifiers added by coroico
-                    case "imgwidth":
-                        if (@file_exists($output)) {
-                            list($width, $height, $type, $attr) = getimagesize($output);
-                            $output = $width;
-                        }
-                        else $output = 0;
-                        break;
-                    case "imgheight":
-                        if (@file_exists($output)) {
-                            list($width, $height, $type, $attr) = getimagesize($output);
-                            $output = $height;
-                        }
-                        else $output = 0;
-                        break;
-                    case "imgattr":
-                        if (@file_exists($output)) {
-                            list($width, $height, $type, $attr) = getimagesize($output);
-                            $output = $attr;
-                        }
-                        else $output = '';
-                        break;
+                    case "imgwidth": list($width, $height, $type, $attr) = getimagesize($output); $output = $width; break;
+                    case "imgheight": list($width, $height, $type, $attr) = getimagesize($output); $output = $height; break;
+                    case "imgattr": list($width, $height, $type, $attr) = getimagesize($output); $output = $attr; break;
                     case "imgmaxwidth":
-                        if (@file_exists($output)) {
-                            list($width, $height, $type, $attr) = getimagesize($output);
-                            $output = ($width < intval($modifier_value[$i])) ? $width : intval($modifier_value[$i]);
-                        }
-                        else $output = intval($modifier_value[$i]);
+                        list($width, $height, $type, $attr) = getimagesize($output);
+                        $output = ($width < intval($modifier_value[$i])) ? $width : intval($modifier_value[$i]);
                         break;
                     case "imgmaxheight":
-                        if (@file_exists($output)) {
-                            list($width, $height, $type, $attr) = getimagesize($output);
-                            $output = ($height < intval($modifier_value[$i])) ? $height : intval($modifier_value[$i]);
-                        }
-                        else $output = intval($modifier_value[$i]);
+                        list($width, $height, $type, $attr) = getimagesize($output);
+                        $output = ($height < intval($modifier_value[$i])) ? $height : intval($modifier_value[$i]);
                         break;
                     case "math":
                         $filter = preg_replace("~([a-zA-Z\n\r\t\s])~","",$modifier_value[$i]);

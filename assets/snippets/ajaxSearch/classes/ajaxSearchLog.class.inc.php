@@ -4,9 +4,9 @@
 * -----------------------------------------------------------------------------
 * @package  AjaxSearchLog
 *
-* @author       Coroico - www.evo.wangba.fr
-* @version      1.9.3
-* @date         26/09/2012
+* @author       Coroico - www.modx.wangba.fr
+* @version      1.9.2
+* @date         05/12/2010
 *
 * Purpose:
 *    The AjaxSearchLog class contains all functions used to Log AjaxSearch requests
