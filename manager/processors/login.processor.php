@@ -1,4 +1,6 @@
 <?php
+
+include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
 require_once(strtr(realpath(dirname(__FILE__)), '\\', '/').'/../includes/protect.inc.php');
 
 // set the include_once path
@@ -285,7 +287,7 @@ if(isset($id) && $id>0) {
     else header($header);
 }
 else {
-    $header = 'Location: '.$modx->config['site_url'].'manager/';
+    $header = 'Location: '.MODX_MANAGER_URL;
     if($_POST['ajax']==1) echo $header;
     else header($header);
 }

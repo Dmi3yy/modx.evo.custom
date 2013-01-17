@@ -31,7 +31,8 @@ $sortby = 'menuindex'; // Could be menuindex or menutitle
 $tree_styles = array("|--", "&#38;#x2516;&#38;#x2500;&nbsp;", "&#38;#x25B9;&nbsp;&nbsp;", "L&nbsp;&nbsp;");
 define('IN_MANAGER_MODE', true);
 define('MODX_API_MODE', true);
-$manage_path = '../../../../manager/';
+include_once(dirname(__FILE__)."/../../../cache/siteManager.php");
+$manage_path = '../../../../'.MGR_DIR.'/';
 include($manage_path . 'includes/config.inc.php');
 include($manage_path . 'includes/document.parser.class.inc.php');
 startCMSSession();

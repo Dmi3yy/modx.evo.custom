@@ -1,6 +1,6 @@
 <?php 
 require_once(dirname(__FILE__).'/protect.inc.php');
-require_once(MODX_BASE_PATH.'manager/includes/sniff/phpSniff.class.php');
+require_once(MODX_MANAGER_PATH.'/includes/sniff/phpSniff.class.php');
 
 $GET_VARS = isset($_GET) ? $_GET : $HTTP_GET_VARS; 
 $POST_VARS = isset($_POST) ? $_GET : $HTTP_POST_VARS; 

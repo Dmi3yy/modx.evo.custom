@@ -73,6 +73,7 @@ switch($modx->Event->name) {
 
 // object identifier for cursor position save in cookie
 $object_id = md5($obect_type.'-'.$object_name);
+$mgr_dir=MGR_DIR;
 
 if (('none' == $rte) && $mode) {
     $output = '';
@@ -140,7 +141,7 @@ HEREDOC;
 
                 position = myCodeMirror.getCursor(false).line +'|'+ myCodeMirror.getCursor(false).ch;
 
-                setCookie('{$object_id}', position);
+                setCookie('{$mgr_dir}','{$object_id}', position);
             }
         }
 */

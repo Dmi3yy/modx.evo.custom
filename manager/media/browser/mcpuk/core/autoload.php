@@ -19,8 +19,9 @@
   *        here, they can be accessed in config.php via $GLOBALS array.
   *        It's recommended to use constants instead.
   */
+include_once(dirname(__FILE__)."/../../../../../assets/cache/siteManager.php");
 
-list($base_url,) = explode('/manager/', $_SERVER['REQUEST_URI']);
+list($base_url,) = explode('/'.MGR_DIR.'/', $_SERVER['REQUEST_URI']);
 $base_url .= '/';
 define('MODX_BASE_URL', $base_url);
 include_once('../../../includes/config.inc.php');

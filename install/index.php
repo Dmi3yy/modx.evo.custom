@@ -14,9 +14,10 @@ $_SESSION['test'] = 1;
 
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
+include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
 
 require_once("lang.php");
-require_once('../manager/includes/version.inc.php');
+require_once('../'.MGR_DIR.'/includes/version.inc.php');
 
 // session loop-back tester
 if (!$_SESSION['test']) {

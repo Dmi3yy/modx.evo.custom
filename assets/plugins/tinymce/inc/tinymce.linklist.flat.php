@@ -1,7 +1,8 @@
 <?php
 define('IN_MANAGER_MODE', true);
 define('MODX_API_MODE', true);
-$manage_path = '../../../../manager/';
+include_once(dirname(__FILE__)."/../../../cache/siteManager.php");
+$manage_path = '../../../../'.MGR_DIR.'/';
 include($manage_path . 'includes/config.inc.php');
 include($manage_path . 'includes/document.parser.class.inc.php');
 startCMSSession();
