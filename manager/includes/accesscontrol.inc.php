@@ -74,6 +74,7 @@ if(!isset($_SESSION['mgrValidated'])){
 	$modx->setPlaceholder('OnManagerLoginFormPrerender',$html);
 
 	$modx->setPlaceholder('site_name',$site_name);
+	$modx->setPlaceholder('manager_path',MGR_DIR);
 	$modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
 	$modx->setPlaceholder('login_message',$_lang["login_message"]);
 
