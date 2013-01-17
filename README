@@ -1,4 +1,9 @@
-текущая версии 1.0.8-d3
+текущая версии 1.0.8-d4  (17.03.2013)
+
+========================================================
+1.0.8-d4 (17.01.2013)
+- возможность поменять папку manager
+- заполнения пропущенных id в site_content (опционально в настройках) 
 
 ========================================================
 1.0.8-d3 (15.01.2013)
@@ -13,12 +18,10 @@
 - update TinyMce + добавлен плагин Youtube и кнопка justifyFull (http://modx.im/blog/addons/234.html)
 - add MarkitUp! плагин (http://modx.im/blog/addons/65.html)
 - add multiTV (https://github.com/Jako/multiTV)
-- update ajaxSearch 193b (http://www.evo.wangba.fr/index.php?id=502)
 - удален Getfiled  вместо него есть DocInfo (быстрее и меньше запросов)
-- fix EXACTPHRASE in AjaxSearch (http://tracker.modx.com/issues/3729)
+- fix EXACTPHRASE in AjaxSearch 
 - fix phpthumb for seo image name
 - резервное копирование и востановление из modx.jp форка
-
 
 ========================================================
 1.0.7-d2 (26.11.2012)
@@ -158,3 +161,6 @@ ALTER TABLE  `modx_site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT 
 -изменен шаблон по умолчанию
 -тема по умолчанию MOdxCarbonEvoRevo
 
+//////
+
+потестить галерею http://modx-store.ru/

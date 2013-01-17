@@ -502,6 +502,27 @@ function confirmLangChange(el, lkey, elupd){
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["custom_contenttype_message"] ?></td>
           </tr>
+<tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr>		  
+<tr>
+	<td><?php echo $_lang["docid_incrmnt_method_title"] ?></td>
+	<td>
+	<input onchange="documentDirty=true;" type="radio" name="docid_incrmnt_method" value="0" 
+			<?php echo ($docid_incrmnt_method=='0' || !isset($auto_menuindex)) ? 'checked="checked"' : "" ; ?> /> 
+			<?php echo $_lang["docid_incrmnt_method_0"]?><br /> 
+			
+	<input onchange="documentDirty=true;" type="radio" name="docid_incrmnt_method" value="1" 
+			<?php echo ($docid_incrmnt_method=='1') ? 'checked="checked"' : "" ; ?> /> 
+			<?php echo $_lang["docid_incrmnt_method_1"]?><br /> 
+			
+	<input onchange="documentDirty=true;" type="radio" name="docid_incrmnt_method" value="2" 
+			<?php echo ($docid_incrmnt_method=='2') ? 'checked="checked"' : "" ; ?> /> 
+			<?php echo $_lang["docid_incrmnt_method_2"]?><br /> 
+	</td>
+</tr>
+
+
           <tr>
             <td colspan="2"><div class='split'></div></td>
             <tr>

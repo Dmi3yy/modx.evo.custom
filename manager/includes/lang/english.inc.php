@@ -1101,4 +1101,9 @@ $_lang["bkmgr_snapshot_submit"] = 'Создать бекап';
 $_lang["bkmgr_snapshot_list_title"] = 'Список бекапов';
 $_lang["bkmgr_restore_submit"] = 'Восстановить эти данные';
 $_lang["bkmgr_snapshot_nothing"] = 'Нет бекапов';
+
+$_lang["docid_incrmnt_method_title"] = 'Способ добавления Resource ID ';
+$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
+$_lang["docid_incrmnt_method_1"] = 'Минимальный пропущенный ID';
+$_lang["docid_incrmnt_method_2"] = 'Максимальный ID+1';
 ?>
