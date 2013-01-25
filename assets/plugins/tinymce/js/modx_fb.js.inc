@@ -10,6 +10,11 @@ function modx_fb (field_name, url, type, win) {
 		case "qt":
 		case "wmp":
 		case "rmp":
+		case "video":
+		case "quicktime":
+		case "windowsmedia":
+		case "realmedia":
+		case "iframe":
 			type = "media";
 			break;
 		case "shockwave":
