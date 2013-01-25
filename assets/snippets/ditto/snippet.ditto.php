@@ -702,7 +702,7 @@ $save = (isset($save))? $save : 0;
         0 - off; returns output
 */
 $templates = array(
-    "default" => "@CODE".$_lang['default_template'],
+    "default" => "@CODE ".$_lang['default_template'],
     "base" => $tpl,
     "alt" => $tplAlt,
     "first" => $tplFirst,
