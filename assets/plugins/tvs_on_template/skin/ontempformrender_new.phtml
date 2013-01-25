@@ -1,0 +1,34 @@
+<?php /* $Id: ontempformrender_new.phtml 25 2010-03-24 20:34:24Z stefan $ */ ?>
+
+</div><!-- close the original sectionBody -->
+
+<div class="sectionBody">
+    <div id="plugin-tt-tabpane" class="tab-pane"> 
+        <script type="text/javascript"> 
+            var tpPluginTT = new WebFXTabPane( $('plugin-tt-tabpane') );
+        </script>
+
+        <div id="tab-tt-template" class="tab-page">
+            <h2 id="tab-header-tt-template" class="tab"><?php echo $_lang['template_title']; ?></h2>
+            <script type="text/javascript">tpPluginTT.addTabPage( $('tab-tt-template') );</script>
+        </div><!-- end __ #tab-tt-template .tab-page -->
+
+<?php if( !empty( $tmplvars ) ) : ?>    
+        <div id="tab-tt-tmplvars" class="tab-page">
+            <h2 id="tab-header-tt-tmplvars" class="tab"><?php echo $_lang['tmplvars'] ?></h2>
+            <script type="text/javascript">tpPluginTT.addTabPage( $('tab-tt-tmplvars') );</script>
+    
+            <?php include $_plugin_params['path'] . 'skin/dl_templatevars.phtml'; ?>
+
+        </div><!-- end __ #tab-tt-tmplvars .tab-page -->
+<?php endif; ?>
+
+    </div><!-- end __ #plugin-tt-tabpane .tab-pane -->
+</div>
+<script type="text/javascript">
+//<![CDATA[
+if( $E('div.sectionBody') !== null ) {
+    $E('div.sectionBody').inject('tab-tt-template').removeProperty('class');
+}
+//]]>
+</script>

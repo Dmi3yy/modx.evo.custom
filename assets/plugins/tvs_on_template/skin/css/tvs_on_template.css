@@ -1,0 +1,30 @@
+@charset "utf-8";
+/**
+    $Id: tvs_on_template.css 25 2010-03-24 20:34:24Z stefan $ 
+----------------------------------------------------------------------------- */
+p#plugin-tt-note{ margin-left: 0px; font-weight:bold; }
+p#plugin-tt-note span.sort{ background: url(../img/sort.png) no-repeat; padding: 0 8px; margin: 0 8px }
+img#plugin-tt-indicator{ margin-left: 5px; margin-bottom: 5px; vertical-align:middle; }
+dl#plugin-tt-tmplvars dt{ font-weight: bold; padding:8px 0px; }
+dl#plugin-tt-tmplvars dd{ padding: 0; }
+dl#plugin-tt-tmplvars dd ul{ margin-left:0; padding-left:0; }
+dl#plugin-tt-tmplvars dd ul li{ padding-left: 20px; background-repeat: no-repeat; list-style-type: none; list-style-image: none; }
+dl#plugin-tt-tmplvars dd ul li{ background-image: url(../img/li.gif); }
+dl#plugin-tt-tmplvars dd ul li{  background-position: 3px 9px; }/* ie6 */
+dl#plugin-tt-tmplvars dd ul>li{  background-position: 3px 50%; }
+dl#plugin-tt-tmplvars dd ul li.checked{ background-image: url(../img/ok.gif); background-position: 0px 8px; } /* ie6 */
+dl#plugin-tt-tmplvars dd ul>li.checked{ background-image: url(../img/ok.png); background-position: 0px 50%; }
+dl#plugin-tt-tmplvars dd ul li span.sort{ margin:3px 5px 0 0; padding:0; cursor:move; vertical-align:middle; }
+dl#plugin-tt-tmplvars dd ul li>span.sort{ background: url(../img/sort.png) no-repeat; display: block; width: 16px; height: 16px; float: left; }
+dl#plugin-tt-tmplvars dd ul li label{ padding: 1px; }
+dl#plugin-tt-tmplvars dd ul li label span.name{ font-weight: bolder; }
+dl#plugin-tt-tmplvars dd ul li label:hover{ background-color: #88939E; color: #fff; }
+dl#plugin-tt-tmplvars dd ul li input{ visibility: hidden }
+dl#plugin-tt-tmplvars dd ul li.move
+{
+    border              : 1px solid #88939E;
+    color               : #88939E;
+    box-shadow          : 0 0 10px #88939E;
+    -moz-box-shadow     : 0 0 10px #88939E;
+    -webkit-box-shadow  : 0 0 10px #88939E;
+}

@@ -1,0 +1,21 @@
+<?php /* $Id: ontempformrender_upd.phtml 25 2010-03-24 20:34:24Z stefan $ */ ?>
+
+<?php if( !empty( $tmplvars ) ) : ?>
+    <?php include $_plugin_params['path'] . 'skin/dl_templatevars.phtml'; ?>
+<?php endif; ?>
+
+<script type="text/javascript">
+//<![CDATA[
+if( $E('#tabAssignedTVs ul') !== null ) {
+    // remove the default list of tvs
+    $E('#tabAssignedTVs ul').remove();
+    // remove the link to default tv-sorting and that following unnecessary <br>
+    $E('#tabAssignedTVs').getElement('a[href^=index.php?a=117]').getParent().getNext().remove();
+    $E('#tabAssignedTVs').getElement('a[href^=index.php?a=117]').getParent().remove();
+}
+if( $('plugin-tt-tmplvars') !== null ){
+    $('tabAssignedTVs').adopt('plugin-tt-tmplvars');
+    $('plugin-tt-note').injectBefore('plugin-tt-tmplvars');
+}
+//]]>
+</script>
