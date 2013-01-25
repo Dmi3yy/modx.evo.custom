@@ -1,6 +1,6 @@
 <?php
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
-//[[phpthumb? &input=`[+tvimagename+]` &options=`w_255,h=200`]]
+//[[phpthumb? &input=`[+image+]` &options=`w=150,h=76,far=C,bg=FFFFFF`]]
 if($input == '' || !file_exists($_SERVER['DOCUMENT_ROOT']."/".$input))
     {return 'assets/snippets/phpthumbof/noimage.png';}
 else{   
