@@ -1,5 +1,6 @@
 # Default modx exclusions
 User-agent: *
+Disallow: /assets/backup/
 Disallow: /assets/cache/
 Disallow: /assets/docs/
 Disallow: /assets/export/
