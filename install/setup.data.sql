@@ -260,5 +260,6 @@ REPLACE INTO `{PREFIX}jot_content` VALUES ('15','I\'m untrusted','','0','9','0',
 CREATE TABLE IF NOT EXISTS `{PREFIX}jot_subscriptions` (`id` mediumint(10) NOT NULL auto_increment, `uparent` mediumint(10) NOT NULL default '0', `tagid` varchar(50) NOT NULL default '', `userid` mediumint(10) NOT NULL default '0', PRIMARY KEY  (`id`), KEY `uparent` (`uparent`), KEY `tagid` (`tagid`), KEY `userid` (`userid`)) ENGINE=MyISAM;
 
 
-ALTER TABLE `{PREFIX}site_content` ADD `alias_visible` INT( 2 ) NOT NULL DEFAULT '1'
-UPDATE `{PREFIX}site_content` set `alias_visible`='1;'
+ALTER TABLE `{PREFIX}site_content` ADD `alias_visible` INT( 2 ) NOT NULL DEFAULT '1';
+
+UPDATE `{PREFIX}site_content` set `alias_visible`='1';
