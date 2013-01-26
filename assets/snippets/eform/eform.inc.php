@@ -90,7 +90,7 @@ $_dfnMaxlength = 6;
 	if( $tmp=efLoadTemplate($tpl) ) $tpl=$tmp; else return $_lang['ef_no_doc'] . " '$tpl'";
 
 	# check for valid form key
-	if ($formid=="") return $_lang['ef_error_formid'];
+    if ($formid=='') $formid = 'eform';
 
 
 	// try to get formid from <form> tag id
