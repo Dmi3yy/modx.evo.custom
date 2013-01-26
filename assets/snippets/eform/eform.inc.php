@@ -353,7 +353,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				}
 			}
 			# set postdate
-			$fields['postdate'] = strftime("%d-%b-%Y %H:%M:%S",time());
+			$fields['postdate'] = strftime($modx->toDateFormat(null, 'formatOnly') . " %H:%M:%S",time());
 
 			//check against email injection and replace suspect content
 			if( hasMailHeaders($fields) ){
