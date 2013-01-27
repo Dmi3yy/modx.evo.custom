@@ -59,7 +59,6 @@ $base_path = str_replace($mgr_dir . '/index.php','',$self);
 $site_mgr_path = $base_path . 'assets/cache/siteManager.php';
 if(is_file($site_mgr_path)) include_once($site_mgr_path);
 if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
-	define('MGR_DIR', $mgr_dir);
 	$src = "<?php\n";
 	$src .= "define('MGR_DIR', '{$mgr_dir}');\n";
 	$rs = file_put_contents($site_mgr_path,$src);
@@ -67,6 +66,9 @@ if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
 		echo 'siteManager.php write error';
 		exit;
 	}
+	sleep(1);
+	header('Location:' . $_SERVER['REQUEST_URI']);
+	exit;
 }
 
 define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
