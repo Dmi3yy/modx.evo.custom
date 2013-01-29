@@ -390,8 +390,8 @@
 
 
 </head>
-<body onClick="hideMenu(1);" class="treeframebody<?php echo $modx_textdir ? ' rtl':''?>">
-
+<body onClick="hideMenu(1);" class="<?php echo $modx_textdir ? ' rtl':''?>">
+<div class="treeframebody">
 <div id="treeSplitter"></div>
 
 <table id="treeMenu" width="100%"  border="0" cellpadding="0" cellspacing="0">
@@ -568,5 +568,6 @@ function menuHandler(action) {
     ?>
 </div>
 
+</div>
 </body>
 </html>
