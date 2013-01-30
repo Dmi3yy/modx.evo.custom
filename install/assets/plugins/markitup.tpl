@@ -9,7 +9,6 @@
  * @license 	MIT/GPL
  * @internal	@properties
  * @internal	@events OnRichTextEditorRegister,OnRichTextEditorInit 
- * @internal	@modx_category Manager and Admin
  * @internal    @installset base, sample
  * @internal    @disabled 1
  *
