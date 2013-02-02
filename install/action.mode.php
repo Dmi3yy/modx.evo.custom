@@ -18,7 +18,7 @@ if (file_exists("../".MGR_DIR."/includes/config.inc.php")) {
             $upgradeable = 1;
         }
     } else {
-        $upgradeable= 0;
+        $upgradeable= 2;
     }
 }
 ?>
