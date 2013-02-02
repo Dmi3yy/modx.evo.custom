@@ -17,35 +17,10 @@ if (!$tvv || $tvv=='[]') return;
 $fotoArr=json_decode($tvv);
 $fotoRes=array();
 $num=1;
-if (!class_exists('PHxParser'))include_once(MODX_BASE_PATH.'assets/snippets/ditto/classes/phx.parser.class.inc.php');
 foreach ($fotoArr as $v) {
-  if (is_dir($v[0])){
-    if ($dh = opendir($v[0]))
-    {
-      $output='<span class="title" style="font-size:16px">'.$v[2].'</span><br/>';
-      while ($file = readdir($dh)) {
-        if ($file!='.'&&$file!='..'&&$file[0]!='.'){
-          if (is_file($v[0].'/'.$file)){
-				    $phx = new PHxParser();
-						$phx->setPHxVariable('url',$v[0].'/'.$file);
-						$phx->setPHxVariable('num',$num);
-           	$output.= $phx->Parse($rowTpl);
-            
-            }
-          }
-        }
-      closedir($dh);
-      $fotoRes[$num] = $output.'<div style="clear:both"></div><p>&nbsp;</p><p>&nbsp;</p>';
-      $num++;
-    }
-  continue;
-	}
-	$phx = new PHxParser();
-	$phx->setPHxVariable('url',$v[0]);
-	$phx->setPHxVariable('link',$v[1]);
-	$phx->setPHxVariable('title',$v[2]);
-	$phx->setPHxVariable('num',$num);
-	$fotoRes[$num] = $phx->Parse($rowTpl);
+	$fields = array ('[+url+]','[+link+]','[+title+]','[+num+]');
+	$values = array ($v[0],$v[1],$v[2],$num);
+	$fotoRes[$num] = str_replace($fields, $values, $rowTpl);
 	$num++;
 }
 #################### PAGINATION ####################
@@ -76,6 +51,5 @@ if (!empty($pagination) && $mp_pagecount > 1){
 #####################################################
 $output = $fid ? $fotoRes[$fid] : implode('',$fotoRes);
 if (isset($random)) $output = $fotoRes[array_rand($fotoRes)];
-return $output;
-return '';
+if ($output) return str_replace('[+photos+]',$output,$outerTpl);
 ?>
