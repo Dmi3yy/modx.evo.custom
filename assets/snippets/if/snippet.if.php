@@ -93,6 +93,8 @@ for ($i=1;$i<count($opers);$i++){
         $output = ($subject %$operand==0) ? true: false;$i++;
         break;
        
+				case 'pages':$output = ($subject != '[+pages+]') ? true : false;$i++;
+					break;  
 				case '!=':
 				case 'not':$output = ($subject != $operand) ? true: false;$i++;
 					break;
