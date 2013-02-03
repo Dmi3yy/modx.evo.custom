@@ -292,6 +292,9 @@ class ditto {
 		
 		// set url placeholder
 		if (in_array("url",$this->fields["display"]["custom"])) {
+			if($resource['id']==$modx->config['site_start'])
+				$placeholders['url'] = $modx->config['site_url'];
+			else
 			$placeholders['url'] = $modx->makeURL($resource['id'],'','','full');
 		}
 
