@@ -1061,13 +1061,14 @@ class ditto {
 			$query = array();
 			foreach ($_GET as $param=>$value) {
 				if ($param != 'id' && $param != 'q') {
+					$clean_param = htmlspecialchars($param, ENT_QUOTES, $modx->config['modx_charset']);
 					if(is_array($value)) {
 					  //$query[$param] = $value;
 					  foreach($value as $key => $val) {
-              $query[htmlspecialchars($param, ENT_QUOTES, $modx->config['modx_charset'])][] = htmlspecialchars($val, ENT_QUOTES, $modx->config['modx_charset']);
+              $query[$clean_param][] = htmlspecialchars($val, ENT_QUOTES, $modx->config['modx_charset']);
             }
 					}else{
-					  $query[htmlspecialchars($param, ENT_QUOTES, $modx->config['modx_charset'])] = htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']);
+					  $query[$clean_param] = htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']);
 					}
 				}
 			}
