@@ -775,7 +775,7 @@ class ditto {
 		$tot = $modx->db->getRecordCount($rs);
 		$resourceArray = array();
 		for($i=0;$i<$tot;$i++)  {
-			$row = @$modx->fetchRow($rs);
+			$row = @$modx->db->getRow($rs);
 			$resourceArray["#".$row['contentid']][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);   
 			$resourceArray["#".$row['contentid']]["tv".$row['name']] = $resourceArray["#".$row['contentid']][$row['name']];
 		}
@@ -784,7 +784,7 @@ class ditto {
 			$query .= " FROM $tb2";
 			$query .= " WHERE name='".$tvname."' LIMIT 1";
 			$rs = $modx->db->query($query);
-			$row = @$modx->fetchRow($rs);
+			$row = @$modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
 				foreach ($docIDs as $id) {
 					$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
@@ -949,7 +949,7 @@ class ditto {
 		$TVIDs = array();
 		if ($cnt) {
 			for ($i= 0; $i < $cnt; $i++) {
-				$resource = $modx->fetchRow($result);
+				$resource = $modx->db->getRow($result);
 				if ($modx->config["server_offset_time"] != 0 && $dateSource !== false) {
 					$dateValue = (is_int($resource[$dateSource]) !== true) ? $resource[$dateSource] : strtotime($resource[$dateSource]);
 					$resource[$dateSource] = $dateValue + $modx->config["server_offset_time"];
@@ -1008,10 +1008,10 @@ class ditto {
 	                WHERE (sc.id IN (" . join($ids, ",") . ") $published AND sc.deleted=0)
 	                AND ($access)
 	                GROUP BY sc.id ";
-	        $result= $modx->dbQuery($sql);
+	        $result= $modx->db->query($sql);
 	        $resourceArray= array ();
-	        for ($i= 0; $i < @ $modx->recordCount($result); $i++) {
-	            array_push($resourceArray, @ $modx->fetchRow($result));
+	        for ($i= 0; $i < @ $modx->db->getRecordCount($result); $i++) {
+	            array_push($resourceArray, @ $modx->db->getRow($result));
 	        }
 	        return $resourceArray;
 	    }
