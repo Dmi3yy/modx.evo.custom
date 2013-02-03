@@ -1064,10 +1064,10 @@ class ditto {
 					if(is_array($value)) {
 					  //$query[$param] = $value;
 					  foreach($value as $key => $val) {
-              $query[htmlspecialchars($param, ENT_QUOTES)][] = htmlspecialchars($val, ENT_QUOTES);
+              $query[htmlspecialchars($param, ENT_QUOTES, $modx->config['modx_charset'])][] = htmlspecialchars($val, ENT_QUOTES, $modx->config['modx_charset']);
             }
 					}else{
-					  $query[htmlspecialchars($param, ENT_QUOTES)] = htmlspecialchars($value, ENT_QUOTES);
+					  $query[htmlspecialchars($param, ENT_QUOTES, $modx->config['modx_charset'])] = htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']);
 					}
 				}
 			}
