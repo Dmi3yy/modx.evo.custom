@@ -1075,11 +1075,11 @@ class ditto {
 				$args = explode("&",$args);
 				foreach ($args as $arg) {
 					$arg = explode("=",$arg);
-					$query[$dittoID.$arg[0]] = urlencode(trim($arg[1]));
+					$query[$dittoID.$arg[0]] = rawurlencode(trim($arg[1]));
 				}
 			} else {
 				foreach ($args as $name=>$value) {
-					$query[$dittoID.$name] = urlencode(trim($value));
+					$query[$dittoID.$name] = rawurlencode(trim($value));
 				}
 			}
 			$queryString = "";
