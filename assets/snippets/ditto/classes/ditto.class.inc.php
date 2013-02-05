@@ -923,6 +923,7 @@ class ditto {
 			$sort= $orderBy['sql'];
 		}
     
+    if($where!=='') $where = $modx->db->escape($where);
     //Added by Andchir (http://modx-shopkeeper.ru/)
 		if(substr($where, 0, 5)=="@SQL:"){
       $where = ($where == "") ? "" : substr(str_replace('@eq','=',$where), 5);
