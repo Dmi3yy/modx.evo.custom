@@ -220,7 +220,9 @@ $lastInstallTime = '.time().';
 $site_sessionname = \'' . $site_sessionname . '\';
 $https_port = \'443\';
 
-include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
+if (!defined('MGR_DIR')) {
+   include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
+}
 
 // automatically assign base_path and base_url
 if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'base_url\']) {
