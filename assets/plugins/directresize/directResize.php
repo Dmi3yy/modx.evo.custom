@@ -808,7 +808,7 @@ function ConvertFromBackend($o, $escape= true)
 		$o = str_replace($imgs[0][$n],$thumbImgTag,$o);	
 	}
 	$o = str_replace(DIRECTRESIZE_GALLERYDIR.$_REQUEST[id]."/wysiwyg_","", $o);
-	if ($escape) $o = mysql_escape_string($o);
+	if ($escape) $o = mysql_real_escape_string($o);
 	return $o;
 	
 }

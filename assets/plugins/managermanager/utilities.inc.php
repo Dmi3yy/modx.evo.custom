@@ -192,7 +192,7 @@ function includeCss($url, $output_type='js') {
 //	// Get the DB table names
 //	$tv_table = $modx->getFullTableName('site_tmplvars');
 //	
-//	$tv_id = mysql_escape_string($tv_id);
+//	$tv_id = mysql_real_escape_string($tv_id);
 //	
 //	$result = $modx->db->query("SELECT id FROM $tv_table tvs WHERE name = '$tv_id'");
 //	$result = $modx->db->makeArray($result);

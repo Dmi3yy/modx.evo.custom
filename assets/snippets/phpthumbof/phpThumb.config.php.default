@@ -181,7 +181,7 @@ $PHPTHUMB_CONFIG['ttf_directory'] = dirname(__FILE__).'/fonts'; // Base director
 // Note: the data retrieved must be the actual binary data of the image, not a URL or filename
 
 $PHPTHUMB_CONFIG['mysql_query'] = '';
-//$PHPTHUMB_CONFIG['mysql_query'] = 'SELECT `picture` FROM `products` WHERE (`id` = \''.mysql_escape_string(@$_GET['id']).'\')';
+//$PHPTHUMB_CONFIG['mysql_query'] = 'SELECT `picture` FROM `products` WHERE (`id` = \''.mysql_real_escape_string(@$_GET['id']).'\')';
 
 // These 4 values must be modified if $PHPTHUMB_CONFIG['mysql_query'] is not empty, but may be ignored if $PHPTHUMB_CONFIG['mysql_query'] is blank.
 $PHPTHUMB_CONFIG['mysql_hostname'] = 'localhost';
