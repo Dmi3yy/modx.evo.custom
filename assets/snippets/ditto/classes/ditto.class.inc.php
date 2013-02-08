@@ -849,53 +849,19 @@ class ditto {
 	// ---------------------------------------------------
 	// Function: getChildIDs
 	// Get the IDs ready to be processed
-	// Similar to the modx version by the same name but much faster
+
 	// ---------------------------------------------------
 
-	function getChildIDs($IDs, $depth) {
+    function getChildIDs($IDs, $depth) {
 		global $modx;
 		$depth = intval($depth);
 		$kids = array();
 		$docIDs = array();
-		
-		if ($depth == 0 && $IDs[0] == 0 && count($IDs) == 1) {
-			foreach ($modx->documentMap as $null => $document) {
-				foreach ($document as $parent => $id) {
-					$kids[] = $id;
-				}
-			}
-			return $kids;
-		} else if ($depth == 0) {
-			$depth = 10000;
-				// Impliment unlimited depth...
+		//	RedCat
+		foreach($IDs as $id) {
+			$kids   = $modx->getChildIds($id,$depth);
+			$docIDs = array_merge($docIDs,$kids);
 		}
-		
-		foreach ($modx->documentMap as $null => $document) {
-			foreach ($document as $parent => $id) {
-				$kids[$parent][] = $id;
-			}
-		}
-
-		foreach ($IDs AS $seed) {
-			if (!empty($kids[intval($seed)])) {
-				$docIDs = array_merge($docIDs,$kids[intval($seed)]);
-				unset($kids[intval($seed)]);
-			}
-		}
-		$depth--;
-
-		while($depth != 0) {
-			$valid = $docIDs;
-			foreach ($docIDs as $child=>$id) {
-				if (!empty($kids[intval($id)])) {
-					$docIDs = array_merge($docIDs,$kids[intval($id)]);
-					unset($kids[intval($id)]);
-				}
-			}
-			$depth--;
-			if ($valid == $docIDs) $depth = 0;
-		}
-
 		return array_unique($docIDs);
 	}
 
