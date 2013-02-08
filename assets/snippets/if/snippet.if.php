@@ -31,15 +31,15 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 **
 **  Пример №6
 **  Выводить при кратности записи дитто 3
-**  [[if?is=`[+ditto_itteration+]:%:3` &then=`true` &else=`false`]]
+**  [[if?is=`[+ditto_iteration+]:%:3` &then=`true` &else=`false`]]
 **
 **  Пример №7
 **  Выводить при кратности записи дитто 3 но с умножением значения
-**  [[if?is=`[+ditto_itteration+]*2:%:3` &then=`true` &else=`false` &math=`on`]]
+**  [[if?is=`[+ditto_iteration+]*2:%:3` &then=`true` &else=`false` &math=`on`]]
 **
 **  Пример №8
 **  Выводить значение математического выражения
-**  [[if?is=`[+ditto_itteration+]*2` &math=`on`]]
+**  [[if?is=`[+ditto_iteration+]*2` &math=`on`]]
 **
 **  только с пропатченым парсером MODx:
 **  [[if?is=`[*id*]:>:2` &then=`<a href="[~[*id*]~]">[*pagetitle*]</a>`]]
