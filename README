@@ -1,5 +1,6 @@
-текущая версии 1.0.8-d4+  (17.01.2013)
+текущая версии 1.0.8-d4.1  (10.02.2013)
 
+1.0.8-d4.1  (10.02.2013)
 ========================================================
 - плагин tvs-on-template (позволяет прям в шаблоне указывать какие тв к нему относяться)
 - удалил phx из multiPhotos
@@ -52,7 +53,7 @@
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 ========================================================
-modx1.0.6-d1
+1.0.6-d1 (20.09.2012)
 Для апдейта нужно сначала выполнить запрос: 
 ALTER TABLE  `modx_site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT  '1'
  
@@ -173,6 +174,4 @@ ALTER TABLE  `modx_site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT 
 -тема по умолчанию MOdxCarbonEvoRevo
 
 //////
-
-потестить галерею http://modx-store.ru/
 добавить diff плагин 
