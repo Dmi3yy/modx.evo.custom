@@ -735,7 +735,6 @@ class DocumentParser {
     // mod by Raymond
     function mergeDocumentContent($template) {
         $replace= array ();
-		$template=$this->mergeSettingsContent($template);
         preg_match_all('~\[\*(.*?)\*\]~', $template, $matches);
         $variableCount= count($matches[1]);
         $basepath= MODX_MANAGER_PATH . "/includes";
@@ -753,7 +752,6 @@ class DocumentParser {
             $replace[$i]= $value;
         }
         $template= str_replace($matches[0], $replace, $template);
-		$template=$this->mergeSettingsContent($template);
         return $template;
     }
 
@@ -775,7 +773,6 @@ class DocumentParser {
     function mergeChunkContent($content) {
         $replace= array ();
         $matches= array ();
-		$content=$this->mergeSettingsContent($content);
         if (preg_match_all('~{{(.*?)}}~', $content, $matches)) {
             $settingsCount= count($matches[1]);
             for ($i= 0; $i < $settingsCount; $i++) {
@@ -1291,21 +1288,27 @@ function evalSnippets($documentSource)
             $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
             $source= $this->documentOutput;
 
+			$source = $this->mergeSettingsContent($source);
+			
             // combine template and document variables
             $source= $this->mergeDocumentContent($source);
 			
-            // replace settings referenced in document
-            $source= $this->mergeSettingsContent($source);
+			$source = $this->mergeSettingsContent($source);
 			
             // replace HTMLSnippets in document
             $source= $this->mergeChunkContent($source);
 			
-	    // insert META tags & keywords
-	    $source= $this->mergeDocumentMETATags($source);
-            // find and merge snippets
-            $source= $this->evalSnippets($source);
+			// insert META tags & keywords
+			$source= $this->mergeDocumentMETATags($source);
+            
+			// find and merge snippets
+            $source = $this->evalSnippets($source);
+			
             // find and replace Placeholders (must be parsed last) - Added by Raymond
             $source= $this->mergePlaceholderContent($source);
+			
+			$source = $this->mergeSettingsContent($source);
+			
             if ($this->dumpSnippets == 1) {
                 echo "</div></fieldset><br />";
             }
