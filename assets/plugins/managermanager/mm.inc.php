@@ -155,6 +155,8 @@ foreach ($all_tvs as $thisTv){
 if (!function_exists('make_changes')){
 	function make_changes($chunk){
 		global $modx;	// Global modx object
+		global $content;
+
 		$config_file = $modx->config['base_path'].'assets/plugins/managermanager/mm_rules.inc.php';
 		
 		// See if there is any chunk output (e.g. it exists, and is not empty)
