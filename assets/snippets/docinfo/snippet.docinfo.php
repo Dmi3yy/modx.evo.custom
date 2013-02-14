@@ -23,7 +23,7 @@
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 $docid = (isset($docid) && (int)$docid>0) ? (int)$docid : $modx->documentIdentifier;
 $field = (isset($field)) ? $field : 'pagetitle';
-$render = ) ? $render : 0;
+$render = (isset($render)) ? $render : 0;
 $output = '';
 if(isset($tv) && 1==$tv){
         if(isset($render) && 1==$render){
