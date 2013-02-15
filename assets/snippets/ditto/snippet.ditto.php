@@ -1078,6 +1078,15 @@ if ($debug == 1) {
         $output = $ditto->debug->render_link($dittoID,$ditto_base).$output;
     }
 }
+//outerTpl by Dmi3yy
+if ($outerTpl && $resource) { 
+  if ($modx->getChunk($outerTpl) != "") {
+                        $outerTpl = $modx->getChunk($outerTpl);
+        } else if(substr($outerTpl, 0, 5) == "@CODE") {
+                        $outerTpl = trim(substr($outerTpl, 6));
+        } 
+  $output = str_replace('[+ditto+]',$output,$outerTpl);
+}
 
 return ($save != 3) ? $output : "";
 ?>
