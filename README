@@ -1,11 +1,11 @@
 Сборка обзавеласть собственным сайтом: http://modx.com.ua
 
-текущая версии 1.0.8-d4.1  (10.02.2013)
-
+текущая версии 1.0.8-d4.2  (**.02.2013)
 =======================================================
 - добавлен параметр outerTpl в Ditto (http://modx.im/blog/triks/414.html)
 - добавлен placeholder [+ditto_class+] в Ditto (http://modx.im/blog/triks/416.html)
 - delete CacheExtender
+- refactor exec mergeSettingsContent() Для использования системных плейсхолдеров не только в шаблонах и чанках
 
 
 
