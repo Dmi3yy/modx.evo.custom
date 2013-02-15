@@ -725,7 +725,10 @@ class DocumentParser {
 	    // Don't process when cached
 	    $this->documentObject['hasmetatags'] = '0';
         }
-	if ($metas) $template = preg_replace("/(<head>)/i", "\\1\n\t" . trim($metas), $template);
+		if ($metas){
+			$template = preg_replace("/(<head>)/i", "\\1\n\t" . trim($metas), $template);
+			$template=$this->mergeSettingsContent($template);
+		}
         return $template;
     }
 
@@ -749,7 +752,6 @@ class DocumentParser {
             $replace[$i]= $value;
         }
         $template= str_replace($matches[0], $replace, $template);
-
         return $template;
     }
 
@@ -791,6 +793,7 @@ class DocumentParser {
                 }
             }
             $content= str_replace($matches[0], $replace, $content);
+			$content=$this->mergeSettingsContent($content);
         }
         return $content;
     }
@@ -799,6 +802,7 @@ class DocumentParser {
     function mergePlaceholderContent($content) {
         $replace= array ();
         $matches= array ();
+		$content=$this->mergeSettingsContent($content);
         if (preg_match_all('~\[\+(.*?)\+\]~', $content, $matches)) {
             $cnt= count($matches[1]);
             for ($i= 0; $i < $cnt; $i++) {
@@ -871,10 +875,12 @@ function evalSnippets($documentSource)
 		$stack = $documentSource;
 		unset($documentSource);
 		
+		
 		$passes = $this->minParserPasses;
 		
 		for($i= 0; $i < $passes; $i++)
 		{
+			$stack=$this->mergeSettingsContent($stack);
 			if($i == ($passes -1)) $bt = md5($stack);
 			$pieces = array();
 			$pieces = explode('[[', $stack);
@@ -1282,18 +1288,27 @@ function evalSnippets($documentSource)
             $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
             $source= $this->documentOutput;
 
+			$source = $this->mergeSettingsContent($source);
+			
             // combine template and document variables
             $source= $this->mergeDocumentContent($source);
-            // replace settings referenced in document
-            $source= $this->mergeSettingsContent($source);
+			
+			$source = $this->mergeSettingsContent($source);
+			
             // replace HTMLSnippets in document
             $source= $this->mergeChunkContent($source);
-	    // insert META tags & keywords
-	    $source= $this->mergeDocumentMETATags($source);
-            // find and merge snippets
-            $source= $this->evalSnippets($source);
+			
+			// insert META tags & keywords
+			$source= $this->mergeDocumentMETATags($source);
+            
+			// find and merge snippets
+            $source = $this->evalSnippets($source);
+			
             // find and replace Placeholders (must be parsed last) - Added by Raymond
             $source= $this->mergePlaceholderContent($source);
+			
+			$source = $this->mergeSettingsContent($source);
+			
             if ($this->dumpSnippets == 1) {
                 echo "</div></fieldset><br />";
             }
