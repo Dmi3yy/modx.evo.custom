@@ -1026,7 +1026,7 @@ if ($count > 0) {
         for ($x=$start;$x<$stop;$x++) {
             $template = $ditto->template->determine($templates,$x,0,$stop,$resource[$x]["id"]);
                 // choose the template to use and set the code of that template to the template variable
-            $renderedOutput = $ditto->render($resource[$x], $template, $removeChunk, $dateSource, $dateFormat, $placeholders,$phx,abs($start-$x));
+            $renderedOutput = $ditto->render($resource[$x], $template, $removeChunk, $dateSource, $dateFormat, $placeholders,$phx,abs($start-$x),$stop);
                 // render the output using the correct template, in the correct format and language
             $modx->setPlaceholder($dittoID."item[".abs($start-$x)."]",$renderedOutput);
             /*
