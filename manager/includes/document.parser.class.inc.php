@@ -47,7 +47,8 @@ class DocumentParser {
     var $documentMap;
     var $forwards= 3;
     var $aliasListing;
-
+    var $ext=array(); //for custom loadExtension
+    
     // constructor
     function DocumentParser() {
         $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
@@ -85,10 +86,48 @@ class DocumentParser {
                 break;
 
             default :
-                return false;
+                return $this->_loadExtension(func_get_args());
+        }
+    }
+    
+    public function __set($name, $value){
+        if(is_object($value)){
+            $this->ext[$name]=$value;
+        }else{
+            $trace = debug_backtrace();
+            trigger_error("No var <strong>{$name}</strong> in {$trace[0]['file']}:{$trace[0]['line']} on class ${__CLASS__}", E_USER_ERROR);
         }
     }
 
+    /*
+     * @param array $args параметры загрузки нового класса
+     *      $args[0] Имя файла без .php расширения
+     *      $args[1] Название класса    (по умолчанию берется значение $args[0])
+     *      $args[2] Индекс для массива (по умолчанию берется значение $args[1])
+     * @return boolean статус загрузки нового класса
+     *      Новый класс помещается в индекс $args[2] массива self::$ext
+     */
+    private function _loadExtension(array $args){
+        if(preg_match("/[\/|\\\]/",$args[0])) return false;
+        $flag=false;
+        $name = $args[0];
+        $class = (isset($args[1])) ? $args[1] : $name;
+        if(!class_exists($class,false)){
+            $name = MODX_MANAGER_PATH . "/includes/extenders/custom/". strtolower($name).".php";
+            include_once($name);
+        }
+        if(class_exists($class,false)){
+            $var = isset($args[2]) ? $args[2] : $class;
+            $tmp = new $class;
+            if(is_object($tmp)){
+                  $this->$var = $tmp;
+                    $flag=true;
+            }
+            unset($tmp,$var,$name,$class);
+        }
+        return $flag;
+    }
+    
     function getMicroTime() {
         list ($usec, $sec)= explode(' ', microtime());
         return ((float) $usec + (float) $sec);
