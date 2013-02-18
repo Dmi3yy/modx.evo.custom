@@ -46,6 +46,7 @@ class DocumentParser {
     var $loadedjscripts;
     var $documentMap;
     var $forwards= 3;
+    var $aliasListing;
 
     // constructor
     function DocumentParser() {
