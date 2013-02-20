@@ -100,7 +100,7 @@ class DocumentParser {
                 return $this->_loadExtension(func_get_args());
         }
     }
-    
+    /* comment by Dmi3yy
     public function __set($name, $value){
         if(is_object($value)){
             $this->ext[$name]=$value;
@@ -109,7 +109,7 @@ class DocumentParser {
             trigger_error("No var <strong>{$name}</strong> in {$trace[0]['file']}:{$trace[0]['line']} on class ${__CLASS__}", E_USER_ERROR);
         }
     }
-
+    */
     /*
      * @param array $args параметры загрузки нового класса
      *      $args[0] Имя файла без .php расширения
