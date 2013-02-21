@@ -9,7 +9,6 @@
 - delete CacheExtender
 - refactor exec mergeSettingsContent Для использования системных плейсхолдеров не только в шаблонах и чанках
 - добавлен плагин CfgTv 0.1  (http://modx.im/blog/addons/425.html)
-- Custom loadExtension
 - fix phpthumb for php5.4
 
 
