@@ -47,6 +47,7 @@ class DocumentParser {
     var $documentMap;
     var $forwards= 3;
     var $aliasListing;
+<<<<<<< HEAD
     var $ext=array(); //for custom loadExtension
     
     /**
@@ -55,6 +56,11 @@ class DocumentParser {
      * @return DocumentParser
      */
     function __construct() {
+=======
+
+    // constructor
+    function DocumentParser() {
+>>>>>>> parent of d33e1ec... Custom loadExtension
         $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
         $this->dbConfig= & $this->db->config; // alias for backward compatibility
         $this->jscripts= array ();
@@ -97,10 +103,11 @@ class DocumentParser {
                 break;
 
             default :
-                return $this->_loadExtension(func_get_args());
+                return false;
         }
     }
-    /* comment by Dmi3yy
+<<<<<<< HEAD
+    
     public function __set($name, $value){
         if(is_object($value)){
             $this->ext[$name]=$value;
@@ -109,7 +116,7 @@ class DocumentParser {
             trigger_error("No var <strong>{$name}</strong> in {$trace[0]['file']}:{$trace[0]['line']} on class ${__CLASS__}", E_USER_ERROR);
         }
     }
-    */
+
     /*
      * @param array $args параметры загрузки нового класса
      *      $args[0] Имя файла без .php расширения
@@ -144,6 +151,9 @@ class DocumentParser {
      *
      * @return float
      */
+=======
+
+>>>>>>> parent of d33e1ec... Custom loadExtension
     function getMicroTime() {
         list ($usec, $sec)= explode(' ', microtime());
         return ((float) $usec + (float) $sec);
