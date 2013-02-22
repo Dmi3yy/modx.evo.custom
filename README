@@ -10,6 +10,7 @@
 - refactor exec mergeSettingsContent Для использования системных плейсхолдеров не только в шаблонах и чанках
 - добавлен плагин CfgTv 0.1  (http://modx.im/blog/addons/425.html)
 - fix phpthumb for php5.4
+- update distinct extender for Ditto Evo to 1.0.2 version (http://modx.com/extras/package/distinctdittoextender)
 
 
 
