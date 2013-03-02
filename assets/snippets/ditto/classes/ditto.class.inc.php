@@ -1028,7 +1028,7 @@ class ditto {
 	// Build a URL with regard to Ditto ID
 	// ---------------------------------------------------
 	
-	function buildURL($args,$id=false,$dittoIdentifier=false) {
+	public static function buildURL($args,$id=false,$dittoIdentifier=false) {
 		global $modx, $dittoID;
 			$dittoID = ($dittoIdentifier !== false) ? $dittoIdentifier : $dittoID;
 			$query = array();
