@@ -2,7 +2,7 @@
 Так же рекоменую скачивать сборку с сайта так как на гитхаб не всегда стабильный релиз!!!
 
 
-текущая версии 1.0.8-d4.2  (**.02.2013)
+текущая версии 1.0.9-d5 BETA  (**.03.2013)
 =======================================================
 - добавлен параметр outerTpl в Ditto (http://modx.im/blog/triks/414.html)
 - добавлен placeholder [+ditto_class+] в Ditto (http://modx.im/blog/triks/416.html)
@@ -12,7 +12,9 @@
 - fix phpthumb for php5.4
 - update distinct extender for Ditto Evo to 1.0.2 version (http://modx.com/extras/package/distinctdittoextender)
 - исправленна ошибка в DocInfo ( "$render = )" )
-
+- ManagerManger откатил до 0.3.11
+- ManagerManager исправленна проблема с переносом CustomTV в отдельные вкладки
+- add customTv choiceTv (http://modx.im/blog/triks/489.html)
 
 
 1.0.8-d4.1  (10.02.2013)
