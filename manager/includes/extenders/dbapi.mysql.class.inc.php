@@ -118,14 +118,9 @@ class DBAPI {
 
    function escape($s) {
       if (empty ($this->conn) || !is_resource($this->conn)) {
-         $this->connect();
-      }
-      if (function_exists('mysql_real_escape_string') && $this->conn) {
-         $s = mysql_real_escape_string($s, $this->conn);
-      } else {
-         $s = mysql_real_escape_string($s);
-      }
-      return $s;
+        $this->connect();
+      } 
+      return mysql_real_escape_string($s, $this->conn);
    }
 
    /**

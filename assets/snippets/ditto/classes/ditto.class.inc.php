@@ -511,7 +511,7 @@ class ditto {
 	// Get the author name, or if not available the username
 	// ---------------------------------------------------
 	
-	function getAuthor($createdby) {
+	public static function getAuthor($createdby) {
 		global $modx;
 		
 		$user = false;
