@@ -20,6 +20,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ( isset($hideUnder) ) ? $hideUnder : $hideUnder = '';
 ( isset($stopIds) ) ? $stopIds : $stopIds = '';
 ( isset($ignoreIds) ) ? $ignoreids : $ignoreids = '';
+( isset($crumbSeparator) ) ? $separator = $crumbSeparator : $separator = ' &raquo; ';
 ( isset($separator) ) ? $separator : $separator = ' &raquo; ';
 $templates = array(
     'defaultString' => array(
