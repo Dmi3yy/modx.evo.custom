@@ -315,11 +315,11 @@ class ditto {
 		}
 		
 		if (in_array("content",$this->fields["display"]["db"]) && $this->format != "html") {
-			$resource['content'] = $this->relToAbs($resource['content'], $modx->config['site_url']);
+			$placeholders['content'] = $this->relToAbs($resource['content'], $modx->config['site_url']);
 		}
 		
 		if (in_array("introtext",$this->fields["display"]["db"]) && $this->format != "html") {
-			$resource['introtext'] = $this->relToAbs($resource['introtext'], $modx->config['site_url']);
+			$placeholders['introtext'] = $this->relToAbs($resource['introtext'], $modx->config['site_url']);
 		}
 		
 		$customPlaceholders = $ph;
