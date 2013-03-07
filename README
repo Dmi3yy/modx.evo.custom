@@ -2,7 +2,7 @@
 Так же рекоменую скачивать сборку с сайта так как на гитхаб не всегда стабильный релиз!!!
 
 
-текущая версии 1.0.9-d5 BETA  (**.03.2013)
+текущая версии 1.0.9-d5 BETA  (08.03.2013)
 =======================================================
 - добавлен параметр outerTpl в Ditto (http://modx.im/blog/triks/414.html)
 - добавлен placeholder [+ditto_class+] в Ditto (http://modx.im/blog/triks/416.html)
@@ -15,6 +15,38 @@
 - ManagerManger откатил до 0.3.11
 - ManagerManager исправленна проблема с переносом CustomTV в отдельные вкладки
 - add customTv choiceTv (http://modx.im/blog/triks/489.html)
+- fix folder .thumbs (теперь папка создается по умолчанию но для нее нужно все равно выставлять права на запить)
+- fix crumbSeparator and separator to BreadCrumbs (параметр для хлебных крошек поправлен)
+- tinyMCE youtube in full mode (добавил кнопу YouTube в Full - режиме
+- add caption for TV in tv-list (теперь на страничке всех ТВ у них отображается не только описание но и название)
+- настроил RSS на modx.com.ua что б транслировать новости сборки и новости modx evo
+
+то что должно войти в официальный релиз modx 1.0.9
+- DocumentParser - remove all unused multiline placeholders
+- Bug #7204 In eFormParseTemplate $formats and $labels
+- Bug #9398 eForm & php 5.3
+- Bug #6119 The function sendMailMessage in save_web_user.processor.php
+- Bug #7459 Deprecated function 'split'
+- Bug #3724 Magic GPC Quotes issue in PHP 5.3.*
+- Bug #5807 manager.lockout not styled properly
+- Bug #4484 bug in wait.static.php
+- Refactor #5971 Check whether manager template exists during manager
+- Bug #3835 Multiple call wayfinder with config, not load config
+- Bug #3689 Ditto relative to absolute url bug 
+- Bug #3495 Mistake in phpSniff.core.php
+- Better modx_sanitize_gpc
+- prevent LFI if not in manager mode (поправил немного но уже было раньше в сборке) спасибо Agel_Nash
+- Better modx_sanitize_gpc (Важное исправление для безопасности) спасибо Agel_Nash и Jako
+- [#9563] onManagerMainFrameHeaderHTMLBlock event
+- OnWUsrFormRender event adjustment
+- Refactor #9567 Add "limit" option to $modx->db->delete()
+- Improvement to full table name call
+- Refactor #9583 Refactoring System configuration in manager screen
+- Refactor #9570 Detailed log message
+- Feature #9582 Add new config "Detection level of the PHP error"
+
+
+
 
 
 1.0.8-d4.1  (10.02.2013)
