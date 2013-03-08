@@ -12,7 +12,15 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
     $pluginsql = $resourceTable == 'site_plugins' ? $tablePre.$resourceTable.'`.disabled, ' : '';
     $tvsql = $resourceTable == 'site_tmplvars' ? $tablePre.$resourceTable.'`.caption, ' : '';
     
-    $orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
+    //$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
+
+    if ($resourceTable == 'site_plugins' || $resourceTable == 'site_tmplvars') {
+        $orderby= '6,2';
+    }else{
+        $orderby= '5,1';
+    }
+
+    
     $sql = 'SELECT '.$pluginsql.$tvsql.$tablePre.$resourceTable.'`.'.$nameField.' as name, '.$tablePre.$resourceTable.'`.id, '.$tablePre.$resourceTable.'`.description, '.$tablePre.$resourceTable.'`.locked, if(isnull('.$tablePre.'categories`.category),\''.$_lang['no_category'].'\','.$tablePre.'categories`.category) as category FROM '.$tablePre.$resourceTable.'` left join '.$tablePre.'categories` on '.$tablePre.$resourceTable.'`.category = '.$tablePre.'categories`.id ORDER BY '.$orderby;
 
     $rs = $modx->db->query($sql);
