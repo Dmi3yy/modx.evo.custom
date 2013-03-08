@@ -1109,10 +1109,10 @@ $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Минимальный пропущенный ID';
 $_lang["docid_incrmnt_method_2"] = 'Максимальный ID+1';
 
-$_lang['a17_error_reporting_title'] = 'Detection level of the PHP error';
-$_lang['a17_error_reporting_msg'] = 'Set the detection level of the PHP error.';
-$_lang['a17_error_reporting_opt0'] = 'Ignore all';
-$_lang['a17_error_reporting_opt1'] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang['a17_error_reporting_opt2'] = 'Detect all errors except E_NOTICE';
-$_lang['a17_error_reporting_opt99'] = 'Detect all';
+$_lang['a17_error_reporting_title'] = 'Обнаружение уровня ошибки РНР';
+$_lang['a17_error_reporting_msg'] = 'Набор обнаружения уровня ошибок РНР';
+$_lang['a17_error_reporting_opt0'] = 'Игнорировать все';
+$_lang['a17_error_reporting_opt1'] = 'Игнорировать предупреждения о незначительных ошибках(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang['a17_error_reporting_opt2'] = 'Обнаружить все ошибки кроме E_NOTICE';
+$_lang['a17_error_reporting_opt99'] = 'Обнаружить все';
 ?>
