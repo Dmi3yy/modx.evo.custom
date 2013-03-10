@@ -76,7 +76,7 @@ if($limit==0 || $limit>1) {
     return;
 }
 
-$row = mysql_fetch_assoc($rs);
+$row = $modx->db->getRow($rs);
 
 $internalKey            = $row['internalKey'];
 $dbasePassword          = $row['password'];
@@ -94,7 +94,7 @@ $email                  = $row['email'];
 // get the user settings from the database
 $sql = "SELECT setting_name, setting_value FROM $dbase.`".$table_prefix."user_settings` WHERE user='".$internalKey."' AND setting_value!=''";
 $rs = mysql_query($sql);
-while ($row = mysql_fetch_assoc($rs)) {
+while ($row = $modx->db->getRow($rs)) {
     ${$row['setting_name']} = $row['setting_value'];
 }
 // blocked due to number of login errors.
@@ -108,7 +108,7 @@ if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
 // blocked due to number of login errors, but get to try again
 if($failedlogins>=$failed_allowed && $blockeduntildate<time()) { 
     $sql = "UPDATE $dbase.`".$table_prefix."user_attributes` SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
-    $rs = mysql_query($sql);
+    $rs = $modx->db->query($sql);
 }
 
 // this user has been blocked by an admin, so no way he's loggin in!
@@ -197,7 +197,7 @@ if($newloginerror) {
     if($failedlogins>=$failed_allowed) { 
 		//block user for too many fail attempts
         $sql = "update $dbase.`".$table_prefix."user_attributes` SET blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
-        $rs = mysql_query($sql);
+        $rs = $modx->db->query($sql);
     } else {
 		//sleep to help prevent brute force attacks
         $sleep = (int)$failedlogins/2;
