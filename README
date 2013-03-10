@@ -34,6 +34,7 @@
 - Bug #3835 Multiple call wayfinder with config, not load config
 - Bug #3689 Ditto relative to absolute url bug 
 - Bug #3495 Mistake in phpSniff.core.php
+- Bug #9586 Quick Manager and system setting Automatic Template Assignment
 - Better modx_sanitize_gpc
 - prevent LFI if not in manager mode (поправил немного но уже было раньше в сборке) спасибо Agel_Nash
 - Better modx_sanitize_gpc (Важное исправление для безопасности) спасибо Agel_Nash и Jako
@@ -44,6 +45,7 @@
 - Refactor #9583 Refactoring System configuration in manager screen
 - Refactor #9570 Detailed log message
 - Feature #9582 Add new config "Detection level of the PHP error"
+
 
 
 
