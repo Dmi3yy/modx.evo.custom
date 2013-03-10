@@ -37,6 +37,7 @@
 - Bug #3495 Mistake in phpSniff.core.php
 - Bug #9586 Quick Manager and system setting Automatic Template Assignment
 - Bug #9620 Set Manager language in Create/Edit User
+- Bug #8339 LFI in install
 - Better modx_sanitize_gpc
 - prevent LFI if not in manager mode (поправил немного но уже было раньше в сборке) спасибо Agel_Nash
 - Better modx_sanitize_gpc (Важное исправление для безопасности) спасибо Agel_Nash и Jako
