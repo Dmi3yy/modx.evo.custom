@@ -1113,4 +1113,11 @@ $_lang['a17_error_reporting_opt0'] = 'Ignore all';
 $_lang['a17_error_reporting_opt1'] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang['a17_error_reporting_opt2'] = 'Detect all errors except E_NOTICE';
 $_lang['a17_error_reporting_opt99'] = 'Detect all';
+
+$_lang['email_method_title'] = 'Sendmail method';
+$_lang['email_method_mail'] = 'mail().';
+$_lang['email_method_smtp'] = 'SMTP.';
+$_lang['email_host_title'] = 'smtp host';
+$_lang['email_pass_title'] = 'smtp password';
+
 ?>

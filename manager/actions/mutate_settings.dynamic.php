@@ -826,10 +826,39 @@ function confirmLangChange(el, lkey, elupd){
             <td nowrap class="warning"><b><?php echo $_lang["emailsender_title"] ?></b></td>
             <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="emailsender" value="<?php echo isset($emailsender) ? $emailsender : "you@example.com" ; ?>" /></td>
           </tr>
-          <tr>
+           <tr>
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["emailsender_message"] ?></td>
           </tr>
+
+          <!--for smtp-->
+
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["email_method_title"] ?></b></td>
+            <td> <input onchange="documentDirty=true;" type="radio" name="email_method" value="mail" <?php echo ($email_method=='mail' || !isset($email_method)) ? 'checked="checked"' : "" ;?> />
+              <?php echo $_lang["email_method_mail"]?><br />
+              <input onchange="documentDirty=true;" type="radio" name="email_method" value="smtp" <?php echo ($email_method=='smtp') ? 'checked="checked"' : "" ;?> />
+              <?php echo $_lang["email_method_smtp"]?> </td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["email_host_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="email_host" value="<?php echo isset($email_host) ? $email_host : "smtp.example.com" ; ?>" /></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["email_pass_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="email_pass" value="<?php echo isset($email_pass) ? $email_pass : "xxxxxx" ; ?>" /></td>
+          </tr>
+          <!--/-->
+
           <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>

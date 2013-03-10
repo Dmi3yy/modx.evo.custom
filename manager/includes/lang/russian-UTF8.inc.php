@@ -1115,4 +1115,10 @@ $_lang['a17_error_reporting_opt0'] = 'Игнорировать все';
 $_lang['a17_error_reporting_opt1'] = 'Игнорировать предупреждения о незначительных ошибках(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang['a17_error_reporting_opt2'] = 'Обнаружить все ошибки кроме E_NOTICE';
 $_lang['a17_error_reporting_opt99'] = 'Обнаружить все';
+
+$_lang['email_method_title'] = 'Метод отправки писем';
+$_lang['email_method_mail'] = 'MAIL - ообщения отправляются с помощью функции mail().';
+$_lang['email_method_smtp'] = 'SMTP - сообщения отправляются почтовым сервером, реквизиты которого нужно указать ниже.';
+$_lang['email_host_title'] = 'Адрес SMTP-сервера';
+$_lang['email_pass_title'] = 'SMTP пароль';
 ?>

@@ -20,6 +20,7 @@
 - tinyMCE youtube in full mode (добавил кнопу YouTube в Full - режиме
 - add caption for TV in tv-list (теперь на страничке всех ТВ у них отображается не только описание но и название)
 - настроил RSS на modx.com.ua что б транслировать новости сборки и новости modx evo
+- обновил phpmailer до 5.2.4
 
 то что должно войти в официальный релиз modx 1.0.9
 - DocumentParser - remove all unused multiline placeholders
