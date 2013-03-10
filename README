@@ -50,7 +50,6 @@
 - Feature #9566 Improvement to full table name call
 
 //awaiting integration
-	 Use DBAPI
 	 New feature - Add salt string to password
 	 Refactor #9568 @Bindings enable/disable option in System configuration
 
