@@ -156,6 +156,7 @@ class DBAPI {
       if (!$from)
          return false;
       else {
+         $from = $this->replaceFullTableName($from);
          if($where != '') $where = "WHERE {$where}";
          if($orderby !== '') $orderby = "ORDER BY {$orderby}";
          if($limit != '') $limit = "LIMIT {$limit}";
@@ -171,11 +172,11 @@ class DBAPI {
       if (!$from)
          return false;
       else {
-         $table = $from;
+         $from = $this->replaceFullTableName($from);
          $where = ($where != "") ? "WHERE $where" : "";
          $orderby = ($orderby != "") ? "ORDER BY $orderby " : "";
          $limit = ($limit != "") ? "LIMIT $limit" : "";
-         return $this->query("SELECT $fields FROM $table $where $orderby $limit");
+         return $this->query("SELECT $fields FROM $from $where $orderby $limit");
       }
    }
 
@@ -187,6 +188,7 @@ class DBAPI {
       if (!$table)
          return false;
       else {
+         $table = $this->replaceFullTableName($table);
          if (!is_array($fields))
             $flds = $fields;
          else {
@@ -219,11 +221,13 @@ class DBAPI {
             $flds = "(" . implode(",", $keys) . ") " .
              (!$fromtable && $values ? "VALUES('" . implode("','", $values) . "')" : "");
             if ($fromtable) {
+               $fromtable = $this->replaceFullTableName($fromtable);
                $where = ($where != "") ? "WHERE $where" : "";
                $limit = ($limit != "") ? "LIMIT $limit" : "";
                $sql = "SELECT $fromfields FROM $fromtable $where $limit";
             }
          }
+         $intotable = $this->replaceFullTableName($intotable);
          $rt = $this->query("INSERT INTO $intotable $flds $sql");
          $lid = $this->getInsertId();
          return $lid ? $lid : $rt;

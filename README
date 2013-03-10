@@ -47,6 +47,7 @@
 - Refactor #9570 Detailed log message
 - Feature #9582 Add new config "Detection level of the PHP error"
 - Feature #9615 Add new function for documentParser "$modx->nicesize()"
+- Feature #9566 Improvement to full table name call
 
 //awaiting integration
 	 Use DBAPI
