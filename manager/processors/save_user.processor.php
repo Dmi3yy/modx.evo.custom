@@ -490,7 +490,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = save_user_quoted_printable($message);
 
     if ($modx->config['email_method'] == 'smtp') {
-        include_once MODX_MANAGER_PATH . "/includes/controls/class.phpmailer.php";
+        include_once MODX_MANAGER_PATH . "includes/controls/class.phpmailer.php";
         $mail = new PHPMailer();
         
         $mail->IsSMTP();// отсылать используя SMTP

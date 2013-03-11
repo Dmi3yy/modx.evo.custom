@@ -209,7 +209,7 @@ if(is_array($evtOut)) {
 }
 
 // load template file
-$customWelcome = MODX_MANAGER_PATH.'/media/style/'.$modx->config['manager_theme'] .'/welcome.html';
+$customWelcome = MODX_MANAGER_PATH.'media/style/'.$modx->config['manager_theme'] .'/welcome.html';
 if( is_readable($customWelcome) ) {
     $tplFile = $customWelcome;
 } else {
