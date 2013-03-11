@@ -53,10 +53,21 @@
       $adminEmail = $modx->config['emailsender'];
       require_once(MODX_MANAGER_PATH . "includes/controls/class.phpmailer.php");
       $mail = new PHPMailer();
-      $mail->IsMail();
+      //add smtp method by Dmi3yy
+      if ($modx->config['email_method'] == 'smtp') {
+          $mail->IsSMTP();// отсылать используя SMTP
+          $mail->Host  = $modx->config['email_host']; // SMTP сервер
+          $mail->SMTPAuth = true;  // включить SMTP аутентификацию
+          $mail->Username = $modx->config['email_smtp_sender']; // SMTP username
+          $mail->Password = $modx->config['email_pass']; // SMTP password
+          $mail->From   = $modx->config['email_smtp_sender'];
+      }else{
+          $mail->IsMail();
+          $mail->From = $adminEmail;
+      }
+      
       $mail->IsHTML(false);
       $mail->CharSet = $charset;
-      $mail->From	= $adminEmail;
       $mail->FromName	= $site_name;
       $mail->Subject	= $subject;
       $mail->Body	= $body;
