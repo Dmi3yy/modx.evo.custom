@@ -468,6 +468,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $signupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name, $site_start, $site_url;
+	global $modx;
     $manager_url =MODX_MANAGER_URL."/";
 	$message = sprintf($signupemail_message, $uid, $pwd); // use old method
 	// replace placeholders
@@ -478,7 +479,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = str_replace("[+saddr+]", $emailsender, $message);
 	$message = str_replace("[+semail+]", $emailsender, $message);
 	$message = str_replace("[+surl+]", $manager_url, $message);
-
+    $body = $message;
 	$headers = "From: " . $emailsender . "\r\n";
 	$headers .= "X-Mailer: Content Manager - PHP/" . phpversion();
 	$headers .= "\r\n";
@@ -488,14 +489,35 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$subject = "=?UTF-8?Q?".$emailsubject."?=";
 	$message = save_user_quoted_printable($message);
 
-	if (ini_get('safe_mode') == FALSE) {
-		if (!mail($email, $subject, $message, $headers, "-f $emailsender")) {
-			webAlert("$email - {$_lang['error_sending_email']}");
-			exit;
-		}
-	} elseif (!mail($email, $subject, $message, $headers)) {
-		webAlert("$email - {$_lang['error_sending_email']}");
-		exit;
+    if ($modx->config['email_method'] == 'smtp') {
+        include_once MODX_MANAGER_PATH . "/includes/controls/class.phpmailer.php";
+        $mail = new PHPMailer();
+        
+        $mail->IsSMTP();// отсылать используя SMTP
+        $mail->Host  = $modx->config['email_host']; // SMTP сервер
+        $mail->SMTPAuth = true;  // включить SMTP аутентификацию
+        $mail->Username = $modx->config['email_smtp_sender']; // SMTP username
+        $mail->Password = $modx->config['email_pass']; // SMTP password
+        $mail->From     = $modx->config['email_smtp_sender'];
+        
+        $mail->CharSet = $modx->config["modx_charset"]; 
+        $mail->IsHTML(false);    
+        $mail->FromName = $modx->config["site_name"];
+        $mail->Subject = $emailsubject;
+        $mail->Body = $body;
+        $mail->AddAddress($email);
+        $mail->Send();
+             
+     }else{
+			if (ini_get('safe_mode') == FALSE) {
+				if (!mail($email, $subject, $message, $headers, "-f $emailsender")) {
+					webAlert("$email - {$_lang['error_sending_email']}");
+					exit;
+				}
+			} elseif (!mail($email, $subject, $message, $headers)) {
+				webAlert("$email - {$_lang['error_sending_email']}");
+				exit;
+			}
 	}
 }
 
