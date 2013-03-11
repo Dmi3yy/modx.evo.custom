@@ -630,10 +630,21 @@ class CJot {
 					$tpl->AddVar("comment",$comment);
 					$tpl->AddVar("recipient",$user);
 					$mail = new PHPMailer();
-					$mail->IsMail();
+					
+                    //add smtp method by Dmi3yy
+                    if ($modx->config['email_method'] == 'smtp') {
+						$mail->IsSMTP();// отсылать используя SMTP
+						$mail->Host	 = $modx->config['email_host']; // SMTP сервер
+						$mail->SMTPAuth = true;	 // включить SMTP аутентификацию
+						$mail->Username = $modx->config['email_smtp_sender']; // SMTP username
+						$mail->Password = $modx->config['email_pass']; // SMTP password
+						$mail->From		= $modx->config['email_smtp_sender'];
+					}else{
+						$mail->IsMail();
+						$mail->From     = $modx->config["emailsender"];
+					}
 					$mail->CharSet = $modx->config["modx_charset"]; 
-					$mail->IsHTML(false);
-					$mail->From = $modx->config["emailsender"];
+					$mail->IsHTML(false);	
 					$mail->FromName = $modx->config["site_name"];
 					$mail->Subject = $subject;
 					$mail->Body = $tpl->Render();
