@@ -24,6 +24,7 @@
 - добавил в системные параметры настройки для отправки почты через SMTP
 - добавил возможность отправлять в eForm, JotX, WebLogin, WebSignup, ForgotManagerLogin, создание менеджера и веб пользователя через smtp
 - fix MODX_MANAGER_PATH (убрал лишний слеш)
+- При создании нового документа что б переходило к документу (http://community.modx-cms.ru/blog/tips_and_tricks/848.html#comment11349)
 
 то что должно войти в официальный релиз modx 1.0.9
 - DocumentParser - remove all unused multiline placeholders
