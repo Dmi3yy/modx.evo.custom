@@ -27,6 +27,7 @@
 - При создании нового документа что б переходило к документу (http://community.modx-cms.ru/blog/tips_and_tricks/848.html#comment11349)
 - Поправлен некоректный html при выводе TV типа select
 - Правильное указание select
+- Fix ImageMagick which convert issue (PHP 5.3.2+) for phpthumb
 
 то что должно войти в официальный релиз modx 1.0.9
 - DocumentParser - remove all unused multiline placeholders
