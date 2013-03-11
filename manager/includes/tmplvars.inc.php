@@ -65,7 +65,7 @@
 				break;
 			case "listbox-multiple": // handler for select boxes where you can choose multiple items
 				$field_value = explode("||",$field_value);
-				$field_html .=  '<select id="tv'.$field_id.'[]" name="tv'.$field_id.'[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
+				$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
