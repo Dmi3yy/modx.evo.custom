@@ -431,6 +431,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $websignupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name, $site_start, $site_url;
+	global $modx;
 	$message = sprintf($websignupemail_message, $uid, $pwd); // use old method
 	// replace placeholders
 	$message = str_replace("[+uid+]", $uid, $message);
