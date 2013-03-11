@@ -847,6 +847,14 @@ function confirmLangChange(el, lkey, elupd){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["email_smtp_sender_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="email_smtp_sender" value="<?php echo isset($email_smtp_sender) ? $email_smtp_sender : "you@example.com" ; ?>" /></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+
+          <tr>
             <td nowrap class="warning"><b><?php echo $_lang["email_host_title"] ?></b></td>
             <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="email_host" value="<?php echo isset($email_host) ? $email_host : "smtp.example.com" ; ?>" /></td>
           </tr>
