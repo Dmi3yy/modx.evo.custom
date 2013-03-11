@@ -24,7 +24,7 @@ $dm->getTheme();
  	$limit = $modx->db->getRecordCount($rs);
  	
  	if ($limit > 0) {
-		require (MODX_BASE_PATH.'/'.MGR_DIR.'/includes/tmplvars.commands.inc.php');
+		require (MODX_BASE_PATH.MGR_DIR.'/includes/tmplvars.commands.inc.php');
 		$output.= "<table style='position:relative' border='0' cellspacing='0' cellpadding='3' width='96%'>";
 
 		for ($i=0; $i<$limit; $i++) {
