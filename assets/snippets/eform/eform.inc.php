@@ -368,9 +368,20 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					include_once MODX_MANAGER_PATH."/includes/controls/class.phpmailer.php";
 				# send abuse alert
 					$mail = new PHPMailer();
-					$mail->IsMail();
-					$mail->IsHTML($isHtml);
-					$mail->From		= $modx->config['emailsender'];
+					//mail or smtp by Dmi3yy
+					if ($smtp == 'smtp') {
+						$mail->IsSMTP();// отсылать используя SMTP
+						$mail->Host	 = $smtphost; // SMTP сервер
+						$mail->SMTPAuth = true;	 // включить SMTP аутентификацию
+						$mail->Username = $smtpfrom; // SMTP username
+						$mail->Password = $smtppass; // SMTP password
+						$mail->From		= $smtpfrom;
+					}else{
+						$mail->IsMail();
+						$mail->From		= $modx->config['emailsender'];
+					}
+
+					$mail->IsHTML($isHtml);					
 					$mail->FromName	= $modx->config['site_name'];
 					$mail->Subject	= $_lang['ef_mail_abuse_subject'];
 					$mail->Body		= $body;
@@ -460,10 +471,21 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				if(!$noemail) {
 					if($sendirect) $to = $fields['email'];
 					$mail = new PHPMailer();
-					$mail->IsMail();
+					//mail or smtp by Dmi3yy
+					if ($smtp == 'smtp') {
+						$mail->IsSMTP();// отсылать используя SMTP
+						$mail->Host	 = $smtphost; // SMTP сервер
+						$mail->SMTPAuth = true;	 // включить SMTP аутентификацию
+						$mail->Username = $smtpfrom; // SMTP username
+						$mail->Password = $smtppass; // SMTP password
+						$mail->From		= $smtpfrom;
+					}else{
+						$mail->IsMail();
+						$mail->From		= $from;
+					}	
 					$mail->CharSet = $modx->config['modx_charset'];
 					$mail->IsHTML($isHtml);
-					$mail->From		= $from;
+					
 					$mail->FromName	= $fromname;
 					$mail->Subject	= $subject;
 					$mail->Body		= $report;
@@ -478,10 +500,21 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				# send user a copy of the report
 				if($ccsender && $fields['email']) {
 					$mail = new PHPMailer();
-					$mail->IsMail();
+					//mail or smtp by Dmi3yy
+					if ($smtp == 'smtp') {
+						$mail->IsSMTP();// отсылать используя SMTP
+						$mail->Host	 = $smtphost; // SMTP сервер
+						$mail->SMTPAuth = true;	 // включить SMTP аутентификацию
+						$mail->Username = $smtpfrom; // SMTP username
+						$mail->Password = $smtppass; // SMTP password
+						$mail->From		= $smtpfrom;
+					}else{
+						$mail->IsMail();
+						$mail->From		= $from;
+					}
+
 					$mail->CharSet = $modx->config['modx_charset'];
 					$mail->IsHTML($isHtml);
-					$mail->From		= $from;
 					$mail->FromName	= $fromname;
 					$mail->Subject	= $subject;
 					$mail->Body		= $report;
@@ -496,10 +529,22 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				if ($autotext && $fields['email']!='') {
 					$autotext = formMerge($autotext,$fields);
 					$mail = new PHPMailer();
-					$mail->IsMail();
+					
+					//mail or smtp by Dmi3yy
+					if ($smtp == 'smtp') {
+						$mail->IsSMTP();// отсылать используя SMTP
+						$mail->Host	 = $smtphost; // SMTP сервер
+						$mail->SMTPAuth = true;	 // включить SMTP аутентификацию
+						$mail->Username = $smtpfrom; // SMTP username
+						$mail->Password = $smtppass; // SMTP password
+						$mail->From		= $smtpfrom;
+					}else{
+						$mail->IsMail();
+						$mail->From		= ($autosender)? $autosender:$from;
+					}
+
 					$mail->CharSet = $modx->config['modx_charset'];
 					$mail->IsHTML($isHtml);
-					$mail->From		= ($autosender)? $autosender:$from;
 					$mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
 					$mail->Subject	= $subject;
 					$mail->Body		= $autotext;
@@ -513,10 +558,22 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				if ($mobile && $mobiletext) {
 					$mobiletext = formMerge($mobiletext,$fields);
 					$mail = new PHPMailer();
-					$mail->IsMail();
+					
+                    //mail or smtp by Dmi3yy
+					if ($smtp == 'smtp') {
+						$mail->IsSMTP();// отсылать используя SMTP
+						$mail->Host	 = $smtphost; // SMTP сервер
+						$mail->SMTPAuth = true;	 // включить SMTP аутентификацию
+						$mail->Username = $smtpfrom; // SMTP username
+						$mail->Password = $smtppass; // SMTP password
+						$mail->From		= $smtpfrom;
+					}else{
+						$mail->IsMail();
+						$mail->From		= $from;
+					}
+
 					$mail->CharSet = $modx->config['modx_charset'];
 					$mail->IsHTML($isHtml);
-					$mail->From		= $from;
 					$mail->FromName	= $fromname;
 					$mail->Subject	= $subject;
 					$mail->Body		= $mobiletext;

@@ -41,6 +41,12 @@ $params = array (
    'vericode' => isset($vericode)? $vericode:"",
    'formid' => isset($formid)? $formid:"",
    'from' => isset($from)? $from:$modx->config['emailsender'],
+
+   'smtp' => isset($smtp)? $smtp:$modx->config['email_method'],
+   'smtpfrom' => isset($smtpfrom)? $smtpfrom:$modx->config['email_smtp_sender'],
+   'smtphost' => isset($smtphost)? $smtphost:$modx->config['email_host'],
+   'smtppass' => isset($smtppass)? $smtppass:$modx->config['email_pass'],
+
    'fromname' => isset($fromname)? $fromname:$modx->config['site_name'],
    'to' => isset($to)? $to:$modx->config['emailsender'],
    'cc' => isset($cc)? $cc:"",
