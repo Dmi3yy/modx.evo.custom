@@ -113,29 +113,17 @@ function showParameters(ctrl) {
             value = decode((ar[2])? ar[2]:'');
 
             // store values for later retrieval
-            if (key && (dt=='list' || dt=='list-multi')) currentParams[key] = [desc,dt,value,ar[3]];
+            if (key && (dt=='list' || dt=='menu' || dt=='list-multi')) currentParams[key] = [desc,dt,value,ar[3]];
             else if (key) currentParams[key] = [desc,dt,value];
 
             if (dt) {
                 switch(dt) {
-                case 'int':
-                    c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
-                    break;
                 case 'menu':
-                    value = ar[3];
-                    c = '<select name="prop_'+key+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
-                    ls = (ar[2]+'').split(",");
-                    if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
-                    for(i=0;i<ls.length;i++){
-                        c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
-                    }
-                    c += '</select>';
-                    break;
                 case 'list':
                     value = ar[3];
                     ls = (ar[2]+'').split(",");
                     if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
-                    c = '<select name="prop_'+key+'" size="'+ls.length+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
+                    c = '<select name="prop_'+key+'"'+ ((dt=='list') ? size='"'+ls.length+'"' : '') + ' style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
                     for(i=0;i<ls.length;i++){
                         c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
                     }
@@ -170,6 +158,7 @@ function showParameters(ctrl) {
                 case 'textarea':
                     c = '<textarea class="phptextarea" name="prop_'+key+'" cols="50" rows="4" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">'+value+'</textarea>';
                     break;
+                case 'int':
                 default:  // string
                     c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
                     break;
