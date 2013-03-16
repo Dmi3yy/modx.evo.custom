@@ -29,6 +29,7 @@
 - Правильное указание select
 - Fix ImageMagick which convert issue (PHP 5.3.2+) for phpthumb
 - TV & template blank (Избавляемся от лишнего SQL запроса за TV параметрами если у документа выбран шаблон blank)
+- Fix разбора параметра типа list-multi в модулях/плагинах/сниппетах
 
 то что должно войти в официальный релиз modx 1.0.9
 - DocumentParser - remove all unused multiline placeholders
