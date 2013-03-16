@@ -241,7 +241,8 @@ class synccache{
         // WRITE snippets to cache file
         $sql = 'SELECT ss.*,sm.properties as `sharedproperties` '.
                 'FROM '.$modx->getFullTableName('site_snippets').' ss '.
-                'LEFT JOIN '.$modx->getFullTableName('site_modules').' sm on sm.guid=ss.moduleguid';
+                'LEFT JOIN '.$modx->getFullTableName('site_modules').' sm on sm.guid=ss.moduleguid '.
+                'WHERE sp.disabled=0';
         $rs = $modx->db->query($sql);
         $limit_tmp = $modx->db->getRecordCount($rs);
         $tmpPHP .= '$s = &$this->snippetCache;' . "\n";
