@@ -60,10 +60,14 @@
 - Feature #9615 Add new function for documentParser "$modx->nicesize()"
 - Feature #9566 Improvement to full table name call
 
-//awaiting integration
+//awaiting integration (https://github.com/modxcms/evolution/pull/87)
 	 New feature - Add salt string to password
 	 Refactor #9568 @Bindings enable/disable option in System configuration
-
+	 Refactor #9622 Refactor "Manage Files"
+	 Feature #9624 Add .htaccess into assets/cache/
+	 Fix - Run snippet in manager issue
+//only for custom
+     проверить tinyMCE alignCenter, кнопку youtube
 
 
 1.0.8-d4.1  (10.02.2013)
