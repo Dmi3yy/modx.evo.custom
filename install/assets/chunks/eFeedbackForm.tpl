@@ -7,6 +7,7 @@
  * @version 	1.0
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal @modx_category Forms
+ * @internal    @overwrite false
  */
  
 <p><span style="color:#900;">[+validationmessage+]</span></p>
