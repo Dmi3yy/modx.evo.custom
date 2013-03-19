@@ -2,7 +2,7 @@
 Так же рекоменую скачивать сборку с сайта так как на гитхаб не всегда стабильный релиз!!!
 
 
-текущая версии 1.0.9-d5 BETA  (19.03.2013)
+текущая версии 1.0.9-d5  (19.03.2013)
 =======================================================
 - добавлен параметр outerTpl в Ditto (http://modx.im/blog/triks/414.html)
 - добавлен placeholder [+ditto_class+] в Ditto (http://modx.im/blog/triks/416.html)
@@ -39,8 +39,7 @@
 - исправил ошибку когда при инстале заменялось содержимое чанков
 - Bug #7541 Upgrade of Existing Site - Error due to single quote in plugin properties
 - Bug #3449 Datepicker bug in Opera
-
-то что должно войти в официальный релиз modx 1.0.9
+список изменений который вошел и в офиуиальную версию modx evo 1.0.9
 - DocumentParser - remove all unused multiline placeholders
 - Bug #7204 In eFormParseTemplate $formats and $labels
 - Bug #9398 eForm & php 5.3
@@ -73,10 +72,6 @@
 - Refactor #9622 Refactor "Manage Files"
 - New feature - Add salt string to password
 - Refactor #9568 @Bindings enable/disable option in System configuration
-
-	 
-//only for custom
-     проверить tinyMCE alignCenter, кнопку youtube
 
 
 1.0.8-d4.1  (10.02.2013)
