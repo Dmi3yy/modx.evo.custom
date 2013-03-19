@@ -108,7 +108,7 @@ class synccache{
 
         // update publish time file
         $timesArr = array();
-        $sql = 'SELECT MIN(pub_date) AS minpub FROM '.$modx->getFullTableName('site_content').' WHERE pub_date>'.time();
+        $sql = 'SELECT MIN(pub_date) AS minpub FROM '.$modx->getFullTableName('site_content').' WHERE pub_date>'.(time() + $modx->config['server_offset_time']);
         if(@!$result = $modx->db->query($sql)) {
             echo 'Couldn\'t determine next publish event!';
         }
@@ -119,7 +119,7 @@ class synccache{
             $timesArr[] = $minpub;
         }
 
-        $sql = 'SELECT MIN(unpub_date) AS minunpub FROM '.$modx->getFullTableName('site_content').' WHERE unpub_date>'.time();
+        $sql = 'SELECT MIN(unpub_date) AS minunpub FROM '.$modx->getFullTableName('site_content').' WHERE unpub_date>'.(time() + $modx->config['server_offset_time']);
         if(@!$result = $modx->db->query($sql)) {
             echo 'Couldn\'t determine next unpublish event!';
         }
