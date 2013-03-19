@@ -1,5 +1,4 @@
 <?php
-
 include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
 require_once(strtr(realpath(dirname(__FILE__)), '\\', '/').'/../includes/protect.inc.php');
 
@@ -92,8 +91,7 @@ $fullname               = $row['fullname'];
 $email                  = $row['email'];
 
 // get the user settings from the database
-$sql = "SELECT setting_name, setting_value FROM $dbase.`".$table_prefix."user_settings` WHERE user='".$internalKey."' AND setting_value!=''";
-$rs = mysql_query($sql);
+$rs = $modx->db->select('setting_name, setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_value!=''");
 while ($row = $modx->db->getRow($rs)) {
     ${$row['setting_name']} = $row['setting_value'];
 }
@@ -170,42 +168,79 @@ $rt = $modx->invokeEvent("OnManagerAuthentication",
                         ));
 
 // check if plugin authenticated the user
-if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
+
+if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
+{
     // check user password - local authentication
-    if($dbasePassword != md5($givenPassword)) {
+    $tbl_manager_users = $modx->getFullTableName('manager_users');
+    if(strpos($dbasePassword,'>')!==false)
+    {
+        if(!isset($modx->config['pwd_hash_algo']) || empty($modx->config['pwd_hash_algo'])) $modx->config['pwd_hash_algo'] = 'UNCRYPT';
+        $user_algo = $modx->manager->getUserHashAlgorithm($internalKey);
+        
+        if($user_algo !== $modx->config['pwd_hash_algo'])
+        {
+            $bk_pwd_hash_algo = $modx->config['pwd_hash_algo'];
+            $modx->config['pwd_hash_algo'] = $user_algo;
+        }
+        
+        if($dbasePassword != $modx->manager->genHash($givenPassword, $internalKey))
+        {
             jsAlert($e->errors[901]);
             $newloginerror = 1;
+        }
+        elseif(isset($bk_pwd_hash_algo))
+        {
+            $modx->config['pwd_hash_algo'] = $bk_pwd_hash_algo;
+            $field = array();
+            $field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
+            $modx->db->update($field, "{$tbl_manager_users}manager_users", "username='{$username}'");
+        }
+    }
+    else
+    {
+        if($dbasePassword != md5($givenPassword))
+        {
+            jsAlert($e->errors[901]);
+            $newloginerror = 1;
+        }
+        else
+        {
+            $field = array();
+            $field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
+            $modx->db->update($field, "{$tbl_manager_users}manager_users", "username='{$username}'");
+        }
     }
 }
 
 if($use_captcha==1) {
-	if (!isset ($_SESSION['veriword'])) {
-		jsAlert('Captcha is not configured properly.');
-		return;
-	}
-	elseif ($_SESSION['veriword'] != $captcha_code) {
+    if (!isset ($_SESSION['veriword'])) {
+        jsAlert('Captcha is not configured properly.');
+        return;
+    }
+    elseif ($_SESSION['veriword'] != $captcha_code) {
         jsAlert($e->errors[905]);
         $newloginerror = 1;
     }
 }
 
 if($newloginerror) {
-	//increment the failed login counter
+    //increment the failed login counter
     $failedlogins += 1;
     $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
     $rs = mysql_query($sql);
     if($failedlogins>=$failed_allowed) { 
-		//block user for too many fail attempts
+        //block user for too many fail attempts
         $sql = "update $dbase.`".$table_prefix."user_attributes` SET blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
         $rs = $modx->db->query($sql);
     } else {
-		//sleep to help prevent brute force attacks
+        //sleep to help prevent brute force attacks
         $sleep = (int)$failedlogins/2;
         if($sleep>5) $sleep = 5;
         sleep($sleep);
     }
-	@session_destroy();
-	session_unset();
+    @session_destroy();
+    session_unset();
     return;
 }
 
@@ -248,22 +283,22 @@ $_SESSION['mgrDocgroups'] = $dg;
 
 if($rememberme == '1') {
     $_SESSION['modx.mgr.session.cookie.lifetime']= intval($modx->config['session.cookie.lifetime']);
-	
-	// Set a cookie separate from the session cookie with the username in it. 
-	// Are we using secure connection? If so, make sure the cookie is secure
-	global $https_port;
-	
-	$secure = (  (isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port);
-	if ( version_compare(PHP_VERSION, '5.2', '<') ) {
-		setcookie('modx_remember_manager', $_SESSION['mgrShortname'], time()+60*60*24*365, MODX_BASE_URL, '; HttpOnly' , $secure );
-	} else {
-		setcookie('modx_remember_manager', $_SESSION['mgrShortname'], time()+60*60*24*365, MODX_BASE_URL, NULL, $secure, true);
-	}
+    
+    // Set a cookie separate from the session cookie with the username in it. 
+    // Are we using secure connection? If so, make sure the cookie is secure
+    global $https_port;
+    
+    $secure = (  (isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port);
+    if ( version_compare(PHP_VERSION, '5.2', '<') ) {
+        setcookie('modx_remember_manager', $_SESSION['mgrShortname'], time()+60*60*24*365, MODX_BASE_URL, '; HttpOnly' , $secure );
+    } else {
+        setcookie('modx_remember_manager', $_SESSION['mgrShortname'], time()+60*60*24*365, MODX_BASE_URL, NULL, $secure, true);
+    }
 } else {
     $_SESSION['modx.mgr.session.cookie.lifetime']= 0;
-	
-	// Remove the Remember Me cookie
-	setcookie ('modx_remember_manager', "", time() - 3600, MODX_BASE_URL);
+    
+    // Remove the Remember Me cookie
+    setcookie ('modx_remember_manager', "", time() - 3600, MODX_BASE_URL);
 }
 
 $log = new logHandler;
@@ -294,10 +329,9 @@ else {
 
 // show javascript alert
 function jsAlert($msg){
-	global $modx;
+    global $modx;
     if($_POST['ajax']==1) echo $msg."\n";
     else {
         echo "<script>window.setTimeout(\"alert('".addslashes($modx->db->escape($msg))."')\",10);history.go(-1)</script>";
     }
 }
-?>
