@@ -61,11 +61,12 @@
 - Feature #9566 Improvement to full table name call
 - Feature #9624 Add .htaccess into assets/cache/
 - Fix - Run snippet in manager issue
+- Refactor #9622 Refactor "Manage Files"
 
 //awaiting integration (https://github.com/modxcms/evolution/pull/87)
 	 New feature - Add salt string to password
 	 Refactor #9568 @Bindings enable/disable option in System configuration
-	 Refactor #9622 Refactor "Manage Files"
+	 
 	 
 //only for custom
      проверить tinyMCE alignCenter, кнопку youtube
