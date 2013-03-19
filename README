@@ -36,7 +36,7 @@
 - Bug #4088 web user photo from other site not correct
 - Refactor #3746 don't show New Module button when user's role lacks that permission
 - Bug #8909 Publication schedule don't use server_offset_time setting
-
+- исправил ошибку когда при инстале заменялось содержимое чанков
 
 то что должно войти в официальный релиз modx 1.0.9
 - DocumentParser - remove all unused multiline placeholders
