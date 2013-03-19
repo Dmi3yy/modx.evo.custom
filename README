@@ -63,11 +63,8 @@
 - Fix - Run snippet in manager issue
 - Refactor #9622 Refactor "Manage Files"
 - New feature - Add salt string to password
+- Refactor #9568 @Bindings enable/disable option in System configuration
 
-//awaiting integration (https://github.com/modxcms/evolution/pull/87)
-	 
-	 Refactor #9568 @Bindings enable/disable option in System configuration
-	 
 	 
 //only for custom
      проверить tinyMCE alignCenter, кнопку youtube

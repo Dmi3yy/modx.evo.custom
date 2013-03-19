@@ -971,7 +971,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('warning_visibility', '0'),
 ('tree_page_click', '27'),
 ('clean_uploaded_filename', '1'),
-('remember_last_tab', '1');
+('remember_last_tab', '1'),
+('enable_bindings', '1');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
