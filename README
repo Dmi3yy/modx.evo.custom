@@ -34,6 +34,7 @@
 - Refactor #3730 Entity encode Wayfinder placeholders + fix time publish
 - Bug #3698 Wrong URL construction when using an array of values (checkboxes)
 - Bug #4088 web user photo from other site not correct
+- Refactor #3746 don't show New Module button when user's role lacks that permission
 
 то что должно войти в официальный релиз modx 1.0.9
 - DocumentParser - remove all unused multiline placeholders
