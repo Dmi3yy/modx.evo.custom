@@ -31,6 +31,9 @@
 - TV & template blank (Избавляемся от лишнего SQL запроса за TV параметрами если у документа выбран шаблон blank)
 - Fix разбора параметра типа list-multi в модулях/плагинах/сниппетах
 - Fixing bug #3847 Wayfinder does not apply lastClass if there is only one item
+- Refactor #3730 Entity encode Wayfinder placeholders + fix time publish
+- Bug #3698 Wrong URL construction when using an array of values (checkboxes)
+
 
 то что должно войти в официальный релиз modx 1.0.9
 - DocumentParser - remove all unused multiline placeholders
