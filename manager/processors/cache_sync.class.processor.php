@@ -143,6 +143,9 @@ class synccache{
              echo 'Cannot open file ('.$filename.')';
              exit;
         }
+        if(!is_file($this->cachePath . '/.htaccess')) {
+            file_put_contents($this->cachePath . '/.htaccess', "order deny,allow\ndeny from all\n");
+        }    
 
         // Write $somecontent to our opened file.
         if (fwrite($handle, $somecontent) === FALSE) {
