@@ -666,7 +666,7 @@ if (isset ($_POST['snippet']) || $installData) {
                 $rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_snippets` WHERE name='$name'", $sqlParser->conn);
                 if (mysql_num_rows($rs)) {
                     $row = mysql_fetch_assoc($rs);
-                    $props = propUpdate($properties,$row['properties']);
+                    $props = propUpdate($properties,mysql_real_escape_string($row['properties']));
                     if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';", $sqlParser->conn)) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
