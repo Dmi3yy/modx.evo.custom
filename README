@@ -38,6 +38,7 @@
 - Bug #8909 Publication schedule don't use server_offset_time setting
 - исправил ошибку когда при инстале заменялось содержимое чанков
 - Bug #7541 Upgrade of Existing Site - Error due to single quote in plugin properties
+- Bug #3449 Datepicker bug in Opera
 
 то что должно войти в официальный релиз modx 1.0.9
 - DocumentParser - remove all unused multiline placeholders
