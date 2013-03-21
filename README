@@ -7,6 +7,7 @@
 - из .htaccess удалены ненужнве записи
 - Исправленна ошибка с разархивированием zip через фаил менеджер
 - $modx->stripTags should remove entity encoded MODX tags
+- Bug #3493 unnecessary slash in MAGPIE_CACHE_DIR
 
 
 текущая версии 1.0.9-d5  (19.03.2013)
