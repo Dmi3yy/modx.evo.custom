@@ -32,7 +32,7 @@ function generate_password($length = 10) {
 	return $pass;
 }
 
-$id = intval($_POST['id']);
+if(isset($_POST['id'])) $id = intval($_POST['id']);
 $oldusername = $_POST['oldusername'];
 $newusername = !empty ($_POST['newusername']) ? trim($_POST['newusername']) : "New User";
 $fullname = $modx->db->escape($_POST['fullname']);
@@ -52,7 +52,7 @@ $zip = $modx->db->escape($_POST['zip']);
 $gender = !empty ($_POST['gender']) ? $_POST['gender'] : 0;
 $photo = $modx->db->escape($_POST['photo']);
 $comment = $modx->db->escape($_POST['comment']);
-$roleid = !empty ($_POST['role']) ? $_POST['role'] : 0;
+$role = !empty ($_POST['role']) ? $_POST['role'] : 0;
 $failedlogincount = $_POST['failedlogincount'];
 $blocked = !empty ($_POST['blocked']) ? $_POST['blocked'] : 0;
 $blockeduntil = !empty ($_POST['blockeduntil']) ? ConvertDate($_POST['blockeduntil']) : 0;
@@ -74,7 +74,7 @@ if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $
 // verify admin security
 if ($_SESSION['mgrRole'] != 1) {
 	// Check to see if user tried to spoof a "1" (admin) role
-	if ($roleid == 1) {
+	if ($role == 1) {
 		webAlert("Illegal attempt to create/modify administrator by non-administrator!");
 		exit;
 	}
@@ -145,24 +145,17 @@ switch ($_POST['mode']) {
 		// invoke OnBeforeUserFormSave event
 		$modx->invokeEvent("OnBeforeUserFormSave", array (
 			"mode" => "new",
-			"id" => $id
 		));
 
 		// build the SQL
-		$sql = "INSERT INTO $dbase.`" . $table_prefix . "manager_users` (username, password)
-						VALUES('" . $newusername . "', md5('" . $newpassword . "'));";
-		$rs = $modx->db->query($sql);
-		if (!$rs) {
+		$internalKey = $modx->db->insert(array('username'=>$newusername), '[+prefix+]manager_users');
+		if (!$internalKey) {
 			webAlert("An error occurred while attempting to save the user.");
 			exit;
 		}
-		// now get the id
-		if (!$key = mysql_insert_id()) {
-			//get the key by sql
-		}
 
-			$field['password'] = $modx->manager->genHash($newpassword, $key);
-		$modx->db->update($field,'[+prefix+]manager_users',"id='{$key}'");
+		$field['password'] = $modx->manager->genHash($newpassword, $internalKey);
+		$modx->db->update($field,'[+prefix+]manager_users',"id='{$internalKey}'");
 		
 		$field = array();
 		$field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
@@ -173,23 +166,23 @@ switch ($_POST['mode']) {
 		}
 
 		// Save User Settings
-		saveUserSettings($key);
+		saveUserSettings($internalKey);
 
 		// invoke OnManagerSaveUser event
 		$modx->invokeEvent("OnManagerSaveUser", array (
 			"mode" => "new",
-			"userid" => $key,
+			"userid" => $internalKey,
 			"username" => $newusername,
 			"userpassword" => $newpassword,
 			"useremail" => $email,
 			"userfullname" => $fullname,
-			"userroleid" => $roleid
+			"userroleid" => $role
 		));
 
 		// invoke OnUserFormSave event
 		$modx->invokeEvent("OnUserFormSave", array (
 			"mode" => "new",
-			"id" => $key
+			"id" => $internalKey
 		));
 
 		/*******************************************************************************/
@@ -323,7 +316,7 @@ switch ($_POST['mode']) {
 
 		$sql = "UPDATE $dbase.`" . $table_prefix . "user_attributes` SET
 					fullname='" . $fullname . "',
-					role='$roleid',
+					role='$role',
 					email='$email',
 					phone='$phone',
 					mobilephone='$mobilephone',
@@ -356,7 +349,7 @@ switch ($_POST['mode']) {
 			"userpassword" => $newpassword,
 			"useremail" => $email,
 			"userfullname" => $fullname,
-			"userroleid" => $roleid,
+			"userroleid" => $role,
 			"oldusername" => (($oldusername != $newusername
 		) ? $oldusername : ""), "olduseremail" => (($oldemail != $email) ? $oldemail : "")));
 
