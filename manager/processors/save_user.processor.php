@@ -96,8 +96,7 @@ if ($_SESSION['mgrRole'] != 1) {
 switch ($_POST['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
-		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "manager_users` WHERE username='$newusername'";
-		if (!$rs = $modx->db->query($sql)) {
+		if (!$rs = $modx->db->select('id', '[+prefix+]manager_users', "username='{$newusername}'")) {
 			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
 		}
@@ -109,7 +108,7 @@ switch ($_POST['mode']) {
 
 		// check if the email address already exist
 		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "user_attributes` WHERE email='$email'";
-		if (!$rs = $modx->db->query($sql)) {
+		if (!$rs = $modx->db->select('id', '[+prefix+]user_attributes', "email='{$email}'")) {
 			webAlert("An error occurred while attempting to retrieve all users with email $email.");
 			exit;
 		}
@@ -191,8 +190,10 @@ switch ($_POST['mode']) {
 		if ($use_udperms == 1) {
 			if (count($user_groups) > 0) {
 				for ($i = 0; $i < count($user_groups); $i++) {
-					$sql = "INSERT INTO $dbase.`" . $table_prefix . "member_groups` (user_group, member) values('" . intval($user_groups[$i]) . "', $key)";
-					$rs = $modx->db->query($sql);
+					$f = array();
+					$f['user_group'] = intval($user_groups[$i]);
+					$f['member']     = $internalKey;
+					$rs = $modx->db->insert($f, '[+prefix+]member_groups');
 					if (!$rs) {
 						webAlert("An error occurred while attempting to add the user to a user_group.");
 						exit;
@@ -214,7 +215,7 @@ switch ($_POST['mode']) {
 			}
 		} else {
 			if ($_POST['stay'] != '') {
-				$a = ($_POST['stay'] == '2') ? "12&id=$key" : "11";
+				$a = ($_POST['stay'] == '2') ? "12&id=$internalKey" : "11";
 				$stayUrl = "index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
 			} else {
 				$stayUrl = "index.php?a=75&r=2";
