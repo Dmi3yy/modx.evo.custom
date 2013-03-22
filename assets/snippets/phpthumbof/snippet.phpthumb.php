@@ -1,34 +1,41 @@
 <?php
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 //[[phpthumb? &input=`[+image+]` &options=`w=150,h=76,far=C,bg=FFFFFF`]]
+
+$base="/assets/cache/phpthumbof/";   // тут можно менять путь
+
+if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
+
 if($input == '' || !file_exists($_SERVER['DOCUMENT_ROOT']."/".$input))
-    {return 'assets/snippets/phpthumbof/noimage.png';}
-else{   
-     $replace  = Array("," => "&", "_" => "=");
-    $options  = strtr($options, $replace);
-    $options .= "&f=jpg&q=96";
-    $opt = $options;
-    $path_parts=pathinfo($input);
-    //$pt = $modx->getPageInfo($modx->documentIdentifier);
-    require_once $_SERVER['DOCUMENT_ROOT']."/assets/snippets/phpthumbof/phpthumb.class.php";
-    $phpThumb = new phpthumb();
-    $phpThumb->setSourceFilename($input); 
-    $options = explode("&", $options);
-    foreach ($options as $value) {
-       $thumb = explode("=", $value);
-       $phpThumb->setParameter($thumb[0], $thumb[1]);
-       $op[$thumb[0]]=$thumb[1];
-    }
-  if ($seourl==1) {$outputFilename = $_SERVER['DOCUMENT_ROOT']."/assets/cache/phpthumbof/".md5($input.$opt).'.'.$op['f'];}
-  else {
-            $outputFilename = $_SERVER['DOCUMENT_ROOT']."/assets/cache/phpthumbof/".$path_parts['filename']."_w".$op['w'].'-h'.$op['h'].'.'.$op['f'];}
+{return 'assets/snippets/phpthumbof/noimage.png';}
+else{
+  $options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "="));
+  $path_parts=pathinfo($input);
+  require_once MODX_BASE_PATH."/assets/snippets/phpthumbof/phpthumb.class.php";
+  $phpThumb = new phpthumb();
+  $phpThumb->setSourceFilename($input);
   
+  $options = explode("&", $options);
+  foreach ($options as $value) {
+    $thumb = explode("=", $value);
+    $phpThumb->setParameter($thumb[0], $thumb[1]);
+    $op[$thumb[0]]=$thumb[1];
+  }
+
+  $tmp=str_replace($_SERVER['DOCUMENT_ROOT']."assets/images","",$path_parts['dirname']);
+  $tmp=str_replace("assets/images","",$tmp);
+  $tmp=explode("/",$tmp);
+  $folder=$base;  
   
-    if (!file_exists($outputFilename))
-       if ($phpThumb->GenerateThumbnail())
-           $phpThumb->RenderToFile($outputFilename) ;
-    $res = explode("/assets", $outputFilename); 
-    $res = "/assets".$res[1];
-    return $res;
+  for($i=0;$i<count($tmp);$i++){
+    if ($tmp[$i]=='') continue;
+    $folder.="/".$tmp[$i];
+    if(!is_dir(MODX_BASE_PATH.$folder)) mkdir(MODX_BASE_PATH.$folder);
+  }
+  
+  $fname=$folder."/".$op['w']."x".$op['h'].'-'.$path_parts['filename'].".".substr(md5($options),3).".".$op['f'];
+  $outputFilename =MODX_BASE_PATH.$fname;
+  if (!file_exists($outputFilename)) if ($phpThumb->GenerateThumbnail()) $phpThumb->RenderToFile($outputFilename) ;
+  return $fname;
 }
 ?>

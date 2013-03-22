@@ -4,7 +4,7 @@
 текущая версии 1.0.9-d5.1 (beta)  (**.**.2013)
 =======================================================
 - Исправленна ошибка с Fix for array_combine bug
-- из .htaccess удалены ненужнве записи
+- из .htaccess удалены ненужные записи
 - Исправленна ошибка с разархивированием zip через фаил менеджер
 - $modx->stripTags should remove entity encoded MODX tags
 - Bug #3493 unnecessary slash in MAGPIE_CACHE_DIR
@@ -50,6 +50,7 @@
 - исправил ошибку когда при инстале заменялось содержимое чанков
 - Bug #7541 Upgrade of Existing Site - Error due to single quote in plugin properties
 - Bug #3449 Datepicker bug in Opera
+
 список изменений который вошел и в офиуиальную версию modx evo 1.0.9
 - DocumentParser - remove all unused multiline placeholders
 - Bug #7204 In eFormParseTemplate $formats and $labels
