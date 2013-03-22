@@ -10,6 +10,7 @@
  * @internal	@properties
  * @internal	@events OnRichTextEditorRegister,OnRichTextEditorInit 
  * @internal    @installset base, sample
+ * @internal    @installset base
  * @internal    @disabled 1
  *
  * yama 

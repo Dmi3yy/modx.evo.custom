@@ -9,6 +9,7 @@
  * @author		Andhir
  * @internal    @properties &separator=Separator;string;<!-- hr --> &open_text=Open link text;string;system content &position=System content position;list;before,after;after
  * @internal    @events OnDocFormRender
+ * @internal    @installset base
  */
 /*
 systemField 1.3 plugin for MODx Evo

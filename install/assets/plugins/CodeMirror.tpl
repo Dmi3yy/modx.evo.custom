@@ -12,6 +12,7 @@
  * @internal    @events OnDocFormRender,OnChunkFormRender,OnModFormRender,OnPluginFormRender,OnSnipFormRender,OnTempFormRender
  * @internal    @modx_category Manager and Admin
  * @internal    @properties &theme=Theme;list;,cobalt,ecllipse,elegant,monokai,neat,night,rubyblue; &indentUnit=Indent unit;int;2 &tabSize=The width of a tab character;int;2 &lineWrapping=lineWrapping;list;true,false;true
+ * @internal    @installset base
  */
 
 $_CM_BASE = 'assets/plugins/codemirror/';

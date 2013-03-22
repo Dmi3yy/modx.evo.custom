@@ -9,6 +9,7 @@
  * @author		Dmi3yy (dmi3yy@gmail.com)
  * @internal    @properties &customTemplates=customTemplates;text;100,101|102,103
  * @internal    @events OnDocFormPrerender 
+ * @internal    @installset base
  */
  
 /*

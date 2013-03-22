@@ -10,6 +10,7 @@
  * @internal    @properties &settings=Settings;textarea;Example custom setting~custom_st_example
  * @internal    @events OnSiteSettingsRender
  * @internal    @modx_category
+ * @internal    @installset base
  */
 
 $e = &$modx->Event;

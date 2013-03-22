@@ -10,6 +10,7 @@
  * @internal    @properties &ids=ID ресурсов настроек;text;347 &prefix=Префикс;text;cfg_
  * @internal    @events OnBeforeDocFormSave
  * @internal    @disabled 1
+ * @internal    @installset base
  */
 
 $e =& $modx->event;

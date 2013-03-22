@@ -10,6 +10,7 @@
  * @internal    @properties &config=Конфигурация;string;fancybox &clearCache=Очистка_кеша;list;0,1,2;2
  * @internal	@events OnWebPagePrerender,OnCacheUpdate,OnBeforeDocFormSave 
  * @internal    @legacy_names directResize
+ * @internal    @installset base
  */
 
 

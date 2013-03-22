@@ -10,6 +10,7 @@
  * @package     modx
  * @author      thebat053
  * @internal    @modx_category
+ * @internal    @installset base, sample
  */
 
 return require MODX_BASE_PATH.'assets/plugins/cacheaccelerator/snippet.ca.php';

@@ -12,6 +12,7 @@
  * @internal    @events OnEmptyTrash
  * @internal    @modx_category
  * @internal    @properties 
+ * @internal    @installset base
  */
 /**
  * Clear Comments Plugin: Remove comments of documents when you empty MODx Trash Can.

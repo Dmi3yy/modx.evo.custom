@@ -6,6 +6,7 @@
  *
  * @category snippet, DocLister
  * @internal @modx_category Content
+ * @internal    @installset base, sample
  * @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
  * @author Agel_Nash <Agel_Nash@xaker.ru>
  * @see https://github.com/AgelxNash/DocLister/blob/master/core/controller/extender/summary.extender.inc

@@ -9,7 +9,8 @@
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties 
  * @internal	@modx_category add
- * @author      Karandash
+ * @internal    @installset base, sample
+ * @author      Bumkaka
  */
 
 return require MODX_BASE_PATH.'assets/snippets/phpthumbof/snippet.phpthumb.php';

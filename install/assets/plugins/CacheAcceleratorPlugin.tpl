@@ -12,6 +12,7 @@
  * @internal    @properties &only_manual=Only manual clear;list;yes,no;no &autoCache=Autocache;list;enabled,disabled;disabled &autoCacheSnippets=Snippets to Autocache ('ditto,jot');string;all &autoCacheExcludeSnippets=Snippets to exclude ('snippet1, snippet2');string;include &dropCacheGroups=Groups to clear ('default, news');string;all &dropCacheFields=Drop cache fields;string;JotForm||post,true,2||,publish,2||,unpublish,2||,delete,2||,edit,2 &showSnippets=Show snippets log;list;full,short,no;no &showSystemData=Show system data;list;yes,no;no
  * @internal    @events OnLoadWebDocument,OnWebPagePrerender,OnCacheUpdate,OnSiteRefresh
  * @internal    @modx_category
+ * @internal    @installset base
  */
 if(!function_exists('processInjection')){
     function processInjection($str, $autoCacheSnippets, $autoCacheExcludeSnippets, $dropCacheFields, $showSnippets){

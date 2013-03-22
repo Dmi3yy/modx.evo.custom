@@ -10,6 +10,7 @@
  * @author      Temus (temus3@gmail.com)
  * @internal	@properties &tvIds=TV Ids;text;&templ=Template;text;&role=Role;text;&resize=Resize: enable;list;true,false;false;&crop=Resize: cropping;list;true,false;true;&prefix=Resize: prefix;text;s_;&th_width=Resize: width;text;&th_height=Resize: height;text;&auto_big=Resize: auto big img;list;true,false;false;&auto_small=Resize: auto small img;list;true,false;false;&w=Preview: width;text;&h=Preview: height;text;&thumbUrl=PHPThumb URL;text;
  * @internal	@events OnDocFormRender,OnBeforeDocFormSave
+ * @internal    @installset base
  * @internal    @legacy_names MultiPhotos
  */
  

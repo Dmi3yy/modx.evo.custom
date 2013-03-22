@@ -8,6 +8,7 @@
  * @version     1
  * @author		bezumkin
  * @internal    @properties
+ * @internal    @installset base
  * @internal    @events OnDocFormRender,OnTempFormRender,OnChunkFormRender,OnSnipFormRender,OnPluginFormRender
  * @internal    @disabled 1
  */

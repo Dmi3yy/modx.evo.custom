@@ -12,6 +12,7 @@
  * @internal	@shareparams 1
  * @internal	@dependencies requires files located at /assets/modules/evogallery/
  * @internal	@modx_category Manager and Admin
+ * @internal    @installset base, sample
  */
 
 /**

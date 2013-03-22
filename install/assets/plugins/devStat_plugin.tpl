@@ -10,6 +10,7 @@
  * @internal @properties &alert_time=Критичное время генерации;int;3 &alert_query=Критичное число запросов;int;100
  * @internal @events OnWebPagePrerender
  * @internal @legacy_names devStat
+ * @internal    @installset base
  * @author Andchir <http://wdevblog.net.ru>
  */  
 

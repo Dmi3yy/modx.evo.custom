@@ -7,6 +7,7 @@
  * @version	1.01 
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal    @events OnWebPageInit
+ * @internal    @installset base
  * @internal    @disabled 1
  */
 /*

@@ -7,6 +7,7 @@
  * @param string $ChunkName Имя чанка
  * @return string распарсеный чанк
  * @author Agel_Nash <Agel_Nash@xaker.ru>
+ * @internal    @installset base, sample
  *
  * @example [!parseChunk? &ChunkName=`form` &username=`Agel_Nash`!]
  */

@@ -9,6 +9,7 @@
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties 
  * @internal	@modx_category add
+ * @internal    @installset base, sample
  */
 
 //[[alterTitle? &id = `[+id+]`]] к примеру для вывода в Ditto

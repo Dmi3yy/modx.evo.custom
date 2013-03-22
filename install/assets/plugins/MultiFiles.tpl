@@ -10,6 +10,7 @@
  * @author      Temus (temus3@gmail.com)
  * @internal	@properties &tvIds=TV Ids;text;&templ=Template;text;&role=Role;text;
  * @internal	@events OnDocFormRender
+ * @internal    @installset base
  * @internal    @legacy_names MultiFiles
  */
  
