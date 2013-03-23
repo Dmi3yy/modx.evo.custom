@@ -1116,10 +1116,16 @@ $_lang['a17_error_reporting_opt99'] = 'Detect all';
 
 $_lang["pwd_hash_algo_title"] = 'Hash algorithm';
 $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
-
 $_lang["enable_bindings_title"]  = 'Enable @Bindings commands';
 $_lang['enable_bindings_message'] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["files.dynamic.php1"] = 'create text file';
+$_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
+$_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
+$_lang["files.dynamic.php4"] = 'The text file was created.';
+$_lang["not_readable_dir"] = 'Can not read this directory.';
+$_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
+$_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
 
 $_lang['email_method_title'] = 'Sendmail method';
 $_lang['email_method_mail'] = 'mail().';
@@ -1127,5 +1133,4 @@ $_lang['email_method_smtp'] = 'SMTP.';
 $_lang['email_smtp_sender_title'] = 'SMTP mail';
 $_lang['email_host_title'] = 'smtp host';
 $_lang['email_pass_title'] = 'smtp password';
-
 ?>

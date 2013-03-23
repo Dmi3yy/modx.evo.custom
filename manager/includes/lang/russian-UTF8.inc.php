@@ -1130,4 +1130,9 @@ $_lang['email_method_smtp'] = 'SMTP - сообщения отправляютс�
 $_lang['email_smtp_sender_title'] = 'SMTP почта';
 $_lang['email_host_title'] = 'Адрес SMTP-сервера';
 $_lang['email_pass_title'] = 'SMTP пароль';
+
+$_lang["pwd_hash_algo_title"] = 'Hash algorithm';
+$_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
+$_lang["enable_bindings_title"]  = 'Enable @Bindings commands';
+$_lang['enable_bindings_message'] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 ?>

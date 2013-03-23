@@ -3912,7 +3912,6 @@ class DocumentParser {
             $path = str_replace('\\','/',$val['file']);
             if(strpos($path,MODX_BASE_PATH)===0) $path = substr($path,strlen(MODX_BASE_PATH));
             switch($val['type'])
-            if(!empty($val['args']) && 0 < count($val['args']))
             {
                case '->':
                case '::':
