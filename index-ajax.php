@@ -21,23 +21,20 @@ $base_path = "";
 
 // get the required includes
 if($database_user=='') {
-    if (!$rt = @include_once MGR_DIR."/includes/config.inc.php") {
-        exit('Could not load MODx configuration file!');
-    }
+        if (!$rt = @include_once MGR_DIR."/includes/config.inc.php") {
+           exit('Could not load MODx configuration file!');
+        }
 }
 
 if($axhandler = (strtoupper($_SERVER['REQUEST_METHOD'])=='GET') ? $_GET['q'] : $_POST['q']) {
-
-    // Limit the characters allowed in the filename
     $axhandler = preg_replace('/[^A-Za-z0-9_\-\.\/]/', '', $axhandler);
-
     // Get realpath
     $axhandler = realpath(MODX_BASE_PATH.$axhandler) or die(); // full
     $axhandler_rel = substr($axhandler, strlen(MODX_BASE_PATH)); // relative
+    $axhandler = realpath($directory.str_replace($directory, '', $axhandler));
 
     if ($axhandler_rel && strtolower(substr($axhandler_rel, -4)) == '.php') {
-
-        // permission check
+    // permission check
         $allowed = false;
         foreach($allowed_dirs as $allowed_dir) {
             if (substr($axhandler_rel, 0, strlen($allowed_dir)) == $allowed_dir) {
@@ -51,3 +48,5 @@ if($axhandler = (strtoupper($_SERVER['REQUEST_METHOD'])=='GET') ? $_GET['q'] : $
         }
     }
 }
+?>
+ 
