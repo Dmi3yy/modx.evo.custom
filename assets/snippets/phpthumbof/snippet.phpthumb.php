@@ -33,7 +33,7 @@ else{
     if(!is_dir(MODX_BASE_PATH.$folder)) mkdir(MODX_BASE_PATH.$folder);
   }
   
-  $fname=$folder."/".$op['w']."x".$op['h'].'-'.$path_parts['filename'].".".substr(md5($options),0,3).".".$op['f'];
+  $fname=$folder."/".$op['w']."x".$op['h'].'-'.$path_parts['filename'].".".substr(md5(serialize($options)),0,3).".".$op['f'];
   $outputFilename =MODX_BASE_PATH.$fname;
   if (!file_exists($outputFilename)) if ($phpThumb->GenerateThumbnail()) $phpThumb->RenderToFile($outputFilename) ;
   return $fname;
