@@ -49,6 +49,7 @@ class DocumentParser {
     var $forwards= 3;
     var $aliasListing;
     var $ext=array(); //for custom loadExtension
+    private $version=array();
     
     /**
      * Document constructor
@@ -1844,6 +1845,8 @@ class DocumentParser {
     $LoginUserID = $this->getLoginUserID();
     if ($LoginUserID == '') $LoginUserID = 0;
         $evtid= intval($evtid);
+        $type=(int)$type;
+
         if ($type < 1) {
             $type= 1;
         }
@@ -2301,14 +2304,20 @@ class DocumentParser {
      *
      * @return array
      */
-    function getVersionData() {
-        include MODX_MANAGER_PATH . "includes/version.inc.php";
-        $v= array ();
-        $v['version']= $modx_version;
-        $v['branch']= $modx_branch;
-        $v['release_date']= $modx_release_date;
-        $v['full_appname']= $modx_full_appname;
-        return $v;
+   
+    function getVersionData($data=null) {
+        $out=array();
+        if(empty($this->version) || !is_array($this->version)){
+            //include for compatibility modx version < 1.0.10
+            include MODX_MANAGER_PATH . "includes/version.inc.php";
+            $this->version=array();
+            $this->version['version']= isset($modx_version) ? $modx_version : '';
+            $this->version['branch']= isset($modx_branch) ? $modx_branch : '';
+            $this->version['release_date']= isset($modx_release_date) ? $modx_release_date : '';
+            $this->version['full_appname']= isset($modx_full_appname) ? $modx_full_appname : '';
+            $this->version['new_version'] = isset($this->config['newversiontext']) ? $this->config['newversiontext'] : '';
+        }
+        return (!is_null($data) && is_array($this->version) && isset($this->version[$data])) ? $this->version[$data] : $this->version;
     }
 
     /**
