@@ -49,18 +49,20 @@ else {
     }
     else {
         /// проверка для установки на мою сборку автоматическое выполнение запроса
-        $avtest = @ mysql_query("SELECT alias_visible FROM {$database_name}.`{$tableprefix}site_content`");
-        if ($avtest)  { 
-           $output .= ' ';
-        }else {
-            $avadd = @ mysql_query("ALTER TABLE  {$database_name}.`{$tableprefix}site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT  '1'");
-            $avtest2 = @ mysql_query("SELECT alias_visible FROM {$database_name}.`{$tableprefix}site_content`");
-            if ($avtest2)  { 
-                $output .= ' ';
+        if ($installMode != 0) {
+            $avtest = @ mysql_query("SELECT alias_visible FROM {$database_name}.`{$tableprefix}site_content`");
+            if ($avtest)  { 
+               $output .= ' ';
             }else {
-                $output .= '<span id="database_pass" style="color:#FF0000;">ошибка при добавлении alias_visible</span><br/>';
+                $avadd = @ mysql_query("ALTER TABLE  {$database_name}.`{$tableprefix}site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT  '1'");
+                $avtest2 = @ mysql_query("SELECT alias_visible FROM {$database_name}.`{$tableprefix}site_content`");
+                if ($avtest2)  { 
+                    $output .= ' ';
+                }else {
+                    $output .= '<span id="database_pass" style="color:#FF0000;">ошибка при добавлении alias_visible</span><br/>';
+                }
             }
-        }
+        }   
 
         $output .= '<span id="database_pass" style="color:#80c000;">'.$_lang['status_passed'].'</span>';
     }
