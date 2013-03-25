@@ -243,6 +243,8 @@ class Gallery
 				$item_phx->setPHxVariable('thumbs_dir', $this->config['galleriesUrl'] . $row['content_id'] . '/thumbs/');
 				$item_phx->setPHxVariable('original_dir', $this->config['galleriesUrl'] . $row['content_id'] . '/original/');
 				$item_phx->setPHxVariable('plugin_dir', $this->config['snippetUrl'] . $this->config['type'] . '/');
+				$item_phx->setPHxVariable('original_dir_all', $this->config['galleriesUrl'] . $row['content_id'] . '/original/' . $row['filename']);
+				$item_phx->setPHxVariable('original_filename', $this->config['galleriesUrl'] . $row['content_id'] . '/original/' . $row['filename']);
 				if(!empty($item_tpl_first) && $count == 1){
     				$items .= $item_phx->Parse($item_tpl_first);
 				} else if(!empty($item_tpl_last) && $count == $recordCount){
