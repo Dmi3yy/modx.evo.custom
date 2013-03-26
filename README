@@ -18,6 +18,7 @@
 - #9693 When use mysql_real_escape_string, execute mysql_set_charset beforehand
 - #9694 Undefined property: DocumentParser::$mstart
 - Автоматическое добавление alias_visible при обновлении с modx evo
+- дбавил параметр а EvoGallery (https://github.com/Mark-H/EvoGallery/pull/55)
 
 
 текущая версии 1.0.9-d5  (19.03.2013)
