@@ -71,11 +71,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     // check for deleted documents on reload
     if ($expandAll==2) {
-        $sql = "SELECT COUNT(*) FROM $dbase.`".$table_prefix."site_content` WHERE deleted=1";
-        $rs = mysql_query($sql);
-        $row = mysql_fetch_row($rs);
-        $count = $row[0];
-        if ($count>0) echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
+        if ($modx->db->getValue('SELECT COUNT(*) FROM '.$modx->getFullTableName('site_content').' WHERE deleted=1')) {
+            echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
+        }
     }
 
     function makeHTML($indent,$parent,$expandAll,$theme) {
@@ -123,22 +121,26 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 $access
                 GROUP BY sc.id
                 ORDER BY {$orderby}";
-        $result = mysql_query($sql, $modxDBConn);
-        if(mysql_num_rows($result)==0) {
+
+        $result = $modx->db->query($sql); 
+
+	if($modx->db->getRecordCount($result)==0) { 
             $output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="'.$_style["tree_deletedpage"].'">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
         }
 
 		// Make sure to pass in the $modx_textdir variable to the node builder
 		global $modx_textdir;
 
-        while(list($id,$pagetitle,$parent,$isfolder,$published,$deleted,$type,$menuindex,$donthit,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = mysql_fetch_row($result))
-        {
-            $pagetitle = htmlspecialchars($pagetitle);
+  while( $fields = $modx->db->getRow($result)) { 
+	foreach($fields as $key=>$value) {
+		$$key = $value;
+	}
+           $pagetitle = htmlspecialchars(str_replace(array("\r\n", "\n", "\r"), '', $pagetitle));
             $protectedClass = $hasAccess==0 ? ' protectedNode' : '';
             $pagetitleDisplay = $published==0 ? "<span class=\"unpublishedNode\">$pagetitle</span>" : ($hidemenu==1 ? "<span class=\"notInMenuNode$protectedClass\">$pagetitle</span>":"<span class=\"publishedNode$protectedClass\">$pagetitle</span>");
             $pagetitleDisplay = $deleted==1 ? "<span class=\"deletedNode\">$pagetitle</span>" : $pagetitleDisplay;
             $weblinkDisplay = $type=="reference" ? '&nbsp;<img src="'.$_style["tree_linkgo"].'">' : '' ;
-			$pageIdDisplay = '<small>('.($modx_textdir ? '&rlm;':'').$id.')</small>';
+		$pageIdDisplay = ($_SESSION['mgrRole'] == 1 || $modx->config['docid_visibility']) ? '<small>('.($modx_textdir ? '&rlm;':'').$id.')</small>' : '';
 			$url = $modx->makeUrl($id);
 
             $alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": -";
@@ -170,7 +172,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 elseif($id == $modx->config['error_page'])            $icon = $_style["tree_page_404"];
                 elseif($id == $modx->config['site_unavailable_page']) $icon = $_style["tree_page_hourglass"];
                 elseif($id == $modx->config['unauthorized_page'])     $icon = $_style["tree_page_info"];
-                
                 $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.$icon.'" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\'" />&nbsp;';
                 $output .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div>';
             }
