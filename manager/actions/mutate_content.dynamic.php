@@ -83,12 +83,12 @@ if ($action == 27) {
 }
 
 // Check to see the document isn't locked
-$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=27 AND id=\''.$id.'\'';
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=27 AND id=\''.$docid.'\'';
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if ($limit > 1) {
     for ($i = 0; $i < $limit; $i++) {
-        $lock = mysql_fetch_assoc($rs);
+        $lock = $modx->db->getRow($rs);
         if ($lock['internalKey'] != $modx->getLoginUserID()) {
             $msg = sprintf($_lang['lock_msg'], $lock['username'], 'document');
             $e->setError(5, $msg);
@@ -109,8 +109,8 @@ if (!empty ($id)) {
            'FROM '.$tbl_site_content.' AS sc '.
            'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document=sc.id '.
            'WHERE sc.id=\''.$id.'\' AND ('.$access.')';
-    $rs = mysql_query($sql);
-    $limit = mysql_num_rows($rs);
+    $rs = $modx->db->query($sql);
+    $limit = $modx->db->getRecordCount($rs);
     if ($limit > 1) {
         $e->setError(6);
         $e->dumpError();
@@ -119,7 +119,7 @@ if (!empty ($id)) {
         $e->setError(3);
         $e->dumpError();
     }
-    $content = mysql_fetch_assoc($rs);
+    $content = $modx->db->getRow($rs);
 } else {
     $content = array();
 }
@@ -761,15 +761,15 @@ if (is_array($evtOut))
                        'WHERE tvtpl.templateid=\''.$template.'\' AND (1=\''.$_SESSION['mgrRole'].'\' OR ISNULL(tva.documentgroup)'.
                        (!$docgrp ? '' : ' OR tva.documentgroup IN ('.$docgrp.')').
                        ') ORDER BY tvtpl.rank,tv.rank, tv.id';
-                $rs = mysql_query($sql);
-                $limit = mysql_num_rows($rs);
+                $rs = $modx->db->query($sql);
+                $limit = $modx->db->getRecordCount($rs);
                 if ($limit > 0) {
                     echo "\t".'<table style="position:relative;" border="0" cellspacing="0" cellpadding="3" width="96%">'."\n";
                     require_once(MODX_MANAGER_PATH.'includes/tmplvars.inc.php');
                     require_once(MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
                     for ($i = 0; $i < $limit; $i++) {
                         // Go through and display all Template Variables
-                        $row = mysql_fetch_assoc($rs);
+                        $row = $modx->db->getRow($rs);
                         if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
                             // Add richtext editor to the list
                             if (is_array($replace_richtexteditor)) {
@@ -1061,8 +1061,8 @@ if ($use_udperms == 1) {
     if ($documentId > 0) {
         // Load up, the permissions from the parent (if new document) or existing document
         $sql = 'SELECT id, document_group FROM '.$tbl_document_groups.' WHERE document=\''.$documentId.'\'';
-        $rs = mysql_query($sql);
-        while ($currentgroup = mysql_fetch_assoc($rs))
+			        $rs = $modx->db->query($sql);
+			        while ($currentgroup = $modx->db->getRow($rs))
             $groupsarray[] = $currentgroup['document_group'].','.$currentgroup['id'];
 
         // Load up the current permissions and names
@@ -1081,8 +1081,8 @@ if ($use_udperms == 1) {
         $groupsarray = array_merge($groupsarray, $_POST['docgroups']);
 
     // Query the permissions and names from above
-    $rs = mysql_query($sql);
-    $limit = mysql_num_rows($rs);
+			    $rs = $modx->db->query($sql);
+			    $limit = $modx->db->getRecordCount($rs);
 
     $isManager = $modx->hasPermission('access_permissions');
     $isWeb     = $modx->hasPermission('web_access_permissions');
@@ -1100,7 +1100,7 @@ if ($use_udperms == 1) {
 
     // Loop through the permissions list
     for ($i = 0; $i < $limit; $i++) {
-        $row = mysql_fetch_assoc($rs);
+			        $row = $modx->db->getRow($rs);
 
         // Create an inputValue pair (group ID and group link (if it exists))
         $inputValue = $row['id'].','.($row['link_id'] ? $row['link_id'] : 'new');
