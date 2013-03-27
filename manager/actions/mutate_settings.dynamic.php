@@ -7,11 +7,11 @@ if(!$modx->hasPermission('settings')) {
 
 // check to see the edit settings page isn't locked
 $sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=17";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
-		$lock = mysql_fetch_assoc($rs);
+        $lock = $modx->db->getRow($rs);
 		if($lock['internalKey']!=$modx->getLoginUserID()) {
 			$msg = sprintf($_lang["lock_settings_msg"],$lock['username']);
 			$e->setError(5, $msg);
@@ -25,9 +25,9 @@ if($limit>1) {
 // this will prevent user-defined settings from being saved as system setting
 $settings = array();
 $sql = "SELECT setting_name, setting_value FROM $dbase.`".$table_prefix."system_settings`";
-$rs = mysql_query($sql);
-$number_of_settings = mysql_num_rows($rs);
-while ($row = mysql_fetch_assoc($rs)) $settings[$row['setting_name']] = $row['setting_value'];
+$rs = $modx->db->query($sql);
+$number_of_settings = $modx->db->getRecordCount($rs);
+while ($row = $modx->db->getRow($rs)) $settings[$row['setting_name']] = $row['setting_value'];
 extract($settings, EXTR_OVERWRITE);
 
 $displayStyle = ( ($_SESSION['browser']=='mz') || ($_SESSION['browser']=='op') || ($_SESSION['browser']=='sf') ) ? "table-row" : "block" ;
