@@ -1352,10 +1352,15 @@ class DocumentParser {
         return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
     }
 
-    /* интеграция кеш экстендера */
-    if($modx->config['cacheextender'] == 1){
-        var $cacheExtender = true; //modified by thebat053
-        function rewriteUrls($documentSource) {
+  
+     /** 
+     * Convert URL tags [~...~] to URLs
+     *
+     * @param string $documentSource
+     * @return string
+     */
+    function rewriteUrls($documentSource) {
+        if($this->config['cacheextender'] == 1){
             // rewrite the urls
             if ($this->config['friendly_urls'] == 1) {
                 $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
@@ -1378,16 +1383,7 @@ class DocumentParser {
                 $out= "index.php?id=" . '\1';
                 $documentSource= preg_replace($in, $out, $documentSource);
             }
-            return $documentSource;
-        }
-    }else{
-        /** 
-         * Convert URL tags [~...~] to URLs
-         *
-         * @param string $documentSource
-         * @return string
-         */
-        function rewriteUrls($documentSource) {
+        }else{    
             // rewrite the urls
             if ($this->config['friendly_urls'] == 1) {
                 $aliases= array ();
@@ -1408,10 +1404,9 @@ class DocumentParser {
                 $out= "index.php?id=" . '\1';
                 $documentSource= preg_replace($in, $out, $documentSource);
             }
-            return $documentSource;
-        }
+        }    
+        return $documentSource;
     }
-
 
     
     /**
@@ -1472,29 +1467,29 @@ class DocumentParser {
 
         # this is now the document :) #
         $documentObject= $this->db->getRow($result);
-    	if ($documentObject['template']) {
-			// load TVs and merge with document - Orig by Apodigm - Docvars
-			$sql= "SELECT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-			$sql .= "FROM " . $this->getFullTableName("site_tmplvars") . " tv ";
-			$sql .= "INNER JOIN " . $this->getFullTableName("site_tmplvar_templates")." tvtpl ON tvtpl.tmplvarid = tv.id ";
-			$sql .= "LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues")." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $documentObject['id'] . "' ";
-			$sql .= "WHERE tvtpl.templateid = '" . $documentObject['template'] . "'";
-			$rs= $this->db->query($sql);
-			$rowCount= $this->db->getRecordCount($rs);
-			if ($rowCount > 0) {
-				for ($i= 0; $i < $rowCount; $i++) {
-					$row= $this->db->getRow($rs);
-					$tmplvars[$row['name']]= array (
-						$row['name'],
-						$row['value'],
-						$row['display'],
-						$row['display_params'],
-						$row['type']
-					);
-				}
-				$documentObject= array_merge($documentObject, $tmplvars);
-			}
-		}
+        if ($documentObject['template']) {
+            // load TVs and merge with document - Orig by Apodigm - Docvars
+            $sql= "SELECT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
+            $sql .= "FROM " . $this->getFullTableName("site_tmplvars") . " tv ";
+            $sql .= "INNER JOIN " . $this->getFullTableName("site_tmplvar_templates")." tvtpl ON tvtpl.tmplvarid = tv.id ";
+            $sql .= "LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues")." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $documentObject['id'] . "' ";
+            $sql .= "WHERE tvtpl.templateid = '" . $documentObject['template'] . "'";
+            $rs= $this->db->query($sql);
+            $rowCount= $this->db->getRecordCount($rs);
+            if ($rowCount > 0) {
+                for ($i= 0; $i < $rowCount; $i++) {
+                    $row= $this->db->getRow($rs);
+                    $tmplvars[$row['name']]= array (
+                        $row['name'],
+                        $row['value'],
+                        $row['display'],
+                        $row['display_params'],
+                        $row['type']
+                    );
+                }
+                $documentObject= array_merge($documentObject, $tmplvars);
+            }
+        }
         return $documentObject;
     }
 
@@ -1784,50 +1779,24 @@ class DocumentParser {
         return $parents;
     }
 
-    /* интеграция кеш экстендера */
-    if($modx->config['cacheextender'] == 1){
-        function getChildIds($id, $depth = 11, $children = array(), $strictchilds = null){
+    
+
+    /**
+     * Returns an array of child IDs belonging to the specified parent.
+     *
+     * @param int $id The parent resource/document to start from
+     * @param int $depth How many levels deep to search for children, default: 10
+     * @param array $children Optional array of docids to merge with the result.
+     * @return array Contains the document Listing (tree) like the sitemap
+     */
+    function getChildIds($id, $depth = 11, $children = array(), $strictchilds = null){
+        if($this->config['cacheextender'] == 1){
             if(!is_array($id))
                 $id = array($id);
             foreach($id as $chid){
                 $children += $this->getChildIdsRec($chid, $depth, array(), $strictchilds);
             }
-
-            return $children;
-        }
-
-        function getChildIdsRec($id, $depth, $children = array(), $strictchilds = null) {
-            // Get all the children for this parent node
-            if (isset($this->documentMap_cache[$id])) {
-                $depth--;
-                $tmp = $this->documentMap_cache[$id];
-                foreach ($tmp as $childId) {
-                    if($strictchilds)
-                        if(!in_array($childId, $strictchilds))
-                            continue;
-                    $pkey = (strlen($this->aliasListing[$childId]['path']) ? "{$this->aliasListing[$childId]['path']}/" : '') . $this->aliasListing[$childId]['alias'];
-                    if (!strlen($pkey)) $pkey = "{$childId}";
-                        $children[$pkey] = $childId;
-
-                    if ($depth || $depth < 0) {
-                        $children += $this->getChildIdsRec($childId, $depth, array(), $strictchilds);
-                    }
-                }
-            }
-            return $children;
-        }
-    }else{ 
-
-        /**
-         * Returns an array of child IDs belonging to the specified parent.
-         *
-         * @param int $id The parent resource/document to start from
-         * @param int $depth How many levels deep to search for children, default: 10
-         * @param array $children Optional array of docids to merge with the result.
-         * @return array Contains the document Listing (tree) like the sitemap
-         */
-        function getChildIds($id, $depth= 10, $children= array ()) {
-
+        }else{
             // Initialise a static array to index parents->children
             static $documentMap_cache = array();
             if (!count($documentMap_cache)) {
@@ -1852,9 +1821,34 @@ class DocumentParser {
                     }
                 }
             }
-            return $children;
-        }
+        }    
+
+        return $children;
     }
+
+    function getChildIdsRec($id, $depth, $children = array(), $strictchilds = null) {
+        // Get all the children for this parent node
+        if (isset($this->documentMap_cache[$id])) {
+            $depth--;
+            $tmp = $this->documentMap_cache[$id];
+            foreach ($tmp as $childId) {
+                if($strictchilds)
+                    if(!in_array($childId, $strictchilds))
+                        continue;
+                $pkey = (strlen($this->aliasListing[$childId]['path']) ? "{$this->aliasListing[$childId]['path']}/" : '') . $this->aliasListing[$childId]['alias'];
+                if (!strlen($pkey)) $pkey = "{$childId}";
+                    $children[$pkey] = $childId;
+
+                if ($depth || $depth < 0) {
+                    $children += $this->getChildIdsRec($childId, $depth, array(), $strictchilds);
+                }
+            }
+        }
+        return $children;
+    }
+
+
+
     /**
      * Displays a javascript alert message in the web browser
      *
