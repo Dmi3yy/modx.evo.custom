@@ -1133,4 +1133,6 @@ $_lang['email_method_smtp'] = 'SMTP.';
 $_lang['email_smtp_sender_title'] = 'SMTP mail';
 $_lang['email_host_title'] = 'smtp host';
 $_lang['email_pass_title'] = 'smtp password';
+
+$_lang['cackeextender_title'] = 'Enable CacheExtender';
 ?>

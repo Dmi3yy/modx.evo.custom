@@ -1131,6 +1131,8 @@ $_lang['email_smtp_sender_title'] = 'SMTP почта';
 $_lang['email_host_title'] = 'Адрес SMTP-сервера';
 $_lang['email_pass_title'] = 'SMTP пароль';
 
+$_lang['cackeextender_title'] = 'Включить КешЭкстендер';
+
 $_lang["pwd_hash_algo_title"] = 'Hash algorithm';
 $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"]  = 'Enable @Bindings commands';
