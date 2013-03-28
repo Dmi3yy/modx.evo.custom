@@ -771,6 +771,18 @@ function confirmLangChange(el, lkey, elupd){
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["blocked_minutes_message"] ?></td>
           </tr>
+          <!--CacheExtender-->
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["cacheextender_title"] ?></b></td>
+            <td> <input onchange="documentDirty=true;" type="radio" name="cacheextender" value="0" <?php echo ($cacheextender=='0' || !isset($cacheextender)) ? 'checked="checked"' : "" ;?> />
+              <?php echo $_lang["no"]?><br />
+              <input onchange="documentDirty=true;" type="radio" name="cacheextender" value="1" <?php echo ($cacheextender=='1') ? 'checked="checked"' : "" ;?> />
+              <?php echo $_lang["yes"]?> </td>
+          </tr>
+          <!--CacheExtender-->
            <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>

@@ -972,6 +972,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('tree_page_click', '27'),
 ('clean_uploaded_filename', '1'),
 ('remember_last_tab', '1'),
+('cacheextender','0'),
 ('enable_bindings', '1');
 
 
