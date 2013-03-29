@@ -6,9 +6,10 @@ $base="/assets/cache/phpthumbof/";   // тут можно менять путь
 
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
-if($input == '' || !file_exists($_SERVER['DOCUMENT_ROOT']."/".$input))
-{return 'assets/snippets/phpthumbof/noimage.png';}
-else{
+if($input == '' || !file_exists($_SERVER['DOCUMENT_ROOT']."/".$input)){
+  $input = 'assets/snippets/phpthumbof/noimage.png';
+}
+
   $options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "="));
   $path_parts=pathinfo($input);
   require_once MODX_BASE_PATH."/assets/snippets/phpthumbof/phpthumb.class.php";
@@ -37,5 +38,5 @@ else{
   $outputFilename =MODX_BASE_PATH.$fname;
   if (!file_exists($outputFilename)) if ($phpThumb->GenerateThumbnail()) $phpThumb->RenderToFile($outputFilename) ;
   return $fname;
-}
+
 ?>
