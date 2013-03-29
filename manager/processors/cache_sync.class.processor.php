@@ -196,34 +196,34 @@ class synccache{
             $config[$key] = $value;
         }
 
-        // get aliases modx: support for alias path
-     if($modx->config['cacheextender'] == 1){
-           $this->processDocumentCacheExtended($modx, $tmpPHP, $config);
-     }else{   
-        
-        $tmpPath = '';
-        $tmpPHP .= '$this->aliasListing = array();' . "\n";
-        $tmpPHP .= '$a = &$this->aliasListing;' . "\n";
-        $tmpPHP .= '$d = &$this->documentListing;' . "\n";
-        $tmpPHP .= '$m = &$this->documentMap;' . "\n";
-        $sql = 'SELECT IF(alias=\'\', id, alias) AS alias, id, contentType, parent FROM '.$modx->getFullTableName('site_content').' WHERE deleted=0 ORDER BY parent, menuindex';
-        $rs = $modx->db->query($sql);
-        $limit_tmp = $modx->db->getRecordCount($rs);
-        for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) {
-            $tmp1 = $modx->db->getRow($rs);
-            if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
-                $tmpPath = $this->getParents($tmp1['parent']);
-                $alias= (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$tmp1['alias'];
-                $alias= $modx->db->escape($alias);
-                $tmpPHP .= '$d[\''.$alias.'\']'." = ".$tmp1['id'].";\n";
+            // get aliases modx: support for alias path
+         if($modx->config['cacheextender'] == 1){
+               $this->processDocumentCacheExtended($modx, $tmpPHP, $config);
+         }else{   
+            
+            $tmpPath = '';
+            $tmpPHP .= '$this->aliasListing = array();' . "\n";
+            $tmpPHP .= '$a = &$this->aliasListing;' . "\n";
+            $tmpPHP .= '$d = &$this->documentListing;' . "\n";
+            $tmpPHP .= '$m = &$this->documentMap;' . "\n";
+            $sql = 'SELECT IF(alias=\'\', id, alias) AS alias, id, contentType, parent FROM '.$modx->getFullTableName('site_content').' WHERE deleted=0 ORDER BY parent, menuindex';
+            $rs = $modx->db->query($sql);
+            $limit_tmp = $modx->db->getRecordCount($rs);
+            for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) {
+                $tmp1 = $modx->db->getRow($rs);
+                if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
+                    $tmpPath = $this->getParents($tmp1['parent']);
+                    $alias= (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$tmp1['alias'];
+                    $alias= $modx->db->escape($alias);
+                    $tmpPHP .= '$d[\''.$alias.'\']'." = ".$tmp1['id'].";\n";
+                }
+                else {
+                    $tmpPHP .= '$d[\''.$modx->db->escape($tmp1['alias']).'\']'." = ".$tmp1['id'].";\n";
+                }
+                $tmpPHP .= '$a[' . $tmp1['id'] . ']'." = array('id' => ".$tmp1['id'].", 'alias' => '".$modx->db->escape($tmp1['alias'])."', 'path' => '" . $modx->db->escape($tmpPath)."', 'parent' => " . $tmp1['parent']. ");\n";
+                $tmpPHP .= '$m[]'." = array('".$tmp1['parent']."' => '".$tmp1['id']."');\n";
             }
-            else {
-                $tmpPHP .= '$d[\''.$modx->db->escape($tmp1['alias']).'\']'." = ".$tmp1['id'].";\n";
-            }
-            $tmpPHP .= '$a[' . $tmp1['id'] . ']'." = array('id' => ".$tmp1['id'].", 'alias' => '".$modx->db->escape($tmp1['alias'])."', 'path' => '" . $modx->db->escape($tmpPath)."', 'parent' => " . $tmp1['parent']. ");\n";
-            $tmpPHP .= '$m[]'." = array('".$tmp1['parent']."' => '".$tmp1['id']."');\n";
-        }
-     }
+         }
 
 
         // get content types

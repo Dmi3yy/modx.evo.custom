@@ -1352,7 +1352,7 @@ class DocumentParser {
         return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
     }
 
-  
+    var $cacheExtender = true; 
      /** 
      * Convert URL tags [~...~] to URLs
      *
