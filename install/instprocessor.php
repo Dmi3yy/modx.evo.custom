@@ -1,5 +1,9 @@
 <?php
-include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+}else{
+    define('MGR_DIR', 'manager');
+}
 
 global $moduleName;
 global $moduleVersion;
@@ -199,6 +203,13 @@ if ($moduleSQLBaseFile) {
     }
 }
 
+// custom or not
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+    $mgrdir = 'include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");';
+}else{
+    $mgrdir = 'define(\'MGR_DIR\', \'manager\');';
+}
+
 // write the config.inc.php file if new installation
 echo "<p>" . $_lang['writing_config_file'];
 $configString = '<?php
@@ -220,7 +231,7 @@ $lastInstallTime = '.time().';
 $site_sessionname = \'' . $site_sessionname . '\';
 $https_port = \'443\';
 
-include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
+'.$mgrdir.'
 
 // automatically assign base_path and base_url
 if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'base_url\']) {
