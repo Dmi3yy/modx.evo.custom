@@ -204,8 +204,8 @@ if ($moduleSQLBaseFile) {
 }
 
 // custom or not
-if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
-    $mgrdir = 'include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");';
+if (file_exists(dirname(__FILE__)."/../../assets/cache/siteManager.php")) {
+    $mgrdir = 'include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");';
 }else{
     $mgrdir = 'define(\'MGR_DIR\', \'manager\');';
 }
