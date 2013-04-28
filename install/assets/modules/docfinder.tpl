@@ -5,7 +5,7 @@
  * быстрый поиск и замена в админке
  * 
  * @category	module
- * @version 	1.1
+ * @version 	1.6
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@guid 	
