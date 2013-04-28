@@ -1,28 +1,17 @@
 Сборка обзавеласть собственным сайтом: http://modx.com.ua
 Так же рекоменую скачивать сборку с сайта так как на гитхаб не всегда стабильный релиз!!!
 
-текущая версии 1.0.10RC-d5.1  (22.03.2013)
+!!Ченжлог не содержит те правки которые не отличаются с офф версией 
+
+текущая версии 1.0.10-d5.2  (18.04.2013)
 =======================================================
-- Исправленна ошибка с Fix for array_combine bug
+- исправленна ошибка в getParentIds при отключенный AliasVisible не коректно работало
 - из .htaccess удалены ненужные записи
-- Исправленна ошибка с разархивированием zip через фаил менеджер
-- $modx->stripTags should remove entity encoded MODX tags
-- Bug #3493 unnecessary slash in MAGPIE_CACHE_DIR
-- Bug #3533 AJAXSEARCH-82 : can't define configuration file name with "@FILE:" prefix
-- Bug #3783 Superfluous code in getTemplateVars
-- Bug #9688 Can not make new manager user
 - update phpthumb snippet
-- Bug #9679 Warning during Installation
-- Bug #9673 Improvement some translations
-- #9692 Escape strings in array data
-- #9693 When use mysql_real_escape_string, execute mysql_set_charset beforehand
-- #9694 Undefined property: DocumentParser::$mstart
 - Автоматическое добавление alias_visible при обновлении с modx evo
-- дбавил параметр а EvoGallery (https://github.com/Mark-H/EvoGallery/pull/55)
-- Bug #9733 mutate_web_user.dynamic.php fails to sanitize user entry
+- добавил параметр а EvoGallery (https://github.com/Mark-H/EvoGallery/pull/55)
 
-
-текущая версии 1.0.9-d5  (19.03.2013)
+1.0.9-d5  (19.03.2013)
 =======================================================
 - добавлен параметр outerTpl в Ditto (http://modx.im/blog/triks/414.html)
 - добавлен placeholder [+ditto_class+] в Ditto (http://modx.im/blog/triks/416.html)
@@ -50,50 +39,7 @@
 - Fix ImageMagick which convert issue (PHP 5.3.2+) for phpthumb
 - TV & template blank (Избавляемся от лишнего SQL запроса за TV параметрами если у документа выбран шаблон blank)
 - Fix разбора параметра типа list-multi в модулях/плагинах/сниппетах
-- Fixing bug #3847 Wayfinder does not apply lastClass if there is only one item
-- Refactor #3730 Entity encode Wayfinder placeholders
-- Bug #3698 Wrong URL construction when using an array of values (checkboxes)
-- Bug #4088 web user photo from other site not correct
-- Refactor #3746 don't show New Module button when user's role lacks that permission
-- Bug #8909 Publication schedule don't use server_offset_time setting
 - исправил ошибку когда при инстале заменялось содержимое чанков
-- Bug #7541 Upgrade of Existing Site - Error due to single quote in plugin properties
-- Bug #3449 Datepicker bug in Opera
-
-список изменений который вошел и в офиуиальную версию modx evo 1.0.9
-- DocumentParser - remove all unused multiline placeholders
-- Bug #7204 In eFormParseTemplate $formats and $labels
-- Bug #9398 eForm & php 5.3
-- Bug #6119 The function sendMailMessage in save_web_user.processor.php
-- Bug #7459 Deprecated function 'split'
-- Bug #3724 Magic GPC Quotes issue in PHP 5.3.*
-- Bug #5807 manager.lockout not styled properly
-- Bug #4484 bug in wait.static.php
-- Refactor #5971 Check whether manager template exists during manager
-- Bug #3835 Multiple call wayfinder with config, not load config
-- Bug #3689 Ditto relative to absolute url bug 
-- Bug #3495 Mistake in phpSniff.core.php
-- Bug #9586 Quick Manager and system setting Automatic Template Assignment
-- Bug #9620 Set Manager language in Create/Edit User
-- Bug #8339 LFI in install
-- Better modx_sanitize_gpc
-- prevent LFI if not in manager mode (поправил немного но уже было раньше в сборке) спасибо Agel_Nash
-- Better modx_sanitize_gpc (Важное исправление для безопасности) спасибо Agel_Nash и Jako
-- [#9563] onManagerMainFrameHeaderHTMLBlock event
-- OnWUsrFormRender event adjustment
-- Refactor #9567 Add "limit" option to $modx->db->delete()
-- Improvement to full table name call
-- Refactor #9583 Refactoring System configuration in manager screen
-- Refactor #9570 Detailed log message
-- Feature #9582 Add new config "Detection level of the PHP error"
-- Feature #9615 Add new function for documentParser "$modx->nicesize()"
-- Feature #9566 Improvement to full table name call
-- Feature #9624 Add .htaccess into assets/cache/
-- Fix - Run snippet in manager issue
-- Refactor #9622 Refactor "Manage Files"
-- New feature - Add salt string to password
-- Refactor #9568 @Bindings enable/disable option in System configuration
-
 
 1.0.8-d4.1  (10.02.2013)
 ========================================================
