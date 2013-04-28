@@ -47,6 +47,7 @@ class DocumentParser {
     var $loadedjscripts;
     var $documentMap;
     var $forwards= 3;
+    var $error_reporting;
     var $aliasListing;
     var $ext=array(); //for custom loadExtension
     private $version=array();
@@ -68,6 +69,7 @@ class DocumentParser {
         $this->pluginEvent= array ();
         // set track_errors ini variable
         @ ini_set("track_errors", "1"); // enable error tracking in $php_errormsg
+        $this->error_reporting = 1;
     }
 
     /**
@@ -374,6 +376,7 @@ class DocumentParser {
                     $usrSettings= array_merge($musrSettings, $usrSettings);
                 }
             }
+            $this->error_reporting = $this->config['error_reporting'];
             $this->config= array_merge($this->config, $usrSettings);
         }
     }
@@ -406,33 +409,7 @@ class DocumentParser {
         $docIdentifier= $this->config['site_start'];
         switch ($method) {
             case 'alias' :
-                $docIdentifier= $this->db->escape((string) $_REQUEST['q']);
-                
-                /*
-                
-                $ext = explode('.',$docIdentifier);
-                
-                $tmp=$ext[0];
-                $exp = explode('-',$tmp);
-                $als = end($exp);
-//echo $als;exit;
-               if($als == 'area') {
-                    //   echo $als;
-                  foreach($exp AS $e_item) {
-                        if($e_item != 'area') $arr_alias[] = $e_item;
-                  }
-
-                   $docIdentifier = implode('-',$arr_alias);
-               }
-               else if($als == 'tool') {
-                   foreach($exp AS $e_item) {
-                        if($e_item != 'tool') $arr_alias[] = $e_item;
-                  }
-                    $docIdentifier = implode('-',$arr_alias);
-               }
-                
-                $docIdentifier.=$ext[1];
-                */
+                $docIdentifier= $this->db->escape($_REQUEST['q']);
                 break;
             case 'id' :
                 if (!is_numeric($_REQUEST['id'])) {
@@ -697,7 +674,7 @@ class DocumentParser {
         $phpTime= sprintf("%2.4f s", $phpTime);
         $source= $this->documentGenerated == 1 ? "database" : "cache";
         $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
-        $phpMemory = (memory_get_peak_usage(true) / 1024 / 1024) . " МБ";
+        $phpMemory = (memory_get_peak_usage(true) / 1024 / 1024) . " mb";
 
         $out =& $this->documentOutput;
         if ($this->dumpSQL) {
@@ -709,7 +686,6 @@ class DocumentParser {
         $out= str_replace("[^t^]", $totalTime, $out);
         $out= str_replace("[^s^]", $source, $out);
         $out= str_replace("[^m^]", $phpMemory, $out);
-        
         //$this->documentOutput= $out;
 
         // invoke OnWebPagePrerender event
@@ -895,6 +871,7 @@ class DocumentParser {
             $replace[$i]= $value;
         }
         $template= str_replace($matches[0], $replace, $template);
+
         return $template;
     }
 
@@ -1032,7 +1009,7 @@ class DocumentParser {
         $snip= eval ($snippet);
         $msg= ob_get_contents();
         ob_end_clean();
-        if ((0<$this->config['error_reporting']) && $msg && isset($php_errormsg))
+        if ((0<$this->config['error_reporting']) && isset($php_errormsg))
         {
             $error_info = error_get_last();
             if($error_info['type']===2048 || $error_info['type']===8192) $error_type = 2;
@@ -1044,7 +1021,7 @@ class DocumentParser {
                 $result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Snippet', $text, $line, $msg);
                 if ($this->isBackend())
                 {
-                    $this->event->alert("An error occurred while loading. Please see the event log for more information<p>{$msg}</p>");
+                    $this->event->alert("An error occurred while loading. Please see the event log for more information<p>{$msg}{$snip}</p>");
                 }
             }
         }
@@ -1125,7 +1102,11 @@ class DocumentParser {
             $params_stack = $snip_call['params'];
             while(!empty($params_stack) && $i < $limit)
             {
-                list($pname,$params_stack) = explode('=',$params_stack,2);
+				if(strpos($params_stack,'=')!==false) list($pname,$params_stack) = explode('=',$params_stack,2);
+				else {
+					$pname=$params_stack;
+					$params_stack = '';
+				}
                 $params_stack = trim($params_stack);
                 $delim = substr($params_stack, 0, 1);
                 $temp_params = array();
@@ -1344,11 +1325,12 @@ class DocumentParser {
      * @param string $alias
      * @return string
      */
-    function makeFriendlyURL($pre, $suff, $alias) {
+   function makeFriendlyURL($pre, $suff, $alias, $isfolder=0) {
         $Alias = explode('/',$alias);
         $alias = array_pop($Alias);
         $dir = implode('/', $Alias);
         unset($Alias);
+        if($this->config['make_folders']==='1' && $isfolder==1) $suff = '/';
         return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
     }
 
@@ -1364,13 +1346,15 @@ class DocumentParser {
             $aliases= array ();
             foreach ($this->aliasListing as $item) {
                 $aliases[$item['id']]= (strlen($item['path']) > 0 ? $item['path'] . '/' : '') . $item['alias'];
+                $isfolder[$item['id']]= $item['isfolder'];
             }
             $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
             $isfriendly= ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
             $pref= $this->config['friendly_url_prefix'];
             $suff= $this->config['friendly_url_suffix'];
             $thealias= '$aliases[\\1]';
-            $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias)";
+            $thefolder= '$isfolder[\\1]';
+            $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder)";
             $not_found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff','" . '\\1' . "')";
             $out= "({$isfriendly} && isset({$thealias}) ? {$found_friendlyurl} : {$not_found_friendlyurl})";
             $documentSource= preg_replace($in, $out, $documentSource);
@@ -1498,18 +1482,14 @@ class DocumentParser {
             
             // combine template and document variables
             $source= $this->mergeDocumentContent($source);
-            
+            // replace settings referenced in document
             $source = $this->mergeSettingsContent($source);
-            
             // replace HTMLSnippets in document
             $source= $this->mergeChunkContent($source);
-            
             // insert META tags & keywords
             $source= $this->mergeDocumentMETATags($source);
-            
             // find and merge snippets
             $source = $this->evalSnippets($source);
-            
             // find and replace Placeholders (must be parsed last) - Added by Raymond
             $source= $this->mergePlaceholderContent($source);
             
@@ -1745,7 +1725,9 @@ class DocumentParser {
             $thisid = $id;
             $id = $this->aliasListing[$id]['parent'];
             if (!$id) break;
-            $parents[$thisid] = $id;
+            $pkey = strlen($this->aliasListing[$thisid]['path']) ? $this->aliasListing[$thisid]['path'] : $this->aliasListing[$id]['alias'];
+            if (!strlen($pkey)) $pkey = "{$id}";
+            $parents[$pkey] = $id;
         }
         return $parents;
     }
@@ -1844,7 +1826,6 @@ class DocumentParser {
     if ($LoginUserID == '') $LoginUserID = 0;
         $evtid= intval($evtid);
         $type=(int)$type;
-
         if ($type < 1) {
             $type= 1;
         }
@@ -2253,6 +2234,8 @@ class DocumentParser {
             $alias= $id;
             if ($this->config['friendly_alias_urls'] == 1) {
                 $al= $this->aliasListing[$id];
+                if($al['isfolder']===1 && $this->config['make_folders']==='1')
+                    $f_url_suffix = '/';
                 $alPath= !empty ($al['path']) ? $al['path'] . '/' : '';
                 if ($al && $al['alias'])
                     $alias= $al['alias'];
@@ -3343,6 +3326,14 @@ class DocumentParser {
         return $t;
     }
 
+	# Decode JSON regarding hexadecimal entity encoded MODX tags
+    function jsonDecode($json, $assoc = false) {
+		// unmask MODX tags
+		$masked = array('&#x005B;', '&#x005D;', '&#x007B;', '&#x007D;');
+		$unmasked = array('[', ']', '{', '}');
+		$json = str_replace($masked, $unmasked, $json);
+		return json_decode($json, $assoc);
+    }
    /**
      * Add an event listner to a plugin - only for use within the current execution cycle
      *
@@ -3685,8 +3676,23 @@ class DocumentParser {
      * @return boolean
      */
     function phpError($nr, $text, $file, $line) {
-        if (error_reporting() == 0 || $nr == 0 || ($nr == 8 && $this->stopOnNotice == false)) {
+        if (error_reporting() == 0 || $nr == 0) {
             return true;
+        }
+        if($this->stopOnNotice == false)
+        {
+            switch($nr)
+            {
+                case E_NOTICE:
+                    if($this->error_reporting <= 2) return true;
+                    break;
+                case E_STRICT:
+                case E_DEPRECATED:
+                    if($this->error_reporting <= 1) return true;
+                    break;
+                default:
+                    if($this->error_reporting === 0) return true;
+            }
         }
         if (is_readable($file)) {
             $source= file($file);
@@ -3876,10 +3882,12 @@ class DocumentParser {
                 $error_level = 3;
         }
         $this->logEvent(0, $error_level, $str,$source);
-        if($error_level === 2) return true;
+	
+        if($error_level === 2 && $this->error_reporting!=='99') return true;
+        if($this->error_reporting==='99' && !isset($_SESSION['mgrValidated'])) return true;
 
         // Set 500 response header
-        header('HTTP/1.1 500 Internal Server Error');
+	    if($error_level !== 2) header('HTTP/1.1 500 Internal Server Error');
 
         // Display error
         if (isset($_SESSION['mgrValidated']))
@@ -3918,7 +3926,6 @@ class DocumentParser {
                default:
                $functionName = $val['function'];
             }
-            
             $str .= "<tr><td valign=\"top\">{$key}</td>";
             $str .= "<td>{$functionName}()<br />{$path} on line {$val['line']}</td>";
         }

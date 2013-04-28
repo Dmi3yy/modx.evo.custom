@@ -8,7 +8,7 @@ if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
 }
 require_once('../'.MGR_DIR.'/includes/version.inc.php');
 
-$moduleName = "MODx";
+$moduleName = "MODX";
 $moduleVersion = $modx_branch.' '.$modx_version;
 $moduleRelease = $modx_release_date;
 $moduleSQLBaseFile = "setup.sql";

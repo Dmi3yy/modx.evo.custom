@@ -7,6 +7,8 @@ require_once('../../includes/protect.inc.php');
 // load configuration file
 include "../../includes/config.inc.php";
 
+error_reporting(E_ALL & ~(E_STRICT|E_NOTICE));
+
 /** 
  * Security check user MUST be logged into manager 
  * before being able to run this script

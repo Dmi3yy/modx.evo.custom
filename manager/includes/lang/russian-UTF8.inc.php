@@ -641,7 +641,7 @@ $_lang["password_method"] = 'Способ уведомления о новом �
 $_lang["password_method_email"] = 'Послать новый пароль по e-mail.';
 $_lang["password_method_screen"] = 'Показать новый пароль на экране.';
 $_lang["password_msg"] = 'Для пользователя <b>%s</b> задан новый пароль - <b>%s</b>.';
-$_lang["php_version_check"] = 'Система MODx работает с PHP версии 4.0.3 или выше. Пожалуйста, обновите PHP';
+$_lang["php_version_check"] = 'Система MODx работает с PHP версии 5.0.0 или выше. Пожалуйста, обновите PHP';
 $_lang["plugin"] = 'Плагин';
 $_lang["plugin_code"] = 'Код плагина (php)';
 $_lang["plugin_config"] = 'Конфигурация плагина';
@@ -1083,7 +1083,14 @@ $_lang["yourinfo_role"] = 'Ваша роль:';
 $_lang["yourinfo_title"] = 'Информация о вас';
 $_lang["yourinfo_total_logins"] = 'Всего авторизаций:';
 $_lang["yourinfo_username"] = 'Вы авторизованы как:';
-// bkmanager.static.php
+
+$_lang['a17_error_reporting_title'] = 'Обнаружение уровня ошибки РНР';
+$_lang['a17_error_reporting_msg'] = 'Набор обнаружения уровня ошибок РНР';
+$_lang['a17_error_reporting_opt0'] = 'Игнорировать все';
+$_lang['a17_error_reporting_opt1'] = 'Игнорировать предупреждения о незначительных ошибках(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang['a17_error_reporting_opt2'] = 'Обнаружить все ошибки кроме E_NOTICE';
+$_lang['a17_error_reporting_opt99'] = 'Обнаружить все';
+
 $_lang["bkmgr_alert_mkdir"] = 'Фаил не может быть создан.  Праверьте права на папку assets/backup';
 $_lang["bkmgr_restore_msg"] = '<p>Сайт может быть восстановление с помощью файла SQL. </p>';
 $_lang["bkmgr_restore_title"] = 'Восстановить';
@@ -1116,13 +1123,6 @@ $_lang["docid_incrmnt_method_title"] = 'Способ добавления Resour
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Минимальный пропущенный ID';
 $_lang["docid_incrmnt_method_2"] = 'Максимальный ID+1';
-
-$_lang['a17_error_reporting_title'] = 'Обнаружение уровня ошибки РНР';
-$_lang['a17_error_reporting_msg'] = 'Набор обнаружения уровня ошибок РНР';
-$_lang['a17_error_reporting_opt0'] = 'Игнорировать все';
-$_lang['a17_error_reporting_opt1'] = 'Игнорировать предупреждения о незначительных ошибках(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang['a17_error_reporting_opt2'] = 'Обнаружить все ошибки кроме E_NOTICE';
-$_lang['a17_error_reporting_opt99'] = 'Обнаружить все';
 
 $_lang['email_method_title'] = 'Метод отправки писем';
 $_lang['email_method_mail'] = 'MAIL - ообщения отправляются с помощью функции mail().';

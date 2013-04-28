@@ -902,9 +902,10 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('error_page','1'),
 ('unauthorized_page','1'),
 ('site_status','1'),
+('site_unavailable_message','The site is currently unavailable'),
 ('track_visitors','0'),
 ('top_howmany','10'),
-('auto_template_logic','sibling'),
+('auto_template_logic','{AUTOTEMPLATELOGIC}'),
 ('default_template','3'),
 ('old_template',''),
 ('publish_default','1'),
@@ -972,7 +973,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('tree_page_click', '27'),
 ('clean_uploaded_filename', '1'),
 ('remember_last_tab', '1'),
-('enable_bindings', '1');
+('enable_bindings', '1'),
+('make_folders', '1');
 
 
 REPLACE INTO `{PREFIX}user_roles` 

@@ -82,6 +82,7 @@ if (!@ mysql_select_db(str_replace("`", "", $dbase), $conn)) {
     echo "<span class=\"notok\" style='color:#707070'>".$_lang['setup_database_selection_failed']."</span>".$_lang['setup_database_selection_failed_note']."</p>";
     $create = true;
 } else {
+	if (function_exists('mysql_set_charset')) mysql_set_charset($database_charset);
     @ mysql_query("{$database_connection_method} {$database_connection_charset}");
     echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
@@ -537,7 +538,7 @@ if (isset ($_POST['module']) || $installData) {
                 $rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_modules` WHERE name='$name'", $sqlParser->conn);
                 if (mysql_num_rows($rs)) {
                     $row = mysql_fetch_assoc($rs);
-                    $props = mysql_real_escape_string(propUpdate($properties,$row['properties']));
+                    $props = propUpdate($properties,mysql_real_escape_string($row['properties']));
                     if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', enable_sharedparams='$shared' WHERE name='$name';", $sqlParser->conn)) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -595,7 +596,7 @@ if (isset ($_POST['plugin']) || $installData) {
                 if (mysql_num_rows($rs)) {
                     $insert = true;
                     while($row = mysql_fetch_assoc($rs)) {
-                        $props = mysql_real_escape_string(propUpdate($properties,$row['properties']));
+                        $props = propUpdate($properties,mysql_real_escape_string($row['properties']));
                         if($row['description'] == $desc){
                             if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE id={$row['id']};", $sqlParser->conn)) {
                                 echo "<p>" . mysql_error() . "</p>";
@@ -630,7 +631,7 @@ if (isset ($_POST['plugin']) || $installData) {
 							return;
 						}
 					}
-						
+					
 					
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
