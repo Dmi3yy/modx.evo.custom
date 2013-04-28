@@ -897,7 +897,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('server_protocol','http'),
 ('manager_language','{MANAGERLANGUAGE}'),
 ('modx_charset','UTF-8'),
-('site_name','MODx Site By Dmi3yy'),
+('site_name','MODX Site By Dmi3yy'),
 ('site_start','1'),
 ('error_page','1'),
 ('unauthorized_page','1'),
@@ -974,7 +974,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('clean_uploaded_filename', '1'),
 ('remember_last_tab', '1'),
 ('enable_bindings', '1'),
-('make_folders', '1');
+('make_folders', '0');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
