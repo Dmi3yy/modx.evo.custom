@@ -104,35 +104,32 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 1.0.6-d1 (20.09.2012)
 ========================================================
-Для апдейта нужно сначала выполнить запрос: 
-ALTER TABLE  `modx_site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT  '1'
- 
 ---------------Добавленны файлы:------------------------
--fancybox
--swfobject
+- fancybox
+- swfobject
 
 --------------Инсталл изменение настроек----------------
--изменил setup.sql (поправил настройки по умолчанию)  (http://e-kao.ru/ownmodx)
--при инстале удалил все языки кроме EN и RU
+- изменил setup.sql (поправил настройки по умолчанию)  (http://e-kao.ru/ownmodx)
+- при инстале удалил все языки кроме EN и RU
 
 
 -------------Изменение системных файлов----------------
--поправил robot.txt
--транслитерация файлов в менеджере картинок и файлов  (http://www.supremum.lv/2010/04/09/transliteraciya-imyon-fajlov-pri-zagruzke-v-modx/)
--wait.static.php - ускоряем переход на главную при сохранении (http://community.modx-cms.ru/blog/tips_and_tricks/2580.html)
--jot обновил шаблоны
--правка managermanager - глюк тв параметра с картинкой mm_widget_showimagetvs  (http://community.modx-cms.ru/blog/questions/2486.html)
--правка managermanager - глюк в MultiPhotos MultiFiles - (http://community.modx-cms.ru/blog/addons/1232.html#comment18538)
--ditto отключение пагинации если 1 страничка (ditto.class.inc.php)
--ditto замена ?=& при работе с @CODE на |xq|','|xe|','|xa| (template.class.inc.php)
--transalias - правильная транслитерация по умолчанию
--FirstChildRedirect - баг с Яндексом (http://community.modx-cms.ru/blog/questions/627.html#comment6754)
--JotX (https://github.com/Temus/JotX/)
--phpmailer - патч (http://forums.modx.com/index.php/topic,36046.0.html)
--ditto исправлен баг в get масивом (http://community.modx-cms.ru/blog/2760.html#comment21973)
--хак дерева документов для редактирования дочерних ресурсов(http://community.modx-cms.ru/blog/tips_and_tricks/848.html)
--переведен на русский datepicker.js
--хак tree.php  для вывода иконки быстрго доступа к елементам(эксперементальная штука)
+- поправил robot.txt
+- транслитерация файлов в менеджере картинок и файлов  (http://www.supremum.lv/2010/04/09/transliteraciya-imyon-fajlov-pri-zagruzke-v-modx/)
+- wait.static.php - ускоряем переход на главную при сохранении (http://community.modx-cms.ru/blog/tips_and_tricks/2580.html)
+- jot обновил шаблоны
+- правка managermanager - глюк тв параметра с картинкой mm_widget_showimagetvs  (http://community.modx-cms.ru/blog/questions/2486.html)
+- правка managermanager - глюк в MultiPhotos MultiFiles - (http://community.modx-cms.ru/blog/addons/1232.html#comment18538)
+- ditto отключение пагинации если 1 страничка (ditto.class.inc.php)
+- ditto замена ?=& при работе с @CODE на |xq|','|xe|','|xa| (template.class.inc.php)
+- transalias - правильная транслитерация по умолчанию
+- FirstChildRedirect - баг с Яндексом (http://community.modx-cms.ru/blog/questions/627.html#comment6754)
+- JotX (https://github.com/Temus/JotX/)
+- phpmailer - патч (http://forums.modx.com/index.php/topic,36046.0.html)
+- ditto исправлен баг в get масивом (http://community.modx-cms.ru/blog/2760.html#comment21973)
+- хак дерева документов для редактирования дочерних ресурсов(http://community.modx-cms.ru/blog/tips_and_tricks/848.html)
+- переведен на русский datepicker.js
+- хак tree.php  для вывода иконки быстрго доступа к елементам(эксперементальная штука)
 - удалил лишние языки из manager, а так же снипетов модулей и плагинов
 - instprocessor.php - если плагин без категории то инстлируем его отключенным
 - добавил свое оформления странички входа
@@ -143,85 +140,82 @@ ALTER TABLE  `modx_site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT 
 
 
 --------------------------------TV----------------
--добавленны TV для SEO:  ключевые слова, мета дескрипшн, мета титл, управление URL (вынесено сразу в отдельную вкладку), управление индексом
+- добавленны TV для SEO:  ключевые слова, мета дескрипшн, мета титл, управление URL (вынесено сразу в отдельную вкладку), управление индексом
 
 
 -------------------------------Чанки------------------
--удалил чанк: weblogin sidebar 
--добавил чанк стандартной формы отправки сообщения feedback
--добавил чанк ie6nomore(можно всраивать в шапку 
--переименовал mm_demo_rules в mm_rules
--добавил в mm_rules несколько примеров
--fancy  - скрипты для лайтбокса
+- удалил чанк: weblogin sidebar 
+- добавил чанк стандартной формы отправки сообщения feedback
+- добавил чанк ie6nomore(можно всраивать в шапку 
+- переименовал mm_demo_rules в mm_rules
+- добавил в mm_rules несколько примеров
+- fancy  - скрипты для лайтбокса
 
 
 -----------------------Сниппеты------------------------
--MultiFiles 1.11   (http://community.modx-cms.ru/blog/addons/1232.html)
--MultiPhotos 1.24  (http://community.modx-cms.ru/blog/addons/1146.html)
--TvTable 1.1       (http://community.modx-cms.ru/blog/addons/1170.html)
--aDate  - вывод русской даты
--GetField 1.3            (http://modx.com/extras/package/getfield)
--parentTitle - получаем pagetitle парента   (http://forums.modx.com/?action=thread&thread=11074)
--sitemap.xml 1.0.8  (есть новее надо обновить) (http://modx.com/extras/package/sitemap)
--splitPagination 2.0 - красивая пагинация для Ditto   (http://modx.com/extras/package/splitpagination)
--YouTube 0.1  
--include
--EvoGallery (http://modx.com/extras/package/evogallery) 
--phpthumb by Karandash (http://community.modx-cms.ru/blog/6217.html)
-обновил веблогин и вебсингап (http://modx-shopkeeper.ru/forum/viewtopic.php?id=226)
--Easy Advertising управление рекламой(http://community.modx-cms.ru/blog/addons/7197.html)
--Ajax submit 1.0 (http://wdevblog.net.ru/blog/ajaxsubmit-1.0-otpravka-ajax-zaprosom-dannyix-lyuboj-formyi-modx.html)
--if, isset (http://community.modx-cms.ru/blog/addons/7801.html)
--alterTitle  вывод pagetitle если longtitle пустой 
--DocInfo    (http://community.modx-cms.ru/blog/fast-solution/6543.html#comment43842)
--truncate (http://minyta.ru/modx/snippet/usechenie.html)
+- MultiFiles 1.11   (http://community.modx-cms.ru/blog/addons/1232.html)
+- MultiPhotos 1.24  (http://community.modx-cms.ru/blog/addons/1146.html)
+- TvTable 1.1       (http://community.modx-cms.ru/blog/addons/1170.html)
+- aDate  - вывод русской даты
+- GetField 1.3            (http://modx.com/extras/package/getfield)
+- parentTitle - получаем pagetitle парента   (http://forums.modx.com/?action=thread&thread=11074)
+- sitemap.xml 1.0.8  (есть новее надо обновить) (http://modx.com/extras/package/sitemap)
+- splitPagination 2.0 - красивая пагинация для Ditto   (http://modx.com/extras/package/splitpagination)
+- YouTube 0.1  
+- include
+- EvoGallery (http://modx.com/extras/package/evogallery) 
+- phpthumb by Karandash (http://community.modx-cms.ru/blog/6217.html)
+- обновил веблогин и вебсингап (http://modx-shopkeeper.ru/forum/viewtopic.php?id=226)
+- Easy Advertising управление рекламой(http://community.modx-cms.ru/blog/addons/7197.html)
+- Ajax submit 1.0 (http://wdevblog.net.ru/blog/ajaxsubmit-1.0-otpravka-ajax-zaprosom-dannyix-lyuboj-formyi-modx.html)
+- if, isset (http://community.modx-cms.ru/blog/addons/7801.html)
+- alterTitle  вывод pagetitle если longtitle пустой 
+- DocInfo    (http://community.modx-cms.ru/blog/fast-solution/6543.html#comment43842)
+- truncate (http://minyta.ru/modx/snippet/usechenie.html)
 
 ------------------------Плагины-------------------------
--добавил плагин seo_strict_urls       (http://modx.com/extras/package/?id=seostricturls)
--добавил ACE (подсветка кода)    (http://community.modx-cms.ru/blog/addons/5828.html)
--добавил CodeMirror (подсветка кода)    (http://forums.modx.com/thread/73753/codemirror-for-modx-evolution)
--TvTable 1.11         (http://community.modx-cms.ru/blog/addons/1170.html)
--MultiFiles 1.0.2      (http://community.modx-cms.ru/blog/addons/1232.html)
--MultiPhotos 1.26     (http://community.modx-cms.ru/blog/addons/1146.html) + (http://community.modx-cms.ru/blog/addons/1146.html#comment13064)
--customTemplate 0.1   (http://community.modx-cms.ru/blog/addons/2368.html)
--devStat 1.0    (http://62.109.9.249/raznoe/devstat___plagin_dlya_mod.html)
--PHx 2.1.4 + хак(меньше запросов) + <!--phx-stop--><!--phx-start-->    (http://community.modx-cms.ru/blog/fast-solution/2782.html)
--исправил глюк с вкладками в MM при переносе в них тв вида чекбокс и радио
--DirectResize 0.8  - автосоздание мелких картинок в контенте и не только
--CacheAccelerator    - кешируем все что можно :) (http://community.modx-cms.ru/blog/addons/1621.html)
--CacheExtender 0.4b - (http://community.modx-cms.ru/blog/dev/1625.html)
--managermanager 0.3.11 (http://modx.com/extras/package/managermanager)
--Ajax submit 1.0 (http://wdevblog.net.ru/blog/ajaxsubmit-1.0-otpravka-ajax-zaprosom-dannyix-lyuboj-formyi-modx.html)
--customSettings 1.0 (http://community.modx-cms.ru/blog/addons/1778.html)
--systemField (http://community.modx-cms.ru/blog/addons/1225.html)
--alwaysStay (http://habrahabr.ru/post/112813/)
+- добавил плагин seo_strict_urls       (http://modx.com/extras/package/?id=seostricturls)
+- добавил ACE (подсветка кода)    (http://community.modx-cms.ru/blog/addons/5828.html)
+- добавил CodeMirror (подсветка кода)    (http://forums.modx.com/thread/73753/codemirror-for-modx-evolution)
+- TvTable 1.11         (http://community.modx-cms.ru/blog/addons/1170.html)
+- MultiFiles 1.0.2      (http://community.modx-cms.ru/blog/addons/1232.html)
+- MultiPhotos 1.26     (http://community.modx-cms.ru/blog/addons/1146.html) + (http://community.modx-cms.ru/blog/addons/1146.html#comment13064)
+- customTemplate 0.1   (http://community.modx-cms.ru/blog/addons/2368.html)
+- devStat 1.0    (http://62.109.9.249/raznoe/devstat___plagin_dlya_mod.html)
+- PHx 2.1.4 + хак(меньше запросов) + <!--phx-stop--><!--phx-start-->    (http://community.modx-cms.ru/blog/fast-solution/2782.html)
+- исправил глюк с вкладками в MM при переносе в них тв вида чекбокс и радио
+- DirectResize 0.8  - автосоздание мелких картинок в контенте и не только
+- CacheAccelerator    - кешируем все что можно :) (http://community.modx-cms.ru/blog/addons/1621.html)
+- CacheExtender 0.4b - (http://community.modx-cms.ru/blog/dev/1625.html)
+- managermanager 0.3.11 (http://modx.com/extras/package/managermanager)
+- Ajax submit 1.0 (http://wdevblog.net.ru/blog/ajaxsubmit-1.0-otpravka-ajax-zaprosom-dannyix-lyuboj-formyi-modx.html)
+- customSettings 1.0 (http://community.modx-cms.ru/blog/addons/1778.html)
+- systemField (http://community.modx-cms.ru/blog/addons/1225.html)
+- alwaysStay (http://habrahabr.ru/post/112813/)
 
 
 
 -------------------------Модули----------------------------
--Модуль doc finder    (http://habrahabr.ru/blogs/modx/102635/)
+- Модуль doc finder    (http://habrahabr.ru/blogs/modx/102635/)
 
 ----------------Экстендеры для Ditto-----------------------
--distinct  (http://modx.com/extras/package/distinctdittoextender)
--jotcount
--tvFilter
--glossaryFilter  (http://setpro.pl/software/ditto-stuff/glossary-extender)
--nosort(customsort)
--search(https://github.com/yama/MODx-Ditto-Extenders/)
--jotdatesort (http://community.modx-cms.ru/blog/addons/6532.html)
--level (вывод документов определенного уровня http://community.modx-cms.ru/blog/questions/6534.html#comment31029)
--andFilter
+- distinct  (http://modx.com/extras/package/distinctdittoextender)
+- jotcount
+- tvFilter
+- glossaryFilter  (http://setpro.pl/software/ditto-stuff/glossary-extender)
+- nosort(customsort)
+- search(https://github.com/yama/MODx-Ditto-Extenders/)
+- jotdatesort (http://community.modx-cms.ru/blog/addons/6532.html)
+- level (вывод документов определенного уровня http://community.modx-cms.ru/blog/questions/6534.html#comment31029)
+- andFilter
 
 ----------------------------setup.sql----------------------
--Default admin account -> admin
--My MODx site -> MODx Site By Dmi3yy
--Шаблон по умолчанию СОСЕДНИЙ
--Опубликованно по умолчанию
--Дружественные урлы ВКЛ с вложенностью
--капча 0,1,2,3,4,5,6,7,8,9
--запоминать вкладки ДА
--изменен шаблон по умолчанию
--тема по умолчанию MOdxCarbonEvoRevo
-
-//////
-добавить diff плагин 
+- Default admin account -> admin
+- My MODx site -> MODx Site By Dmi3yy
+- Шаблон по умолчанию СОСЕДНИЙ
+- Опубликованно по умолчанию
+- Дружественные урлы ВКЛ с вложенностью
+- капча 0,1,2,3,4,5,6,7,8,9
+- запоминать вкладки ДА
+- изменен шаблон по умолчанию
+- тема по умолчанию MOdxCarbonEvoRevo
