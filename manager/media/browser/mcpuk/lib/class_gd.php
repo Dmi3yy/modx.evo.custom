@@ -115,10 +115,8 @@ class gd {
             $image = $this->image;
             list($width, $height) = $this->get_prop_size($bigger_size);
             $this->image = imagecreatetruecolor($width, $height);
-            if ($this->type == IMAGETYPE_PNG) {
                 imagealphablending($this->image, false);
                 imagesavealpha($this->image, true);
-            }
             $this->width = $width;
             $this->height = $height;
             $this->imagecopyresampled($image);
@@ -364,7 +362,26 @@ class gd {
             if (is_null($dst_h)) $dst_h = $this->height - $dst_y;
             if (is_null($src_w)) $src_w = $src_width - $src_x;
             if (is_null($src_h)) $src_h = $src_height - $src_y;
-            return imagecopyresampled($this->image, $src, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+            imagealphablending($this->image, false);
+            imagesavealpha($this->image,true);
+			$transindex = imagecolortransparent($src);
+			if($transindex >= 0) {
+				$transcol = imagecolorsforindex($src, $transindex);
+				$transindex = imagecolorallocatealpha($this->image, $transcol['red'], $transcol['green'], $transcol['blue'], 127);
+				imagefilledrectangle($this->image, 0, 0, $dst_w, $dst_h, $transindex);
+				imagecopyresampled($this->image, $src, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+				imagecolortransparent($this->image, $transindex);
+				for($y=0; $y<$dst_h; ++$y)
+					for($x=0; $x<$dst_w; ++$x)
+						if(((imagecolorat($this->image, $x, $y)>>24) & 0x7F) >= 100) imagesetpixel($this->image, $x, $y, $transindex);				
+				imagetruecolortopalette($this->image, true, 255);
+			}
+			else {
+				$transparent = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
+				imagefilledrectangle($this->image, 0, 0, $dst_w, $dst_h, $transparent);
+				imagecopyresampled($this->image, $src, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+			}
+			return $this->image;
 
         } else
             return false;
@@ -392,6 +409,7 @@ class gd {
     public function imagegif($filename=null) {
         if (is_null($filename) && !headers_sent())
             header("Content-Type: image/gif");
+			@imagesavealpha($this->image, true);
         return imagegif($this->image, $filename);
     }
 }

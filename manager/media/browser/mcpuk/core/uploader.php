@@ -527,7 +527,13 @@ class uploader {
         ))
             return false;
 
-        return $gd->imagejpeg($file, $this->config['jpegQuality']);
+		switch ($gd->type) {
+			case IMAGETYPE_GIF: return $gd->imagegif($file);
+			case IMAGETYPE_PNG: return $gd->imagepng($file);
+			case IMAGETYPE_JPEG: return $gd->imagejpeg($file, $this->config['jpegQuality']);
+			default: return $gd->imagejpeg($file, $this->config['jpegQuality']);
+        
+		}
     }
 
     protected function makeThumb($file, $overwrite=true) {
@@ -561,7 +567,14 @@ class uploader {
             return false;
 
         // Save thumbnail
-        return $gd->imagejpeg($thumb, $this->config['jpegQuality']);
+		switch ($gd->type) {
+			case IMAGETYPE_GIF: return $gd->imagepng($thumb);
+			case IMAGETYPE_PNG: return $gd->imagepng($thumb);
+			case IMAGETYPE_JPEG: return $gd->imagejpeg($thumb, $this->config['jpegQuality']);
+			default: return $gd->imagejpeg($thumb, $this->config['jpegQuality']);
+        
+		}
+		//return $gd->imagejpeg($thumb, $this->config['jpegQuality']);
     }
 
     protected function localize($langCode) {
