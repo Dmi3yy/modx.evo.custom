@@ -11,6 +11,7 @@
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
+//setlocale (LC_ALL, 'ru_RU.UTF-8');
 
 $_lang["resource_opt_alvisibled"] = 'in URL'; 
 $_lang["resource_opt_alvisibled_help"] = 'alias in url';

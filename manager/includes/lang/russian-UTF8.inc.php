@@ -6,13 +6,16 @@
  * Author:         Russian MODX community, gabdullin, Jaroslav Sidorkin, Safronovich Victor, MARDEN
  * Date:           30 December 2010
  * Version:        2.0.5
- * MODX version:   Evolution 1.0.5
+ * MODX version:   Evolution 1.0.10
 */
+//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $MODX_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $MODX_manager_charset = 'UTF-8';
 setlocale (LC_ALL, 'ru_RU.UTF-8');
+
 $_lang["resource_opt_alvisibled"] = 'Участвует в URL'; 
 $_lang["resource_opt_alvisibled_help"] = 'Для участия данного документа в адресной строке поставьте галку, и наоборот - снимите, если псевдоним этого документа нужно убрать из URL.';
+
 
 $_lang["about_msg"] = 'MODX - это <a href="http://MODX.com/what-is-MODX.html" target="_blank">PHP Application Framework и Content Management System</a>, распространяемая по лицензии <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'О MODX';
@@ -953,6 +956,7 @@ $_lang["tmplvars_caption"] = 'Заголовок';
 $_lang["tmplvars_default"] = 'Значение по умолчанию';
 $_lang["tmplvars_description"] = 'Описание';
 $_lang["tmplvars_elements"] = 'Возможные значения';
+$_lang["tmplvars_inherited"] = 'Value inherited';
 $_lang["tmplvars_management_msg"] = '<b>Параметры (TV)</b> - это динамические элементы шаблона, которые получают своё значение из некоего <i>источника данных</i>. Существуют также параметры, предопределённые для каждого конкретного ресурса (например, предопределённый параметр <code>[*pagetitle*]</code> содержит заголовок страницы). Параметры могут иметь различный тип данных и разное значение на различных страницах сайта.<p><b>Использование:</b> вставьте где-либо в <i>шаблоне</i> или в <i>области контента</i> выражение <code>[*tvName*]</code></p> <p><b>Вызов через MODX API:</b> <code>$MODX-&gt;documentObject[\'variable-name\']</code></p><p><br />Выберите параметр для редактирования или создайте новый.';
 $_lang["tmplvars_msg"] = 'Здесь вы можете создать / отредактировать параметр (TV). <br /> Помните, параметры должны быть доступны для выбранных шаблонов, чтобы их можно было использовать. <br /><br /> ';
 $_lang["tmplvars_name"] = 'Имя параметра';
@@ -1084,12 +1088,24 @@ $_lang["yourinfo_title"] = 'Информация о вас';
 $_lang["yourinfo_total_logins"] = 'Всего авторизаций:';
 $_lang["yourinfo_username"] = 'Вы авторизованы как:';
 
+
+$_lang["docid_incrmnt_method_title"] = 'Способ добавления Resource ID ';
+$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
+$_lang["docid_incrmnt_method_1"] = 'Минимальный пропущенный ID';
+$_lang["docid_incrmnt_method_2"] = 'Максимальный ID+1';
+
 $_lang['a17_error_reporting_title'] = 'Обнаружение уровня ошибки РНР';
 $_lang['a17_error_reporting_msg'] = 'Набор обнаружения уровня ошибок РНР';
 $_lang['a17_error_reporting_opt0'] = 'Игнорировать все';
 $_lang['a17_error_reporting_opt1'] = 'Игнорировать предупреждения о незначительных ошибках(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang['a17_error_reporting_opt2'] = 'Обнаружить все ошибки кроме E_NOTICE';
 $_lang['a17_error_reporting_opt99'] = 'Обнаружить все';
+
+$_lang["pwd_hash_algo_title"] = 'Hash algorithm';
+$_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
+
+$_lang["enable_bindings_title"]  = 'Enable @Bindings commands';
+$_lang['enable_bindings_message'] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
 $_lang["bkmgr_alert_mkdir"] = 'Фаил не может быть создан.  Праверьте права на папку assets/backup';
 $_lang["bkmgr_restore_msg"] = '<p>Сайт может быть восстановление с помощью файла SQL. </p>';
@@ -1106,23 +1122,24 @@ $_lang["bkmgr_snapshot_submit"] = 'Создать бекап';
 $_lang["bkmgr_snapshot_list_title"] = 'Список бекапов';
 $_lang["bkmgr_restore_submit"] = 'Восстановить эти данные';
 $_lang["bkmgr_snapshot_nothing"] = 'Нет бекапов';
-$_lang["bkmgr_snapshot_submit"] = 'Создать бекап';
-$_lang["bkmgr_snapshot_list_title"] = 'Список бекапов';
-$_lang["bkmgr_restore_submit"] = 'Восстановить эти данные';
-$_lang["bkmgr_snapshot_nothing"] = 'Нет бекапов';
 
-$_lang['not_readable_dir'] = 'Директория недоступна для записи';
 $_lang['files.dynamic.php1'] = 'Создать PHP-файл';
-$_lang['confirm_delete_dir'] = 'Вы уверены, что хотите удалить папку? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
-$_lang['confirm_delete_dir_recursive'] = 'Вы уверены, что хотите удалить папку со всем ее содержимым? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
 $_lang['files.dynamic.php2']='files.dynamic.php2';
 $_lang['files.dynamic.php3'] = 'files.dynamic.php3';
 $_lang['files.dynamic.php4'] = 'files.dynamic.php4';
+$_lang['not_readable_dir'] = 'Директория недоступна для записи';
+$_lang['confirm_delete_dir'] = 'Вы уверены, что хотите удалить папку? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
+$_lang['confirm_delete_dir_recursive'] = 'Вы уверены, что хотите удалить папку со всем ее содержимым? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
 
-$_lang["docid_incrmnt_method_title"] = 'Способ добавления Resource ID ';
-$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
-$_lang["docid_incrmnt_method_1"] = 'Минимальный пропущенный ID';
-$_lang["docid_incrmnt_method_2"] = 'Максимальный ID+1';
+$_lang['make_folders_title'] = 'Make end slash URL at the container';
+$_lang['make_folders_message'] = 'The slash to append to Resources set as containers when using FURLs.';
+
+$_lang['check_files_onlogin_title'] = 'Check core files on login';
+$_lang['check_files_onlogin_message'] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+
+$_lang['configcheck_sysfiles_mod'] = 'Important System Files have been modified.';
+$_lang['configcheck_sysfiles_mod_msg'] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, manager/index.php, manager/includes/config.inc.php)';
+
 
 $_lang['email_method_title'] = 'Метод отправки писем';
 $_lang['email_method_mail'] = 'MAIL - ообщения отправляются с помощью функции mail().';
@@ -1130,9 +1147,4 @@ $_lang['email_method_smtp'] = 'SMTP - сообщения отправляютс�
 $_lang['email_smtp_sender_title'] = 'SMTP почта';
 $_lang['email_host_title'] = 'Адрес SMTP-сервера';
 $_lang['email_pass_title'] = 'SMTP пароль';
-
-$_lang["pwd_hash_algo_title"] = 'Hash algorithm';
-$_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
-$_lang["enable_bindings_title"]  = 'Enable @Bindings commands';
-$_lang['enable_bindings_message'] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 ?>
