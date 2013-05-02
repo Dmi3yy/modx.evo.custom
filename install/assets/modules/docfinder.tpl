@@ -8,7 +8,7 @@
  * @version 	1.6
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
- * @internal	@guid 	
+ * @internal	@guid docfind3453245kl32454235432534534
  * @internal	@shareparams 1
  * @internal	@dependencies requires files located at /assets/modules/docmanager/
  * @internal	@modx_category Manager and Admin
