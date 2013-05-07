@@ -884,7 +884,7 @@ class DocumentParser {
     function mergeSettingsContent($template) {
         $replace= array ();
         $matches= array ();
-        if (preg_match_all('~\[\(([a-z\_]*?)\)\]~', $template, $matches)) {
+        if (preg_match_all('~\[\(([a-zA-Z0-9\_]*?)\)\]~', $template, $matches)) {
             $settingsCount= count($matches[1]);
             for ($i= 0; $i < $settingsCount; $i++) {
                 if (array_key_exists($matches[1][$i], $this->config))
