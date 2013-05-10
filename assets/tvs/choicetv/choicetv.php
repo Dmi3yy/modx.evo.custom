@@ -6,7 +6,7 @@
  * @author Dmi3yy <dmi3yy@gmail.com>
  * @link http://dmi3yy.com author home page
  */
-$sql = 'SELECT DISTINCT `value` FROM '.$modx->getFullTableName('site_tmplvar_contentvalues').' WHERE tmplvarid = '.$field_id;
+$sql = 'SELECT DISTINCT `value` FROM '.$modx->getFullTableName('site_tmplvar_contentvalues').' WHERE tmplvarid = '.$field_id.' ORDER BY value ASC';
 $result = $modx->db->query( $sql );  
 
 while( $row = $modx->db->getRow( $result ) ) {  
@@ -36,9 +36,9 @@ function inpChange'.$field_id.'(obj){
     #tv'.$field_id.' {visibility:hidden;}
 </style>
     <select name="select'.$field_id.'" id="select'.$field_id.'" style="width: 278px;" onchange="inpChange'.$field_id.'(this);">
-        <option value="">Выбрать вариант</option>
+        <option value=""> - Выбрать вариант - </option>
         '.$output.'
-        <option value="???">Добавить вариант</option>
+        <option value="???"> - Добавить вариант - </option>
     </select>
     <input class="choicetv" type="text" name="tv'.$field_id.'" id="tv'.$field_id.'" value="'.$field_value.'" />
 ';
