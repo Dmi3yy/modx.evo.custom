@@ -104,6 +104,7 @@ p.thumbPreview img {
 }
 #overlay form {
     margin-left: 220px;
+    overflow: hidden;
 }
 #overlay .imageupdater {
     margin-top: 50px;
