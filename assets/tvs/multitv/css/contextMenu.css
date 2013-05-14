@@ -1,0 +1,30 @@
+.context-menu {
+    background-color: #fff;
+	border: 1px solid #ededed;
+	border-right-color: #dcdcdc;
+	border-bottom-color: #dcdcdc;
+    list-style-type: none;
+    margin: 0;
+    padding: 2px;
+	box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+	-webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+	-moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+}
+.context-menu li {
+	list-style: none;
+	padding: 1px 7px 5px 2px;
+	line-height: 11px;
+}
+.context-menu li:hover {
+	background: #dde4eb;
+}
+.context-menu li img {
+	position: relative;
+	top: 2px;
+	opacity: .3;
+	filter: alpha(opacity=30);
+}
+.context-menu li:hover img {
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
