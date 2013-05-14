@@ -223,7 +223,8 @@ function SetUrl(url, width, height, alt) {
 				var thumbName = thumbPath.pop();
 				var thumbId = name.replace(/^(.*?)(\d*)$/, '#$1preview$2');
 				if (thumbName !== '') {
-					el.find(thumbId).html('<img src="../' + thumbPath.join('/') + '/.thumb_' + thumbName + '" />');
+					thumbPath[0] = '/assets/.thumbs';
+					el.find(thumbId).html('<img src="'+thumbPath.join("/")+'/'+thumbName+'" />');
 				} else {
 					el.find(thumbId).html('');
 				}
