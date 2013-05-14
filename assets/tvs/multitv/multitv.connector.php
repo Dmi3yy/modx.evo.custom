@@ -1,5 +1,11 @@
 <?php
-define('MODX_MANAGER_PATH', '../../../manager/'); //relative path for manager folder
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+}else{
+    define('MGR_DIR', 'manager');
+}
+define('MODX_MANAGER_PATH', '../../../'.MGR_DIR.'/'); //relative path for manager folder
+
 require_once(MODX_MANAGER_PATH . 'includes/config.inc.php'); //config
 require_once(MODX_MANAGER_PATH . '/includes/protect.inc.php');
 
