@@ -539,6 +539,8 @@ class phpthumb {
 		if ($this->RenderOutput()) {
 			if (file_put_contents($renderfilename, $this->outputImageData)) {
 				$this->DebugMessage('RenderToFile('.$renderfilename.') succeeded', __FILE__, __LINE__);
+				/*if trouble with chmod (infobox hoster)*/
+				//chmod($renderfilename, 0644);
 				return true;
 			}
 			if (!@file_exists($renderfilename)) {
