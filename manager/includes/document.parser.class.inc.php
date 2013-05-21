@@ -57,7 +57,9 @@ class DocumentParser {
      *
      * @return DocumentParser
      */
-    function __construct() {
+    function DocumentParser() {
+        global $database_server;
+        if(substr(PHP_OS,0,3) === 'WIN' && $database_server==='localhost') $database_server = '127.0.0.1';
         $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
         $this->dbConfig= & $this->db->config; // alias for backward compatibility
         $this->jscripts= array ();
@@ -220,81 +222,6 @@ class DocumentParser {
         }
         $this->sendForward($unauthorizedPage, 'HTTP/1.1 401 Unauthorized');
         exit();
-    }
-
-    /**
-     * Connect to the database
-     *
-     * @deprecated use $modx->db->connect()
-     */
-    function dbConnect() {
-        $this->db->connect();
-        $this->rs= $this->db->conn; // for compatibility
-    }
-
-    /**
-     * Query the database
-     *
-     * @deprecated use $modx->db->query()
-     * @param string $sql The SQL statement to execute
-     * @return resource|bool
-     */
-    function dbQuery($sql) {
-        return $this->db->query($sql);
-    }
-
-    /**
-     * Count the number of rows in a record set
-     *
-     * @deprecated use $modx->db->getRecordCount($rs)
-     * @param resource
-     * @return int
-     */
-    function recordCount($rs) {
-        return $this->db->getRecordCount($rs);
-    }
-
-    /**
-     * Get a result row
-     * 
-     * @deprecated use $modx->db->getRow()
-     * @param array $rs
-     * @param string $mode
-     * @return array
-     */
-    function fetchRow($rs, $mode= 'assoc') {
-        return $this->db->getRow($rs, $mode);
-    }
-
-    /**
-     * Get the number of rows affected in the last db operation
-     * 
-     * @deprecated use $modx->db->getAffectedRows()
-     * @param array $rs
-     * @return int
-     */
-    function affectedRows($rs) {
-        return $this->db->getAffectedRows($rs);
-    }
-
-    /**
-     * Get the ID generated in the last query
-     * 
-     * @deprecated use $modx->db->getInsertId()
-     * @param array $rs
-     * @return int
-     */
-    function insertId($rs) {
-        return $this->db->getInsertId($rs);
-    }
-
-    /**
-     * Close a database connection
-     *
-     * @deprecated use $modx->db->disconnect()
-     */
-    function dbClose() {
-        $this->db->disconnect();
     }
 
     /**
@@ -1078,12 +1005,6 @@ class DocumentParser {
         $except_snip_call = $snip_call['except_snip_call'];
         
         $key = $snip_call['name'];
-        if(strpos($key,':')!==false && $this->config['enable_phx']==='1')
-        {
-            list($key,$modifiers) = explode(':', $key, 2);
-            $snip_call['name'] = $key;
-        }
-        else $modifiers = false;
         
         $snippetObject = $this->_get_snip_properties($snip_call);
         
@@ -1147,8 +1068,7 @@ class DocumentParser {
             unset($temp_params);
         }
         $value = $this->evalSnippet($snippetObject['content'], $params);
-        if($modifiers!==false) $value = $this->phx->phxFilter($key,$value,$modifiers);
-        
+                
         if($this->dumpSnippets == 1)
         {
             $this->snipCode .= '<fieldset><legend><b>' . $snippetObject['name'] . '</b></legend><textarea style="width:60%;height:200px">' . htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']) . '</textarea></fieldset>';
@@ -1401,7 +1321,9 @@ class DocumentParser {
             // replace HTMLSnippets in document
             $source= $this->mergeChunkContent($source);
             // insert META tags & keywords
-            $source= $this->mergeDocumentMETATags($source);
+            if(isset($this->config['show_meta']) && $this->config['show_meta']==1) {
+                $source= $this->mergeDocumentMETATags($source);
+            }
             // find and merge snippets
             $source = $this->evalSnippets($source);
             // find and replace Placeholders (must be parsed last) - Added by Raymond
@@ -3802,7 +3724,7 @@ class DocumentParser {
         {
             echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head><title>MODX Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
                  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                 <link rel="stylesheet" type="text/css" href="' . $this->config['site_url'] . MGR_DIR .'/media/style/' . $this->config['manager_theme'] . '/style.css" />
+                 <link rel="stylesheet" type="text/css" href="' . $this->config['site_manager_url'] . 'media/style/' . $this->config['manager_theme'] . '/style.css" />
                  <style type="text/css">body { padding:10px; } td {font:inherit;}</style>
                  </head><body>
                  ' . $str . '</body></html>';
