@@ -21,7 +21,7 @@
 				$field_html .=  '<input type="email" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:50%" />';
 				break;
 			case "number": // handles the input of numbers
-				$field_html .=  '<input type="number" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:50%" />';
+				$field_html .=  '<input type="number" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:50%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
 				break;
 			case "textarea": // handler for textarea boxes
 			case "rawtextarea": // non-htmlentity convertex textarea boxes
