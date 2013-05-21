@@ -376,6 +376,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 						$mail->Username = $smtpfrom; // SMTP username
 						$mail->Password = $smtppass; // SMTP password
 						$mail->From		= $smtpfrom;
+						$mail->Port     = $smtpport;
 					}else{
 						$mail->IsMail();
 						$mail->From		= $modx->config['emailsender'];
@@ -479,6 +480,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 						$mail->Username = $smtpfrom; // SMTP username
 						$mail->Password = $smtppass; // SMTP password
 						$mail->From		= $smtpfrom;
+						$mail->Port     = $smtpport;
 					}else{
 						$mail->IsMail();
 						$mail->From		= $from;
@@ -508,6 +510,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 						$mail->Username = $smtpfrom; // SMTP username
 						$mail->Password = $smtppass; // SMTP password
 						$mail->From		= $smtpfrom;
+						$mail->Port     = $smtpport;
 					}else{
 						$mail->IsMail();
 						$mail->From		= $from;
@@ -538,6 +541,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 						$mail->Username = $smtpfrom; // SMTP username
 						$mail->Password = $smtppass; // SMTP password
 						$mail->From		= $smtpfrom;
+						$mail->Port     = $smtpport;
 					}else{
 						$mail->IsMail();
 						$mail->From		= ($autosender)? $autosender:$from;
@@ -567,6 +571,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 						$mail->Username = $smtpfrom; // SMTP username
 						$mail->Password = $smtppass; // SMTP password
 						$mail->From		= $smtpfrom;
+						$mail->Port     = $smtpport;
 					}else{
 						$mail->IsMail();
 						$mail->From		= $from;

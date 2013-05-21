@@ -927,6 +927,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('email_smtp_sender','{ADMINEMAIL}'),
 ('email_host',''),
 ('email_pass',''),
+('email_port','25'),
 ('number_of_logs','100'),
 ('number_of_messages','30'),
 ('number_of_results','20'),

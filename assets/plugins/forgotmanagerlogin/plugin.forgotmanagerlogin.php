@@ -102,6 +102,7 @@ EOD;
                 $mail->SMTPAuth = true;  // включить SMTP аутентификацию
                 $mail->Username = $modx->config['email_smtp_sender']; // SMTP username
                 $mail->Password = $modx->config['email_pass']; // SMTP password
+                $mail->Port     = $modx->config['email_port']; 
                 $mail->From     = $modx->config['email_smtp_sender'];
                 
                 $mail->CharSet = $modx->config["modx_charset"]; 

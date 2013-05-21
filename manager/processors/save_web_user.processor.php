@@ -434,6 +434,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
         $mail->Username = $modx->config['email_smtp_sender']; // SMTP username
         $mail->Password = $modx->config['email_pass']; // SMTP password
         $mail->From     = $modx->config['email_smtp_sender'];
+        $mail->Port     = $modx->config['email_port'];
         
         $mail->CharSet = $modx->config["modx_charset"]; 
         $mail->IsHTML(false);    

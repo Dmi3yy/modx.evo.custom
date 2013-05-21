@@ -639,6 +639,7 @@ class CJot {
 						$mail->Username = $modx->config['email_smtp_sender']; // SMTP username
 						$mail->Password = $modx->config['email_pass']; // SMTP password
 						$mail->From		= $modx->config['email_smtp_sender'];
+						$mail->Port     = $modx->config['email_port'];
 					}else{
 						$mail->IsMail();
 						$mail->From     = $modx->config["emailsender"];

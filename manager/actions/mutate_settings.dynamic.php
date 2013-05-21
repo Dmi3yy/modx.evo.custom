@@ -934,6 +934,13 @@ function confirmLangChange(el, lkey, elupd){
             <td nowrap class="warning"><b><?php echo $_lang["email_pass_title"] ?></b></td>
             <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="email_pass" value="<?php echo isset($email_pass) ? $email_pass : "xxxxxx" ; ?>" /></td>
           </tr>
+           <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["email_port_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="email_port" value="<?php echo isset($email_port) ? $email_port : "25" ; ?>" /></td>
+          </tr>
           <!--/-->
 
           <tr>

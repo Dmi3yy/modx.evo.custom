@@ -1146,5 +1146,6 @@ $_lang['email_method_mail'] = 'mail().';
 $_lang['email_method_smtp'] = 'SMTP.';
 $_lang['email_smtp_sender_title'] = 'SMTP mail';
 $_lang['email_host_title'] = 'smtp host';
+$_lang['email_port_title'] = 'smtp port';
 $_lang['email_pass_title'] = 'smtp password';
 ?>

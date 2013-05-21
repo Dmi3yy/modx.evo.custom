@@ -1146,5 +1146,6 @@ $_lang['email_method_mail'] = 'MAIL - ообщения отправляются 
 $_lang['email_method_smtp'] = 'SMTP - сообщения отправляются почтовым сервером, реквизиты которого нужно указать ниже.';
 $_lang['email_smtp_sender_title'] = 'SMTP почта';
 $_lang['email_host_title'] = 'Адрес SMTP-сервера';
+$_lang['email_port_title'] = 'SMTP порт';
 $_lang['email_pass_title'] = 'SMTP пароль';
 ?>
