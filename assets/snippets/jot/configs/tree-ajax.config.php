@@ -61,16 +61,16 @@
 	
 	[+form.moderation:is=`1`:then=`
 	<div class="jot-info">
-		<b>Создан:</b> [+form.field.createdon:date=`%d %b %Y в %H:%M`+]<br />
+		<b>Создан:</b> [+form.field.createdon:date=`%d.%m.%Y в %H:%M`+]<br />
 		<b>Автор:</b> [+form.field.createdby:userinfo=`username`:ifempty=`[+jot.guestname+]`+]<br />
 		<b>IP:</b> [+form.field.secip+]<br />
 		<b>Опубликовано:</b> [+form.field.published:select=`0=Нет&1=Да`+]<br />
 		[+form.field.publishedon:gt=`0`:then=`
-		<b>Дата публикации:</b> [+form.field.publishedon:date=`%d %b %Y в %H:%M`+]<br />
+		<b>Дата публикации:</b> [+form.field.publishedon:date=`%d.%m.%Y в %H:%M`+]<br />
 		<b>Опубликовал:</b> [+form.field.publishedby:userinfo=`username`:ifempty=` - `+]<br />
 		`+]
 		[+form.field.editedon:gt=`0`:then=`
-		<b>Дата изменения:</b> [+form.field.editedon:date=`%d %b %Y в %H:%M`+]<br />
+		<b>Дата изменения:</b> [+form.field.editedon:date=`%d.%m.%Y в %H:%M`+]<br />
 		<b>Редактировал:</b> [+form.field.editedby:userinfo=`username`:ifempty=` -`+]<br />
 		`+]
 	</div>
@@ -127,7 +127,7 @@
 			</div>
 			<div class="jot-avatar" [+comment.createdby:ne=`0`:then=`title="Ответов: [+comment.userpostcount+]"`+]><img src="http://www.gravatar.com/avatar/[+comment.email:ifempty=`[+comment.custom.email+]`:lcase:md5+]?s=24&amp;d=mm&amp;r=g" alt="" /></div>
 			<span class="jot-name">[+comment.username:ifempty=`[+comment.custom.name:ifempty=`[+jot.guestname+]`:esc+]`+] [+jot.moderation.enabled:is=`1`:then=`<span class="jot-extra"><a target="_blank" href="http://www.ripe.net/perl/whois?searchtext=[+comment.secip+]">([+comment.secip+])</a></span>`+]</span>
-			<span class="jot-date">[+comment.createdon:date=`%d %b %Y в %H:%M`+]</span>
+			<span class="jot-date">[+comment.createdon:date=`%d.%m.%Y в %H:%M`+]</span>
 			<span class="jot-perma"><a rel="nofollow" title="Ссылка на комментарий" href="[+jot.link.current+]#jc[+jot.link.id+][+comment.id+]">#<!--[+comment.postnumber+]--></a></span>
 			[+comment.depth:lt=`[+jot.depth+]`:then=`
 			<span class="jot-reply"><a rel="nofollow" href="[+comment.parentlink+]#jf[+jot.link.id+]" onclick="return addComment.moveForm(\'[+jot.link.id+]\', \'[+comment.id+]\')">Ответить</a></span>

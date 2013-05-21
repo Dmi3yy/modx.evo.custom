@@ -92,7 +92,7 @@
 		<div class="jot-comment-head">
 			[+jot.moderation.enabled:is=`1`:then=`<span class="jot-extra"><a target="_blank" href="http://www.ripe.net/perl/whois?searchtext=[+comment.secip+]">([+comment.secip+])</a></span>`+]
 			<span class="jot-perma"><a rel="nofollow" title="Ссылка на вопрос" href="[+jot.link.current+]#jc[+jot.link.id+][+comment.id+]">#[+comment.postnumber+]</a> |</span>
-			<span class="jot-date">[+comment.createdon:date=`%d %b %Y в %H:%M`+]</span>
+			<span class="jot-date">[+comment.createdon:date=`%d.%m.%Y в %H:%M`+]</span>
 			<span class="jot-name">[+comment.username:ifempty=`[+comment.custom.name:ifempty=`[+jot.guestname+]`:esc+]`+]:</span>
 			[+comment.title:length:ne=`0`:then=`<span class="jot-subject">[+comment.title:esc+]</span>`+]
 		</div>
