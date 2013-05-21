@@ -51,6 +51,25 @@ switch($modx->Event->name) {
         $object_name = $content['pagetitle'];
         $xrte  = (('htmlmixed' == $mode) ? $xrte : 0);
         $rte   = ($prte ? $prte : ($content['id'] ? ($xrte ? $srte : 'none') : $srte));
+        
+        $query = "SELECT contentType FROM ".$modx->getFullTableName('site_content')." WHERE id=" . $id;
+        $txt = $modx->db->query($query);
+	    $txt = $modx->db->makeArray($txt);
+	    $contentType = $txt[0]['contentType'];
+	    switch($contentType){
+    		case "text/css":
+			    $mode = "text/css";
+    		    break;
+    		case "text/javascript":
+    			$mode = "text/javascript";
+    		    break;
+    		case "application/json":
+    			$mode = "application/json";
+    		    break;
+    		default:
+    			$mode = "htmlmixed";
+	    }
+        
         break;
 
     case 'OnSnipFormRender'   :
@@ -121,6 +140,30 @@ HEREDOC;
                 try {
                     if(document.getElementById('Button1')) {
                         document.getElementById('Button1').getElementsByTagName('select')[0].options[1].selected = true;
+                        document.getElementById('Button1').getElementsByTagName('a')[0].onclick();
+                    }
+                }
+                catch(event) {}
+
+                return event.stop();
+            }
+    		// CTRL + B
+			if(event.ctrlKey == true && event.keyCode == 66) {
+                try {
+                    if(document.getElementById('Button1')) {
+                        document.getElementById('Button1').getElementsByTagName('select')[0].options[0].selected = true;
+                        document.getElementById('Button1').getElementsByTagName('a')[0].onclick();
+                    }
+                }
+                catch(event) {}
+
+                return event.stop();
+            }
+			// CTRL + Q
+            if(event.ctrlKey == true && event.keyCode == 81) {
+                try {
+                    if(document.getElementById('Button1')) {
+                        document.getElementById('Button1').getElementsByTagName('select')[0].options[2].selected = true;
                         document.getElementById('Button1').getElementsByTagName('a')[0].onclick();
                     }
                 }
