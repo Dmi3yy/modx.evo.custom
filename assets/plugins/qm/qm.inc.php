@@ -96,11 +96,11 @@ class Qm {
                     // Normal saving document procedure stops to redirect => Before redirecting secure documents and clear cache
                     
                     // Secure web documents - flag as private (code from: manager/processors/save_content.processor.php)
-    		        include $this->modx->config['site_manager_path']."/includes/secure_web_documents.inc.php";
+    		        include $this->modx->config['site_manager_path']."includes/secure_web_documents.inc.php";
     		        secureWebDocument($key);
     
             		// Secure manager documents - flag as private (code from: manager/processors/save_content.processor.php)
-            		include $this->modx->config['site_manager_path']."/includes/secure_mgr_documents.inc.php";
+            		include $this->modx->config['site_manager_path']."includes/secure_mgr_documents.inc.php";
             		secureMgrDocument($key);
                     
                     // Clear cache

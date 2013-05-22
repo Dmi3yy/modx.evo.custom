@@ -7,7 +7,7 @@ include_once("../../cache/siteManager.php");
 
 require_once '../../../'.MGR_DIR.'/includes/protect.inc.php';
 include_once ('../../../'.MGR_DIR.'/includes/config.inc.php');
-include_once (MODX_BASE_PATH.MGR_DIR.'/includes/document.parser.class.inc.php');
+include_once (MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
 include_once (MODX_BASE_PATH.'assets/modules/docmanager/classes/docmanager.class.php');
 $modx = new DocumentParser;
 $modx->getSettings();
@@ -24,7 +24,7 @@ $dm->getTheme();
  	$limit = $modx->db->getRecordCount($rs);
  	
  	if ($limit > 0) {
-		require (MODX_BASE_PATH.MGR_DIR.'/includes/tmplvars.commands.inc.php');
+		require (MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
 		$output.= "<table style='position:relative' border='0' cellspacing='0' cellpadding='3' width='96%'>";
 
 		for ($i=0; $i<$limit; $i++) {

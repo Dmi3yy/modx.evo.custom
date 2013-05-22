@@ -105,7 +105,7 @@ function ConvertDate($date) {
 
 // include the country list language file
 $_country_lang = array();
-if($manager_language!="english" && file_exists($modx->config['site_manager_path']."/includes/lang/country/".$manager_language."_country.inc.php")){
+if($manager_language!="english" && file_exists($modx->config['site_manager_path']."includes/lang/country/".$manager_language."_country.inc.php")){
     include_once "lang/country/".$manager_language."_country.inc.php";
 } else {
     include_once "lang/country/english_country.inc.php";

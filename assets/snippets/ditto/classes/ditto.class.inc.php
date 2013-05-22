@@ -493,7 +493,7 @@ class ditto {
 				}
 			}
 			
-			$js = "window.open('".MODX_MANAGER_URL."/index.php?a=112&id=".$id."&doc=".$resource["id"]."&var=".$ds."', 'QuickEditor', 'width=525, height=300, toolbar=0, menubar=0, status=0, alwaysRaised=1, dependent=1');";
+			$js = "window.open('".MODX_MANAGER_URL."index.php?a=112&id=".$id."&doc=".$resource["id"]."&var=".$ds."', 'QuickEditor', 'width=525, height=300, toolbar=0, menubar=0, status=0, alwaysRaised=1, dependent=1');";
 			$url = $this->buildURL("qe_open=true",$modx->documentIdentifier,$dittoID);
 			
 			unset($custom[3]);
