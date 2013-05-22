@@ -30,7 +30,7 @@ $installMode= intval($_POST['installmode']);
 $installData = $_POST['installdata'] == "1" ? 1 : 0;
 
 //if ($installMode == 1) {
-//	include "../manager/includes/config.inc.php";
+//	include "../".MGR_DIR."/includes/config.inc.php";
 //} else {
 // get db info from post
 $database_server = $_POST['databasehost'];

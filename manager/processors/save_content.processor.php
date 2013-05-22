@@ -351,7 +351,7 @@ switch ($actionToTake) {
 			$new_groups = array();
 			foreach ($document_groups as $value_pair) {
 				// first, split the pair (this is a new document, so ignore the second value
-				list($group) = explode(',', $value_pair); // @see manager/actions/mutate_content.dynamic.php @ line 1138 (permissions list)
+				list($group) = explode(',', $value_pair); // @see actions/mutate_content.dynamic.php @ line 1138 (permissions list)
 				$new_groups[] = '('.(int)$group.','.$key.')';
 			}
 			$saved = true;

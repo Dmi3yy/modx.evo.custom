@@ -612,7 +612,7 @@ function logFileChange($type, $filename)
     $log->initAndWriteLog($string, '', '', '', $type, $filename);
 
     // HACK: change the global action to prevent double logging
-    // @see manager/index.php @ 915
+    // @see index.php @ 915
     global $action; $action = 1;
 }
 
