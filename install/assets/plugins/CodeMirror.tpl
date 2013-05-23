@@ -5,13 +5,13 @@
  * JavaScript library that can be used to create a relatively pleasant editor interface
  *
  * @category    plugin
- * @version     2.23 c
+ * @version     3.13
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @package     modx
- * @author      hansek from www.modxcms.cz <http://www.modxcms.cz>
+ * @author      hansek from www.modxcms.cz <http://www.modxcms.cz>, update Mihanik71
  * @internal    @events OnDocFormRender,OnChunkFormRender,OnModFormRender,OnPluginFormRender,OnSnipFormRender,OnTempFormRender
  * @internal    @modx_category Manager and Admin
- * @internal    @properties &theme=Theme;list;,cobalt,ecllipse,elegant,monokai,neat,night,rubyblue; &indentUnit=Indent unit;int;2 &tabSize=The width of a tab character;int;2 &lineWrapping=lineWrapping;list;true,false;true
+ * @internal    @properties &theme=Theme;list;default,ambiance,blackboard,cobalt,eclipse,elegant,erlang-dark,lesser-dark,midnight,monokai,neat,night,rubyblue,solarized,twilight,vibrant-ink,xq-dark,xq-light; &indentUnit=Indent unit;int;4 &tabSize=The width of a tab character;int;4 &lineWrapping=lineWrapping;list;true,false;true &matchBrackets=matchBrackets;list;true,false;true &activeLine=activeLine;list;true,false;true &selectionMatches=selectionMatches;list;true,false;true
  * @internal    @installset base
  */
 
