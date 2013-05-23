@@ -460,7 +460,6 @@ class DocumentParser {
     function checkCache($id) {
         if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
         $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
-
         if (file_exists($cacheFile)) {
             $this->documentGenerated= 0;
             $flContent = file_get_contents($cacheFile, false);
@@ -722,9 +721,7 @@ class DocumentParser {
         if ($this->documentGenerated == 1 && $this->documentObject['cacheable'] == 1 && $this->documentObject['type'] == 'document' && $this->documentObject['published'] == 1) {
             $basepath= $this->config["base_path"] . "assets/cache";
             // invoke OnBeforeSaveWebPageCache event
-            $this->invokeEvent("OnBeforeSaveWebPageCache");
-            
-            
+            $this->invokeEvent("OnBeforeSaveWebPageCache"); 
             if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
             if ($fp= @ fopen($basepath . "/docid_" . $this->documentIdentifier . $md5_hash .".pageCache.php", "w")) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
@@ -747,42 +744,50 @@ class DocumentParser {
         // end post processing
     }
 
-    /**
-     * Merge meta tags
-     *
-     * @param string $template
-     * @return string
-     */
-    function mergeDocumentMETATags($template) {
-        if ($this->documentObject['haskeywords'] == 1) {
-            // insert keywords
-            $keywords = $this->getKeywords();
-            if (is_array($keywords) && count($keywords) > 0) {
-                $keywords = implode(", ", $keywords);
-                $metas= "\t<meta name=\"keywords\" content=\"$keywords\" />\n";
+    function getTagsFromContent($content,$left='[+',$right='+]') {
+        $hash = explode($left,$content);
+        foreach($hash as $i=>$v) {
+          if(0<$i) $hash[$i] = $left.$v;
+        }
+        
+        $i=0;
+        $count = count($hash);
+        $safecount = 0;
+        $temp_hash = array();
+        while(0<$count) {
+            $open  = 1;
+            $close = 0;
+            $safecount++;
+            if(1000<$safecount) break;
+            while($close < $open && 0 < $count) {
+                $safecount++;
+                if(!isset($temp_hash[$i])) $temp_hash[$i] = '';
+                if(1000<$safecount) break;
+                $temp_hash[$i] .= array_shift($hash);
+                $count = count($hash);
+                if($i===0) {
+                    $i++;
+                    continue;
+                }
+                if(strpos($temp_hash[$i],$right)===false) $open++;
+                else {
+                    $right_count = substr_count($temp_hash[$i],$right);
+                    $close += $right_count;
+                }
             }
-
-        // Don't process when cached
-        $this->documentObject['haskeywords'] = '0';
+            $i++;
         }
-        if ($this->documentObject['hasmetatags'] == 1) {
-            // insert meta tags
-            $tags= $this->getMETATags();
-            foreach ($tags as $n => $col) {
-                $tag= strtolower($col['tag']);
-                $tagvalue= $col['tagvalue'];
-                $tagstyle= $col['http_equiv'] ? 'http-equiv' : 'name';
-                $metas .= "\t<meta $tagstyle=\"$tag\" content=\"$tagvalue\" />\n";
+        $matches=array();
+        $i = 0;
+        foreach($temp_hash as $v) {
+            if(strpos($v,$left)!==false) {
+                $v = substr($v,0,strrpos($v,$right));
+                $matches[0][$i] = $v . $right;
+                $matches[1][$i] = substr($v,strlen($left));
+                $i++;
             }
-
-        // Don't process when cached
-        $this->documentObject['hasmetatags'] = '0';
         }
-        if ($metas){
-            $template = preg_replace("/(<head>)/i", "\\1\n\t" . trim($metas), $template);
-            $template=$this->mergeSettingsContent($template);
-        }
-        return $template;
+        return $matches;
     }
 
     /**
@@ -791,9 +796,9 @@ class DocumentParser {
      * @param string $template
      * @return string
      */
-    function mergeDocumentContent($template) {
+    function mergeDocumentContent($content) {
         $replace= array ();
-        preg_match_all('~\[\*(.*?)\*\]~', $template, $matches);
+        $matches = $this->getTagsFromContent($content,'[*','*]');
         $variableCount= count($matches[1]);
         $basepath= MODX_MANAGER_PATH . "includes";
         for ($i= 0; $i < $variableCount; $i++) {
@@ -809,9 +814,9 @@ class DocumentParser {
             }
             $replace[$i]= $value;
         }
-        $template= str_replace($matches[0], $replace, $template);
+        $content= str_replace($matches[0], $replace, $content);
 
-        return $template;
+        return $content;
     }
 
     /**
@@ -820,19 +825,19 @@ class DocumentParser {
      * @param string $template
      * @return string
      */
-    function mergeSettingsContent($template) {
+    function mergeSettingsContent($content) {
         $replace= array ();
-        $matches= array ();
-        if (preg_match_all('~\[\(([a-zA-Z0-9\_]*?)\)\]~', $template, $matches)) {
+        $matches = $this->getTagsFromContent($content,'[(',')]');
+        if($matches) {
             $settingsCount= count($matches[1]);
             for ($i= 0; $i < $settingsCount; $i++) {
                 if (array_key_exists($matches[1][$i], $this->config))
                     $replace[$i]= $this->config[$matches[1][$i]];
             }
 
-            $template= str_replace($matches[0], $replace, $template);
+            $content= str_replace($matches[0], $replace, $content);
         }
-        return $template;
+        return $content;
     }
 
     /**
@@ -843,8 +848,8 @@ class DocumentParser {
      */
     function mergeChunkContent($content) {
         $replace= array ();
-        $matches= array ();
-        if (preg_match_all('~{{(.*?)}}~', $content, $matches)) {
+        $matches = $this->getTagsFromContent($content,'{{','}}');
+        if ($matches) {
             $settingsCount= count($matches[1]);
             for ($i= 0; $i < $settingsCount; $i++) {
                 if (isset ($this->chunkCache[$matches[1][$i]])) {
@@ -877,9 +882,9 @@ class DocumentParser {
      */
     function mergePlaceholderContent($content) {
         $replace= array ();
-        $matches= array ();
         $content=$this->mergeSettingsContent($content);
-        if (preg_match_all('~\[\+(.*?)\+\]~', $content, $matches)) {
+        $matches = $this->getTagsFromContent($content,'[+','+]');
+        if($matches) {
             $cnt= count($matches[1]);
             for ($i= 0; $i < $cnt; $i++) {
                 $v= '';
@@ -1167,23 +1172,6 @@ class DocumentParser {
     }
 
     /**
-     * Create a friendly URL
-     *
-     * @param string $pre
-     * @param string $suff
-     * @param string $alias
-     * @return string
-     */
-   function makeFriendlyURL($pre, $suff, $alias, $isfolder=0) {
-        $Alias = explode('/',$alias);
-        $alias = array_pop($Alias);
-        $dir = implode('/', $Alias);
-        unset($Alias);
-        if($this->config['make_folders']==='1' && $isfolder==1) $suff = '/';
-        return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
-    }
-
-    /** 
      * Convert URL tags [~...~] to URLs
      *
      * @param string $documentSource

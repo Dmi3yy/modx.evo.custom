@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Title: Filter Class
  * Purpose:
