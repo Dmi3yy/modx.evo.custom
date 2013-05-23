@@ -1,4 +1,5 @@
 <?php
+
 $host = $_POST['host'];
 $uid = $_POST['uid'];
 $pwd = $_POST['pwd'];

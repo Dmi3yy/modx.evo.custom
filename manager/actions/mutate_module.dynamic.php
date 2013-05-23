@@ -156,41 +156,48 @@ function showParameters(ctrl) {
             value = decode((ar[2])? ar[2]:'');
 
             // store values for later retrieval
-            if (key && (dt=='list' || dt=='menu' || dt=='list-multi')) currentParams[key] = [desc,dt,value,ar[3]];
+            if (key && dt=='list') currentParams[key] = [desc,dt,value,ar[3]];
             else if (key) currentParams[key] = [desc,dt,value];
 
             if (dt) {
                 switch(dt) {
+                    case 'int':
+                        c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
+                        break;
                     case 'menu':
+                        value = ar[3];
+                        c = '<select name="prop_'+key+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
+                        ls = (ar[2]+'').split(",");
+                        if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
+                        for(i=0;i<ls.length;i++) {
+                            c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
+                        }
+                        c += '</select>';
+                        break;
                     case 'list':
                         value = ar[3];
                         ls = (ar[2]+'').split(",");
                         if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
-                        c = '<select name="prop_'+key+'"'+ ((dt=='list') ? size='"'+ls.length+'"' : '') + ' style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
+                        c = '<select name="prop_'+key+'" size="'+ls.length+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
                         for(i=0;i<ls.length;i++){
                             c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
                         }
                         c += '</select>';
                         break;
                     case 'list-multi':
-                        value = typeof ar[3] !== 'undefined' ? (ar[3]+'').replace(/^\s|\s$/,"") : '';
-                        arrValue = value.split(",");
+                        value = (ar[3]+'').replace(/^\s|\s$/,"");
+                        arrValue = value.split(",")
                         ls = (ar[2]+'').split(",");
-
                         if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
                         c = '<select name="prop_'+key+'" size="'+ls.length+'" multiple="multiple" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
                         for(i=0;i<ls.length;i++){
                             if(arrValue.length){
-                                var found = false;
                                 for(j=0;j<arrValue.length;j++){
                                     if (ls[i] == arrValue[j]) {
-                                        found = true;
-                                    }
-                                }
-                                if(found == true){
                                     c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
                                 }else{
                                     c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
+                                }
                                 }
                             }else{
                                 c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
@@ -201,7 +208,6 @@ function showParameters(ctrl) {
                     case 'textarea':
                         c = '<textarea class="phptextarea" name="prop_'+key+'" cols="50" rows="4" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">'+value+'</textarea>';
                         break;
-                    case 'int':
                     default:  // string
                         c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
                         break;
@@ -390,7 +396,7 @@ function SetUrl(url, width, height, alt) {
         <tr><td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']?>:</td>
             <td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" onchange="documentDirty=true;"></td></tr>
         <tr><td align="left"><input name="enable_resource" title="<?php echo $_lang['enable_resource']?>" type="checkbox"<?php echo $content['enable_resource']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang['enable_resource']?>"><?php echo $_lang["element"]?></span>:</td>
-            <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="sourcefile" type="text" maxlength="255" value="<?php echo $content['resourcefile']?>" class="inputBox" onchange="documentDirty=true;" /></td></tr>
+            <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="resourcefile" type="text" maxlength="255" value="<?php echo $content['resourcefile']?>" class="inputBox" onchange="documentDirty=true;" /></td></tr>
         <tr><td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? 'checked="checked"' : ''?> value="on" class="inputBox" />
             <span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></td></tr>
         <tr><td align="left" valign="top" colspan="2"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? ' checked="checked"' : ''?> class="inputBox" />

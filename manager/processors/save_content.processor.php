@@ -549,7 +549,7 @@ $sql = "UPDATE $tbl_site_content SET introtext='$introtext', content='$content',
 			$new_groups = array();
 			// process the new input
 			foreach ($document_groups as $value_pair) {
-				list($group, $link_id) = explode(',', $value_pair); // @see manager/actions/mutate_content.dynamic.php @ line 1138 (permissions list)
+				list($group, $link_id) = explode(',', $value_pair); // @see actions/mutate_content.dynamic.php @ line 1138 (permissions list)
 				$new_groups[$group] = $link_id;
 			}
 

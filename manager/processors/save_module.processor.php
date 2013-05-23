@@ -10,7 +10,7 @@ if(!$modx->hasPermission('save_module')) {
 $id = intval($_POST['id']);
 $name = $modx->db->escape(trim($_POST['name']));
 $description = $modx->db->escape($_POST['description']);
-$resourcefile = $modx->db->escape($_POST['sourcefile']);
+$resourcefile = $modx->db->escape($_POST['resourcefile']);
 $enable_resource = $_POST['enable_resource']=='on' ? 1 : 0 ;
 $icon = $modx->db->escape($_POST['icon']);
 //$category = intval($_POST['category']);

@@ -49,7 +49,6 @@ class DocumentParser {
     var $forwards= 3;
     var $error_reporting;
     var $aliasListing;
-    var $ext=array(); //for custom loadExtension
     private $version=array();
     
     /**
@@ -72,6 +71,11 @@ class DocumentParser {
         // set track_errors ini variable
         @ ini_set("track_errors", "1"); // enable error tracking in $php_errormsg
         $this->error_reporting = 1;
+    }
+
+    function __call($name,$args) {
+        include_once(MODX_MANAGER_PATH . 'includes/extenders/deprecated.functions.inc.php');
+        if(method_exists($this->old,$name)) return call_user_func_array(array($this->old,$name),$args);
     }
 
     /**
@@ -223,82 +227,6 @@ class DocumentParser {
         $this->sendForward($unauthorizedPage, 'HTTP/1.1 401 Unauthorized');
         exit();
     }
-
-
-/**
- * Connect to the database
- *
- * @deprecated use $modx->db->connect()
- */
-function dbConnect() {
-    $this->db->connect();
-    $this->rs= $this->db->conn; // for compatibility
-}
-
-/**
- * Query the database
- *
- * @deprecated use $modx->db->query()
- * @param string $sql The SQL statement to execute
- * @return resource|bool
- */
-function dbQuery($sql) {
-    return $this->db->query($sql);
-}
-
-/**
- * Count the number of rows in a record set
- *
- * @deprecated use $modx->db->getRecordCount($rs)
- * @param resource
- * @return int
- */
-function recordCount($rs) {
-    return $this->db->getRecordCount($rs);
-}
-
-/**
- * Get a result row
- * 
- * @deprecated use $modx->db->getRow()
- * @param array $rs
- * @param string $mode
- * @return array
- */
-function fetchRow($rs, $mode= 'assoc') {
-    return $this->db->getRow($rs, $mode);
-}
-
-/**
- * Get the number of rows affected in the last db operation
- * 
- * @deprecated use $modx->db->getAffectedRows()
- * @param array $rs
- * @return int
- */
-function affectedRows($rs) {
-    return $this->db->getAffectedRows($rs);
-}
-
-/**
- * Get the ID generated in the last query
- * 
- * @deprecated use $modx->db->getInsertId()
- * @param array $rs
- * @return int
- */
-function insertId($rs) {
-    return $this->db->getInsertId($rs);
-}
-
-/**
- * Close a database connection
- *
- * @deprecated use $modx->db->disconnect()
- */
-function dbClose() {
-    $this->db->disconnect();
-}
 
     /**
      * Get MODx settings including, but not limited to, the system_settings table
@@ -668,27 +596,18 @@ function dbClose() {
             }
         }
 
-        $totalTime= ($this->getMicroTime() - $this->tstart);
-        $queryTime= $this->queryTime;
-        $phpTime= $totalTime - $queryTime;
-
-        $queryTime= sprintf("%2.4f s", $queryTime);
-        $totalTime= sprintf("%2.4f s", $totalTime);
-        $phpTime= sprintf("%2.4f s", $phpTime);
-        $source= $this->documentGenerated == 1 ? "database" : "cache";
-        $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
-        $phpMemory = (memory_get_peak_usage(true) / 1024 / 1024) . " mb";
+        $stats = $this->getTimerStats($this->tstart);
 
         $out =& $this->documentOutput;
         if ($this->dumpSQL) {
             $out .= $this->queryCode;
         }
-        $out= str_replace("[^q^]", $queries, $out);
-        $out= str_replace("[^qt^]", $queryTime, $out);
-        $out= str_replace("[^p^]", $phpTime, $out);
-        $out= str_replace("[^t^]", $totalTime, $out);
-        $out= str_replace("[^s^]", $source, $out);
-        $out= str_replace("[^m^]", $phpMemory, $out);
+        $out= str_replace("[^q^]", $stats['queries'] , $out);
+        $out= str_replace("[^qt^]", $stats['queryTime'] , $out);
+        $out= str_replace("[^p^]", $stats['phpTime'] , $out);
+        $out= str_replace("[^t^]", $stats['totalTime'] , $out);
+        $out= str_replace("[^s^]", $stats['source'] , $out);
+        $out= str_replace("[^m^]", $stats['phpMemory'], $out);
         //$this->documentOutput= $out;
 
         // invoke OnWebPagePrerender event
@@ -700,6 +619,23 @@ function dbClose() {
         ob_end_flush();
     }
 
+    function getTimerStats($tstart) {
+        $stats = array();
+
+        $stats['totalTime'] = ($this->getMicroTime() - $tstart);
+        $stats['queryTime'] = $this->queryTime;
+        $stats['phpTime'] = $stats['totalTime'] - $stats['queryTime'];
+
+        $stats['queryTime'] = sprintf("%2.4f s", $stats['queryTime']);
+        $stats['totalTime'] = sprintf("%2.4f s", $stats['totalTime']);
+        $stats['phpTime'] = sprintf("%2.4f s", $stats['phpTime']);
+        $stats['source'] = $this->documentGenerated == 1 ? "database" : "cache";
+        $stats['queries'] = isset ($this->executedQueries) ? $this->executedQueries : 0;
+        $stats['phpMemory'] = (memory_get_peak_usage(true) / 1024 / 1024) . " mb";
+
+        return $stats;
+    }
+    
     /**
      * Checks the publish state of page
      */
@@ -1127,10 +1063,13 @@ function dbClose() {
                         }
                         else $pvalue = $params_stack;
                         $pvalue = trim($pvalue);
+                        $delim = '';
                 }
                 if($delim !== "'")
                 {
                     $pvalue = (strpos($pvalue,'[*')!==false) ? $this->mergeDocumentContent($pvalue) : $pvalue;
+                    $pvalue = (strpos($pvalue,'[(')!==false) ? $this->mergeSettingsContent($pvalue) : $pvalue;
+                    $pvalue = (strpos($pvalue,'{{')!==false) ? $this->mergeChunkContent($pvalue)    : $pvalue;
                 }
                 
                 $pname  = str_replace('&amp;', '', $pname);
@@ -1752,7 +1691,7 @@ function dbClose() {
     }
 
     /**
-     * Returns true if we are currently in the manager/backend
+     * Returns true if we are currently in the manager backend
      *
      * @return boolean
      */
@@ -2212,127 +2151,6 @@ function dbClose() {
     }
 
     /**
-     * Returns an ordered or unordered HTML list.
-     *
-     * @param array $array
-     * @param string $ulroot Default: root
-     * @param string $ulprefix Default: sub_
-     * @param string $type Default: Empty string
-     * @param boolean $ordered Default: false
-     * @param int $tablevel Default: 0
-     * @return string
-     */
-    function makeList($array, $ulroot= 'root', $ulprefix= 'sub_', $type= '', $ordered= false, $tablevel= 0) {
-        // first find out whether the value passed is an array
-        if (!is_array($array)) {
-            return "<ul><li>Bad list</li></ul>";
-        }
-        if (!empty ($type)) {
-            $typestr= " style='list-style-type: $type'";
-        } else {
-            $typestr= "";
-        }
-        $tabs= "";
-        for ($i= 0; $i < $tablevel; $i++) {
-            $tabs .= "\t";
-        }
-        $listhtml= $ordered == true ? $tabs . "<ol class='$ulroot'$typestr>\n" : $tabs . "<ul class='$ulroot'$typestr>\n";
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $listhtml .= $tabs . "\t<li>" . $key . "\n" . $this->makeList($value, $ulprefix . $ulroot, $ulprefix, $type, $ordered, $tablevel +2) . $tabs . "\t</li>\n";
-            } else {
-                $listhtml .= $tabs . "\t<li>" . $value . "</li>\n";
-            }
-        }
-        $listhtml .= $ordered == true ? $tabs . "</ol>\n" : $tabs . "</ul>\n";
-        return $listhtml;
-    }
-
-    /**
-     * Returns user login information, as loggedIn (true or false), internal key, username and usertype (web or manager).
-     *
-     * @return boolean|array
-     */
-    function userLoggedIn() {
-        $userdetails= array ();
-        if ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
-            // web user
-            $userdetails['loggedIn']= true;
-            $userdetails['id']= $_SESSION['webInternalKey'];
-            $userdetails['username']= $_SESSION['webShortname'];
-            $userdetails['usertype']= 'web'; // added by Raymond
-            return $userdetails;
-        } else
-            if ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
-                // manager user
-                $userdetails['loggedIn']= true;
-                $userdetails['id']= $_SESSION['mgrInternalKey'];
-                $userdetails['username']= $_SESSION['mgrShortname'];
-                $userdetails['usertype']= 'manager'; // added by Raymond
-                return $userdetails;
-            } else {
-                return false;
-            }
-    }
-
-    /**
-     * Returns an array with keywords for the current document, or a document with a given docid
-     *
-     * @param int $id The docid, 0 means the current document
-     *                Default: 0
-     * @return array
-     */
-    function getKeywords($id= 0) {
-        if ($id == 0) {
-            $id= $this->documentObject['id'];
-        }
-        $tblKeywords= $this->getFullTableName('site_keywords');
-        $tblKeywordXref= $this->getFullTableName('keyword_xref');
-        $sql= "SELECT keywords.keyword FROM " . $tblKeywords . " AS keywords INNER JOIN " . $tblKeywordXref . " AS xref ON keywords.id=xref.keyword_id WHERE xref.content_id = '$id'";
-        $result= $this->db->query($sql);
-        $limit= $this->db->getRecordCount($result);
-        $keywords= array ();
-        if ($limit > 0) {
-            for ($i= 0; $i < $limit; $i++) {
-                $row= $this->db->getRow($result);
-                $keywords[]= $row['keyword'];
-            }
-        }
-        return $keywords;
-    }
-
-    /**
-     * Returns an array with meta tags for the current document, or a document with a given docid.
-     *
-     * @param int $id The document identifier, 0 means the current document
-     *                Default: 0
-     * @return array
-     */
-    function getMETATags($id= 0) {
-        if ($id == 0) {
-            $id= $this->documentObject['id'];
-        }
-        $sql= "SELECT smt.* " .
-        "FROM " . $this->getFullTableName("site_metatags") . " smt " .
-        "INNER JOIN " . $this->getFullTableName("site_content_metatags") . " cmt ON cmt.metatag_id=smt.id " .
-        "WHERE cmt.content_id = '$id'";
-        $ds= $this->db->query($sql);
-        $limit= $this->db->getRecordCount($ds);
-        $metatags= array ();
-        if ($limit > 0) {
-            for ($i= 0; $i < $limit; $i++) {
-                $row= $this->db->getRow($ds);
-                $metatags[$row['name']]= array (
-                    "tag" => $row['tag'],
-                    "tagvalue" => $row['tagvalue'],
-                    "http_equiv" => $row['http_equiv']
-                );
-            }
-        }
-        return $metatags;
-    }
-
-    /**
      * Executes a snippet.
      *
      * @param string $snippetName
@@ -2373,17 +2191,6 @@ function dbClose() {
         return $t;
     }
 
-     /**
-     * Old method that just calls getChunk()
-     * 
-     * @deprecated Use getChunk
-     * @param string $chunkName
-     * @return boolean|string
-     */
-    function putChunk($chunkName) { // alias name >.<
-        return $this->getChunk($chunkName);
-    }
-
     function parseChunk($chunkName, $chunkArr, $prefix= "{", $suffix= "}") {
         if (!is_array($chunkArr)) {
             return false;
@@ -2393,17 +2200,6 @@ function dbClose() {
             $chunk= str_replace($prefix . $key . $suffix, $value, $chunk);
         }
         return $chunk;
-    }
-
-    /**
-     * Get data from phpSniff
-     *
-     * @category API-Function
-     * @return array
-     */
-    function getUserData() {
-        include MODX_MANAGER_PATH . "includes/extenders/getUserData.extender.php";
-        return $tmpArray;
     }
 
     /**
@@ -3002,18 +2798,6 @@ function dbClose() {
     }
     
     /**
-     * Returns an array of document groups that current user is assigned to.
-     * This function will first return the web user doc groups when running from
-     * frontend otherwise it will return manager user's docgroup.
-     *
-     * @deprecated
-     * @return string|array
-     */
-    function getDocGroups() {
-        return $this->getUserDocGroups();
-    } // deprecated
-
-    /**
      * Change current web user's password
      *
      * @todo Make password length configurable, allow rules for passwords and translation of messages
@@ -3362,214 +3146,9 @@ function dbClose() {
         return $parameter;
     }
 
-    /*############################################
-      Etomite_dbFunctions.php
-      New database functions for Etomite CMS
-      Author: Ralph A. Dahlgren - rad14701@yahoo.com
-      Etomite ID: rad14701
-      See documentation for usage details
-      ############################################*/
-      
-    /**
-     * @depracted Etomite db method
-     */
-    function getIntTableRows($fields= "*", $from= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
-        // function to get rows from ANY internal database table
-        if ($from == "") {
-            return false;
-        } else {
-            $where= ($where != "") ? "WHERE $where" : "";
-            $sort= ($sort != "") ? "ORDER BY $sort $dir" : "";
-            $limit= ($limit != "") ? "LIMIT $limit" : "";
-            $tbl= $this->getFullTableName($from);
-            $sql= "SELECT $fields FROM $tbl $where $sort $limit;";
-            $result= $this->db->query($sql);
-            $resourceArray= array ();
-            for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-                array_push($resourceArray, @ $this->db->getRow($result));
-            }
-            return $resourceArray;
-        }
-    }
-
-    /**
-     * @depracted Etomite db method
-     */
-    function putIntTableRow($fields= "", $into= "") {
-        // function to put a row into ANY internal database table
-        if (($fields == "") || ($into == "")) {
-            return false;
-        } else {
-            $tbl= $this->getFullTableName($into);
-            $sql= "INSERT INTO $tbl SET ";
-            foreach ($fields as $key => $value) {
-                $sql .= $key . "=";
-                if (is_numeric($value))
-                    $sql .= $value . ",";
-                else
-                    $sql .= "'" . $value . "',";
-            }
-            $sql= rtrim($sql, ",");
-            $sql .= ";";
-            $result= $this->db->query($sql);
-            return $result;
-        }
-    }
-
-    /**
-     * @depracted Etomite db method
-     */
-    function updIntTableRow($fields= "", $into= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
-        // function to update a row into ANY internal database table
-        if (($fields == "") || ($into == "")) {
-            return false;
-        } else {
-            $where= ($where != "") ? "WHERE $where" : "";
-            $sort= ($sort != "") ? "ORDER BY $sort $dir" : "";
-            $limit= ($limit != "") ? "LIMIT $limit" : "";
-            $tbl= $this->getFullTableName($into);
-            $sql= "UPDATE $tbl SET ";
-            foreach ($fields as $key => $value) {
-                $sql .= $key . "=";
-                if (is_numeric($value))
-                    $sql .= $value . ",";
-                else
-                    $sql .= "'" . $value . "',";
-            }
-            $sql= rtrim($sql, ",");
-            $sql .= " $where $sort $limit;";
-            $result= $this->db->query($sql);
-            return $result;
-        }
-    }
-
-    /**
-     * @depracted Etomite db method
-     */
-    function getExtTableRows($host= "", $user= "", $pass= "", $dbase= "", $fields= "*", $from= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
-        // function to get table rows from an external MySQL database
-        if (($host == "") || ($user == "") || ($pass == "") || ($dbase == "") || ($from == "")) {
-            return false;
-        } else {
-            $where= ($where != "") ? "WHERE  $where" : "";
-            $sort= ($sort != "") ? "ORDER BY $sort $dir" : "";
-            $limit= ($limit != "") ? "LIMIT $limit" : "";
-            $tbl= $dbase . "." . $from;
-            $this->dbExtConnect($host, $user, $pass, $dbase);
-            $sql= "SELECT $fields FROM $tbl $where $sort $limit;";
-            $result= $this->db->query($sql);
-            $resourceArray= array ();
-            for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
-                array_push($resourceArray, @ $this->db->getRow($result));
-            }
-            return $resourceArray;
-        }
-    }
-
-    /**
-     * @depracted Etomite db method
-     */
-    function putExtTableRow($host= "", $user= "", $pass= "", $dbase= "", $fields= "", $into= "") {
-        // function to put a row into an external database table
-        if (($host == "") || ($user == "") || ($pass == "") || ($dbase == "") || ($fields == "") || ($into == "")) {
-            return false;
-        } else {
-            $this->dbExtConnect($host, $user, $pass, $dbase);
-            $tbl= $dbase . "." . $into;
-            $sql= "INSERT INTO $tbl SET ";
-            foreach ($fields as $key => $value) {
-                $sql .= $key . "=";
-                if (is_numeric($value))
-                    $sql .= $value . ",";
-                else
-                    $sql .= "'" . $value . "',";
-            }
-            $sql= rtrim($sql, ",");
-            $sql .= ";";
-            $result= $this->db->query($sql);
-            return $result;
-        }
-    }
-
-    /**
-     * @depracted Etomite db method
-     */
-    function updExtTableRow($host= "", $user= "", $pass= "", $dbase= "", $fields= "", $into= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
-        // function to update a row into an external database table
-        if (($fields == "") || ($into == "")) {
-            return false;
-        } else {
-            $this->dbExtConnect($host, $user, $pass, $dbase);
-            $tbl= $dbase . "." . $into;
-            $where= ($where != "") ? "WHERE $where" : "";
-            $sort= ($sort != "") ? "ORDER BY $sort $dir" : "";
-            $limit= ($limit != "") ? "LIMIT $limit" : "";
-            $sql= "UPDATE $tbl SET ";
-            foreach ($fields as $key => $value) {
-                $sql .= $key . "=";
-                if (is_numeric($value))
-                    $sql .= $value . ",";
-                else
-                    $sql .= "'" . $value . "',";
-            }
-            $sql= rtrim($sql, ",");
-            $sql .= " $where $sort $limit;";
-            $result= $this->db->query($sql);
-            return $result;
-        }
-    }
-
-    /**
-     * @depracted Etomite db method
-     */
-    function dbExtConnect($host, $user, $pass, $dbase) {
-        // function to connect to external database
-        $tstart= $this->getMicroTime();
-        if (@ !$this->rs= mysql_connect($host, $user, $pass)) {
-            $this->messageQuit("Failed to create connection to the $dbase database!");
-        } else {
-            mysql_select_db($dbase);
-            $tend= $this->getMicroTime();
-            $totaltime= $tend - $tstart;
-            if ($this->dumpSQL) {
-                $this->queryCode .= "<fieldset style='text-align:left'><legend>Database connection</legend>" . sprintf("Database connection to %s was created in %2.4f s", $dbase, $totaltime) . "</fieldset><br />";
-            }
-            $this->queryTime= $this->queryTime + $totaltime;
-        }
-    }
-    
-    /**
-     * @depracted Etomite db method
-     */
-    function getFormVars($method= "", $prefix= "", $trim= "", $REQUEST_METHOD) {
-        //  function to retrieve form results into an associative array
-        $results= array ();
-        $method= strtoupper($method);
-        if ($method == "")
-            $method= $REQUEST_METHOD;
-        if ($method == "POST")
-            $method= & $_POST;
-        elseif ($method == "GET") $method= & $_GET;
-        else
-            return false;
-        reset($method);
-        foreach ($method as $key => $value) {
-            if (($prefix != "") && (substr($key, 0, strlen($prefix)) == $prefix)) {
-                if ($trim) {
-                    $pieces= explode($prefix, $key, 2);
-                    $key= $pieces[1];
-                    $results[$key]= $value;
-                } else
-                    $results[$key]= $value;
-            }
-            elseif ($prefix == "") $results[$key]= $value;
-        }
-        return $results;
-    }
-
-    ########################################
-    // END New database functions - rad14701
-    ########################################
+    /***************************************************************************************/
+    /* End of API functions								       */
+    /***************************************************************************************/
 
     /**
      * PHP error handler set by http://www.php.net/manual/en/function.set-error-handler.php
@@ -3897,7 +3476,7 @@ class SystemEvent {
     /**
      * @param string $name Name of the event
      */
-    function __construct($name= "") {
+    function SystemEvent($name= "") {
         $this->_resetEventObject();
         $this->name= $name;
     }

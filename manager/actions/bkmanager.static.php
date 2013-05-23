@@ -5,14 +5,13 @@ if(!$modx->hasPermission('bk_manager')) {
 	$e->dumpError();
 }
 
+$dbase = trim($dbase,'`');
+
 if(!isset($modx->config['snapshot_path']))
 {
 	if(is_dir(MODX_BASE_PATH . 'temp/backup/')) $modx->config['snapshot_path'] = MODX_BASE_PATH . 'temp/backup/';
-	elseif(is_dir(MODX_BASE_PATH . 'assets/backup/')) $modx->config['snapshot_path'] = MODX_BASE_PATH . 'assets/backup/';
+	else $modx->config['snapshot_path'] = MODX_BASE_PATH . 'assets/backup/';
 }
-
-// Get table names (alphabetical)
-$tbl_event_log    = $modx->getFullTableName('event_log');
 
 // Backup Manager by Raymond:
 
@@ -30,6 +29,7 @@ if ($mode=='restore1')
 		$source = file_get_contents($_FILES['sqlfile']['tmp_name']);
 	}
 	import_sql($source);
+	header('Location: index.php?r=9&a=93');
 	exit;
 }
 elseif ($mode=='restore2')
@@ -39,6 +39,7 @@ elseif ($mode=='restore2')
 	{
 		$source = file_get_contents($path);
 		import_sql($source);
+		header('Location: index.php?r=9&a=93');
 	}
 	exit;
 }
@@ -59,8 +60,7 @@ elseif ($mode=='backup')
 	 * Perform MySQLdumper data dump
 	 */
 	@set_time_limit(120); // set timeout limit to 2 minutes
-	$dbname = str_replace('`', '', $dbase);
-	$dumper = new Mysqldumper($database_server, $database_user, $database_password, $dbname);
+	$dumper = new Mysqldumper($database_server, $database_user, $database_password, $dbase);
 	$dumper->setDBtables($tables);
 	$dumper->setDroptables((isset($_POST['droptables']) ? true : false));
 	$dumpfinished = $dumper->createDump('callBack');
@@ -91,10 +91,11 @@ elseif ($mode=='snapshot')
 	}
 	if(!is_writable(rtrim($modx->config['snapshot_path'],'/')))
 	{
-		echo str_replace('[+snapshot_path+]','assets/backup/',$_lang["bkmgr_alert_mkdir"]);
+		echo parsePlaceholder($_lang["bkmgr_alert_mkdir"],$modx->config['snapshot_path']);
 		exit;
 	}
-	$sql = 'SHOW TABLE STATUS FROM '.$dbase. ' LIKE \'' . str_replace('_', '\\_', $table_prefix) . '%\'';
+	$escaped_table_prefix = str_replace('_', '\\_', $table_prefix);
+	$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$escaped_table_prefix}%'";
 	$rs = $modx->db->query($sql);
 	$tables = array();
 	if(0<$modx->db->getRecordCount($rs))
@@ -112,8 +113,7 @@ elseif ($mode=='snapshot')
 	$path = "{$modx->config['snapshot_path']}{$today}.sql";
 	
 	@set_time_limit(120); // set timeout limit to 2 minutes
-	$dbname = str_replace('`', '', $dbase);
-	$dumper = new Mysqldumper($database_server, $database_user, $database_password, $dbname);
+	$dumper = new Mysqldumper($database_server, $database_user, $database_password, $dbase);
 	$dumper->setDBtables($tables);
 	$dumper->setDroptables(true);
 	$dumpfinished = $dumper->createDump('snapshot');
@@ -162,6 +162,7 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '')
 else $ph['result_msg'] = '';
 
 ?>
+<script type="text/javascript" src="media/script/tabpane.js"></script>
 <script language="javascript">
 	function selectAll() {
 		var f = document.forms['frmdb'];
@@ -180,7 +181,6 @@ else $ph['result_msg'] = '';
 	<?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>
 
 </script>
-<script type="text/javascript" src="media/script/tabpane.js"></script>
 <h1><?php echo $_lang['bk_manager']?></h1>
 
 <div id="actions">
@@ -201,21 +201,22 @@ else $ph['result_msg'] = '';
 	<input type="hidden" name="mode" value="" />
 	<p><?php echo $_lang['table_hoverinfo']?></p>
 
-	<p class="actionButtons" style="overflow:hidden;"><a href="#" onclick="backup();return false;"><img src="<?php echo $style_path;?>misc/ed_save.gif" /> <?php echo $_lang['database_table_clickbackup']?></a></p>
+	<p class="actionButtons"><a class="primary" href="#" onclick="backup();return false;"><img src="media/style/<?php echo $modx->config['manager_theme'];?>/images/misc/ed_save.gif" /> <?php echo $_lang['database_table_clickbackup']?></a></p>
 	<p><label><input type="checkbox" name="droptables" checked="checked" /><?php echo $_lang['database_table_droptablestatements']?></label></p>
 	<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
 		<thead><tr>
 			<td width="160"><label><input type="checkbox" name="chkselall" onclick="selectAll()" title="Select All Tables" /><b><?php echo $_lang['database_table_tablename']?></b></label></td>
-			<td width="40" align="right"><b><?php echo $_lang['database_table_records']?></b></td>
-			<td width="120" align="right"><b><?php echo $_lang['database_table_datasize']?></b></td>
-			<td width="120" align="right"><b><?php echo $_lang['database_table_overhead']?></b></td>
-			<td width="120" align="right"><b><?php echo $_lang['database_table_effectivesize']?></b></td>
-			<td width="120" align="right"><b><?php echo $_lang['database_table_indexsize']?></b></td>
-			<td width="120" align="right"><b><?php echo $_lang['database_table_totalsize']?></b></td>
+			<td align="right"><b><?php echo $_lang['database_table_records']?></b></td>
+			<td align="right"><b><?php echo $_lang['database_collation']?></b></td>
+			<td align="right"><b><?php echo $_lang['database_table_datasize']?></b></td>
+			<td align="right"><b><?php echo $_lang['database_table_overhead']?></b></td>
+			<td align="right"><b><?php echo $_lang['database_table_effectivesize']?></b></td>
+			<td align="right"><b><?php echo $_lang['database_table_indexsize']?></b></td>
+			<td align="right"><b><?php echo $_lang['database_table_totalsize']?></b></td>
 		</tr></thead>
 		<tbody>
 			<?php
-$sql = 'SHOW TABLE STATUS FROM '.$dbase. ' LIKE \'' . str_replace('_', '\\_', $table_prefix) . '%\'';
+$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$table_prefix}%'";
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 for ($i = 0; $i < $limit; $i++) {
@@ -227,38 +228,36 @@ for ($i = 0; $i < $limit; $i++) {
 	else    $table_string = '';
 
 	echo '<tr bgcolor="'.$bgcolor.'" title="'.$db_status['Comment'].'" style="cursor:default">'."\n".
-	     "\t\t\t\t".'<td><label><input type="checkbox" name="chk[]" value="'.$db_status['Name'].'"'.(strstr($table_string,$db_status['Name']) === false ? '' : ' checked="checked"').' /><b style="color:#009933">'.$db_status['Name'].'</b></label></td>'."\n".
-	     "\t\t\t\t".'<td align="right">'.$db_status['Rows'].'</td>'."\n";
+	     '<td><label><input type="checkbox" name="chk[]" value="'.$db_status['Name'].'"'.(strstr($table_string,$db_status['Name']) === false ? '' : ' checked="checked"').' /><b style="color:#009933">'.$db_status['Name'].'</b></label></td>'."\n".
+	     '<td align="right">'.$db_status['Rows'].'</td>'."\n";
+	echo '<td align="right">'.$db_status['Collation'].'</td>'."\n";
 
 	// Enable record deletion for certain tables (TRUNCATE TABLE) if they're not already empty
 	$truncateable = array(
 		$table_prefix.'event_log',
-		$table_prefix.'log_access',   // should these three
-		$table_prefix.'log_hosts',    // be deleted? - sirlancelot (2008-02-26)
-		$table_prefix.'log_visitors', //
 		$table_prefix.'manager_log',
 	);
 	if($modx->hasPermission('settings') && in_array($db_status['Name'], $truncateable) && $db_status['Rows'] > 0) {
-		echo "\t\t\t\t".'<td dir="ltr" align="right">'.
-		     '<a href="index.php?a=54&mode='.$action.'&u='.$db_status['Name'].'" title="'.$_lang['truncate_table'].'">'.nicesize($db_status['Data_length']+$db_status['Data_free']).'</a>'.
+		echo '<td dir="ltr" align="right">'.
+		     '<a href="index.php?a=54&mode='.$action.'&u='.$db_status['Name'].'" title="'.$_lang['truncate_table'].'">'.$modx->nicesize($db_status['Data_length']+$db_status['Data_free']).'</a>'.
 		     '</td>'."\n";
 	} else {
-		echo "\t\t\t\t".'<td dir="ltr" align="right">'.nicesize($db_status['Data_length']+$db_status['Data_free']).'</td>'."\n";
+		echo '<td dir="ltr" align="right">'.$modx->nicesize($db_status['Data_length']+$db_status['Data_free']).'</td>'."\n";
 	}
 
 	if($modx->hasPermission('settings')) {
-		echo "\t\t\t\t".'<td align="right">'.($db_status['Data_free'] > 0 ?
-		     '<a href="index.php?a=54&mode='.$action.'&t='.$db_status['Name'].'" title="'.$_lang['optimize_table'].'">'.nicesize($db_status['Data_free']).'</a>' :
+		echo '<td align="right">'.($db_status['Data_free'] > 0 ?
+		     '<a href="index.php?a=54&mode='.$action.'&t='.$db_status['Name'].'" title="'.$_lang['optimize_table'].'">'.$modx->nicesize($db_status['Data_free']).'</a>' :
 		     '-').
 		     '</td>'."\n";
 	} else {
-		echo '<td align="right">'.($db_status['Data_free'] > 0 ? nicesize($db_status['Data_free']) : '-').'</td>'."\n";
+		echo '<td align="right">'.($db_status['Data_free'] > 0 ? $modx->nicesize($db_status['Data_free']) : '-').'</td>'."\n";
 	}
 
-	echo "\t\t\t\t".'<td dir="ltr" align="right">'.nicesize($db_status['Data_length']-$db_status['Data_free']).'</td>'."\n".
-	     "\t\t\t\t".'<td dir="ltr" align="right">'.nicesize($db_status['Index_length']).'</td>'."\n".
-	     "\t\t\t\t".'<td dir="ltr" align="right">'.nicesize($db_status['Index_length']+$db_status['Data_length']+$db_status['Data_free']).'</td>'."\n".
-	     "\t\t\t</tr>";
+	echo '<td dir="ltr" align="right">'.$modx->nicesize($db_status['Data_length']-$db_status['Data_free']).'</td>'."\n".
+	     '<td dir="ltr" align="right">'.$modx->nicesize($db_status['Index_length']).'</td>'."\n".
+	     '<td dir="ltr" align="right">'.$modx->nicesize($db_status['Index_length']+$db_status['Data_length']+$db_status['Data_free']).'</td>'."\n".
+	     "</tr>";
 
 	$total = $total+$db_status['Index_length']+$db_status['Data_length'];
 	$totaloverhead = $totaloverhead+$db_status['Data_free'];
@@ -266,10 +265,10 @@ for ($i = 0; $i < $limit; $i++) {
 ?>
 			<tr bgcolor="#CCCCCC">
 				<td valign="top"><b><?php echo $_lang['database_table_totals']?></b></td>
+				<td colspan="3">&nbsp;</td>
+				<td dir="ltr" align="right" valign="top"><?php echo $totaloverhead>0 ? '<b style="color:#990033">'.$modx->nicesize($totaloverhead).'</b><br />('.number_format($totaloverhead).' B)' : '-'?></td>
 				<td colspan="2">&nbsp;</td>
-				<td dir="ltr" align="right" valign="top"><?php echo $totaloverhead>0 ? '<b style="color:#990033">'.nicesize($totaloverhead).'</b><br />('.number_format($totaloverhead).' B)' : '-'?></td>
-				<td colspan="2">&nbsp;</td>
-				<td dir="ltr" align="right" valign="top"><?php echo "<b>".nicesize($total)."</b><br />(".number_format($total)." B)"?></td>
+				<td dir="ltr" align="right" valign="top"><?php echo "<b>".$modx->nicesize($total)."</b><br />(".number_format($total)." B)"?></td>
 			</tr>
 		</tbody>
 	</table>
@@ -368,8 +367,8 @@ function checked($cond)
 	<div id="textarea" style="display:<?php echo $t_display;?>;">
 		<textarea name="textarea" style="width:500px;height:200px;"><?php echo $value;?></textarea>
 	</div>
-	<div class="actionButtons" style="margin-top:10px;overflow:hidden;">
-	<a href="#" onclick="document.mutate.save.click();"><img alt="icons_save" src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang["bkmgr_run_sql_submit"];?></a>
+	<div class="actionButtons" style="margin-top:10px;">
+	<a href="#" class="primary" onclick="document.mutate.save.click();"><img alt="icons_save" src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang["bkmgr_run_sql_submit"];?></a>
 	</div>
 	<input type="submit" name="save" style="display:none;" />
 	</form>
@@ -382,12 +381,12 @@ function checked($cond)
 	<h2 class="tab"><?php echo $_lang["bkmgr_snapshot_title"];?></h2>
 	<?php echo $ph['result_msg']; ?>
 	<script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabSnapshot'));</script>
-	<?php echo str_replace("[+snapshot_path+]","assets/backup/",$_lang["bkmgr_snapshot_msg"]);?>
+	<?php echo parsePlaceholder($_lang["bkmgr_snapshot_msg"],array('snapshot_path'=>"snapshot_path={$modx->config['snapshot_path']}"));?>
 	<form method="post" name="snapshot" action="index.php">
 	<input type="hidden" name="a" value="93" />
 	<input type="hidden" name="mode" value="snapshot" />
-	<div class="actionButtons" style="margin-top:10px;margin-bottom:10px;overflow:hidden;">
-	<a href="#" onclick="document.snapshot.save.click();"><img alt="icons_save" src="<?php echo $_style["icons_add"]?>" /><?php echo $_lang["bkmgr_snapshot_submit"];?></a>
+	<div class="actionButtons" style="margin-top:10px;margin-bottom:10px;">
+	<a href="#" class="primary" onclick="document.snapshot.save.click();"><img alt="icons_save" src="<?php echo $_style["icons_add"]?>" /><?php echo $_lang["bkmgr_snapshot_submit"];?></a>
 	<input type="submit" name="save" style="display:none;" />
 	</form>
 	</div>
@@ -414,7 +413,7 @@ if(is_array($files) && 0 < $total)
 	while ($file = array_shift($files))
 	{
 		$filename = substr($file,strrpos($file,'/')+1);
-		$filesize = nicesize(filesize($file));
+		$filesize = $modx->nicesize(filesize($file));
 		echo str_replace(array('[+filename+]','[+filesize+]'),array($filename,$filesize),$tpl);
 	}
 	echo '</ul>';
@@ -453,9 +452,12 @@ else
 class Mysqldumper {
 	var $_dbtables;
 	var $_isDroptables;
+	var $database_server;
+	var $dbname;
 
-	function Mysqldumper() {
+	function Mysqldumper($database_server, $database_user, $database_password, $dbname) {
 		// Don't drop tables by default.
+		$this->dbname = $dbname;
 		$this->setDroptables(false);
 	}
 
@@ -466,7 +468,7 @@ class Mysqldumper {
 	function isDroptables()        { return $this->_isDroptables; }
 
 	function createDump($callBack) {
-		global $modx,$database_server,$dbname;
+		global $modx;
 
 		// Set line feed
 		$lf = "\n";
@@ -482,11 +484,11 @@ class Mysqldumper {
 		$output .= "# ".addslashes($modx->config['site_name'])." Database Dump{$lf}";
 		$output .= "# MODX Version:{$modx->config['settings_version']}{$lf}";
 		$output .= "# {$lf}";
-		$output .= "# Host: {$database_server}{$lf}";
+		$output .= "# Host: {$this->database_server}{$lf}";
 		$output .= "# Generation Time: " . $modx->toDateFormat(time()) . $lf;
 		$output .= "# Server version: ". $modx->db->getVersion() . $lf;
 		$output .= "# PHP Version: " . phpversion() . $lf;
-		$output .= "# Database : `{$dbname}`{$lf}";
+		$output .= "# Database : `{$this->dbname}`{$lf}";
 		$output .= "#";
 
 		// Generate dumptext for the tables.
@@ -503,20 +505,20 @@ class Mysqldumper {
 				}
 			}
 			$output .= "{$lf}{$lf}# --------------------------------------------------------{$lf}{$lf}";
-			$output .= "#{$lf}# Table structure for table `$tblval`{$lf}";
+			$output .= "#{$lf}# Table structure for table `{$tblval}`{$lf}";
 			$output .= "#{$lf}{$lf}";
 			// Generate DROP TABLE statement when client wants it to.
 			if($this->isDroptables()) {
-				$output .= "DROP TABLE IF EXISTS `$tblval`;{$lf}";
+				$output .= "DROP TABLE IF EXISTS `{$tblval}`;{$lf}";
 			}
 			$output .= "{$createtable[$tblval][0]};{$lf}";
 			$output .= $lf;
-			$output .= "#{$lf}# Dumping data for table `$tblval`{$lf}#{$lf}";
+			$output .= "#{$lf}# Dumping data for table `{$tblval}`{$lf}#{$lf}";
 			$result = $modx->db->select('*',$tblval);
 			$rows = $this->loadObjectList('', $result);
 			foreach($rows as $row) {
 				$insertdump = $lf;
-				$insertdump .= "INSERT INTO `$tblval` VALUES (";
+				$insertdump .= "INSERT INTO `{$tblval}` VALUES (";
 				$arr = $this->object2Array($row);
 				foreach($arr as $key => $value) {
 					$value = addslashes($value);
@@ -573,8 +575,21 @@ class Mysqldumper {
 
 function import_sql($source,$result_code='import_ok')
 {
-	global $modx;
-	$source = str_replace(array("\r\n","\r"),"\n",$source);
+	global $modx,$e;
+	
+	$tbl_active_users = $modx->getFullTableName('active_users');
+	$rs = $modx->db->select('*',$tbl_active_users,"action='27'");
+	if(0 < $modx->db->getRecordCount($rs))
+	{
+		echo '<html><body>'.
+		     '<script type="text/javascript">alert(\'Resource is edit now by any user\');</script>'.
+		     '</body></html>';
+		exit;
+	}
+	
+	$settings = getSettings();
+	
+	$source = str_replace(array("\r\n","\n","\r"),"\n",$source);
 	$sql_array = preg_split('@;[ \t]*\n@', $source);
 	foreach($sql_array as $sql_entry)
 	{
@@ -582,6 +597,8 @@ function import_sql($source,$result_code='import_ok')
 		if(empty($sql_entry)) continue;
 		$rs = $modx->db->query($sql_entry);
 	}
+	restoreSettings($settings);
+	
 	$modx->clearCache();
 	if(0 < $modx->db->getRecordCount($rs))
 	{
@@ -592,7 +609,6 @@ function import_sql($source,$result_code='import_ok')
 	}
 	
 	$_SESSION['result_msg'] = $result_code;
-	header("Location: index.php?r=9&a=93");
 }
 
 function callBack(&$dumpstring) {
@@ -617,15 +633,48 @@ function snapshot(&$dumpstring) {
 	return true;
 }
 
-function nicesize($size) {
-	$a = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
-
-	$pos = 0;
-	while ($size >= 1024) {
-		$size /= 1024;
-		$pos++;
+function getSettings()
+{
+	global $modx;
+	
+	$tbl_system_settings = $modx->getFullTableName('system_settings');
+	$rs = $modx->db->select('setting_name, setting_value',$tbl_system_settings);
+	
+	$settings = array();
+	while ($row = $modx->db->getRow($rs))
+	{
+		switch($row['setting_name'])
+		{
+			case 'rb_base_dir':
+			case 'filemanager_path':
+			case 'site_url':
+			case 'base_url':
+				$settings[$row['setting_name']] = $row['setting_value'];
+				break;
+		}
 	}
-	if ($size==0)
-	        return '-';
-	else    return round($size,2).' '.$a[$pos];
+	return $settings;
+}
+
+function restoreSettings($settings)
+{
+	global $modx;
+
+	$tbl_system_settings = $modx->getFullTableName('system_settings');
+	foreach($settings as $k=>$v)
+	{
+		$modx->db->update(array('setting_value'=>$v),$tbl_system_settings,"setting_name='{$k}'");
+	}
+}
+
+function parsePlaceholder($tpl='', $ph=array())
+{
+	if(empty($ph) || empty($tpl)) return $tpl;
+	
+	foreach($ph as $k=>$v)
+	{
+		$k = "[+{$k}+]";
+		$tpl = str_replace($k, $v, $tpl);
+	}
+	return $tpl;
 }

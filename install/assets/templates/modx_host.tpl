@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="assets/templates/modxhost/modx.css" type="text/css" media="screen" />
   <link rel="stylesheet" href="assets/templates/modxhost/print.css" type="text/css" media="print" />
   <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="[(site_url)][~11~]" />
-  <script src="[(site_manager_url)]/media/script/mootools/mootools.js" type="text/javascript"></script>
+  <script src="[(site_manager_url)]media/script/mootools/mootools.js" type="text/javascript"></script>
   <script src="assets/templates/modxhost/drop_down_menu.js" type="text/javascript"></script>
 </head>
 <body>
@@ -41,7 +41,7 @@
               <h2>Most Recent:</h2>
               <a name="recentdocs"></a>[[ListIndexer?LIn_root=0]] </div>
             <h2>Login:</h2>
-            <div id="sidebarlogin">[!WebLogin? &tpl=`FormLogin` &loginhomeid=`[(site_start)]`!]</div>
+            <div id="sidebarlogin">[!WebLogin? &tpl=`WebLoginSideBar` &loginhomeid=`[(site_start)]`!]</div>
             <h2>Meta:</h2>
             <p><a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional">Valid <abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a></p>
             <p><a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page uses valid Cascading Stylesheets" rel="external">Valid <abbr title="W3C Cascading Stylesheets">css</abbr></a></p>
@@ -54,6 +54,7 @@
       <!-- end right -->
       <div id="left">
         <div id="left-inner">
+          [[Breadcrumbs?]]
           <div id="content">
             <div class="post">
               <h2>[*longtitle*]</h2>
@@ -78,10 +79,10 @@
     <!-- end header -->
     <br style="clear:both;height:0;font-size: 1px" />
     <div id="footer">
-      <p> <a href="http://modxcms.com" title="Ajax CMS and PHP Application Framework">Powered
-          by MODx</a> &nbsp;<a href="http://www.modxhost.com/" title="Template Designed by modXhost.com">Template &copy; 2006-2010
+      <p> <a href="http://modx.com" title="Ajax CMS and PHP Application Framework">Powered
+          by MODX</a> &nbsp;<a href="http://www.modx.com/" title="Template Designed by modXhost.com">Template &copy; 2006-2011
           modXhost.com</a><br />
-        Mem : [^m^], MySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document retrieved
+        Memory: [^m^], MySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document retrieved
         from [^s^]. </p>
     </div>
     <!-- end footer -->
