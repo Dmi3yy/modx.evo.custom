@@ -923,6 +923,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('use_captcha','0'),
 ('captcha_words','0,1,2,3,4,5,6,7,8,9'),
 ('emailsender','{ADMINEMAIL}'),
+('emailsubject','Your login details'),
 ('email_method','mail'),
 ('email_smtp_sender','{ADMINEMAIL}'),
 ('email_host',''),
