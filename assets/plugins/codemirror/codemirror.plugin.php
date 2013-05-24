@@ -78,13 +78,14 @@ if (('none' == $rte) && $mode) {
 	<link rel="stylesheet" href="{$_CM_URL}cm/addon.css">
 	<link rel="stylesheet" href="{$_CM_URL}cm/theme/{$theme}.css">
 	<script src="{$_CM_URL}cm/lib/codemirror.js"></script>
-	<script src="{$_CM_URL}cm/hotkey.js"></script>
+	<script src="{$_CM_URL}cm/addon.js"></script>
 	<script src="{$_CM_URL}cm/addon/selection/active-line.js"></script>
 	<script src="{$_CM_URL}cm/addon/search/searchcursor.js"></script>
 	<script src="{$_CM_URL}cm/addon/search/match-highlighter.js"></script>
 	<script src="{$_CM_URL}cm/addon/fold/foldcode.js"></script>
 	<script src="{$_CM_URL}cm/addon/fold/brace-fold.js"></script>
 	<script src="{$_CM_URL}cm/addon/fold/xml-fold.js"></script>
+	<script src="{$_CM_URL}cm/addon/mode/overlay.js"></script>
 
 	<script src="{$_CM_URL}cm/mode/xml/xml.js"></script>
 	<script src="{$_CM_URL}cm/mode/javascript/javascript.js"></script>
@@ -94,8 +95,66 @@ if (('none' == $rte) && $mode) {
 	<script src="{$_CM_URL}cm/mode/php/php.js"></script>
 
 	<script type="text/javascript">
+		CodeMirror.defineMode("MODx", function(config, parserConfig) {
+			var mustacheOverlay = {
+				token: function(stream, state) {
+					var ch;
+					if (stream.match("[[")) {
+						while ((ch = stream.next()) != null)
+							if (ch == "]" && stream.next() == "]") break;
+						stream.eat("]");
+						return "modxSnippet";
+					}
+					if (stream.match("{{")) {
+						while ((ch = stream.next()) != null)
+							if (ch == "}" && stream.next() == "}") break;
+						stream.eat("}");
+						return "modxChunk";
+					}
+					if (stream.match("[*")) {
+						while ((ch = stream.next()) != null)
+							if (ch == "*" && stream.next() == "]") break;
+						stream.eat("]");
+						return "modxTv";
+					}
+					if (stream.match("[+")) {
+						while ((ch = stream.next()) != null)
+							if (ch == "+" && stream.next() == "]") break;
+						stream.eat("]");
+						return "modxPlaceholder";
+					}
+					if (stream.match("[!")) {
+						while ((ch = stream.next()) != null)
+							if (ch == "!" && stream.next() == "]") break;
+						stream.eat("]");
+						return "modxSnippetNoCache";
+					}
+					if (stream.match("[(")) {
+						while ((ch = stream.next()) != null)
+							if (ch == ")" && stream.next() == "]") break;
+						stream.eat("]");
+						return "modxVariable";
+					}
+					if (stream.match("[~")) {
+						while ((ch = stream.next()) != null)
+							if (ch == "~" && stream.next() == "]") break;
+						stream.eat("]");
+						return "modxUrl";
+					}
+					if (stream.match("[^")) {
+						while ((ch = stream.next()) != null)
+							if (ch == "^" && stream.next() == "]") break;
+						stream.eat("]");
+						return "modxConfig";
+					}
+					while (stream.next() != null && !stream.match("[[", false) && !stream.match("{{", false) && !stream.match("[*", false) && !stream.match("[+", false) && !stream.match("[!", false) && !stream.match("[(", false) && !stream.match("[~", false) && !stream.match("[^", false)) {}
+					return null;
+				}
+			};
+			return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || "{$mode}"), mustacheOverlay);
+		});
 		var config = {
-			mode: '{$mode}',
+			mode: 'MODx',
 			theme: '{$theme}',
 			indentUnit: {$indentUnit},
 			tabSize: '{$tabSize}',
@@ -107,7 +166,17 @@ if (('none' == $rte) && $mode) {
 			styleActiveLine: {$activeLine},
 			highlightSelectionMatches: {$selectionMatches},
 			indentWithTabs: true,
-			extraKeys: {"Ctrl-Space": function(cm){foldFunc_html(cm, cm.getCursor().line);}}
+			extraKeys:{
+				"Ctrl-Space": function(cm){
+					foldFunc_html(cm, cm.getCursor().line);
+				},
+				"F11": function(cm) {
+					setFullScreen(cm, !isFullScreen(cm));
+				},
+				"Esc": function(cm) {
+					if (isFullScreen(cm)) setFullScreen(cm, false);
+				}
+			}
 		};
 		var foldFunc_html = CodeMirror.newFoldFunction(CodeMirror.tagRangeFinder);
 		var myTextArea = document.getElementsByName('{$textarea_name}')[0];
