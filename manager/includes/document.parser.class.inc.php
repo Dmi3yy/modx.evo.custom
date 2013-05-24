@@ -1171,6 +1171,13 @@ class DocumentParser {
         return $snippetObject;
     }
 
+    
+    function toAlias($text) {
+        $suff= $this->config['friendly_url_suffix'];
+        return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff),array('.xml','.rss','.js','.css'),$text);
+    }
+
+    
     /**
      * Convert URL tags [~...~] to URLs
      *
@@ -1199,6 +1206,30 @@ class DocumentParser {
             $in= '!\[\~([0-9]+)\~\]!is';
             $out= "index.php?id=" . '\1';
             $documentSource= preg_replace($in, $out, $documentSource);
+        }
+        // FIX URLs
+        $myProtocol = ($_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+        $parts = explode("?", $_SERVER['REQUEST_URI']); 
+        $strictURL =  $this->toAlias($this->makeUrl($this->documentIdentifier));
+        $myDomain = $myProtocol . "://" . $_SERVER['HTTP_HOST'];
+        $newURL = $myDomain . $strictURL;
+        $requestedURL = $myDomain . $parts[0];
+        if ($this->documentIdentifier == $this->config['site_start']){
+            if ($requestedURL != $this->config['site_url']){
+                // Force redirect of site start
+                header("HTTP/1.1 301 Moved Permanently");
+                $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', $parts[1]);  // Strip conflicting id/q from query string
+                if ($qstring) header('Location: ' . $this->config['site_url'] . '?' . $qstring);
+                else header('Location: ' . $this->config['site_url']);
+                exit(0);
+            }
+        }elseif ($parts[0] != $strictURL){
+            // Force page redirect
+            header("HTTP/1.1 301 Moved Permanently");
+            $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', $parts[1]);  // Strip conflicting id/q from query string
+            if ($qstring) header('Location: ' . $strictURL . '?' . $qstring);
+            else header('Location: ' . $strictURL);
+            exit(0);
         }
         return $documentSource;
     }
