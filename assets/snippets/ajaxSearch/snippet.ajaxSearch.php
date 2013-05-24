@@ -2,7 +2,7 @@
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 // ajaxSearch version being executed
-define('AS_VERSION', '1.9.2');
+define('AS_VERSION', '1.9.3');
 // Path where ajaxSearch is installed
 define('AS_SPATH', 'assets/snippets/ajaxSearch/');
 //include snippet file
@@ -26,7 +26,7 @@ if (!isset($dcfg)) return "<h3>AjaxSearch error: default configuration array not
 if ($dcfg['version'] != AS_VERSION) return "<h3>AjaxSearch error: Version number mismatch. Check the content of the default configuration file!</h3>";
 
 // check the possible use of deprecated parameters (since 1.8.5)
-$readme = "ajaxSearch_version_192.txt";
+$readme = "ajaxSearch_version_193.txt";
 if (isset($searchWordList)) return "<h3>AjaxSearch error: searchWordList is a deprecated parameter. Read " . $readme . " file.</h3>";
 if (isset($resultsPage)) return "<h3>AjaxSearch error: resultsPage is a deprecated parameter. Read " . $readme . " file.</h3>";
 if (isset($AS_showForm)) return "<h3>AjaxSearch error: AS_showForm parameter has been renamed showInputForm. Read " . $readme . " file.</h3>";
@@ -65,6 +65,9 @@ $cfg['language'] = isset($language) ? $language : (isset($__language) ? $__langu
 // Use this to display the search results using ajax You must include the Mootools library in your template
 // Default: 1 - ajax mode selected
 $cfg['ajaxSearch'] = isset($ajaxSearch) ? $ajaxSearch : (isset($__ajaxSearch) ? $__ajaxSearch : $dcfg['ajaxSearch']);
+// avoid the use of @FILE: prefix with ajax mode
+if ((substr($cfg['config'], 0, 6) == "@FILE:") && $cfg['ajaxSearch'])
+	return "<h3>AjaxSearch error: @FILE: prefix not allowed !<br />Check your config parameter or your config file name!</h3>";
 
 // &advSearch [ 'exactphrase' | 'allwords' | 'nowords' | 'oneword' ]
 // Advanced search:

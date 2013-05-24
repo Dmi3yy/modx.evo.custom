@@ -4,9 +4,9 @@
 * -----------------------------------------------------------------------------
 * @package  AjaxSearchCtrl
 *
-* @author       Coroico - www.modx.wangba.fr
-* @version      1.9.2
-* @date         05/12/2010
+* @author       Coroico - www.evo.wangba.fr
+* @version      1.9.3
+* @date         26/09/2012
 *
 * Purpose:
 *    The AjaxSearchCtrl class contains the logic and synchronisation between model and views
@@ -147,11 +147,7 @@ class AjaxSearchCtrl {
                         }
                         else $this->searchString = strip_tags($_POST['search']);
                     } else {
-                            if (is_array($_GET['search'])) {
-                                    foreach($_GET['search'] as $key => $value) $_GET['search'][$key] = strip_tags($value);
-                                    $this->searchString = implode(' ', $_GET['search']);
-                            }
-                            else $this->searchString = strip_tags(urldecode($_GET['search']));
+                        $this->searchString = strip_tags(urldecode($_GET['search']));
                     }
                     if (isset($_POST['advsearch'])) $this->advSearch = strip_tags($_POST['advsearch']);
                     else if (isset($_GET['advsearch'])) $this->advSearch = strip_tags(urldecode($_GET['advsearch']));

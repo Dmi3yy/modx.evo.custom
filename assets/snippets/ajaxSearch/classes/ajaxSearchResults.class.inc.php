@@ -4,9 +4,9 @@
 * -----------------------------------------------------------------------------
 * @package  AjaxSearchResults
 *
-* @author       Coroico - www.modx.wangba.fr
-* @version      1.9.2
-* @date         05/10/2010
+* @author       Coroico - www.evo.wangba.fr
+* @version      1.9.3
+* @date         26/09/2012
 *
 * Purpose:
 *    The AjaxSearchResults class contains all functions and data used to manage Results
@@ -529,15 +529,8 @@ class AjaxSearchResults {
                 $wordLength = $mbStrlen($searchTerm);
                 $wordLength2 = $wordLength / 2;
                 // $pattern = '/' . preg_quote($searchTerm, '/') . $lookAhead . '/' . $pcreModifier;
-                // // if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier; 
-				if ($advSearch == EXACTPHRASE) {
-					if ($this->asCfg->dbCharset == 'utf8') {
-						$pattern = '/\P{L}' . preg_quote($searchTerm, '/') . '\P{L}/' . $pcreModifier;
-					} else {
-						$pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
-					}
-				};
-                //else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
+                if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
+                else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
                 $matches = array();
                 $nbr = preg_match_all($pattern, $text, $matches, PREG_OFFSET_CAPTURE);
 
@@ -599,15 +592,8 @@ class AjaxSearchResults {
                 if ($this->asCfg->cfg['highlightResult']) {
                     $rank = $extracts[$i]['rank'];
                     $searchTerm = $searchList[$rank - 1];
-                    // // if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
-					if ($advSearch == EXACTPHRASE) {
-						if ($this->asCfg->dbCharset == 'utf8') {
-							$pattern = '/\P{L}' . preg_quote($searchTerm, '/') . '\P{L}/' . $pcreModifier;
-						} else {
-							$pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
-						}
-					};
-                    //else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
+                    if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
+                    else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
                     $subject = '<span class="' . $highlightClass . ' ' . $highlightClass . $rank . '">\0</span>';
                     $extract = preg_replace($pattern, $subject, $extract);
                 }
@@ -895,15 +881,8 @@ class AjaxSearchResults {
                     $searchList = $this->asCtrl->getSearchWords($searchString, $advSearch);
                     $pcreModifier = $this->asCfg->pcreModifier;
                     foreach ($searchList as $searchTerm) {
-                        // // if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
-						if ($advSearch == EXACTPHRASE) {
-							if ($this->asCfg->dbCharset =='utf8') {
-								$pattern = '/\P{L}' . preg_quote($searchTerm, '/') . '\P{L}/' . $pcreModifier;
-							} else {
-								$pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
-							}
-						};
-                        //else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
+                        if ($advSearch == EXACTPHRASE) $pattern = '/\b' . preg_quote($searchTerm, '/') . '\b/' . $pcreModifier;
+                        else $pattern = '/' . preg_quote($searchTerm, '/') . '/' . $pcreModifier;
                         $matches = array();
                         $found = preg_match($pattern, $text, $matches, PREG_OFFSET_CAPTURE);
                         if ($found) break;
