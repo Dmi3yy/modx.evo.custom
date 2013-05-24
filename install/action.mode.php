@@ -24,6 +24,19 @@ if (file_exists("../".MGR_DIR."/includes/config.inc.php")) {
     } else {
         $upgradeable= 2;
     }
+    $avtest = @ mysql_query("SELECT alias_visible FROM {$database_name}.`{$tableprefix}site_content`");
+    /// проверка для установки на мою сборку автоматическое выполнение запроса
+    if ($avtest)  { 
+       $output .= ' ';
+    }else {
+        $avadd = @ mysql_query("ALTER TABLE  {$database_name}.`{$tableprefix}site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT  '1'");
+        $avtest2 = @ mysql_query("SELECT alias_visible FROM {$database_name}.`{$tableprefix}site_content`");
+        if ($avtest2)  { 
+            $output .= ' ';
+        }else {
+            $output .= '<span id="database_pass" style="color:#FF0000;">ошибка при добавлении alias_visible</span><br/>';
+        }
+    }
 }
 ?>
 <form name="install" id="install_form" action="index.php?action=connection" method="post">
