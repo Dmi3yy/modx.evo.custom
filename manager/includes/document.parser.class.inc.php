@@ -458,6 +458,7 @@ class DocumentParser {
      * @return string
      */
     function checkCache($id) {
+        $md5_hash = '';
         if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
         $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
         if (file_exists($cacheFile)) {
@@ -722,6 +723,7 @@ class DocumentParser {
             $basepath= $this->config["base_path"] . "assets/cache";
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache"); 
+            $md5_hash = '';
             if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
             if ($fp= @ fopen($basepath . "/docid_" . $this->documentIdentifier . $md5_hash .".pageCache.php", "w")) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
