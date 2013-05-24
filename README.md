@@ -28,6 +28,24 @@
 - обновил ajaxSearch to 1.9.3b
 - исправленно автоматичское добавление alias_visible при простом обновлении сайта (спасибо Bumkaka)
 
+============то что будет в 1.0.11=============
+- fix trouble with display 2 tv with type date
+- Refactor #9939: multiple event functions separated by comma
+- Bug #9938: Send sendirect, ccsender and autotext mails
+- #9933 insideManager - security fix
+- Refactor #9930 update tv type numeric and email to html5
+- Refactor #3833 Default template in root when Sibling is checked
+- Refactor #3432 Use menutitle instead of Pagetitle in resource tree
+- Refactor #5972 Installer should check whether $_SESSION data
+- Refactor #9845 Snippet Parameters cannot use Chunks
+- Refactor #9797 Fetch modx tags without using the regular expression
+- Refactor #9891 Delete phpSniff
+- Fixed 'wrong datatype' warning at install 
+- Refactor parser statistics into own method, so accessible from all code
+- Refactor #9860 Delete Etomite database functions
+- Refactor #9720 Separation deprecated core functions 
+- Refactor #9861 Should be core files line feed code
+
 
 текущая стабильная версии 1.0.10-d5.2  (18.04.2013)
 =======================================================
