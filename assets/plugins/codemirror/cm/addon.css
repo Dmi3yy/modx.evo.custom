@@ -72,11 +72,11 @@
 	-khtml-opacity: 1;
 	opacity: 1;
 }
-.cm-modxChunk{color: #0ca;}
-.cm-modxSnippet{color: #0ca;}
-.cm-modxTv{color: #0ca;}
-.cm-modxPlaceholder{color: #0ca;}
-.cm-modxSnippetNoCache{color: #0ca;}
-.cm-modxVariable{color: #0ca;}
-.cm-modxUrl{color: #0ca;}
-.cm-modxConfig{color: #0ca;}
+.cm-modxChunk{color: #000; font-weight: bold;}
+.cm-modxSnippet{color: #000; font-weight: bold;}
+.cm-modxTv{color: #000; font-weight: bold;}
+.cm-modxPlaceholder{color: #000; font-weight: bold;}
+.cm-modxSnippetNoCache{color: #000; font-weight: bold;}
+.cm-modxVariable{color: #000;font-weight: bold;}
+.cm-modxUrl{color: #000;font-weight: bold;}
+.cm-modxConfig{color: #000;font-weight: bold;}
