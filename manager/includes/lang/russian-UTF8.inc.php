@@ -1147,4 +1147,7 @@ $_lang['email_smtp_sender_title'] = 'SMTP почта';
 $_lang['email_host_title'] = 'Адрес SMTP-сервера';
 $_lang['email_port_title'] = 'SMTP порт';
 $_lang['email_pass_title'] = 'SMTP пароль';
+
+$_lang['setting_resource_tree_node_name'] = 'Имя узла дерева ресурсов';
+$_lang['setting_resource_tree_node_name_desc'] = 'Укажите поле ресурс. Следует использовать при формировании узлов в дереве ресурсов. По умолчанию pagetitle, возможны и другие варианты, например, menutitle, alias и т.д..';
 ?>
