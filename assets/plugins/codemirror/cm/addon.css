@@ -72,11 +72,11 @@
 	-khtml-opacity: 1;
 	opacity: 1;
 }
-.cm-modxChunk{color: #000; font-weight: bold;}
-.cm-modxSnippet{color: #000; font-weight: bold;}
-.cm-modxTv{color: #000; font-weight: bold;}
-.cm-modxPlaceholder{color: #000; font-weight: bold;}
-.cm-modxSnippetNoCache{color: #000; font-weight: bold;}
-.cm-modxVariable{color: #000;font-weight: bold;}
-.cm-modxUrl{color: #000;font-weight: bold;}
-.cm-modxConfig{color: #000;font-weight: bold;}
+.cm-modxChunk{color: #000000; /*font-weight: 100;*/text-shadow: rgb(187, 187, 187) 1px 1px 1px;}
+.cm-modxSnippet{color: #000000; /*font-weight: 100;*/text-shadow: rgb(187, 187, 187) 1px 1px 1px;}
+.cm-modxTv{color: #000000; /*font-weight: 100;*/text-shadow: rgb(187, 187, 187) 1px 1px 1px;}
+.cm-modxPlaceholder{color: #000000; /*font-weight: 100;*/text-shadow: rgb(187, 187, 187) 1px 1px 1px;}
+.cm-modxSnippetNoCache{color: #000000; /*font-weight: 100;*/text-shadow: rgb(187, 187, 187) 1px 1px 1px;}
+.cm-modxVariable{color: #000000; /*font-weight: 100;*/text-shadow: rgb(187, 187, 187) 1px 1px 1px;}
+.cm-modxUrl{color: #000000; /*font-weight: 100;*/text-shadow: rgb(187, 187, 187) 1px 1px 1px;}
+.cm-modxConfig{color: #000000; /*font-weight: 100;*/text-shadow: rgb(187, 187, 187) 1px 1px 1px;}
