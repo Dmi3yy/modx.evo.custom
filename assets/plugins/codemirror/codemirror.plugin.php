@@ -1,15 +1,10 @@
 <?php
 global $content;
-
 $textarea_name = 'post';
-$object_name  = $content['name'];
-$obect_type  = substr($evt->name, 2, 1);
 $mode = 'htmlmixed';
-
 /*
  * Default Plugin configuration
  */
- 
 $theme                  = (isset($theme)                    ? $theme                    : 'default');
 $indentUnit             = (isset($indentUnit)               ? $indentUnit               : 4);
 $tabSize                = (isset($tabSize)                  ? $tabSize                  : 4);
@@ -17,14 +12,15 @@ $lineWrapping           = (isset($lineWrapping)             ? $lineWrapping     
 $matchBrackets        	= (isset($matchBrackets)            ? $matchBrackets           	: false);
 $activeLine           	= (isset($activeLine)               ? $activeLine			    : false);
 $selectionMatches       = (isset($selectionMatches)         ? $selectionMatches         : false);
-
 /*
  * This plugin is only valid in "text" mode. So check for the current Editor
  */
 $prte   = (isset($_POST['which_editor']) ? $_POST['which_editor'] : '');
 $srte   = ($modx->config['use_editor'] ? $modx->config['which_editor'] : 'none');
 $xrte   = $content['richtext'];
-
+/*
+ * Switch event
+ */
 switch($modx->Event->name) {
     case 'OnTempFormRender'   :
         $object_name = $content['templatename'];
@@ -38,6 +34,9 @@ switch($modx->Event->name) {
         $xrte  = (('htmlmixed' == $mode) ? $xrte : 0);
         $rte   = ($prte ? $prte : ($content['id'] ? ($xrte ? $srte : 'none') : $srte));
 		$contentType = $content['contentType'];
+		/*
+		* Switch contentType for doc
+		*/
 		switch($contentType){
 			case "text/css":
 				$mode = "text/css";
@@ -62,15 +61,13 @@ switch($modx->Event->name) {
 
     case 'OnManagerPageRender':
         if ((31 == $action) && (('view' == $_REQUEST['mode']) || ('edit' == $_REQUEST['mode']))) {
-            $textarea_name = 'content';
-            $rte   = 'none';
+            print_r($content);
         }
         break;
 
     default:
         $this->logEvent(1, 2, 'Undefined event : <b>'.$modx->Event->name.'</b> in <b>'.$this->Event->activePlugin.'</b> Plugin', 'CodeMirror Plugin : '.$modx->Event->name);
 }
-
 if (('none' == $rte) && $mode) {
     $output = '';
     $output .= <<< HEREDOC
@@ -86,7 +83,6 @@ if (('none' == $rte) && $mode) {
 	<script src="{$_CM_URL}cm/addon/fold/brace-fold.js"></script>
 	<script src="{$_CM_URL}cm/addon/fold/xml-fold.js"></script>
 	<script src="{$_CM_URL}cm/addon/mode/overlay.js"></script>
-
 	<script src="{$_CM_URL}cm/mode/xml/xml.js"></script>
 	<script src="{$_CM_URL}cm/mode/javascript/javascript.js"></script>
 	<script src="{$_CM_URL}cm/mode/css/css.js"></script>
@@ -95,14 +91,14 @@ if (('none' == $rte) && $mode) {
 	<script src="{$_CM_URL}cm/mode/php/php.js"></script>
 
 	<script type="text/javascript">
+		// Add mode MODx for syntax highlighting. Dfsed on $mode
 		CodeMirror.defineMode("MODx", function(config, parserConfig) {
 			var mustacheOverlay = {
 				token: function(stream, state) {
 					var ch;
 					if (stream.match("[[")) {
 						while ((ch = stream.next()) != null)
-							if (ch == "]" && stream.next() == "]") break;
-						stream.eat("]");
+							if (ch == "?" || (ch == "]"&& stream.next() == "]")) break;
 						return "modxSnippet";
 					}
 					if (stream.match("{{")) {
@@ -125,8 +121,7 @@ if (('none' == $rte) && $mode) {
 					}
 					if (stream.match("[!")) {
 						while ((ch = stream.next()) != null)
-							if (ch == "!" && stream.next() == "]") break;
-						stream.eat("]");
+							if (ch == "?" || (ch == "!"&& stream.next() == "]")) break;
 						return "modxSnippetNoCache";
 					}
 					if (stream.match("[(")) {
@@ -147,21 +142,34 @@ if (('none' == $rte) && $mode) {
 						stream.eat("]");
 						return "modxConfig";
 					}
-					while (stream.next() != null && !stream.match("[[", false) && !stream.match("{{", false) && !stream.match("[*", false) && !stream.match("[+", false) && !stream.match("[!", false) && !stream.match("[(", false) && !stream.match("[~", false) && !stream.match("[^", false)) {}
+					if (stream.match("&")) {
+						while ((ch = stream.next()) != null)
+							if (ch == "=") break;
+						stream.eat("=");
+						return "attribute";
+					}
+					if (stream.match("!]")) {
+						return "modxSnippet";
+					}
+					if (stream.match("]]")) {
+						return "modxSnippetNoCache";
+					}
+					while (stream.next() != null && !stream.match("[[", false) && !stream.match("&", false) && !stream.match("{{", false) && !stream.match("[*", false) && !stream.match("[+", false) && !stream.match("[!", false) && !stream.match("[(", false) && !stream.match("[~", false) && !stream.match("[^", false) && !stream.match("!]", false) && !stream.match("]]", false)) {}
 					return null;
 				}
 			};
 			return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || "{$mode}"), mustacheOverlay);
 		});
+		//Basic settings
 		var config = {
 			mode: 'MODx',
 			theme: '{$theme}',
 			indentUnit: {$indentUnit},
-			tabSize: '{$tabSize}',
+			tabSize: {$tabSize},
 			lineNumbers: true,
-			matchBrackets:{$matchBrackets},
+			matchBrackets: {$matchBrackets},
 			onKeyEvent: myEventHandler,
-			lineWrapping: '{$lineWrapping}',
+			lineWrapping: {$lineWrapping},
 			gutters: ["CodeMirror-linenumbers", "breakpoints"],
 			styleActiveLine: {$activeLine},
 			highlightSelectionMatches: {$selectionMatches},
