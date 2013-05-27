@@ -72,11 +72,8 @@
 	-khtml-opacity: 1;
 	opacity: 1;
 }
-.cm-modxChunk{color: #000000; background: #fff;}
-.cm-modxSnippet{color: #000000; background: #fff;}
-.cm-modxTv{color: #000000; background: #fff;}
-.cm-modxPlaceholder{color: #000000; background: #fff;}
-.cm-modxSnippetNoCache{color: #000000; background: #fff;}
-.cm-modxVariable{color: #000000; background: #fff;}
-.cm-modxUrl{color: #000000; background: #fff;}
-.cm-modxConfig{color: #000000; background: #fff;}
+.cm-modxChunk, .cm-modxSnippet, .cm-modxTv,  .cm-modxPlaceholder,.cm-modxSnippetNoCache, .cm-modxVariable, .cm-modxUrl, .cm-modxConfig {
+    color: #000;
+    text-shadow:1px 1px 10px rgba(106, 177, 0, 0.68);
+}
+
