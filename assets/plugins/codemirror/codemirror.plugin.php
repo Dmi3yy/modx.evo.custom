@@ -61,7 +61,8 @@ switch($modx->Event->name) {
 
     case 'OnManagerPageRender':
         if ((31 == $action) && (('view' == $_REQUEST['mode']) || ('edit' == $_REQUEST['mode']))) {
-            print_r($content);
+            $textarea_name = 'content';
+            $rte   = 'none';
         }
         break;
 
