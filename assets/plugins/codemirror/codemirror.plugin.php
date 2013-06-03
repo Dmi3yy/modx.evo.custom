@@ -6,12 +6,12 @@ $lang = 'htmlmixed';
 /*
  * Default Plugin configuration
  */
-$theme                  = (($theme)                    ? $theme				: 'default');
-$indentUnit             = (($indentUnit)               ? $indentUnit               	: 4);
-$tabSize                = (($tabSize)                  ? $tabSize                  	: 4);
+$theme                  = (($theme)                    ? true					: 'default');
+$indentUnit             = (($indentUnit)               ? true               	: 4);
+$tabSize                = (($tabSize)                  ? true                  	: 4);
 $lineWrapping           = (($lineWrapping)             ? true           	 	: false);
-$matchBrackets        	= (($matchBrackets)            ? true				: false);
-$activeLine           	= (($activeLine)               ? true			   	: false);
+$matchBrackets        	= (($matchBrackets)            ? true					: false);
+$activeLine           	= (($activeLine)               ? true			   	 	: false);
 /*
  * This plugin is only valid in "text" mode. So check for the current Editor
  */
@@ -63,7 +63,8 @@ switch($modx->Event->name) {
 
     case 'OnManagerPageRender':
         if ((31 == $action) && (('view' == $_REQUEST['mode']) || ('edit' == $_REQUEST['mode']))) {
-            print_r($content);
+            $textarea_name = 'content';
+            $rte   = 'none';
         }
         break;
 
@@ -176,7 +177,15 @@ if (('none' == $rte) && $mode) {
 		};
 		var foldFunc_html = CodeMirror.newFoldFunction(CodeMirror.tagRangeFinder);
 		var myTextArea = document.getElementsByName('{$textarea_name}')[0];
-		var myCodeMirror = CodeMirror.fromTextArea(myTextArea, config);
+		var myCodeMirror =[];
+		myCodeMirror.push(CodeMirror.fromTextArea(myTextArea, config));
+		$$('.tab-row .tab').addEvents({
+            		click: function() {
+                		myCodeMirror.each(function(el) {
+                    			el.refresh();
+                		});
+            		}	
+        	});
 		myCodeMirror.on("gutterClick", function(cm, n) {
 			var info = cm.lineInfo(n);
 			cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
