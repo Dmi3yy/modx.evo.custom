@@ -375,7 +375,7 @@ class directResize {
 			return true;
 		}
 		
-		preg_match("/height *(:|=) *[\"']* *\d+ *[\"']*/",$img,$array);	
+		preg_match("/[^-]height *(:|=) *[\"']* *\d+ *[\"']*/",$img,$array);
 		$imgHTMLHeight = preg_replace("/[^0123456789]/","",$array[0]);
 		if ($imgHTMLHeight>0) $this->imgHTMLHeight = $imgHTMLHeight;
 		
