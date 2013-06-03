@@ -28,6 +28,7 @@
 - удалил SeoStrictUrl
 - обновил ajaxSearch to 1.9.3b
 - исправленно автоматичское добавление alias_visible при простом обновлении сайта (спасибо Bumkaka)
+- исправлен баз в DirectResize (http://modx.im/blog/questions/904.html#comment7793)
 
 ============то что будет в 1.0.11=============
 - fix trouble with display 2 tv with type date
