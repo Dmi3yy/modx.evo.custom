@@ -1027,7 +1027,7 @@ class ditto {
 	// Function: buildURL
 	// Build a URL with regard to Ditto ID
 	// ---------------------------------------------------
-	
+
 	public static function buildURL($args,$id=false,$dittoIdentifier=false) {
 		global $modx, $dittoID;
 			$dittoID = ($dittoIdentifier !== false) ? $dittoIdentifier : $dittoID;
@@ -1037,9 +1037,9 @@ class ditto {
 					$clean_param = htmlspecialchars($param, ENT_QUOTES, $modx->config['modx_charset']);
 					if(is_array($value)) {
 					  //$query[$param] = $value;
-					  foreach($value as $key => $val) {
-              $query[$clean_param][] = htmlspecialchars($val, ENT_QUOTES, $modx->config['modx_charset']);
-            }
+					   foreach($value as $key => $val) {
+                         $query[$clean_param][htmlspecialchars($key, ENT_QUOTES)] = htmlspecialchars($val, ENT_QUOTES, $modx->config['modx_charset']);
+                       }
 					}else{
 					  $query[$clean_param] = htmlspecialchars($value, ENT_QUOTES, $modx->config['modx_charset']);
 					}
@@ -1065,7 +1065,7 @@ class ditto {
           $queryString .= '&'.$param.'='.$value;
         }else{
           foreach ($value as $key=>$val){
-            $queryString .= '&'.$param.'[]='.$val;
+            $queryString .= '&'.$param.'['.$key.']='.$val;
           }
         }
 			}
