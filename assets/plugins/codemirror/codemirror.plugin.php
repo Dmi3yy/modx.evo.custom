@@ -28,7 +28,7 @@ $tabSize                = (isset($tabSize)                  ? $tabSize          
 $lineWrapping           = (isset($lineWrapping)             ? $lineWrapping             : false);
 $matchBrackets          = (isset($matchBrackets)            ? $matchBrackets            : false);
 $activeLine           	= (isset($activeLine)             	? $activeLine            	: false);
-$emmet					= (($emmet == 'true')? '<script src="'.$_CM_URL.'cm/emmet.js"></script>' : "");
+$emmet					= (($emmet == 'true')? '<script src="'.$_CM_URL.'cm/emmet-compressed.js"></script>' : "");
 /*
  * This plugin is only valid in "text" mode. So check for the current Editor
  */

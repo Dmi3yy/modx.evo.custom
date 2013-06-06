@@ -7,7 +7,7 @@
 AddDefaultCharset utf-8
 #php_value date.timezone Europe/Moscow
 
-Options +FollowSymlinks
+#Options +FollowSymlinks
 RewriteEngine On
 RewriteBase /
 
