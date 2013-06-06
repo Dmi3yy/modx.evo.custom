@@ -1,6 +1,6 @@
 <?php
 /**
-version: 0.4.1
+version: 0.4.2
 
 Author:
 	* Bumkaka from modx.im
@@ -468,9 +468,13 @@ class resourse {
 		foreach($fld as $key=>$value){
 			if ($value=='') continue;
  			if ($this->tv[$key]!=''){
-				$result = $this->query("UPDATE {$this->_table['site_tmplvar_contentvalues']} SET `value` = '{$value}' WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}';");
-				$rc = mysql_affected_rows();
-				if ($rc==0){
+				$rc = $this->query("SELECT value FROM {$this->_table['site_tmplvar_contentvalues']} WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}';");
+				$row = mysql_fetch_assoc($rc);
+				if (is_array($row)) {
+					if ($row[0] != $value) {
+						$result = $this->query("UPDATE {$this->_table['site_tmplvar_contentvalues']} SET `value` = '{$value}' WHERE `contentid` = '{$this->id}' AND `tmplvarid` = '{$this->tv[$key]}';");
+				    }
+				}else{	
 					$result = $this->query("INSERT into {$this->_table['site_tmplvar_contentvalues']} SET `contentid` = {$this->id},`tmplvarid` = {$this->tv[$key]},`value` = '{$value}';");
 				}
 			}
