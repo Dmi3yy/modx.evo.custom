@@ -20,6 +20,7 @@
 - мелкие правки manager_path
 - Обновление CodeMirror до версии 3,13 (спасибо Mihanik71)
 - CodeMirror Add fullscreen and MODx tags (спасибо Mihanik71)
+- CodeMirror Add Emmet (спасибо Mihanik71)
 - Обновление snippet sitemap (спасибо Mihanik71)
 - добавление параметров для карты сайта в таб для SEO (спасибо Mihanik71)
 - Обновление fancybox до 2.1.4 (спасибо Mihanik71)
