@@ -447,6 +447,9 @@ if($_REQUEST['mode']=="edit") {
 </form>
 </div>
 <?php
+$_CM_BASE = 'assets/plugins/codemirror/';
+$_CM_URL = $modx->config['site_url'] . $_CM_BASE;
+require(MODX_BASE_PATH. $_CM_BASE .'cm/codemirror.files.php');
 }
 
 function ls($curpath)
@@ -612,7 +615,7 @@ function logFileChange($type, $filename)
     $log->initAndWriteLog($string, '', '', '', $type, $filename);
 
     // HACK: change the global action to prevent double logging
-    // @see index.php @ 915
+    // @see manager/index.php @ 915
     global $action; $action = 1;
 }
 
