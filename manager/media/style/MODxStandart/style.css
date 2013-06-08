@@ -1660,3 +1660,5 @@ form#mutate input.number {width:60px !important;padding-right:10px;text-align:ri
 optgroup {font-style:normal;}
 
 #mainpane table th {vertical-align:top;}
+
+span.unpublish{color:gray;}

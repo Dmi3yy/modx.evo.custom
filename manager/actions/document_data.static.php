@@ -138,6 +138,9 @@ if ($numRecords > 0) {
 		'<option value="pub_date"'.(($sort=='pub_date') ? ' selected' : '').'>'.$_lang["page_data_publishdate"].'</option>'.
 		'<option value="pagetitle"'.(($sort=='pagetitle') ? ' selected' : '').'>'.$_lang['pagetitle'].'</option>'.
 		'<option value="menuindex"'.(($sort=='menuindex') ? ' selected' : '').'>'.$_lang['resource_opt_menu_index'].'</option>'.
+//********  resource_opt_is_published - //
+		'<option value="published"'.(($sort=='published') ? ' selected' : '').'>'.$_lang['resource_opt_is_published'].'</option>'.
+//********//
 	'</select>';
 	$filter_dir='<select size="1" name="dir" onchange="document.location=\'index.php?a=3&id='.$id.'&sort='.$sort.'&dir=\'+this.options[this.selectedIndex].value">'.
 		'<option value="DESC"'.(($dir=='DESC') ? ' selected' : '').'>'.$_lang['sort_desc'].'</option>'.
@@ -180,8 +183,15 @@ if ($numRecords > 0) {
 
 		$limitClause = $childsTable->handlePaging();
 
+$sd=isset($_REQUEST['dir'])?'&amp;dir='.$_REQUEST['dir']:'&amp;dir=DESC';
+$sb=isset($_REQUEST['sort'])?'&amp;sort='.$_REQUEST['sort']:'&amp;sort=createdon';
+$pg=isset($_REQUEST['page'])?'&amp;page='.(int)$_REQUEST['page']:'';
+$add_path=$sd.$sb.$pg;
+
+
 		$listDocs = array();
 		foreach($resource as $k => $children){
+			/*
 			$listDocs[] = array(
 				'docid' =>  $children['id'],
 				'title' =>  (($children['deleted'] ? ('<s>'.$children['pagetitle'].'</s>') : ( ($modx->hasPermission('edit_document')) ? ('<a href="index.php?a=27&amp;id='.$children['id'].'">' . $children['pagetitle'] . '</a>') : $children['pagetitle'] ))),
@@ -194,6 +204,25 @@ if ($numRecords > 0) {
 				(($modx->hasPermission('delete_document')) ? '&nbsp;<a href="index.php?a=6&amp;id='.$children['id'].'" title="'.$_lang['delete_resource'].'"><img src="' . $_style["icons_delete_document"] .'" /></a>&nbsp;<a href="index.php?a=63&amp;id='.$children['id'].'" title="'.$_lang['undelete_resource'].'"><img 
 				src="' . $_style["icons_undelete_resource"] .'" /></a>' : ''),
 			);
+			*/
+			
+			// дописываем в заголовок класс для неопубликованных плюс по всем ссылкам обратный путь 
+			// для сохранения сортировки
+			
+			$listDocs[] = array(
+				'docid' =>  $children['id'],
+				'title' =>  (($children['deleted'] ? ('<s>'.$children['pagetitle'].'</s>') : ( ($modx->hasPermission('edit_document')) ? ('<a href="index.php?a=27&amp;id='.$children['id'].$add_path.'">' . ($children['published']?$children['pagetitle']:'<span class=unpublish>'.$children['pagetitle'].'</span>') . '</a>') : $children['pagetitle'] ))),
+				'createdon' =>  ($modx->toDateFormat($children['createdon']+$server_offset_time,'dateOnly')),
+				'pub_date' =>  ($children['pub_date']? ($modx->toDateFormat($children['pub_date']+$server_offset_time,'dateOnly')) : ''),
+				'status' => ($children['published'] == 0) ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publishedDoc">'.$_lang['page_data_published'].'</span>',
+				'edit' =>   (($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].$add_path.'" title="'.$_lang['edit'].'"><img src="' . $_style["icons_save"] .'" /></a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].$add_path.'" title="'.$_lang['move'].'"><img 
+				src="' . $_style["icons_move_document"] .'" /></a>&nbsp;<a href="index.php?a=61&amp;id='.$children['id'].$add_path.'" title="'.$_lang["publish_resource"].'"><img src="' . $_style["icons_publish_document"] .'" /></a>&nbsp;<a 
+				href="index.php?a=62&amp;id='.$children['id'].$add_path.'" title="'.$_lang["unpublish_resource"].'"><img src="' . $_style["icons_unpublish_resource"] .'" /></a>' : '') .
+				(($modx->hasPermission('delete_document')) ? '&nbsp;<a href="index.php?a=6&amp;id='.$children['id'].$add_path.'" title="'.$_lang['delete_resource'].'"><img src="' . $_style["icons_delete_document"] .'" /></a>&nbsp;<a href="index.php?a=63&amp;id='.$children['id'].$add_path.'" title="'.$_lang['undelete_resource'].'"><img 
+				src="' . $_style["icons_undelete_resource"] .'" /></a>' : ''),
+			);
+			
+			/****************/
 		}
 
 		$childsTable->createPagingNavigation($numRecords,'a=3&id='.$content['id'].'&dir='.$dir.'&sort='.$sort);

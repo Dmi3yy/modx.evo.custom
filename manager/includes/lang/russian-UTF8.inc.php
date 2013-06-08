@@ -1150,4 +1150,6 @@ $_lang['email_pass_title'] = 'SMTP пароль';
 
 $_lang['setting_resource_tree_node_name'] = 'Имя узла дерева ресурсов';
 $_lang['setting_resource_tree_node_name_desc'] = 'Укажите поле ресурс. Следует использовать при формировании узлов в дереве ресурсов. По умолчанию pagetitle, возможны и другие варианты, например, menutitle, alias и т.д..';
+
+$_lang['resource_opt_is_published'] = 'Опубликован';
 ?>

@@ -1741,3 +1741,5 @@ strong[style*='color:#EF1D1D'] {
 	.selected strong[style*='color:#EF1D1D'] {
 		color: red !important;
 	}
+
+span.unpublish{color:gray;}

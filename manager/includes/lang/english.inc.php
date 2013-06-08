@@ -1150,3 +1150,5 @@ $_lang['email_pass_title'] = 'smtp password';
 
 $_lang['setting_resource_tree_node_name'] = 'The node name of a resource tree';
 $_lang['setting_resource_tree_node_name_desc'] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+
+$_lang['resource_opt_is_published'] = 'Published';

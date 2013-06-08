@@ -1,6 +1,13 @@
 <?php
 if (IN_MANAGER_MODE != 'true') die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.');
 
+/********************/
+$sd=isset($_REQUEST['dir'])?'&dir='.$_REQUEST['dir']:'&dir=DESC';
+$sb=isset($_REQUEST['sort'])?'&sort='.$_REQUEST['sort']:'&sort=createdon';
+$pg=isset($_REQUEST['page'])?'&page='.(int)$_REQUEST['page']:'';
+$add_path=$sd.$sb.$pg;
+/*******************/
+
 // check permissions
 switch ($_REQUEST['a']) {
     case 27:
@@ -201,13 +208,13 @@ function changestate(element) {
 
 function deletedocument() {
     if (confirm("<?php echo $_lang['confirm_delete_resource']?>")==true) {
-        document.location.href="index.php?id=" + document.mutate.id.value + "&a=6";
+        document.location.href="index.php?id=" + document.mutate.id.value + "&a=6<?php echo $add_path; ?>";
     }
 }
 
 function duplicatedocument(){
     if(confirm("<?php echo $_lang['confirm_resource_duplicate']?>")==true) {
-        document.location.href="index.php?id=<?php echo $_REQUEST['id']?>&a=94";
+        document.location.href="index.php?id=<?php echo $_REQUEST['id']?>&a=94<?php echo $add_path; ?>";
     }
 }
 
@@ -230,7 +237,7 @@ function enableLinkSelection(b) {
 
 function setLink(lId) {
     if (!allowLinkSelection) {
-        window.location.href="index.php?a=3&id="+lId;
+        window.location.href="index.php?a=3&id="+lId+"<?php echo $add_path; ?>";
         return;
     }
     else {
@@ -255,7 +262,7 @@ function enableParentSelection(b) {
 
 function setParent(pId, pName) {
     if (!allowParentSelection) {
-        window.location.href="index.php?a=3&id="+pId;
+        window.location.href="index.php?a=3&id="+pId+"<?php echo $add_path; ?>";
         return;
     }
     else {
@@ -507,6 +514,13 @@ $evtOut = $modx->invokeEvent('OnDocFormPrerender', array(
 ));
 if (is_array($evtOut))
     echo implode('', $evtOut);
+	
+/*************************/	
+$dir=isset($_REQUEST['dir'])?$_REQUEST['dir']:'';
+$sort=isset($_REQUEST['sort'])?$_REQUEST['sort']:'createdon';
+$page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
+/*************************/
+
 ?>
 <input type="hidden" name="a" value="5" />
 <input type="hidden" name="id" value="<?php echo $content['id']?>" />
@@ -514,6 +528,14 @@ if (is_array($evtOut))
 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : 1048576?>" />
 <input type="hidden" name="refresh_preview" value="0" />
 <input type="hidden" name="newtemplate" value="" />
+
+<!------------- добавляем параметры сортировки------------------>
+<input type="hidden" name="dir" value="<?php echo $dir;?>" />
+<input type="hidden" name="sort" value="<?php echo $sort;?>" />
+<input type="hidden" name="page" value="<?php echo $page;?>" />
+<!-------------- --------------->
+
+
 
 <fieldset id="create_edit">
     <h1><?php if ($_REQUEST['id']){ echo $_lang['edit_resource_title']; } else { echo $_lang['create_resource_title'];}?></h1>

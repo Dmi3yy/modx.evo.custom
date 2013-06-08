@@ -33,6 +33,7 @@
 - исправлен баз в DirectResize (http://modx.im/blog/questions/904.html#comment7793)
 - fix  Удаление ключей в $_GET в Ditto(http://modx.im/blog/dmi3yy/895.html#comment7605)
 - разрешение добликатов псевдонимов в разных папках (http://modx.im/blog/fast-solution/810.html) (спасибо Webber)
+- добаленна сортировка при просмотре дочерних документов ресурса (спасибо Webber)
 
 ============то что будет в 1.0.11=============
 - fix trouble with display 2 tv with type date

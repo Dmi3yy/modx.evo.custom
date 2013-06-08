@@ -38,6 +38,14 @@ $menutitle = $modx->db->escape($_POST['menutitle']);
 $hidemenu = intval($_POST['hidemenu']);
 $aliasvisible = $_POST['alias_visible'];
 
+/************* webber ********/
+$sd=isset($_POST['dir'])?'&dir='.$_POST['dir']:'&dir=DESC';
+$sb=isset($_POST['sort'])?'&sort='.$_POST['sort']:'&sort=pub_date';
+$pg=isset($_POST['page'])?'&page='.(int)$_POST['page']:'';
+$add_path=$sd.$sb.$pg;
+
+
+
 if (trim($pagetitle == "")) {
 	if ($type == "reference") {
 		$pagetitle = $_lang['untitled_weblink'];
@@ -150,10 +158,6 @@ if ($friendly_urls) {
 elseif ($alias) {
 	$alias = $modx->stripAlias($alias);
 }
-
-
-
-
 
 // determine published status
 $currentdate = time() + $modx->config['server_offset_time'];
@@ -694,9 +698,9 @@ $sql = "UPDATE $tbl_site_content SET introtext='$introtext', content='$content',
 					// document
 					$a = ($_POST['stay'] == '2') ? "27&id=$id" : "4&pid=$parent";
 				}
-				$header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'];
+				$header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'].$add_path;
 			} else {
-				$header = "Location: index.php?r=1&id=$id&a=7&dv=1";
+				$header = "Location: index.php?r=1&id=$id&a=7&dv=1".$add_path;
 			}
 		}
 		header($header);
