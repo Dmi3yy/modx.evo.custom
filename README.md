@@ -21,6 +21,7 @@
 - Обновление CodeMirror до версии 3,13 (спасибо Mihanik71)
 - CodeMirror Add fullscreen and MODx tags (спасибо Mihanik71)
 - CodeMirror Add Emmet (спасибо Mihanik71)
+- CodeMirror in FileManager (спасибо Mihanik71)
 - Обновление snippet sitemap (спасибо Mihanik71)
 - добавление параметров для карты сайта в таб для SEO (спасибо Mihanik71)
 - Обновление fancybox до 2.1.4 (спасибо Mihanik71)
@@ -31,6 +32,7 @@
 - исправленно автоматичское добавление alias_visible при простом обновлении сайта (спасибо Bumkaka)
 - исправлен баз в DirectResize (http://modx.im/blog/questions/904.html#comment7793)
 - fix  Удаление ключей в $_GET в Ditto(http://modx.im/blog/dmi3yy/895.html#comment7605)
+- разрешение добликатов псевдонимов в разных папках (http://modx.im/blog/fast-solution/810.html) (спасибо Webber)
 
 ============то что будет в 1.0.11=============
 - fix trouble with display 2 tv with type date
