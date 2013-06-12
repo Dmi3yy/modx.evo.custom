@@ -11,7 +11,7 @@ if(!$modx->hasPermission('delete_document')) {
 $id=intval($_GET['id']);
 
 /*******ищем родителя чтобы к нему вернуться********/
-$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM modx_site_content WHERE id=".$id." LIMIT 0,1"));
+$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM ".$modx->getFullTableName('site_content')." WHERE id=".$id." LIMIT 0,1"));
 $pid=($pid==0?$id:$pid);
 
 /************ а заодно и путь возврата (сам путь внизу файла) **********/

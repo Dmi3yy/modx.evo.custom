@@ -9,7 +9,7 @@ $id = $_REQUEST['id'];
 
 
 /************webber ********/
-$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM modx_site_content WHERE id=".$id." LIMIT 0,1"));
+$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM ".$modx->getFullTableName('site_content')." WHERE id=".$id." LIMIT 0,1"));
 $pid=($pid==0?$id:$pid);
 
 /************** webber *************/

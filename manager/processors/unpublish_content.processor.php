@@ -8,7 +8,7 @@ if(!$modx->hasPermission('save_document')||!$modx->hasPermission('publish_docume
 $id = $_REQUEST['id'];
 
 /************ Webber ********/
-$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM modx_site_content WHERE id=".$id." LIMIT 0,1"));
+$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM ".$modx->getFullTableName('site_content')." WHERE id=".$id." LIMIT 0,1"));
 $pid=($pid==0?$id:$pid);
 
 /************** Webber *************/
