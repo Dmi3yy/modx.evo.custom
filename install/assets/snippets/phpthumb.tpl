@@ -5,7 +5,7 @@
  * Работа к картинками резайз эфекты - через снипет
  *
  * @category 	snippet
- * @version 	1.0
+ * @version 	1.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties 
  * @internal	@modx_category add
@@ -13,4 +13,4 @@
  * @author      Bumkaka
  */
 
-return require MODX_BASE_PATH.'assets/snippets/phpthumbof/snippet.phpthumb.php';
+return require MODX_BASE_PATH.'assets/snippets/phpthumb/snippet.phpthumb.php';

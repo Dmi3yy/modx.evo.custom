@@ -1,18 +1,19 @@
 <?php
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 //[[phpthumb? &input=`[+image+]` &options=`w=150,h=76,far=C,bg=FFFFFF`]]
+//Author: Bumkaka
 
-$base="/assets/cache/phpthumbof/";   // тут можно менять путь
+$base="assets/cache/images/";   // тут можно менять путь
 
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 if($input == '' || !file_exists($_SERVER['DOCUMENT_ROOT']."/".$input)){
-  $input = 'assets/snippets/phpthumbof/noimage.png';
+  $input = 'assets/snippets/phpthumb/noimage.png';
 }
 
   $options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "="));
   $path_parts=pathinfo($input);
-  require_once MODX_BASE_PATH."/assets/snippets/phpthumbof/phpthumb.class.php";
+  require_once MODX_BASE_PATH."/assets/snippets/phpthumb/phpthumb.class.php";
   $phpThumb = new phpthumb();
   $phpThumb->setSourceFilename($input);
   
