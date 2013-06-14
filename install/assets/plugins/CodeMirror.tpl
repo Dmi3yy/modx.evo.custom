@@ -1,8 +1,8 @@
 //<?php
 /**
  * CodeMirror
- * 
- * <b>3.13 b</b> JavaScript library that can be used to create a relatively pleasant editor interface
+ *
+ * JavaScript library that can be used to create a relatively pleasant editor interface based on CodeMirrir 3.13
  *
  * @events:
  * - OnDocFormRender
@@ -12,7 +12,7 @@
  * - OnSnipFormRender
  * - OnTempFormRender
  * @category    plugin
- * @version     3.13
+ * @version     1.1b
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @package     modx
  * @author      hansek from www.modxcms.cz <http://www.modxcms.cz>, update Mihanik71
@@ -27,3 +27,4 @@ $_CM_BASE = 'assets/plugins/codemirror/';
 $_CM_URL = $modx->config['site_url'] . $_CM_BASE;
 
 require(MODX_BASE_PATH. $_CM_BASE .'codemirror.plugin.php');
+
