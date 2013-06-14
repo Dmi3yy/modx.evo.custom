@@ -3,7 +3,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 //[[phpthumb? &input=`[+image+]` &options=`w=150,h=76,far=C,bg=FFFFFF`]]
 //Author: Bumkaka
 
-$base="assets/cache/images/";   // тут можно менять путь
+$base="assets/cache/images";   // тут можно менять путь
 
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
