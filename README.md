@@ -34,7 +34,7 @@
 - удалил SeoStrictUrl
 - обновил ajaxSearch to 1.9.3b
 - исправленно автоматичское добавление alias_visible при простом обновлении сайта (спасибо Bumkaka)
-- исправлен баз в DirectResize (http://modx.im/blog/questions/904.html#comment7793)
+- исправлен баг в DirectResize (http://modx.im/blog/questions/904.html#comment7793)
 - fix  Удаление ключей в $_GET в Ditto(http://modx.im/blog/dmi3yy/895.html#comment7605)
 - разрешение добликатов псевдонимов в разных папках (http://modx.im/blog/fast-solution/810.html) (спасибо Webber)
 - добаленна сортировка при просмотре дочерних документов ресурса (спасибо Webber)
