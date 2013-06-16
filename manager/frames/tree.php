@@ -16,7 +16,7 @@
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
-<head>
+<head style="height:100%">
     <title>Document Tree</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
@@ -94,8 +94,8 @@
         var tree = $('treeHolder');
         var tmnu = $('treeMenu');
         tree.style.width = (win['width']-20)+'px';
-        tree.style.height = (win['height']-tree.offsetTop-6)+'px';
-        tree.style.overflow = 'auto';
+        //tree.style.height = (win['height']-tree.offsetTop-6)+'px';
+        //tree.style.overflow = 'auto';
     }
 
     function getScrollY() {
