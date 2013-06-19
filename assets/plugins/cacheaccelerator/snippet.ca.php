@@ -158,8 +158,10 @@ if($nocache == 0){
     $cached = $cache->cache($cacheId.$url, $cacheGroup);
     if(isset($cached)){
         if($logMessages) echo("<b>Cache hit!</b>");
-        $this->placeholders = array_merge($this->placeholders, $cached['placeholders']); //установка плейсхолдеров закешированного сниппета
-//        $modx->placeholders = $cached['placeholders']; 
+        //установка плейсхолдеров закешированного сниппета
+        $this->placeholders = array_merge(is_array($this->placeholders)? $this->placeholders: array(), $cached['placeholders']);
+
+
         //регистрирование скриптов и css
         if($cached['head']){
             end($cached['head'][0]);
