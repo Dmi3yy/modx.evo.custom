@@ -94,8 +94,8 @@
         var tree = $('treeHolder');
         var tmnu = $('treeMenu');
         tree.style.width = (win['width']-20)+'px';
-        //tree.style.height = (win['height']-tree.offsetTop-6)+'px';
-        //tree.style.overflow = 'auto';
+        tree.style.height = (win['height']-tree.offsetTop-6)+'px';
+        tree.style.overflow = 'auto';
     }
 
     function getScrollY() {
