@@ -8,6 +8,7 @@
 =======================================================
 - под IE9 — не разворачивался календарь (http://modx.im/blog/dmi3yy/955.html#comment8196) 
 - обновил CodeMirror до 1.1b (http://modx.im/blog/addons/960.html)
+- add tv sitemap_exclude for sitemap.xml
 - #9849 Replace to DBAPI functions
 
 текущая версии 1.0.10-d5.3  (13.06.2013)
