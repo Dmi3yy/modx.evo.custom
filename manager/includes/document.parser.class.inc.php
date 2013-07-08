@@ -1200,7 +1200,8 @@ class DocumentParser {
             $suff= $this->config['friendly_url_suffix'];
             $thealias= '$aliases[\\1]';
             $thefolder= '$isfolder[\\1]';
-            $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder)";
+            //$found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder)";
+            $found_friendlyurl= "\$this->toAlias(\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1'))";
             $not_found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff','" . '\\1' . "')";
             $out= "({$isfriendly} && isset({$thealias}) ? {$found_friendlyurl} : {$not_found_friendlyurl})";
             $documentSource= preg_replace($in, $out, $documentSource);
@@ -2132,6 +2133,9 @@ class DocumentParser {
             $host= $scheme == 'full' ? $this->config['site_url'] : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
         }
 
+        //fix strictUrl by Bumkaka
+        $url = $this->toAlias($url);
+        
         if ($this->config['xhtml_urls']) {
             return preg_replace("/&(?!amp;)/","&amp;", $host . $virtualDir . $url);
         } else {
