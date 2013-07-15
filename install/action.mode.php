@@ -24,13 +24,13 @@ if (file_exists("../".MGR_DIR."/includes/config.inc.php")) {
     } else {
         $upgradeable= 2;
     }
-    $avtest = @ mysql_query("SELECT alias_visible FROM {$database_name}.`{$tableprefix}site_content`");
+    $avtest = @ mysql_query("SELECT alias_visible FROM {$dbase}.`{$tableprefix}site_content`");
     /// проверка для установки на мою сборку автоматическое выполнение запроса
     if ($avtest)  { 
        $output .= ' ';
     }else {
-        $avadd = @ mysql_query("ALTER TABLE  {$database_name}.`{$tableprefix}site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT  '1'");
-        $avtest2 = @ mysql_query("SELECT alias_visible FROM {$database_name}.`{$tableprefix}site_content`");
+        $avadd = @ mysql_query("ALTER TABLE  {$dbase}.`{$tableprefix}site_content` ADD  `alias_visible` INT( 2 ) NOT NULL DEFAULT  '1'");
+        $avtest2 = @ mysql_query("SELECT alias_visible FROM {$dbase}.`{$tableprefix}site_content`");
         if ($avtest2)  { 
             $output .= ' ';
         }else {
