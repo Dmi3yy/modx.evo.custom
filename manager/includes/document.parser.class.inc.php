@@ -186,6 +186,7 @@ class DocumentParser {
      * @param string $responseCode
      */
     function sendForward($id, $responseCode= '') {
+    //fix 404 in seo strict by Bumkaka
         if ($this->forwards > 0) {
             $this->forwards= $this->forwards - 1;
             $this->documentIdentifier= $id;
@@ -206,10 +207,9 @@ class DocumentParser {
      * Redirect to the error page, by calling sendForward(). This is called for example when the page was not found.
      */
     function sendErrorPage() {
-        // invoke OnPageNotFound event
         $this->invokeEvent('OnPageNotFound');
-//        $this->sendRedirect($this->makeUrl($this->config['error_page'], '', '&refurl=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'])), 1);
-        $this->sendForward($this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'], 'HTTP/1.0 404 Not Found');
+        $url = $this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'];
+        $this->sendForward($url, 'HTTP/1.0 404 Not Found');
         exit();
     }
 
@@ -1211,7 +1211,7 @@ class DocumentParser {
             $documentSource= preg_replace($in, $out, $documentSource);
         }
         // FIX URLs
-        if ((int)$this->documentIdentifier != 0){
+        if ((int)$this->documentIdentifier != 0 ){
             if ($this->config['site_status'] == 1) {
                 $myProtocol = ($_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
                 $parts = explode("?", $_SERVER['REQUEST_URI']); 
@@ -1219,23 +1219,28 @@ class DocumentParser {
                 $myDomain = $myProtocol . "://" . $_SERVER['HTTP_HOST'];
                 $newURL = $myDomain . $strictURL;
                 $requestedURL = $myDomain . $parts[0];
+                
                 if ($this->documentIdentifier == $this->config['site_start']){
                     if ($requestedURL != $this->config['site_url']){
                         // Force redirect of site start
+                        // $this->sendErrorPage();
                         header("HTTP/1.1 301 Moved Permanently");
                         $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', $parts[1]);  // Strip conflicting id/q from query string
                         if ($qstring) header('Location: ' . $this->config['site_url'] . '?' . $qstring);
                         else header('Location: ' . $this->config['site_url']);
                         exit(0);
                     }
-                }elseif ($parts[0] != $strictURL){
-                    // Force page redirect
-                    header("HTTP/1.1 301 Moved Permanently");
-                    $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', $parts[1]);  // Strip conflicting id/q from query string
-                    if ($qstring) header('Location: ' . $strictURL . '?' . $qstring);
-                    else header('Location: ' . $strictURL);
-                    exit(0);
                 }
+                
+                if ($parts[0] != $strictURL ){
+                    if ( $this->documentIdentifier>0 ){
+                    
+                    } else {                
+                        $this->sendErrorPage();
+                        exit(0);
+                    }
+                }
+                
             }
         }
         return $documentSource;
@@ -3176,7 +3181,7 @@ class DocumentParser {
     }
 
     /***************************************************************************************/
-    /* End of API functions								       */
+    /* End of API functions                                    */
     /***************************************************************************************/
 
     /**

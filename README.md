@@ -11,6 +11,7 @@
 - add tv sitemap_exclude for sitemap.xml
 - fix Seostrict (работа с ajax, правильная генерация ссылки на странички со своим суфиксом и на главную)
 - #9849 Replace to DBAPI functions
+- fix Seostrict 404 by Bumkaka
 
 текущая версии 1.0.10-d5.3  (13.06.2013)
 =======================================================
