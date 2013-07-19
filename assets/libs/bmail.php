@@ -2,7 +2,7 @@
 /** author Bumkaka 
 *
 *   include_once('assets/libs/bmail.php');
-	$mail = new bmail('bumkaka@yandex.ru,ruus@yandex.ru');
+	$mail = bmail('bumkaka@yandex.ru,ruus@yandex.ru');
     $mail->Subject	= "Ïğåäçàêàç";
     $mail->Body		= $body;
     $mail->send();
