@@ -16,7 +16,7 @@
 // you are using session configuration.
 // See http://kcfinder.sunhater.com/install for setting descriptions
 
-global $settings;
+global $settings,$site_url;
 $_CONFIG = array(
 
     'disabled' => false,
@@ -28,6 +28,7 @@ $_CONFIG = array(
 
     'uploadURL' => $settings['rb_base_url'],
     'uploadDir' => $settings['rb_base_dir'],
+    'siteURL' => $site_url,
 	'assetsURL' => rtrim($settings['rb_base_url'],'/'),
     'dirPerms' => 0755,
     'filePerms' => 0644,

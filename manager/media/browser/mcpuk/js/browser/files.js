@@ -76,7 +76,7 @@ browser.showFiles = function(callBack, selected) {
                 if (file.thumb)
                     var icon = browser.baseGetData('thumb') + '&file=' + encodeURIComponent(file.name) + '&dir=' + encodeURIComponent(browser.dir) + '&stamp=' + stamp;
                 else if (file.smallThumb) {
-                    var icon = '/' + browser.assetsURL + '/' + browser.dir + '/' + file.name;
+                    var icon = browser.siteURL + browser.assetsURL + '/' + browser.dir + '/' + file.name;
                     icon = _.escapeDirs(icon).replace(/\'/g, "%27");
                 } else {
                     var icon = file.bigIcon ? _.getFileExtension(file.name) : '.';
@@ -507,7 +507,7 @@ browser.menuFile = function(file, e) {
         browser.hideDialog();
         var ts = new Date().getTime();
         var showImage = function(data) {
-            url = _.escapeDirs(browser.uploadURL + '/' + browser.dir + '/' + data.name) + '?ts=' + ts,
+            url = (browser.siteURL + browser.assetsURL + '/' + browser.dir + '/' + data.name) + '?ts=' + ts,
             $('#loading').html(browser.label("Loading image..."));
             $('#loading').css('display', 'inline');
             var img = new Image();

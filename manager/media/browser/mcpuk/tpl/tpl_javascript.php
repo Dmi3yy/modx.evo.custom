@@ -22,6 +22,7 @@ browser.access = <?php echo json_encode($this->config['access']) ?>;
 browser.dir = "<?php echo text::jsValue($this->session['dir']) ?>";
 browser.uploadURL = "<?php echo text::jsValue($this->config['uploadURL']) ?>";
 //browser.uploadURL = "assets";
+browser.siteURL = "<?php echo text::jsValue($this->config['siteURL']) ?>";
 browser.assetsURL = "<?php echo text::jsValue($this->config['assetsURL']) ?>";
 browser.thumbsURL = browser.uploadURL + "/<?php echo text::jsValue($this->config['thumbsDir']) ?>";
 <?php IF (isset($this->get['opener']) && strlen($this->get['opener'])): ?>
