@@ -36,7 +36,7 @@ browser.initFolders = function() {
     });
 
     if ($.browser.msie && $.browser.version &&
-        (parseInt($.browser.version.substr(0, 1)) < 8)
+        (parseInt($.browser.version) < 8)
     ) {
         var fls = $('div.folder').get();
         var body = $('body').get(0);

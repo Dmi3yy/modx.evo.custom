@@ -76,7 +76,7 @@ browser.showFiles = function(callBack, selected) {
                 if (file.thumb)
                     var icon = browser.baseGetData('thumb') + '&file=' + encodeURIComponent(file.name) + '&dir=' + encodeURIComponent(browser.dir) + '&stamp=' + stamp;
                 else if (file.smallThumb) {
-                    var icon = browser.uploadURL + '/' + browser.dir + '/' + file.name;
+                    var icon = '/' + browser.assetsURL + '/' + browser.dir + '/' + file.name;
                     icon = _.escapeDirs(icon).replace(/\'/g, "%27");
                 } else {
                     var icon = file.bigIcon ? _.getFileExtension(file.name) : '.';
@@ -154,9 +154,8 @@ browser.selectAll = function(e) {
 };
 
 browser.returnFile = function(file) {
-
     var fileURL = file.substr
-        ? file : browser.uploadURL + '/' + browser.dir + '/' + file.data('name');
+        ? file : browser.assetsURL + '/' + browser.dir + '/' + file.data('name');
     fileURL = _.escapeDirs(fileURL);
 
     if (this.opener.CKEditor) {

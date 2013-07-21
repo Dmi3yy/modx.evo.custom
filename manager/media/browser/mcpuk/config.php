@@ -16,6 +16,7 @@
 // you are using session configuration.
 // See http://kcfinder.sunhater.com/install for setting descriptions
 
+global $settings;
 $_CONFIG = array(
 
     'disabled' => false,
@@ -25,9 +26,9 @@ $_CONFIG = array(
 
     'theme' => "oxygen",
 
-    'uploadURL' => MODX_BASE_URL  . 'assets',
-    'uploadDir' => MODX_BASE_PATH . 'assets',
-
+    'uploadURL' => $settings['rb_base_url'],
+    'uploadDir' => $settings['rb_base_dir'],
+	'assetsURL' => rtrim($settings['rb_base_url'],'/'),
     'dirPerms' => 0755,
     'filePerms' => 0644,
 
@@ -73,15 +74,15 @@ $_CONFIG = array(
 
     'mime_magic' => "",
 
-    'maxImageWidth' => 1600,
-    'maxImageHeight' => 1050,
+    'maxImageWidth' => $settings['maxImageWidth'],
+    'maxImageHeight' => $settings['maxImageHeight'],
 
-    'thumbWidth' => 100,
-    'thumbHeight' => 100,
+    'thumbWidth' => $settings['thumbWidth'],
+    'thumbHeight' => $settings['thumbHeight'],
 
-    'thumbsDir' => ".thumbs",
+    'thumbsDir' => $settings['thumbsDir'],
 
-    'jpegQuality' => 90,
+    'jpegQuality' => $settings['jpegQuality'],
 
     'cookieDomain' => "",
     'cookiePath' => "",
