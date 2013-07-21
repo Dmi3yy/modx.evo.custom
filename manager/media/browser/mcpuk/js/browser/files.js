@@ -212,7 +212,7 @@ browser.returnFiles = function(files) {
     if (this.opener.callBackMultiple && files.length) {
         var rfiles = [];
         $.each(files, function(i, file) {
-            rfiles[i] = browser.uploadURL + '/' + browser.dir + '/' + $(file).data('name');
+            rfiles[i] = browser.assetsURL + '/' + browser.dir + '/' + $(file).data('name');
             rfiles[i] = _.escapeDirs(rfiles[i]);
         });
         this.opener.callBackMultiple(rfiles);
