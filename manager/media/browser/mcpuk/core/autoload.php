@@ -19,22 +19,37 @@
   *        here, they can be accessed in config.php via $GLOBALS array.
   *        It's recommended to use constants instead.
   */
-include_once(dirname(__FILE__)."/../../../../../assets/cache/siteManager.php");
 
-list($base_url,) = explode('/'.MGR_DIR.'/', $_SERVER['REQUEST_URI']);
-$base_url .= '/';
-define('MODX_BASE_URL', $base_url);
+require_once('../../../includes/protect.inc.php');
 include_once('../../../includes/config.inc.php');
+include_once('../../../includes/document.parser.class.inc.php');
+$modx = new DocumentParser;
+$modx->db->connect();
 startCMSSession(); 
 if(!isset($_SESSION['mgrValidated'])) {
         die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 }
+define('IN_MANAGER_MODE',true);
+// Get system settings and override them with managers'
+include_once('../../../includes/settings.inc.php');
+include_once('../../../includes/user_settings.inc.php');
 
+// Pass language code from MODX to KCFinder
+if(!isset($manager_language) || !file_exists("../../../includes/lang/".$manager_language.".inc.php")) {
+    $manager_language = "english"; // if not set, get the english language file.
+}
+$_lang = array();
+include_once "../../../includes/lang/english.inc.php";
+$length_eng_lang = count($_lang);
+
+if($manager_language!="english" && file_exists("../../../includes/lang/".$manager_language.".inc.php")) {
+    include_once "../../../includes/lang/".$manager_language.".inc.php";
+}
+$_GET['langCode'] = $modx_lang_attribute;
 
 // PHP VERSION CHECK
 if (substr(PHP_VERSION, 0, strpos(PHP_VERSION, '.')) < 5)
     die("You are using PHP " . PHP_VERSION . " when KCFinder require at least version 5! Some systems has an option to change the active PHP version. Please refer to your hosting provider or upgrade your PHP distribution.");
-
 
 // GD EXTENSION CHECK
 if (!function_exists("imagecopyresampled"))

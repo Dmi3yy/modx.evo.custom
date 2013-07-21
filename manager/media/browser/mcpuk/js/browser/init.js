@@ -173,7 +173,7 @@ browser.resize = function() {
         _('status').style.width = _.nopx(_('status').style.width) - 1 + 'px';
     while ($('#status').outerWidth() < width)
         _('status').style.width = _.nopx(_('status').style.width) + 1 + 'px';
-    if ($.browser.msie && ($.browser.version.substr(0, 1) < 8))
+    if ($.browser.msie && (parseInt($.browser.version) < 8))
         _('right').style.width = $(window).width() - $('#left').outerWidth() + 'px';
     _('files').style.width = $('#right').innerWidth() - _.outerHSpace('#files') + 'px';
     _('resizer').style.left = $('#left').outerWidth() - _.outerRightSpace('#folders', 'm') + 'px';
