@@ -13,6 +13,15 @@
 - #9849 Replace to DBAPI functions
 - fix Seostrict 404 by Bumkaka
 - Обновление KCFinder (https://github.com/dmi3yy/modx.evo.custom/pull/56) Больше спасибо Pathologic
+- исправленна ошибка с (пишет в логи «fake settings_version») (спасибо Shin)
+- исправленн виджет managermanager для evogalery для работы с админкой не MANAGER (спасибо Shin)
+- webLogin Corected authorization after the password activation (Спасибо Akool)
+
+проверить добавить до выпуска: 
+===
+- дитто пагинацию в параметр
+- seoStrict в настройки 
+- тип TV-параметров «Textarea» превратился в «Textarea (Mini)», а «Textarea (Mini)» превратился в тип «Text».
 
 
 текущая версии 1.0.10-d5.3  (13.06.2013)
