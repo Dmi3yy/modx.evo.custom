@@ -976,7 +976,13 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('clean_uploaded_filename', '1'),
 ('remember_last_tab', '1'),
 ('enable_bindings', '1'),
-('make_folders', '0');
+('make_folders', '0'),
+('maxImageWidth', '1600'),
+('maxImageHeight', '1200'),
+('thumbWidth', '150'),
+('thumbHeight', '150'),
+('thumbsDir', '.thumbs'),
+('jpegQuality', '90');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
