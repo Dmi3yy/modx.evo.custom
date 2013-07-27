@@ -84,7 +84,6 @@ if ($_SESSION['mgrRole'] != 1) {
 		if ($rsQty = $modx->db->getRecordCount($rs)) {
 			// There should only be one if there is one
 			$row = $modx->db->getRow($rs);
-
 			if ($row['role'] == 1) {
 				webAlert("You cannot alter an administrative user.");
 				exit;
@@ -297,7 +296,6 @@ switch ($_POST['mode']) {
 		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
 			$row = $modx->db->getRow($rs);
-
 			if ($row['internalKey'] != $id) {
 				webAlert("Email is already in use!");
 				exit;

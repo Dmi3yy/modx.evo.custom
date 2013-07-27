@@ -10,22 +10,22 @@ if(!$modx->hasPermission('new_template')) {
 $id=$_GET['id'];
 
 // duplicate template
-if (version_compare(mysql_get_server_info(),"4.0.14")>=0) {
+if (version_compare($modx->db->getVersion(),"4.0.14")>=0) {
 	$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates` (templatename, description, content, category)
 			SELECT CONCAT('Duplicate of ',templatename) AS 'templatename', description, content, category
 			FROM $dbase.`".$table_prefix."site_templates` WHERE id=$id;";
-	$rs = mysql_query($sql);
+	$rs = $modx->db->query($sql);
 }
 else {
 	$sql = "SELECT CONCAT('Duplicate of ',templatename) AS 'templatename', description, content, category
 			FROM $dbase.`".$table_prefix."site_templates` WHERE id=$id;";
-	$rs = mysql_query($sql);
+	$rs = $modx->db->query($sql);
 	if($rs) {
-		$row = mysql_fetch_assoc($rs);
+		$row = $modx->db->getRow($rs);
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates`
 				(templatename, description, content, category) VALUES
 				('".$modx->db->escape($row['templatename'])."', '".$modx->db->escape($row['description'])."','".$modx->db->escape($row['content'])."', ".$modx->db->escape($row['category']).");";
-		$rs = mysql_query($sql);
+		$rs = $modx->db->query($sql);
 	}
 }
 if($rs) {
@@ -39,7 +39,7 @@ if($rs) {
 		}
 	}
 } else {
-	echo "A database error occured while trying to duplicate variable: <br /><br />".mysql_error();
+	echo "A database error occured while trying to duplicate variable: <br /><br />".$modx->db->getLastError();
 	exit;
 }
 

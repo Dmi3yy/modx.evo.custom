@@ -212,8 +212,7 @@ function saveTemplateAccess() {
 
 function saveDocumentAccessPermissons(){
 	global $id,$newid;
-	global $dbase,$table_prefix,$use_udperms;
-	global $modx;
+	global $modx,$dbase,$table_prefix,$use_udperms;
 
 	if($newid) $id = $newid;
 	$docgroups = $_POST['docgroups'];

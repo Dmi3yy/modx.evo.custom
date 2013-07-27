@@ -53,7 +53,7 @@ $children = array();
 
 function getChildren($parent) {
 	
-	global $dbase;
+	global $modx,$dbase;
 	global $table_prefix;
 	global $children;
 	global $deltime;
@@ -79,7 +79,7 @@ getChildren($id);
 if(count($children)>0) {
 	$docs_to_undelete = implode(" ,", $children);
 	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=0, deletedby=0, deletedon=0 WHERE id IN($docs_to_undelete);";
-	$rs = @mysql_query($sql);
+	$rs = @$modx->db->query($sql);
 	if(!$rs) {
 		echo "Something went wrong while trying to set the document's children to undeleted status...";
 		exit;
@@ -87,7 +87,7 @@ if(count($children)>0) {
 }
 //'undelete' the document.
 $sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=0, deletedby=0, deletedon=0 WHERE id=$id;";
-$rs = mysql_query($sql);
+$rs = $modx->db->query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to set the document to undeleted status...";
 	exit;

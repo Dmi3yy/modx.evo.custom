@@ -1622,7 +1622,6 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
         </table>
       </div>
-
     </div>
 </div>
 </form>

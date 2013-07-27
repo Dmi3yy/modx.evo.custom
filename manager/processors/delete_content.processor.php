@@ -44,7 +44,7 @@ if(!$udperms->checkPermissions()) {
 
 function getChildren($parent) {
 
-	global $dbase;
+	global $modx,$dbase;
 	global $table_prefix;
 	global $children;
 	global $site_start;
@@ -53,12 +53,12 @@ function getChildren($parent) {
 	//$db->debug = true;
 
 	$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.parent=".$parent." AND deleted=0;";
-	$rs = mysql_query($sql);
-	$limit = mysql_num_rows($rs);
+	$rs = $modx->db->query($sql);
+	$limit = $modx->db->getRecordCount($rs);
 	if($limit>0) {
 		// the document has children documents, we'll need to delete those too
 		for($i=0;$i<$limit;$i++) {
-		$row=mysql_fetch_assoc($rs);
+		$row=$modx->db->getRow($rs);
 			if($row['id']==$site_start) {
 				echo "The document you are trying to delete is a folder containing document ".$row['id'].". This document is registered as the 'Site start' document, and cannot be deleted. Please assign another document as your 'Site start' document and try again.";
 				exit;
@@ -86,7 +86,7 @@ $modx->invokeEvent("OnBeforeDocFormDelete",
 if(count($children)>0) {
 	$docs_to_delete = implode(" ,", $children);
 	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=1, deletedby=".$modx->getLoginUserID().", deletedon=$deltime WHERE id IN($docs_to_delete);";
-	$rs = @$modx->db->query($sql);
+	$rs = $modx->db->query($sql);
 	if(!$rs) {
 		echo "Something went wrong while trying to set the document's children to deleted status...";
 		exit;
