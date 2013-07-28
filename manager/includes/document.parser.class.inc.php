@@ -186,7 +186,6 @@ class DocumentParser {
      * @param string $responseCode
      */
     function sendForward($id, $responseCode= '') {
-    //fix 404 in seo strict by Bumkaka
         if ($this->forwards > 0) {
             $this->forwards= $this->forwards - 1;
             $this->documentIdentifier= $id;
@@ -207,9 +206,14 @@ class DocumentParser {
      * Redirect to the error page, by calling sendForward(). This is called for example when the page was not found.
      */
     function sendErrorPage() {
+        // invoke OnPageNotFound event
         $this->invokeEvent('OnPageNotFound');
-        $url = $this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'];
-        $this->sendForward($url, 'HTTP/1.0 404 Not Found');
+        if($this->config['seostrict']=='1') {
+           $url = $this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'];
+           $this->sendForward($url, 'HTTP/1.0 404 Not Found');
+        }else{
+           $this->sendForward($this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'], 'HTTP/1.0 404 Not Found');
+        }
         exit();
     }
 
@@ -1210,8 +1214,11 @@ class DocumentParser {
             $suff= $this->config['friendly_url_suffix'];
             $thealias= '$aliases[\\1]';
             $thefolder= '$isfolder[\\1]';
-            //$found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder)";
-            $found_friendlyurl= "\$this->toAlias(\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1'))";
+            if ($this->config['seostrict']=='1'){
+               $found_friendlyurl= "\$this->toAlias(\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1'))";
+            }else{
+               $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1')";
+            }
             $not_found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff','" . '\\1' . "')";
             $out= "({$isfriendly} && isset({$thealias}) ? {$found_friendlyurl} : {$not_found_friendlyurl})";
             $documentSource= preg_replace($in, $out, $documentSource);
@@ -1221,7 +1228,7 @@ class DocumentParser {
             $documentSource= preg_replace($in, $out, $documentSource);
         }
         // FIX URLs
-        if ((int)$this->documentIdentifier != 0 ){
+        if ((int)$this->documentIdentifier != 0 && $this->config['seostrict']=='1' ){
             if ($this->config['site_status'] == 1) {
                 $myProtocol = ($_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
                 $parts = explode("?", $_SERVER['REQUEST_URI']); 
@@ -2149,8 +2156,9 @@ class DocumentParser {
         }
 
         //fix strictUrl by Bumkaka
-        $url = $this->toAlias($url);
-        
+        if ($this->config['seostrict']=='1'){
+           $url = $this->toAlias($url);
+        }
         if ($this->config['xhtml_urls']) {
             return preg_replace("/&(?!amp;)/","&amp;", $host . $virtualDir . $url);
         } else {
