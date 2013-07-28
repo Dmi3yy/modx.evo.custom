@@ -1166,6 +1166,6 @@ $_lang['setting_resource_tree_node_name_desc'] = 'Specify the Resource field to 
 
 $_lang['resource_opt_is_published'] = 'Published';
 
-$_lang["cache_type_title"] = 'Document cache type';
-$_lang["cache_type_1"] = 'Only document id (standart)';
-$_lang["cache_type_2"] = 'Document ID with $_GET';
+$_lang["cache_type_title"] = 'Document caching type';
+$_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
+$_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';

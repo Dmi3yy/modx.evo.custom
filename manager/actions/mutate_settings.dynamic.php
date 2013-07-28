@@ -543,6 +543,7 @@ function confirmLangChange(el, lkey, elupd){
 
           <tr>
             <td colspan="2"><div class='split'></div></td>
+            </tr>
             <tr>
               <td nowrap class="warning"><b><?php echo $_lang["serveroffset_title"] ?></b></td>
               <td> <select name="server_offset_time" size="1" class="inputBox">
