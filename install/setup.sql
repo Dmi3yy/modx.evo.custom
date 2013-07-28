@@ -977,6 +977,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('remember_last_tab', '1'),
 ('enable_bindings', '1'),
 ('make_folders', '0'),
+('seostrict', '1'),
+('cache_type', '2'),
 ('maxImageWidth', '1600'),
 ('maxImageHeight', '1200'),
 ('thumbWidth', '150'),

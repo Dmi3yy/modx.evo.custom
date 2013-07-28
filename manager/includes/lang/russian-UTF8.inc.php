@@ -1165,4 +1165,9 @@ $_lang['setting_resource_tree_node_name'] = 'Имя узла дерева рес
 $_lang['setting_resource_tree_node_name_desc'] = 'Укажите поле ресурс. Следует использовать при формировании узлов в дереве ресурсов. По умолчанию pagetitle, возможны и другие варианты, например, menutitle, alias и т.д..';
 
 $_lang['resource_opt_is_published'] = 'Опубликован';
+
+$_lang["cache_type_title"] = 'Способ кеширования страниц ';
+$_lang["cache_type_1"] = 'Только с учетом ID (стандартный метод)';
+$_lang["cache_type_2"] = 'C учетом ID и $_GET';
+
 ?>

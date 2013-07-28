@@ -458,9 +458,13 @@ class DocumentParser {
      * @return string
      */
     function checkCache($id) {
-        $md5_hash = '';
-        if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
-        $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
+        if ($this->config['cache_type'] == 2) {
+           $md5_hash = '';
+           if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
+           $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
+        }else{
+           $cacheFile= "assets/cache/docid_" . $id . ".pageCache.php";
+        }
         if (file_exists($cacheFile)) {
             $this->documentGenerated= 0;
             $flContent = file_get_contents($cacheFile, false);
@@ -723,9 +727,15 @@ class DocumentParser {
             $basepath= $this->config["base_path"] . "assets/cache";
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache"); 
-            $md5_hash = '';
-            if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
-            if ($fp= @ fopen($basepath . "/docid_" . $this->documentIdentifier . $md5_hash .".pageCache.php", "w")) {
+            if ($this->config['cache_type'] == 2) {
+                $md5_hash = '';
+                if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
+                $pageCache = $md5_hash .".pageCache.php";
+            }else{
+                $pageCache = ".pageCache.php";
+            }
+
+            if ($fp= @ fopen($basepath . "/docid_" . $this->documentIdentifier . $pageCache, "w")) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
                 $sql= "SELECT document_group FROM " . $this->getFullTableName("document_groups") . " WHERE document='" . $this->documentIdentifier . "'";
                 $docGroups= $this->db->getColumn("document_group", $sql);
