@@ -19,7 +19,7 @@
   *        here, they can be accessed in config.php via $GLOBALS array.
   *        It's recommended to use constants instead.
   */
-
+include_once(dirname(__FILE__)."/../../../../../assets/cache/siteManager.php");
 require_once('../../../includes/protect.inc.php');
 include_once('../../../includes/config.inc.php');
 include_once('../../../includes/document.parser.class.inc.php');
