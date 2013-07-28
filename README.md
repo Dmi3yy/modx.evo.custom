@@ -8,7 +8,6 @@
 - обновил CodeMirror до 1.1b (http://modx.im/blog/addons/960.html)
 - add tv sitemap_exclude for sitemap.xml
 - fix Seostrict (работа с ajax, правильная генерация ссылки на странички со своим суфиксом и на главную)
-- #9849 Replace to DBAPI functions
 - fix Seostrict 404 by Bumkaka
 - Обновление KCFinder (https://github.com/dmi3yy/modx.evo.custom/pull/56) Больше спасибо Pathologic
 - исправленна ошибка с (пишет в логи «fake settings_version») (спасибо Shin)

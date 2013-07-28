@@ -765,6 +765,23 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 	$labels = array();
 
 	$regExpr = "#(<label[^>]*?>)(.*?)</label>#si";;
+	
+	if ( preg_match_all('~\[(\[)([^\[]*?)(\])\]~s',$tpl, $matches)) {
+                $count = count($matches[0]);
+                $var_search = array();
+                $var_replace = array();
+                // for each detected snippet
+                for($i=0; $i<$count; $i++) {
+                        $snippet = $matches[2][$i]; // snippet call
+                        // Let MODx evaluate snippet
+                        $replace = $modx->evalSnippets("[[".$snippet."]]");
+                        // Replace values
+                        $var_search[] = $matches[0][$i];
+                        $var_replace[] = $replace;
+                }
+                $tpl = str_replace($var_search, $var_replace, $tpl);
+        }
+	
 	preg_match_all($regExpr,$tpl,$matches);
 	foreach($matches[1] as $key => $fld){
 		$attr = attr2array($fld);
