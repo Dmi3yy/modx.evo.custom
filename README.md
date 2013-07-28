@@ -16,12 +16,13 @@
 - исправленна ошибка с (пишет в логи «fake settings_version») (спасибо Shin)
 - исправленн виджет managermanager для evogalery для работы с админкой не MANAGER (спасибо Shin)
 - webLogin Corected authorization after the password activation (Спасибо Akool)
+- ditto paginate (2 новых параметра $max_paginate = 11; $max_previous = 5;)
+
 
 проверить добавить до выпуска: 
 ===
 - DBAPI - последние пару файлов доправить
-- дитто пагинацию в параметр
-- seoStrict шт core - в настройки 
+- seoStrict in core - в настройки 
 - Кеш с учетом $_GET - в настройки 
 - тип TV-параметров «Textarea» превратился в «Textarea (Mini)», а «Textarea (Mini)» превратился в тип «Text».
 - Добавить пару Евентов в Tree
