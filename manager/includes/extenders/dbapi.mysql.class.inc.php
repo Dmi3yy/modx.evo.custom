@@ -252,7 +252,39 @@ class DBAPI {
          return $lid ? $lid : $rt;
       }
    }
-
+   /**
+    * @name:  freeResult
+    *
+    */
+   function freeResult($rs) {
+      mysql_free_result($rs);
+   }
+   
+   /**
+    * @name:  numFields
+    *
+    */
+   function numFields($rs) {
+      return mysql_num_fields($rs);
+   }
+   
+   /**
+    * @name:  fieldName
+    *
+    */
+   function fieldName($rs,$col=0) {
+      return mysql_field_name($rs,$col);
+   }
+   
+    /**
+    * @name:  selectDb
+    *
+    */
+   function selectDb($name) {
+      mysql_select_db($name);
+   }
+   
+   
    /**
     * @name:  getInsertId
     *
@@ -287,7 +319,7 @@ class DBAPI {
    function getRecordCount($ds) {
       return (is_resource($ds)) ? mysql_num_rows($ds) : 0;
    }
-
+  
    /**
     * @name:  getRow
     * @desc:  returns an array of column values
@@ -301,6 +333,9 @@ class DBAPI {
          }
          elseif ($mode == 'num') {
             return mysql_fetch_row($ds);
+         }
+		 elseif ($mode == 'object') {
+            return mysql_fetch_object($ds);
          }
          elseif ($mode == 'both') {
             return mysql_fetch_array($ds, MYSQL_BOTH);
@@ -497,6 +532,10 @@ class DBAPI {
       }
    }
 
+   
+   
+   
+   
    /**
    * @name:  makeArray
    * @desc:  turns a recordset into a multidimensional array
