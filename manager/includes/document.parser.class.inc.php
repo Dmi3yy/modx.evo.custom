@@ -212,7 +212,7 @@ class DocumentParser {
            $url = $this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'];
            $this->sendForward($url, 'HTTP/1.0 404 Not Found');
         }else{
-           $this->sendForward($this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'], 'HTTP/1.0 404 Not Found');
+        $this->sendForward($this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'], 'HTTP/1.0 404 Not Found');
         }
         exit();
     }
@@ -463,9 +463,9 @@ class DocumentParser {
      */
     function checkCache($id) {
         if ($this->config['cache_type'] == 2) {
-           $md5_hash = '';
-           if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
-           $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
+        $md5_hash = '';
+        if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
+        $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
         }else{
            $cacheFile= "assets/cache/docid_" . $id . ".pageCache.php";
         }
@@ -732,8 +732,8 @@ class DocumentParser {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache"); 
             if ($this->config['cache_type'] == 2) {
-                $md5_hash = '';
-                if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
+            $md5_hash = '';
+            if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
                 $pageCache = $md5_hash .".pageCache.php";
             }else{
                 $pageCache = ".pageCache.php";
@@ -1217,7 +1217,7 @@ class DocumentParser {
             if ($this->config['seostrict']=='1'){
                $found_friendlyurl= "\$this->toAlias(\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1'))";
             }else{
-               $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1')";
+            $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1')";
             }
             $not_found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff','" . '\\1' . "')";
             $out= "({$isfriendly} && isset({$thealias}) ? {$found_friendlyurl} : {$not_found_friendlyurl})";
@@ -1236,7 +1236,7 @@ class DocumentParser {
                 $myDomain = $myProtocol . "://" . $_SERVER['HTTP_HOST'];
                 $newURL = $myDomain . $strictURL;
                 $requestedURL = $myDomain . $parts[0];
-                
+                    
                 if ($this->documentIdentifier == $this->config['site_start']){
                     if ($requestedURL != $this->config['site_url']){
                         // Force redirect of site start
@@ -1247,9 +1247,7 @@ class DocumentParser {
                         else header('Location: ' . $this->config['site_url']);
                         exit(0);
                     }
-                }
-                
-             }elseif ($parts[0] != $strictURL){
+                }elseif ($parts[0] != $strictURL){
                     if ( $this->documentIdentifier>0 ){
                     
                     } else {                
@@ -3511,38 +3509,38 @@ class DocumentParser {
         return round($size,2).' '.$a[$pos];
     }
 
-	function getIdFromAlias($alias)
-	{
-		$children = array();
-		
-		if($this->config['use_alias_path']==1)
-		{
-			if(strpos($alias,'/')!==false) $_a = explode('/', $alias);
-			else                           $_a[] = $alias;
-			$id= 0;
-			
-			foreach($_a as $alias)
-			{
-				if($id===false) break;
-				$alias = $this->db->escape($alias);
-				$rs  = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and parent='{$id}' and alias='{$alias}'");
-				if($this->db->getRecordCount($rs)==0) $rs  = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and parent='{$id}' and id='{$alias}'");
-				$row = $this->db->getRow($rs);
-				
-				if($row) $id = $row['id'];
-				else     $id = false;
-			}
-		}
-		else
-		{
-			$rs = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and alias='{$alias}'", 'parent, menuindex');
-			$row = $this->db->getRow($rs);
-			
-			if($row) $id = $row['id'];
-			else     $id = false;
-		}
-		return $id;
-	}
+    function getIdFromAlias($alias)
+    {
+        $children = array();
+        
+        if($this->config['use_alias_path']==1)
+        {
+            if(strpos($alias,'/')!==false) $_a = explode('/', $alias);
+            else                           $_a[] = $alias;
+            $id= 0;
+            
+            foreach($_a as $alias)
+            {
+                if($id===false) break;
+                $alias = $this->db->escape($alias);
+                $rs  = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and parent='{$id}' and alias='{$alias}'");
+                if($this->db->getRecordCount($rs)==0) $rs  = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and parent='{$id}' and id='{$alias}'");
+                $row = $this->db->getRow($rs);
+                
+                if($row) $id = $row['id'];
+                else     $id = false;
+            }
+        }
+        else
+        {
+            $rs = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and alias='{$alias}'", 'parent, menuindex');
+            $row = $this->db->getRow($rs);
+            
+            if($row) $id = $row['id'];
+            else     $id = false;
+        }
+        return $id;
+    }
     // End of class.
 
 }
