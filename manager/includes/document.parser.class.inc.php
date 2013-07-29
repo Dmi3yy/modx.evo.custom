@@ -1247,17 +1247,14 @@ class DocumentParser {
                         else header('Location: ' . $this->config['site_url']);
                         exit(0);
                     }
-                }
-                
-             }elseif ($parts[0] != $strictURL){
+                }elseif ($parts[0] != $strictURL){
                     if ( $this->documentIdentifier>0 ){
                     
                     } else {                
                         $this->sendErrorPage();
                         exit(0);
                     }
-                }
-                
+                }      
             }
         }
         return $documentSource;
