@@ -8,7 +8,6 @@
 - обновил CodeMirror до 1.1b (http://modx.im/blog/addons/960.html)
 - add tv sitemap_exclude for sitemap.xml
 - fix Seostrict (работа с ajax, правильная генерация ссылки на странички со своим суфиксом и на главную)
-- fix Seostrict 404 by Bumkaka
 - Обновление KCFinder (https://github.com/dmi3yy/modx.evo.custom/pull/56) Больше спасибо Pathologic
 - исправленна ошибка с (пишет в логи «fake settings_version») (спасибо Shin)
 - исправленн виджет managermanager для evogalery для работы с админкой не MANAGER (спасибо Shin)
@@ -22,6 +21,7 @@
 ===
 - тип TV-параметров «Textarea» превратился в «Textarea (Mini)», а «Textarea (Mini)» превратился в тип «Text».
 - Добавить пару Евентов в Tree
+- fix Seostrict 404 by Bumkaka
 
 текущая версии 1.0.10-d5.3  (13.06.2013)
 =======================================================

@@ -1248,12 +1248,19 @@ class DocumentParser {
                         exit(0);
                     }
                 }elseif ($parts[0] != $strictURL){
+                    /*
                     if ( $this->documentIdentifier>0 ){
                     
                     } else {                
                         $this->sendErrorPage();
                         exit(0);
-                    }
+                    }*/
+                     // Force page redirect
+                    header("HTTP/1.1 301 Moved Permanently");
+                    $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', $parts[1]);  // Strip conflicting id/q from query string
+                    if ($qstring) header('Location: ' . $strictURL . '?' . $qstring);
+                    else header('Location: ' . $strictURL);
+                    exit(0);
                 }      
             }
         }
