@@ -1669,6 +1669,27 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
+		  </tr>
+          <tr>
+               <td nowrap class="warning"><b><?php echo $_lang["denyZipDownload"] ?></b></td>
+               <td> <input onchange="documentDirty=true;" type="radio" name="denyZipDownload" value="0" <?php echo $denyZipDownload=='0' ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["no"]?><br />
+                 <input onchange="documentDirty=true;" type="radio" name="denyZipDownload" value="1" <?php echo (!isset($denyZipDownload) || $denyZipDownload=='1') ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["yes"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+		  </tr>
+		  <tr>
+               <td nowrap class="warning"><b><?php echo $_lang["denyExtensionRename"] ?></b></td>
+               <td> <input onchange="documentDirty=true;" type="radio" name="denyExtensionRename" value="0" <?php echo $denyExtensionRename=='0' ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["no"]?><br />
+                 <input onchange="documentDirty=true;" type="radio" name="denyExtensionRename" value="1" <?php echo (!isset($denyExtensionRename) || $denyExtensionRename=='1') ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["yes"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+		  </tr>
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php

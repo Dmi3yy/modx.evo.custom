@@ -20,9 +20,9 @@ global $settings,$site_url;
 $_CONFIG = array(
 
     'disabled' => false,
-    'denyZipDownload' => false,
+    'denyZipDownload' => $settings['denyZipDownload'],
     'denyUpdateCheck' => false,
-    'denyExtensionRename' => false,
+    'denyExtensionRename' => $settings['denyExtensionRename'],
 
     'theme' => "oxygen",
 
@@ -30,8 +30,8 @@ $_CONFIG = array(
     'uploadDir' => $settings['rb_base_dir'],
     'siteURL' => $site_url,
 	'assetsURL' => rtrim($settings['rb_base_url'],'/'),
-    'dirPerms' => 0755,
-    'filePerms' => 0644,
+    'dirPerms' => intval($settings['new_folder_permissions'],8),
+    'filePerms' => intval($settings['new_file_permissions'],8),
 
     'access' => array(
 
@@ -55,14 +55,14 @@ $_CONFIG = array(
     'types' => array(
 
         // CKEditor & FCKEditor types
-        'files'   =>  "",
-        'flash'   =>  "swf",
-        'images'  =>  "*img",
+        'files'   =>  str_replace(',',' ',$settings['upload_files']),
+        'flash'   =>  str_replace(',',' ',$settings['upload_flash']),
+        'images'  =>  str_replace(',',' ',$settings['upload_images']),
 
         // TinyMCE types
-        'file'    =>  "",
-        'media'   =>  "swf flv avi mpg mpeg qt mov wmv asf rm",
-        'image'   =>  "*img",
+        'file'    =>  str_replace(',',' ',$settings['upload_files']),
+        'media'   =>  str_replace(',',' ',$settings['upload_media']),
+        'image'   =>  str_replace(',',' ',$settings['upload_images']),
     ),
 
     'filenameChangeChars' => array("а"=>"a","б"=>"b","в"=>"v","г"=>"g","д"=>"d","е"=>"e","ё"=>"yo","ж"=>"zh","з"=>"z","и"=>"i","й"=>"j","к"=>"k","л"=>"l","м"=>"m","н"=>"n","о"=>"o","п"=>"p","р"=>"r","с"=>"s","т"=>"t","у"=>"u","ф"=>"f","х"=>"h","ц"=>"c","ч"=>"ch","ш"=>"sh","щ"=>"shh","ы"=>"i","э"=>"e","ю"=>"yu","я"=>"ya",
