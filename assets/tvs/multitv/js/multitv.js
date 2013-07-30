@@ -327,6 +327,7 @@ function SetUrl(url, width, height, alt) {
 						onClosed: function() {
 							fieldPasteArea.html('');
 						},
+						scrolling: false,
 						close: '',
 						open: true,
 						opacity: '0.35',
