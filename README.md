@@ -17,6 +17,7 @@
 - seoStrict in core - в настройке во вкладке ЧПУ  (При использовании YAMS нужно отключать или если нужно использовать SeoStrictPlugin)
 - DBAPI - в ядре MODX теперь все через DBAPI 
 - fix Seostrict 404 by Agel_Nash (большое спасибо Agel_Nash)
+- fix Схлопываются всплывающие окна в Chrome в tinyMCE
 
 проверить добавить до выпуска: 
 ===
