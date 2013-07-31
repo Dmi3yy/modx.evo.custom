@@ -71,37 +71,37 @@ class TinyMCE
 		switch($params['theme'])
 		{
 		case 'simple':
-			$plugins  = 'emotions,advimage,advlink,paste,contextmenu';
+			$plugins  = 'emotions,advimage,advlink,paste,contextmenu,inlinepopups';
 			$buttons1 = 'undo,redo,|,bold,strikethrough,|,justifyleft,justifycenter,justifyright,|,link,unlink,image,emotions,|,hr,|,help';
 			$buttons2 = '';
 		    break;
 		case 'editor':
-			$plugins  = 'autosave,save,advlist,style,fullscreen,advimage,paste,advlink,media,contextmenu,table,youtubeIframe';//clearfloat,
+			$plugins  = 'autosave,save,advlist,style,fullscreen,advimage,paste,advlink,media,contextmenu,table,youtubeIframe,inlinepopups';//clearfloat,
 			$buttons1 = 'undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,fontsizeselect,pastetext,pasteword,code,|,fullscreen,help';
 			$buttons2 = 'image,media,youtubeIframe,link,unlink,anchor,|,justifyleft,justifycenter,justifyright,justifyfull,clearfloat,|,bullist,numlist,|,blockquote,outdent,indent,|,table,hr,|,styleprops,removeformat';
 			$buttons3 = '';
 			$buttons4 = '';
 		    break;
 		case 'creative':
-			$plugins = 'autosave,advlist,layer,style,fullscreen,advimage,advhr,paste,advlink,media,contextmenu,table';
+			$plugins = 'autosave,advlist,layer,style,fullscreen,advimage,advhr,paste,advlink,media,contextmenu,table,inlinepopups';
 			$buttons1 = 'undo,undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,styleselect,fontsizeselect,code';
 			$buttons2 = 'image,media,link,unlink,anchor,|,bullist,numlist,|,blockquote,outdent,indent,|,justifyleft,justifycenter,justifyright,|,advhr,|,styleprops,removeformat,|,pastetext,pasteword';
 			$buttons3 = 'insertlayer,absolute,moveforward,movebackward,|,tablecontrols,|,fullscreen,help';
 		    break;
 		case 'logic':
-			$plugins = 'autosave,advlist,xhtmlxtras,style,fullscreen,advimage,paste,advlink,media,contextmenu,table';
+			$plugins = 'autosave,advlist,xhtmlxtras,style,fullscreen,advimage,paste,advlink,media,contextmenu,table,inlinepopups';
 			$buttons1 = 'undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,styleselect,fontsizeselect,code,|,fullscreen,help';
 			$buttons2 = 'image,media,link,unlink,anchor,|,bullist,numlist,|,blockquote,outdent,indent,|,justifyleft,justifycenter,justifyright,|,table,|,hr,|,styleprops,removeformat,|,pastetext,pasteword';
 			$buttons3 = 'charmap,sup,sub,|,cite,ins,del,abbr,acronym,attribs';
 		    break;
 		case 'legacy':
-			$plugins  = 'autosave,advlist,style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media';
+			$plugins  = 'autosave,advlist,style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media,inlinepopups';
 			$buttons1 = 'undo,redo,selectall,|,pastetext,pasteword,|,search,replace,|,nonbreaking,hr,charmap,|,image,link,unlink,anchor,media,|,cleanup,removeformat,|,fullscreen,print,code,help';
 			$buttons2 = 'bold,italic,underline,strikethrough,sub,sup,|,blockquote,|,bullist,numlist,outdent,indent,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,|,styleprops';
 			$buttons3 = '';
 		    break;
 		case 'advanced':
-			$plugins  = 'youtubeIframe';
+			$plugins  = 'youtubeIframe,inlinepopups';
 			$buttons1 = 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect';
 			$buttons2 = 'bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,anchor,image,youtubeIframe,cleanup,help,code';
 			$buttons3 = 'hr,removeformat,visualaid,|,sub,sup,|,charmap';
