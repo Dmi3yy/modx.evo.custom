@@ -25,6 +25,11 @@ RewriteRule .* - [F,L]
 #RewriteCond %{HTTP_HOST} !^example\.com [NC]
 #RewriteRule (.*) http://example.com/$1 [R=301,L]
 
+# without www  all domian
+#RewriteCond %{HTTP_HOST} .
+#RewriteCond %{HTTP_HOST} ^www.(.*)$ [NC]
+#RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
 # Exclude /assets and /manager directories and images from rewrite rules
 RewriteRule ^(manager|assets|js|css|images|img)/.*$ - [L]
 RewriteRule \.(jpg|jpeg|png|gif|ico)$ - [L]
