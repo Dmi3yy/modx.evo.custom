@@ -73,11 +73,12 @@ class VeriWord {
     function pick_word() {
         global $modx,$database_server, $database_user, $database_password, $dbase, $table_prefix, $database_connection_charset, $database_connection_method;
         // set default words
-        $words="MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
+        $words="0,1,2,3,4,5,6,7,8,9";
 
         // connect to the database
+        
         if(@$dbConn = $modx->db->connect($database_server, $database_user, $database_password)) {
-            $modx->db->selectDb($dbase);
+        /*    $modx->db->selectDb($dbase);
             $modx->db->query("{$database_connection_method} {$database_connection_charset}");
             $sql = "SELECT * FROM $dbase.`".$table_prefix."system_settings` WHERE setting_name='captcha_words'";
             $rs = $modx->db->query($sql);
@@ -87,7 +88,7 @@ class VeriWord {
                 $words = $row['setting_value'];
             }
         }
-
+        */
         $arr_words = explode(",", $words);
 
         /* pick one randomly for text verification */
