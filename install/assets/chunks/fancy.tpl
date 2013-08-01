@@ -15,7 +15,7 @@
 <script type="text/javascript" src="/assets/js/fancybox/jquery.fancybox.js"></script>
 <script>
   $(function(){
-      $("a[rel=group]").fancybox({'padding':'3px','transitionIn'	: 'none','transitionOut': 'none'});
+       $("a[rel=fancy]").fancybox({'transitionIn': 'none','transitionOut': 'none', 'nextEffect': 'none', 'prevEffect': 'none'});
   });
 </script>
 <link rel="stylesheet" type="text/css" href="/assets/js/fancybox/jquery.fancybox.css" media="screen" />
