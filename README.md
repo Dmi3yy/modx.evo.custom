@@ -18,6 +18,7 @@
 - DBAPI - в ядре MODX теперь все через DBAPI 
 - fix Seostrict 404 by Agel_Nash (большое спасибо Agel_Nash)
 - fix Схлопываются всплывающие окна в Chrome в tinyMCE
+- Ditto Extender: countDocs (спасибо Bumkaka)
 
 проверить добавить до выпуска: 
 ===
