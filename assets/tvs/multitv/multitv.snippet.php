@@ -3,11 +3,11 @@
  * multiTV
  * 
  * @category 	snippet
- * @version 	1.5.1
+ * @version 	1.5.6
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @author		Jako (thomas.jakobi@partout.info)
  *
- * @internal    description: <strong>1.5.1</strong> Transform template variables into a sortable multi item list.
+ * @internal    description: <strong>1.5.6</strong> Transform template variables into a sortable multi item list.
  * @internal    snippet code: return include(MODX_BASE_PATH.'assets/tvs/multitv/multitv.snippet.php');
  */
 if (MODX_BASE_PATH == '') {
@@ -51,6 +51,7 @@ $offset = isset($offset) ? intval($offset) : 0;
 $rows = (isset($rows) && ($rows != 'all')) ? explode(',', $rows) : 'all';
 $toPlaceholder = (isset($toPlaceholder) && $toPlaceholder != '') ? $toPlaceholder : FALSE;
 $randomize = (isset($randomize) && $randomize) ? TRUE : FALSE;
+$reverse = (isset($reverse) && $reverse) ? TRUE : FALSE;
 $orderBy = isset($orderBy) ? $orderBy : '';
 list($sortBy, $sortDir) = explode(" ", $orderBy);
 $published = (isset($published)) ? $published : '1';
@@ -61,6 +62,8 @@ $maskedTags = array('((' => '[+', '))' => '+]');
 $outerTpl = str_replace(array_keys($maskedTags), array_values($maskedTags), $outerTpl);
 $rowTpl = str_replace(array_keys($maskedTags), array_values($maskedTags), $rowTpl);
 
+// get template variable always if logged into manager
+$published = isset($_SESSION['mgrValidated'])? '2' : $published;
 // get template variable
 switch (strtolower($published)) {
 	case '0':
@@ -78,7 +81,7 @@ switch (strtolower($published)) {
 }
 $tvOutput = $tvOutput[$tvName];
 $tvOutput = json_decode($tvOutput, TRUE);
-if ($tvOutput['fieldValue']) {
+if (isset($tvOutput['fieldValue'])) {
 	$tvOutput = $tvOutput['fieldValue'];
 }
 $countOutput = count($tvOutput);
@@ -113,6 +116,8 @@ if (!$countOutput || $firstEmpty) {
 // random or sort output
 if ($randomize) {
 	shuffle($tvOutput);
+} elseif ($reverse) {
+	$tvOutput = array_reverse($tvOutput);
 } elseif (!empty($sortBy)) {
 	$multiTV->sort($tvOutput, trim($sortBy), trim($sortDir));
 }

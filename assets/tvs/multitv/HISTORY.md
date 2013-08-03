@@ -1,5 +1,24 @@
 History
 ================================================================================
+- 1.5.6 July 18, 2013
+    - Snippet: show multiTV value always if logged into manager regardless of document publishing status
+
+- 1.5.5 June 8, 2013
+    - Snippet: `reverse` parameter
+    
+- 1.5.4 May 24, 2013
+    - Snippet: bugfix for empty multiTV
+    - CustomTV: bugfix for datatables and template var id
+    - CustomTV: corrected invalid language settings
+
+- 1.5.3 May 24, 2013
+    - CustomTV: bugfix for row reordering problem in datatables with more than one datatables multiTV
+
+- 1.5.2 May 15, 2013
+    - CustomTV: bugfix in connector for not published documents
+    - CustomTV: changed path to MODX_MANAGER_PATH base
+    - CustomTV: bugfix for documents that have rich text disabled
+
 - 1.5.1 May 6, 2013
     - CustomTV: bugfix for datatables and template var id below 10
     - CustomTV: bugfix for label width in horizontal mode

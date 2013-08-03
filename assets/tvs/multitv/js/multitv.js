@@ -702,7 +702,7 @@ function SetUrl(url, width, height, alt) {
 			// save/append edit box
 			function saveRow(mode) {
 				if (typeof tinyMCE != 'undefined') {
-				tinyMCE.triggerSave();
+					tinyMCE.triggerSave();
 				}
 				var values = new Object();
 				var saveTab = fieldEditForm.find('[name^="' + tvid + 'tab_radio_mtv"]').getValue();
@@ -710,9 +710,9 @@ function SetUrl(url, width, height, alt) {
 				fieldEditArea.find(':input').each(function(i) {
 					if ($(this).attr('name')) {
 						var key = $(this).attr('name').replace(/tv\d+(.*)_mtv/, '$1');
-					if (key !== '') {
-						values[key] = $(this).val();
-					}
+						if (key !== '') {
+							values[key] = $(this).val();
+						}
 					}
 				});
 				$.ajax({

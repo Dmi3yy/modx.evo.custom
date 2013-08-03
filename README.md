@@ -20,12 +20,9 @@
 - fix Схлопываются всплывающие окна в Chrome в tinyMCE
 - Ditto Extender: countDocs (спасибо Bumkaka)
 - добавленны новые события (OnManagerTreeInit, OnManagerTreePrerender, OnManagerTreeRender, OnManagerPreFrameLoader, OnManagerFrameLoader)
+- добавлен плагин JotAdminNotify(community.modx-cms.ru/blog/addons/615.html)
+- обновлен multiTV до 1.5.6
 
-проверить добавить до выпуска: 
-===
-- тип TV-параметров «Textarea» превратился в «Textarea (Mini)», а «Textarea (Mini)» превратился в тип «Text».
-- добавить JotAdminNotify(community.modx-cms.ru/blog/addons/615.html)
-- обновить multiTV до 1.5.6
 
 
 

@@ -3,11 +3,11 @@
  * multiTV
  *
  * @category 	customtv
- * @version 	1.5.1
+ * @version 	1.5.6
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @author		Jako (thomas.jakobi@partout.info)
  *
- * @internal    description: <strong>1.5.1</strong> Transform template variables into a sortable multi item list.
+ * @internal    description: <strong>1.5.6</strong> Transform template variables into a sortable multi item list.
  * @internal    input option code: @INCLUDE/assets/tvs/multitv/multitv.customtv.php
  */
 if (IN_MANAGER_MODE != 'true') {

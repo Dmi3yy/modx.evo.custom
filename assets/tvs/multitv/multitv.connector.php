@@ -7,7 +7,7 @@ if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
 define('MODX_MANAGER_PATH', '../../../'.MGR_DIR.'/'); //relative path for manager folder
 
 require_once(MODX_MANAGER_PATH . 'includes/config.inc.php'); //config
-require_once(MODX_MANAGER_PATH . '/includes/protect.inc.php');
+require_once(MODX_MANAGER_PATH . 'includes/protect.inc.php');
 
 // Setup the MODx API
 define('MODX_API_MODE', TRUE);
@@ -38,29 +38,35 @@ $tvid = isset($_POST['tvid']) ? intval(str_replace('tv', '', $_POST['tvid'])) : 
 
 $answer = array();
 if ($action && $docid && $tvid) {
-	// document with docId editable?
-	$docObj = $modx->getDocuments(array($docid), 1, 0, 'id');
-	if (count($docObj)) {
-		// get the settings for the multiTV
-		$tvSettings = $modx->getTemplateVar($tvid, '*', $docid);
-		if ($tvSettings && $tvSettings[elements] = '@INCLUDE/assets/tvs/multitv/multitv.customtv.php') {
-			$multiTV = new multiTV($tvSettings);
-			//die(print_r($multiTV, TRUE));
-			$includeFile = $multiTV->includeFile($action, 'processor');
-			// processor available?
-			if (substr($includeFile, 0, 1) != 'A') {
-				include $includeFile;
+	// document exists?
+	$res = $modx->db->select('*', $modx->getFullTableName('site_content'), 'id=' . $docid);
+	if ($modx->db->getRecordCount($res)) {
+		// document with docId editable?
+		$docObj = $modx->getPageInfo($docid, 0, '*');
+		if ($docObj) {
+			// get the settings for the multiTV
+			$tvSettings = $modx->getTemplateVar($tvid, '*', $docid, $docObj['published']);
+			if ($tvSettings && $tvSettings[elements] = '@INCLUDE/assets/tvs/multitv/multitv.customtv.php') {
+				$multiTV = new multiTV($tvSettings);
+				$includeFile = $multiTV->includeFile($action, 'processor');
+				// processor available?
+				if (substr($includeFile, 0, 1) != 'A') {
+					include $includeFile;
+				} else {
+					$answer['error'] = TRUE;
+					$answer['msg'] = 'Processor does not exist!';
+				}
 			} else {
 				$answer['error'] = TRUE;
-				$answer['msg'] = 'Processor does not exist!';
+				$answer['msg'] = 'multiTV does not exist!';
 			}
 		} else {
 			$answer['error'] = TRUE;
-			$answer['msg'] = 'multiTV does not exist!';
+			$answer['msg'] = 'Insufficient rights for this action!';
 		}
 	} else {
 		$answer['error'] = TRUE;
-		$answer['msg'] = 'Insufficient rights for this action!';
+		$answer['msg'] = 'Document does not exists!';
 	}
 } else {
 	$answer['error'] = TRUE;

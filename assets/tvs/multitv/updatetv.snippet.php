@@ -3,11 +3,11 @@
  * multiTV
  * 
  * @category 	snippet
- * @version 	1.5.1
+ * @version 	1.5.6
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @author		Jako (thomas.jakobi@partout.info)
  *
- * @internal    description: <strong>1.5.1</strong> Transform template variables into a sortable multi item list.
+ * @internal    description: <strong>1.5.6</strong> Transform template variables into a sortable multi item list.
  * @internal    snippet code: return include(MODX_BASE_PATH.'assets/tvs/multitv/multitv.snippet.php');
  */
 if (MODX_BASE_PATH == '') {

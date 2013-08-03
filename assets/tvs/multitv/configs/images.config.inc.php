@@ -16,7 +16,7 @@ $settings['fields'] = array(
 	),
 	'legend' => array(
 		'caption' => 'Legend',
-		'type' => 'textarea'
+		'type' => 'text'
 	),
 	'author' => array(
 		'caption' => 'Author',
