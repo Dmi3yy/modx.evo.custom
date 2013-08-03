@@ -19,11 +19,12 @@
 - fix Seostrict 404 by Agel_Nash (большое спасибо Agel_Nash)
 - fix Схлопываются всплывающие окна в Chrome в tinyMCE
 - Ditto Extender: countDocs (спасибо Bumkaka)
+- добавленны новые события (OnManagerTreeInit, OnManagerTreePrerender, OnManagerTreeRender, OnManagerPreFrameLoader, OnManagerFrameLoader)
 
 проверить добавить до выпуска: 
 ===
 - тип TV-параметров «Textarea» превратился в «Textarea (Mini)», а «Textarea (Mini)» превратился в тип «Text».
-- Добавить пару Евентов в Tree
+
 
 
 текущая версии 1.0.10-d5.3  (13.06.2013)
