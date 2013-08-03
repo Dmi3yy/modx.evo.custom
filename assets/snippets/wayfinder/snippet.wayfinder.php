@@ -100,6 +100,7 @@ if ($wf->_config['debug']) {
 //Ouput Results
 if ($wf->_config['ph']) {
     $modx->setPlaceholder($wf->_config['ph'],$output);
+    return;
 } else {
     return $output;
 }
