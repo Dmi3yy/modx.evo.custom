@@ -24,6 +24,8 @@
 проверить добавить до выпуска: 
 ===
 - тип TV-параметров «Textarea» превратился в «Textarea (Mini)», а «Textarea (Mini)» превратился в тип «Text».
+- добавить JotAdminNotify(community.modx-cms.ru/blog/addons/615.html)
+- обновить multiTV до 1.5.6
 
 
 
