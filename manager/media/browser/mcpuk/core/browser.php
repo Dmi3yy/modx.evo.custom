@@ -723,6 +723,7 @@ class browser extends uploader {
             $stat = stat($file);
             if ($stat === false) continue;
             $name = basename($file);
+			if (substr($name,0,1) == '.' && !$this->config['showHiddenFiles']) continue;
             $ext = file::getExtension($file);
             $bigIcon = file_exists("themes/{$this->config['theme']}/img/files/big/$ext.png");
             $smallIcon = file_exists("themes/{$this->config['theme']}/img/files/small/$ext.png");

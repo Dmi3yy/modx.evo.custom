@@ -423,6 +423,7 @@ $_lang["thumbWidth_message"]= 'Maximum thumbnail width.';
 $_lang["thumbHeight_message"]= 'Maximum thumbnail height.';
 $_lang["thumbsDir_message"]= 'The name of previews folder.';
 $_lang["jpegQuality_message"]= 'JPEG compression quality of thumbnails and resized images';
+$_lang["showHiddenFiles"]= 'Show hidden files in file browser';
 $_lang["keyword"] = 'Keyword';
 $_lang["keywords"] = 'Keywords';
 $_lang["keywords_intro"] = 'To edit a keyword, simply type in the new keyword in the text field next to the keyword you wish to change. To delete a keyword, check the \'delete\' box for that keyword. If you check the keyword\'s delete box, and also change it\'s name, it will be deleted, and the renaming of the keyword will not take place!';
@@ -1174,6 +1175,3 @@ $_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
 
 $_lang["seostrict_title"] = 'Use SEO Strict URLs';
 $_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
-
-$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
-$_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
