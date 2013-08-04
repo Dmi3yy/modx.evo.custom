@@ -986,7 +986,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('thumbsDir', '.thumbs'),
 ('jpegQuality', '90'),
 ('denyZipDownload', '0'),
-('denyExtensionRename', '0');
+('denyExtensionRename', '0'),
+('showHiddenFiles', '0');
 
 
 REPLACE INTO `{PREFIX}user_roles` 

@@ -1690,6 +1690,17 @@ function confirmLangChange(el, lkey, elupd){
           <tr>
             <td colspan="2"><div class='split'></div></td>
 		  </tr>
+		  <tr>
+               <td nowrap class="warning"><b><?php echo $_lang["showHiddenFiles"] ?></b></td>
+               <td> <input onchange="documentDirty=true;" type="radio" name="showHiddenFiles" value="0" <?php echo $showHiddenFiles=='0' ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["no"]?><br />
+                 <input onchange="documentDirty=true;" type="radio" name="showHiddenFiles" value="1" <?php echo (!isset($showHiddenFiles) || $showHiddenFiles=='1') ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["yes"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+		  </tr>
+		  
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php
