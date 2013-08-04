@@ -2,13 +2,14 @@
 Так же рекоменую скачивать сборку с сайта так как на гитхаб не всегда стабильный релиз!!!
 
 !!Ченжлог не содержит те правки которые не отличаются с офф версией 
-текущая нестаблильная версия 1.0.10-d5.4RC  (*.07.2013)
+текущая нестаблильная версия 1.0.10-d5.4RC2  (04.08.2013)
 =======================================================
 - под IE9 — не разворачивался календарь (http://modx.im/blog/dmi3yy/955.html#comment8196) 
 - обновил CodeMirror до 1.1b (http://modx.im/blog/addons/960.html)
 - add tv sitemap_exclude for sitemap.xml
 - fix Seostrict (работа с ajax, правильная генерация ссылки на странички со своим суфиксом и на главную)
 - Обновление KCFinder (https://github.com/dmi3yy/modx.evo.custom/pull/56) Больше спасибо Pathologic
+- KCFinder возможность скрыть файлы .thumb (https://github.com/dmi3yy/modx.evo.custom/pull/63/) Больше спасибо Pathologic
 - исправленна ошибка с (пишет в логи «fake settings_version») (спасибо Shin)
 - исправленн виджет managermanager для evogalery для работы с админкой не MANAGER (спасибо Shin)
 - webLogin Corected authorization after the password activation (Спасибо Akool)
