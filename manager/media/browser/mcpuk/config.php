@@ -23,7 +23,8 @@ $_CONFIG = array(
     'denyZipDownload' => $settings['denyZipDownload'],
     'denyUpdateCheck' => false,
     'denyExtensionRename' => $settings['denyExtensionRename'],
-
+	'showHiddenFiles' => $settings['showHiddenFiles'],
+	
     'theme' => "oxygen",
 
     'uploadURL' => $settings['rb_base_url'],
