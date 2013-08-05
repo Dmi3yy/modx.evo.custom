@@ -24,6 +24,8 @@
 - добавлен плагин JotAdminNotify(community.modx-cms.ru/blog/addons/615.html)
 - обновлен multiTV до 1.5.6
 - update CodeMirror to 1.2b
+=============
+- не работает regClientStartupScript на главной странице. 
 
 
 
