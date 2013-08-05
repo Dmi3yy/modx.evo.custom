@@ -106,6 +106,14 @@ class DocumentParser {
                 return true;
                 break;
 
+            // PHPMailer
+            case 'MODxMailer' :
+                include_once(MODX_BASE_PATH . 'manager/includes/extenders/modxmailer.class.inc.php');
+                $this->mail= new MODxMailer;
+                if($this->mail) return true;
+                else            return false;
+                break;
+
             default :
                 return false;
         }
