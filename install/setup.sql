@@ -890,7 +890,7 @@ REPLACE INTO `{PREFIX}user_roles`
 
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
-('manager_theme','MODxCarbonEvoRevo'),
+('manager_theme','MODxCarbon'),
 ('settings_version',''),
 ('show_meta','0'),
 ('server_offset_time','0'),
@@ -1107,6 +1107,11 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('204','OnBeforeDocDuplicate','1','Documents'),
 ('205','OnDocDuplicate','1','Documents'),
 ('206','OnManagerMainFrameHeaderHTMLBlock','2',''),
+('207','OnManagerPreFrameLoader','2',''),
+('208','OnManagerFrameLoader','2',''),
+('209','OnManagerTreeInit','2',''),
+('210','OnManagerTreePrerender','2',''),
+('211','OnManagerTreeRender','2',''),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1','');
 

@@ -215,7 +215,7 @@ if (file_exists(dirname(__FILE__)."/../../assets/cache/siteManager.php")) {
 echo "<p>" . $_lang['writing_config_file'];
 $configString = '<?php
 /**
- * MODx Configuration file
+ * MODX Configuration file
  */
 $database_type = \'mysql\';
 $database_server = \'' . $database_server . '\';
@@ -571,6 +571,7 @@ if (isset ($_POST['plugin']) || $installData) {
             $guid = mysql_real_escape_string($modulePlugin[5]);
             $category = mysql_real_escape_string($modulePlugin[6]);
             $leg_names = '';
+            $disabled = $modulePlugin[9];
             if(array_key_exists(7, $modulePlugin)) {
                 // parse comma-separated legacy names and prepare them for sql IN clause
                 $leg_names = "'" . implode("','", preg_split('/\s*,\s*/', mysql_real_escape_string($modulePlugin[7]))) . "'";
@@ -618,21 +619,10 @@ if (isset ($_POST['plugin']) || $installData) {
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-				 
-				    //add disabled
-                    if ($category == 'add'){				
-						if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','1',$category);", $sqlParser->conn)) {
-							echo "<p>" . mysql_error() . "</p>";
-							return;
-						}
-					}else{	
-						if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,category) VALUES('$name','$desc','$plugin','$properties','$guid',$category);", $sqlParser->conn)) {
-							echo "<p>" . mysql_error() . "</p>";
-							return;
-						}
-					}
-					
-					
+                    if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,category,disabled) VALUES('$name','$desc','$plugin','$properties','$guid',$category,$disabled);", $sqlParser->conn)) {
+                        echo "<p>" . mysql_error() . "</p>";
+                        return;
+                    }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
                 }
                 // add system events
@@ -721,7 +711,7 @@ if ($installData && $moduleSQLDataFile) {
 if ($callBackFnc != "")
     $callBackFnc ($sqlParser);
 
-// Setup the MODx API -- needed for the cache processor
+// Setup the MODX API -- needed for the cache processor
 define('MODX_API_MODE', true);
 define('MODX_BASE_PATH', $base_path);
 if (!defined('MODX_MANAGER_PATH')) define('MODX_MANAGER_PATH', $base_path.MGR_DIR.'/');
