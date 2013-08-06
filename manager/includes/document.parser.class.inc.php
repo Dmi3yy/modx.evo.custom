@@ -991,6 +991,9 @@ class DocumentParser {
         }
         unset ($modx->event->params);
         $this->currentSnippet = '';
+        if(is_array($snip) || is_object($snip))
+            return $snip;
+        else
         return $msg . $snip;
     }
     
@@ -1755,6 +1758,20 @@ class DocumentParser {
         }
     }
 
+    function rotate_log($target='event_log',$limit=3000, $trim=100)
+    {
+        if($limit < $trim) $trim = $limit;
+        
+        $count = $this->db->getValue($this->db->select('COUNT(id)',"[+prefix+]{$target}"));
+        $over = $count - $limit;
+        if(0 < $over)
+        {
+            $trim = ($over + $trim);
+            $this->db->delete("[+prefix+]{$target}",'','',$trim);
+        }
+        $this->db->optimize("[+prefix+]{$target}");
+    }
+    
     /**
      * Returns true if we are currently in the manager backend
      *

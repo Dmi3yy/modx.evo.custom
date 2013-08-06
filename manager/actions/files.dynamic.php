@@ -449,6 +449,7 @@ if($_REQUEST['mode']=="edit") {
 <?php
 $_CM_BASE = 'assets/plugins/codemirror/';
 $_CM_URL = $modx->config['site_url'] . $_CM_BASE;
+if(is_file(MODX_BASE_PATH . $_CM_BASE .'cm/codemirror.files.php'))
 require(MODX_BASE_PATH. $_CM_BASE .'cm/codemirror.files.php');
 }
 
