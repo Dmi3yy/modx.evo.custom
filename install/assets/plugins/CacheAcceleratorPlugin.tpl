@@ -13,6 +13,7 @@
  * @internal    @events OnLoadWebDocument,OnWebPagePrerender,OnCacheUpdate,OnSiteRefresh
  * @internal    @modx_category
  * @internal    @installset base
+ * @internal    @disabled 1
  */
 if(!function_exists('processInjection')){
     function processInjection($str, $autoCacheSnippets, $autoCacheExcludeSnippets, $dropCacheFields, $showSnippets){
