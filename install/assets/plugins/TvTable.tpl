@@ -12,6 +12,7 @@
  * @internal	@events OnDocFormRender,OnBeforeDocFormSave
  * @internal    @legacy_names TvTable
  * @internal    @installset base
+ * @internal    @disabled 1
  */
  
 //defined('IN_MANAGER_MODE') or die();
