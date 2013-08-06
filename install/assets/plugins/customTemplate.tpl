@@ -10,6 +10,7 @@
  * @internal    @properties &customTemplates=customTemplates;text;100,101|102,103
  * @internal    @events OnDocFormPrerender 
  * @internal    @installset base
+ * @internal    @disabled 1
  */
  
 /*
