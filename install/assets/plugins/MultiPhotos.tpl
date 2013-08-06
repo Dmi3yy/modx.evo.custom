@@ -12,6 +12,7 @@
  * @internal	@events OnDocFormRender,OnBeforeDocFormSave
  * @internal    @installset base
  * @internal    @legacy_names MultiPhotos
+ * @internal    @disabled 1
  */
  
 ///defined('IN_MANAGER_MODE') or die();

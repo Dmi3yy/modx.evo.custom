@@ -12,6 +12,7 @@
  * @internal	@events OnDocFormRender
  * @internal    @installset base
  * @internal    @legacy_names MultiFiles
+ * @internal    @disabled 1
  */
  
 //defined('IN_MANAGER_MODE') or die();

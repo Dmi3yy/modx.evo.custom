@@ -10,6 +10,7 @@
  * @internal	@events OnWebPagePrerender 
  * @internal    @legacy_names Search Highlight
  * @internal    @installset base, sample
+ * @internal    @disabled 1
  */
  
  /*

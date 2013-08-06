@@ -11,6 +11,7 @@
  * @internal    @events OnSiteSettingsRender
  * @internal    @modx_category
  * @internal    @installset base
+ * @internal    @disabled 1
  */
 
 $e = &$modx->Event;
