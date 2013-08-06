@@ -12,6 +12,7 @@
  * @internal	@events OnManagerWelcomePrerender
  * @internal    @installset base
  * @internal    @legacy_names JotAdminNotify
+ * @internal    @disabled 1
  */
  
 $output = "";
