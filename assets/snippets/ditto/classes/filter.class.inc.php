@@ -100,7 +100,6 @@ class filter {
 					if ($firstChr!=$this->filterValue)
 						$unset = 0;
 					break;
-				
 				//Added by Andchir (http://modx-shopkeeper.ru/)
 				case 12 :
 					$inputArr = explode('~',$value[$this->array_key]);
