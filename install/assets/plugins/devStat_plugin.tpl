@@ -12,6 +12,7 @@
  * @internal @legacy_names devStat
  * @internal    @installset base
  * @author Andchir <http://wdevblog.net.ru>
+ * @internal    @disabled 1
  */  
 
 $e = &$modx->Event;
