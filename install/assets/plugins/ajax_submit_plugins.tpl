@@ -13,6 +13,7 @@
  * @internal    @events OnLoadWebDocument,OnLoadWebPageCache
  * @internal    @installset base
  * @internal    @modx_category
+ * @internal    @disabled 1
  */
 
 if(!isset($post_signal)) $post_signal = 'ajax_submit';
