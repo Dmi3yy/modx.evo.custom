@@ -11,6 +11,7 @@
  * @internal	@events OnWebPagePrerender,OnCacheUpdate,OnBeforeDocFormSave 
  * @internal    @legacy_names directResize
  * @internal    @installset base
+ * @internal    @disabled 1
  */
 
 
