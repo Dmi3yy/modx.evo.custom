@@ -11,6 +11,7 @@
  * @internal	@events OnParseDocument,OnWebPagePrerender,OnDocFormPrerender,OnDocFormSave,OnManagerLogout 
  * @internal    @legacy_names Quick Manager+
  * @internal    @installset base, sample
+ * @internal    @disabled 1
  */
 
 
