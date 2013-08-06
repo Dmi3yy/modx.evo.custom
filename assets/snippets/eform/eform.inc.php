@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4.4.7 - Electronic Form Snippet
+# eForm 1.4.4.8 - Electronic Form Snippet
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -133,15 +133,21 @@ $_dfnMaxlength = 6;
 	}
 
 	# invoke onBeforeFormParse event set by another script
+	// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 	if ($eFormOnBeforeFormParse) {
-		if( $isDebug && !function_exists($eFormOnBeforeFormParse))
-			$fields['debug'] .= "eFormOnBeforeFormParse event: Could not find the function " . $eFormOnBeforeFormParse;
-		else{
+		$eFormOnBeforeFormParse = explode(',', $eFormOnBeforeFormParse);
+		foreach ($eFormOnBeforeFormParse as $beforeFormParse) {
+			$beforeFormParse = trim($beforeFormParse);
+			if ($isDebug && !function_exists($beforeFormParse)) {
+				$fields['debug'] .= 'eFormOnBeforeFormParse event: Could not find the function ' . $beforeFormParse;
+			} else {
 			$templates = array('tpl'=>$tpl,'report'=>$report,'thankyou'=>$thankyou,'autotext'=>$autotext);
-			if( $eFormOnBeforeFormParse($fields,$templates)===false )
-				return "";
-			elseif(is_array($templates))
+				if ($beforeFormParse($fields, $templates) === false) {
+					return '';
+				} elseif (is_array($templates)) {
 				extract($templates); // extract back into original variables
+		}
+	}
 		}
 	}
 
@@ -269,11 +275,19 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 		}
 
 // Changed in 1.4.4.5  - now expects 4 parameters
+		// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 	if ($eFormOnValidate) {
-		if( $isDebug && !function_exists($eFormOnValidate))
-				$fields['debug'] .= "eformOnValidate event: Could not find the function " . $eFormOnValidate;
-			else
-				if ($eFormOnValidate($fields,$vMsg,$rMsg,$rClass)===false) return;
+			$eFormOnValidate = explode(',', $eFormOnValidate);
+			foreach ($eFormOnValidate as $onValidate) {
+				$onValidate = trim($onValidate);
+				if ($isDebug && !function_exists($onValidate)) {
+					$fields['debug'] .= 'eformOnValidate event: Could not find the function ' . $onValidate;
+				} else {
+					if ($onValidate($fields, $vMsg, $rMsg, $rClass) === false) {
+						return;
+					}
+				}
+			}
 	}
 
 
@@ -404,17 +418,24 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 			}
 
 			# invoke OnBeforeMailSent event set by another script
+			// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 			if ($eFormOnBeforeMailSent) {
-				if( $isDebug && !function_exists($eFormOnBeforeMailSent))
-					$fields['debug'] .= "eFormOnBeforeMailSent event: Could not find the function " . $eFormOnBeforeMailSent;
-				elseif ($eFormOnBeforeMailSent($fields)===false) {
+				$eFormOnBeforeMailSent = explode(',', $eFormOnBeforeMailSent);
+				foreach ($eFormOnBeforeMailSent as $beforeMailSent) {
+					$beforeMailSent = trim($beforeMailSent);
+					if ($isDebug && !function_exists($beforeMailSent)) {
+						$fields['debug'] .= 'eFormOnBeforeMailSent event: Could not find the function ' . $beforeMailSent;
+					} elseif ($beforeMailSent($fields) === false) {
 					if( isset($fields['validationmessage']) && !empty($fields['validationmessage']) ){
 						//register css and/or javascript
-						if( isset($startupSource) ) efRegisterStartupBlock($startupSource);
+							if (isset($startupSource)) {
+								efRegisterStartupBlock($startupSource);
+							}
 						return formMerge($tpl,$fields);
+						} else {
+							return;
+						}
 					}
-					else
-						return;
 				}
 			}
 
@@ -594,11 +615,19 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 			 if($submitLimit>0) $_SESSION[$formid.'_limit'] = time();
 
 				# invoke OnMailSent event set by another script
+			// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 				if ($eFormOnMailSent) {
-					if( $isDebug && !function_exists($eFormOnMailSent) )
-						$fields['debug'] .= "eFormOnMailSent event: Could not find the function" . $eFormOnMailSent;
-					else
-						if ($eFormOnMailSent($fields)===false) return;
+				$eFormOnMailSent = explode(',', $eFormOnMailSent);
+				foreach ($eFormOnMailSent as $mailSent) {
+					$mailSent = trim($mailSent);
+					if ($isDebug && !function_exists($mailSent)) {
+						$fields['debug'] .= 'eFormOnMailSent event: Could not find the function' . $mailSent;
+					} else {
+						if ($mailSent($fields) === false) {
+							return;
+						}
+					}
+				}
 				}
 
 
@@ -664,11 +693,19 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 	}
 
 	# invoke OnBeforeFormMerge event set by another script
+	// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 	if ($eFormOnBeforeFormMerge) {
-		if( $isDebug && !function_exists($eFormOnBeforeFormMerge))
-				$fields['debug'] .= "eFormOnBeforeFormMerge event: Could not find the function " . $eFormOnBeforeFormMerge;
-			else
-				if ($eFormOnBeforeFormMerge($fields)===false) return;
+		$eFormOnBeforeFormMerge = explode(',', $eFormOnBeforeFormMerge);
+		foreach ($eFormOnBeforeFormMerge as $beforeFormMerge) {
+			$beforeFormMerge = trim($beforeFormMerge);
+			if ($isDebug && !function_exists($beforeFormMerge)) {
+				$fields['debug'] .= 'eFormOnBeforeFormMerge event: Could not find the function ' . $beforeFormMerge;
+			} else {
+				if ($beforeFormMerge($fields) === false) {
+					return;
+				}
+			}
+		}
 	}
 
 	# build form
@@ -765,23 +802,6 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 	$labels = array();
 
 	$regExpr = "#(<label[^>]*?>)(.*?)</label>#si";;
-	
-	if ( preg_match_all('~\[(\[)([^\[]*?)(\])\]~s',$tpl, $matches)) {
-                $count = count($matches[0]);
-                $var_search = array();
-                $var_replace = array();
-                // for each detected snippet
-                for($i=0; $i<$count; $i++) {
-                        $snippet = $matches[2][$i]; // snippet call
-                        // Let MODx evaluate snippet
-                        $replace = $modx->evalSnippets("[[".$snippet."]]");
-                        // Replace values
-                        $var_search[] = $matches[0][$i];
-                        $var_replace[] = $replace;
-                }
-                $tpl = str_replace($var_search, $var_replace, $tpl);
-        }
-	
 	preg_match_all($regExpr,$tpl,$matches);
 	foreach($matches[1] as $key => $fld){
 		$attr = attr2array($fld);
@@ -979,7 +999,7 @@ function buildTagPlaceholder($tag,$attributes,$name){
 }
 
 function attr2array($tag){
-	$expr = "#([a-z0-9_]*?)=(([\"'])[^\\3]*?\\3)#si";
+	$expr = "#([a-z0-9_-]*?)=(([\"'])[^\\3]*?\\3)#si";
 	preg_match_all($expr,$tag,$matches);
 	foreach($matches[1] as $i => $key)
 		$rt[$key]= $matches[2][$i];
