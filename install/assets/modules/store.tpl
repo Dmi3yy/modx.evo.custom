@@ -14,4 +14,5 @@
  * @internal    @installset base, sample
  */
 
+//AUTHORS: Bumkaka & Dmi3yy 
 include_once('../assets/modules/store/core.php');
