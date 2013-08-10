@@ -5,8 +5,7 @@
  * first repository for MODX EVO
  * 
  * @category	module
- * @version 	0.2
- * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @version 	0.1.0 beta
  * @internal	@properties
  * @internal	@guid store435243542tf542t5t	
  * @internal	@shareparams 1
