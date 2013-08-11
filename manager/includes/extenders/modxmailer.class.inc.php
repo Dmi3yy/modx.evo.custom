@@ -29,7 +29,24 @@ class MODxMailer extends PHPMailer
 		$this->mb_language = 'UNI';
 		$this->encode_header_method = '';
 		
-		$this->Mailer = 'mail';
+		$this->PluginDir = MODX_MANAGER_PATH . 'includes/controls/phpmailer/';
+
+		switch($modx->config['email_method'])
+		{
+		    case 'smtp':
+		    	$smtp_password = '';
+		    	$smtp_info_path = $modx->config['base_path'] . 'assets/cache/smtp_info.php';
+		    	if(is_file($smtp_info_path)) include_once($smtp_info_path);
+                $this->IsSMTP();
+                $this->Host      = $modx->config['smtp_host'] . ':' . $modx->config['smtp_port'];
+                $this->SMTPAuth  = $modx->config['smtp_auth']==='1' ? true : false;
+                $this->Username  = $modx->config['smtp_username'];
+                $this->Password  = $smtp_password;
+                break;
+		    case 'mail':
+		    default:
+		    	$this->IsMail();
+		}
 		
 		$this->From     = $modx->config['emailsender'];
 		$this->Sender   = $modx->config['emailsender']; 
@@ -76,12 +93,32 @@ class MODxMailer extends PHPMailer
 	
 	function EncodeHeader($str, $position = 'text')
 	{
-		global $modx;
+		global $modx, $sanitize_seed;
+		if(strpos($str, $sanitize_seed)!==false) $str = str_replace($sanitize_seed, '', $str);
 		if($this->encode_header_method=='mb_encode_mimeheader')
 			return mb_encode_mimeheader($str, $this->CharSet, 'B', "\n");
 		else return parent::EncodeHeader($str, $position);
 	}
 	
+    public function Send() {
+		global $sanitize_seed;
+		
+		if(strpos($this->Body, $sanitize_seed)!==false)    $this->Body = str_replace($sanitize_seed, '', $this->Body);
+		if(strpos($this->Subject, $sanitize_seed)!==false) $this->Subject = str_replace($sanitize_seed, '', $this->Subject);
+		
+        try {
+            if(!$this->PreSend()) return false;
+            return $this->PostSend();
+        } catch (phpmailerException $e) {
+            $this->mailHeader = '';
+            $this->SetError($e->getMessage());
+            if ($this->exceptions) {
+                throw $e;
+            }
+            return false;
+        }
+    }
+
 	function MailSend($header, $body)
 	{
 		global $modx;

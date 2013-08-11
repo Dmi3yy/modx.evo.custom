@@ -822,8 +822,8 @@ if ($count > 0) {
         // set initial stop count
 
     if($paginate == 1) {
-        $max_paginate = isset($max_paginate)? $max_paginate : 11;
-        $max_previous = isset($max_previous)? $max_previous : 6;
+        $max_paginate = isset($max_paginate)? $max_paginate : 50;
+        $max_previous = isset($max_previous)? $max_previous : 25;
         $paginateAlwaysShowLinks = isset($paginateAlwaysShowLinks)? $paginateAlwaysShowLinks : 0;
         /*
             Param: paginateAlwaysShowLinks

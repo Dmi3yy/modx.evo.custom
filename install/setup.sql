@@ -884,10 +884,9 @@ REPLACE INTO `{PREFIX}manager_users`
 (id, username, password)VALUES 
 (1, '{ADMIN}', MD5('{ADMINPASS}'));
 
-
 REPLACE INTO `{PREFIX}user_attributes` 
 (id, internalKey, fullname, role, email, phone, mobilephone, blocked, blockeduntil, blockedafter, logincount, lastlogin, thislogin, failedlogincount, sessionid, dob, gender, country, state, zip, fax, photo, comment) VALUES 
-(1, 1, 'Admin', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '');
+(1, 1, 'Admin', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '', '', '');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
@@ -904,7 +903,7 @@ REPLACE INTO `{PREFIX}user_roles`
 
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
-('manager_theme','MODxCarbon'),
+('manager_theme','MODxRE'),
 ('settings_version',''),
 ('show_meta','0'),
 ('server_offset_time','0'),
@@ -932,8 +931,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('use_alias_path','1'),
 ('use_udperms','1'),
 ('udperms_allowroot','0'),
-('failed_login_attempts','5'),
-('blocked_minutes','30'),
+('failed_login_attempts','3'),
+('blocked_minutes','60'),
 ('use_captcha','0'),
 ('captcha_words','0,1,2,3,4,5,6,7,8,9'),
 ('emailsender','{ADMINEMAIL}'),
@@ -1174,10 +1173,10 @@ UPDATE `{PREFIX}user_roles` SET
 
 
 UPDATE `{PREFIX}user_settings` SET
-  `setting_value`='MODxCarbon'
+  `setting_value`='MODxRE'
   WHERE `setting_name`='manager_theme';
 
 
-REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxCarbon');
+REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxRE');
 
 UPDATE `{PREFIX}system_settings` set setting_value = if(setting_value REGEXP 'application/json',setting_value,concat_ws(",",setting_value,"application/json")) WHERE setting_name='custom_contenttype';
