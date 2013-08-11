@@ -7,7 +7,7 @@
     <style type="text/css">
 
 		#login {
-			background: #eeeeee url(media/style/MODxRE/images/body.jpg);
+			background: #eeeeee url(media/style/[+theme+]/images/body.jpg);
 			margin: 12% 0 0;
 		}
 		#mx_loginbox {
@@ -77,9 +77,12 @@
 			width: 91px;
 			height: 33px;
 			cursor: pointer;
-			text-indent: -9999px;
+			/*text-indent: -9999px;*/
+			color:#fff;
+			font-size: 14px;
+			font-weight: 100;
 		    margin: -7px 0 12px;
-			background: url(media/style/MODxRE/images/misc/enter.png) no-repeat top left;
+			background: url(media/style/[+theme+]/images/misc/enter.png) no-repeat top left;
 		}
 		#onManagerLoginFormRender {
 			clear: both;
@@ -116,9 +119,12 @@
 			float: right;
 			height: 33px;
 			margin: 5px 26px 22px 0;
-			text-indent: -9999px;
+			/*text-indent: -9999px;*/
+			color:#fff;
+			font-size: 14px;
+			font-weight: 100;
 			width: 111px;
-			background: url(media/style/MODxRE/images/misc/submit.png) no-repeat top left;
+			background: url(media/style/[+theme+]/images/misc/submit.png) no-repeat top left;
 		}
 		.loginLicense {
 			width: 309px;
@@ -202,7 +208,7 @@
     [+OnManagerLoginFormPrerender+]
         <div class="sectionHeader">
 			<a class="logo" href="../" title="[+site_name+]">
-				<img src="media/style/MODxRE/images/misc/login-logo.png" alt="[+site_name+]" id="logo" />
+				<img src="media/style/[+theme+]/images/misc/login-logo.png" alt="[+site_name+]" id="logo" />
 			</a>
 		</div>
         <div class="sectionBody">

@@ -8,6 +8,11 @@
  * Version:        1.1
  * MODx version:   1.0.3
 */
+
+// $modx->config['manager_menu_height'] = '70';
+// $modx->config['manager_tree_width']  = '260';
+// $modx->config['mce_editor_skin'] = 'o2k7:silver';
+
 $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
 
 // Tree Menu Toolbar
@@ -70,7 +75,7 @@ $_style['icons_cancel']             = $style_path.'icons/stop.png';
 $_style['icons_close']              = $style_path.'icons/stop.png';
 $_style['icons_delete']             = $style_path.'icons/delete.png';
 $_style['icons_delete_document']    = $style_path.'icons/delete.png';
-$_style['icons_resource_overview']  = $style_path.'icons/page_white_magnify.png';
+$_style['icons_resource_overview']  = $style_path.'icons/information.png';
 $_style['icons_resource_duplicate'] = $style_path.'icons/page_white_copy.png';
 $_style['icons_edit_document']      = $style_path.'icons/save.png';
 $_style['icons_email']              = $style_path.'icons/email.png';
@@ -89,7 +94,7 @@ $_style['icons_preview_resource']   = $style_path.'icons/page_white_magnify.png'
 $_style['icons_publish_document']   = $style_path.'icons/clock_play.png';
 $_style['icons_refresh']            = $style_path.'icons/refresh.png'; 
 $_style['icons_save']               = $style_path.'icons/save.png';
-$_style['icons_set_parent']         = $style_path.'icons/layout_go.png';
+$_style['icons_set_parent']         = $style_path.'icons/stick.gif';
 $_style['icons_table']              = $style_path.'icons/table.gif'; 
 $_style['icons_undelete_resource']  = $style_path.'icons/b092.gif';
 $_style['icons_unpublish_resource'] = $style_path.'icons/clock_stop.png';
