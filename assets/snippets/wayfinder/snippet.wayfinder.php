@@ -4,7 +4,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 2.0
+ Version: 2.0.1
  Authors: 
 	Kyle Jaebker (muddydogpaws.com)
 	Ryan Thrash (vertexworks.com)
@@ -59,6 +59,7 @@ $wf->_config = array(
 	'textOfLinks' => isset($textOfLinks) ? $textOfLinks : 'menutitle',
 	'titleOfLinks' => isset($titleOfLinks) ? $titleOfLinks : 'pagetitle',
 	'displayStart' => isset($displayStart) ? $displayStart : FALSE,
+	'entityEncode' => isset($entityEncode) ? $entityEncode : TRUE,
 );
 
 //get user class definitions

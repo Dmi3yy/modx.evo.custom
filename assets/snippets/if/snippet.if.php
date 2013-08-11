@@ -1,66 +1,58 @@
 <?php
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 /**
-** if snippet
-** [[if&is=`[*id*]:=:4:or:[*parent*]:in:5,6,5,7,8,9` &then=`[[if&is=`0||=||0` &then=`true` &else=`false` &separator=`||`]]` &else=`@TPL:else`]]
-** [[if?is=`[*id*]:is:1:or:[*id*]:is:2:and:[*parent*]:is:5:or:[*parent*]:in:2,3,4` &then=`true` &else=`false`]]
-**
-** Все выражения обрабатываются по логике (....:or:is:.... ) :and: (...:!empty:.....)
-** выражение and делит условие на 2 части, которые в конце в конце сравниваются к true
-**
-** Пример №1
-** Выводить акцию нужно только в каталоге с ID = 5
-** [[if?is=`[*parent*]:=:5` &then=`@TPL:akcia`]]
-**
-** Пример №2
-** Выводить акцию нужно только в каталоге с ID = 5 или в каталогас с шаблоном №7,8,9
-** [[if?is=`[*parent*]:=:5:or:[*template*]:in:7,8,9` &then=`@TPL:akcia`]]
-**
-** Пример №3
-** Выводить акцию нужно только в каталоге с ID = 5 и только в ресурсе с шаблоном №2
-** [[if?is=`[*parent*]:=:5:and:[*template*]:=:7` &then=`@TPL:akcia`]]
-**
-** Пример №4
-** Выводить акцию нужно только в каталоге с ID = 5 и ( только в ресурсе с шаблоном №2  или в других шаблонах но с ТВ `show_akcia`=1
-** [[if?is=`[*parent*]:=:5:and:[*template*]:=:7:or:[*show_akcia*]:=1` &then=`@TPL:akcia`]]
-**
-** Пример №5
-** Выводить акцию только для товаров с ценой в диапазоне >300$     <=700$
-** [[if?is=`[*price*]:>:300:and:[*price*]:<=:700` &then=`@TPL:akcia`]]
-**
-**
-**  Пример №6
-**  Выводить при кратности записи дитто 3
-**  [[if?is=`[+ditto_iteration+]:%:3` &then=`true` &else=`false`]]
-**
-**  Пример №7
-**  Выводить при кратности записи дитто 3 но с умножением значения
-**  [[if?is=`[+ditto_iteration+]*2:%:3` &then=`true` &else=`false` &math=`on`]]
-**
-**  Пример №8
-**  Выводить значение математического выражения
-**  [[if?is=`[+ditto_iteration+]*2` &math=`on`]]
-**
-**  только с пропатченым парсером MODx:
-**  [[if?is=`[*id*]:>:2` &then=`<a href="[~[*id*]~]">[*pagetitle*]</a>`]]
-**
-**  Операторы:
-**  (is,=) , (not,!=) , (>,gt) , (<,lt) , (>=,gte) , (lte,<=) , (isempty,empty) , (not_empty,!empty)
-**  (null, is_null) , (in_array, inarray, in) , (not_in,!in)
-**
-**
-**
-** ===============================================================================================
-** Вкусности
-** [[if?is=`eval('global $iteration;$iteration++;echo $iteration;')` &math=`on`]]   // итерация в Ditto,Wayfinder и других каталожниках
-** [[if?is=`:is:` &then=`@eval: echo str_replace('<br/>','','[*pagetitle*]');`]]    // 'главное<br/> меню' -> 'главное меню' 
-** [[if?is=`:is:` &then=`@eval: echo number_format('[*price*]', 2, ',', ' ');`]]    // '1000000,89' -> '1 000 000,89'
-**
-**
-**  @Author: Bumkaka
-**  RussAndRussky.org.ua
+* if snippet  
+* Date: Jan 03, 2013
+*
+* [[if? &is=`[*id*]:is:4:or:[*parent*]:in:5,6,5,7,8,9` &then=`[[if? &is=`0||is||0` &then=`true` &else=`false` &separator=`||`]]` &else=`@TPL:else`]]
+* [[if? &is=`[*id*]:is:1:or:[*id*]:is:2:and:[*parent*]:is:5:or:[*parent*]:in:2,3,4` &then=`true` &else=`false`]]
+*
+* All expressions are logically (....:or:is:.... ) :and: (...:!empty:.....)
+* expression and divides the condition into 2 parts, which in the end compared to the true
+*
+* Sample №1
+* Output action is necessary only in the parent ID = 5 
+* [[if? &is=`[*parent*]:is:5` &then=`@TPL:chunk-name`]]
+*
+* Sample №2
+* Output action is necessary only in the parent ID = 5 or template IDs in (7,8,9)
+* [[if? &is=`[*parent*]:is:5:or:[*template*]:in:7,8,9` &then=`@TPL:chunk-name`]]
+*
+* Sample №3
+* Output action is necessary only in the parent ID = 5 and only the resource with the template ID = 7
+* [[if? &is=`[*parent*]:is:5:and:[*template*]:is:7` &then=`@TPL:chunk-name`]]
+*
+* Sample №4
+* Output action is necessary only in the parent ID = 5 and (only in the template ID = 7 or in other templates but with TV `new` = 1
+* [[if? &is=`[*parent*]:is:5:and:[*template*]:is:7:or:[*new*]:is:1` &then=`@TPL:chunk-name`]]
+*
+* Sample №5
+* Output share for the goods with a price in the range of > 300 <= 700
+* [[if? &is=`[*price*]:gt:300:and:[*price*]:lte:700` &then=`@TPL:chunk-name`]]
+*
+* Sample №6
+* Output in the multiplicity of records Ditto 3
+* [[if? &is=`[+ditto_iteration+]:%:3` &then=`true` &else=`false`]]
+*
+* Sample №7
+* Output in the multiplicity of records Ditto 3 but by multiplying the
+* [[if? &is=`[+ditto_iteration+]*2:%:3` &then=`true` &else=`false` &math=`on`]]
+*
+* Sample №8
+* Print the value of the mathematical expression
+* [[if? &is=`[+ditto_iteration+]*2` &math=`on`]]
+*
+* Operator:
+* (is,=) , (not,!=) , (>,gt) , (<,lt) , (>=,gte) , (lte,<=) , (isempty,empty) , (not_empty,!empty)
+* (null, is_null) , (in_array, inarray, in) , (not_in,!in)
+*
+* More samples
+* [[if? &is=`eval('global $iteration;$iteration++;echo $iteration;')` &math=`on`]]   // iteration in Ditto,Wayfinder and others
+* [[if? &is=`:is:` &then=`@eval: echo str_replace('<br/>','','[*pagetitle*]');`]]    // 'our<br/>works' -> 'our works' 
+* [[if? &is=`:is:` &then=`@eval: echo number_format('[*price*]', 2, ',', ' ');`]]    // '1000000,89' -> '1 000 000,89'
+*
+*  RussAndRussky.org.ua
 **/
-  //echo $is;
 $s=empty($separator)?':':$separator;
 $opers=explode($s,$is);
 $subject=$opers[0];
