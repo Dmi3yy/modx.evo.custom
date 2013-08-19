@@ -232,7 +232,7 @@ class resourse {
 	
 	private function getAlias(){
 		if ($this->modx->config['friendly_urls'] && $this->modx->config['automatic_alias'] && $this->get('alias') == ''){
-			$alias = strtr($this->get('pagetitle'), $this->table);
+			$alias = mb_strtolower(strtr($this->get('pagetitle'), $this->table));
 		}else{
 			if($this->get('alias')!=''){
 				$alias = $this->get('alias');
