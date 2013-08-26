@@ -117,6 +117,14 @@ class DocumentParser {
                 else            return false;
                 break;
 
+            case 'EXPORT_SITE' :
+                if(include_once(MODX_BASE_PATH . 'manager/includes/extenders/export.class.inc.php'))
+                {
+                    $this->export= new EXPORT_SITE;
+                    return true;
+                }
+                else return false;
+                break;
             case 'PHPCOMPAT' :
             	if(is_object($this->phpcompat)) return;
                 include_once(MODX_BASE_PATH . 'manager/includes/extenders/phpcompat.class.inc.php');
