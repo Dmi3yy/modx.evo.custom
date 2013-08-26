@@ -1,5 +1,5 @@
 <script language="javascript" type="text/javascript">
-function modx_fb (field_name, url, type, win) {
+function mceOpenServerBrowser(field_name, url, type, win) {
     if (type == "media") {type = win.document.getElementById("media_type").value;}
 	var cmsURL = "[+cmsurl+]";
 	switch (type) {
