@@ -117,6 +117,12 @@ class DocumentParser {
                 else            return false;
                 break;
 
+            case 'PHPCOMPAT' :
+            	if(is_object($this->phpcompat)) return;
+                include_once(MODX_BASE_PATH . 'manager/includes/extenders/phpcompat.class.inc.php');
+                $this->phpcompat = new PHPCOMPAT;
+                break;
+                
             default :
                 return false;
         }
@@ -258,7 +264,7 @@ class DocumentParser {
                     $included= include MODX_BASE_PATH . 'assets/cache/siteCache.idx.php';
                 }
                 if(!$included) {
-                    $result= $this->db->query('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
+                    $result= $this->db->select('setting_name, setting_value', '[+prefix+]system_settings');
                     while ($row= $this->db->getRow($result, 'both')) {
                         $this->config[$row[0]]= $row[1];
                     }
@@ -291,10 +297,16 @@ class DocumentParser {
                     $usrSettings= & $_SESSION[$usrType . 'UsrConfigSet'];
                 } else {
                     if ($usrType == 'web')
-                        $query= $this->getFullTableName('web_user_settings') . ' WHERE webuser=\'' . $id . '\'';
+                    {
+                        $from = '[+prefix+]web_user_settings';
+                        $where = "webuser='{$id}'";
+                    }
                     else
-                        $query= $this->getFullTableName('user_settings') . ' WHERE user=\'' . $id . '\'';
-                    $result= $this->db->query('SELECT setting_name, setting_value FROM ' . $query);
+                    {
+                        $from = '[+prefix+]user_settings';
+                    	$where = "user='{$id}'";
+                    }
+                    $result= $this->db->select('setting_name, setting_value', $from, $where);
                     while ($row= $this->db->getRow($result, 'both'))
                         $usrSettings[$row[0]]= $row[1];
                     if (isset ($usrType))
@@ -306,8 +318,7 @@ class DocumentParser {
                 if (isset ($_SESSION['mgrUsrConfigSet'])) {
                     $musrSettings= & $_SESSION['mgrUsrConfigSet'];
                 } else {
-                    $query= $this->getFullTableName('user_settings') . ' WHERE user=\'' . $mgrid . '\'';
-                    if ($result= $this->db->query('SELECT setting_name, setting_value FROM ' . $query)) {
+                    if ($result= $this->db->select('setting_name, setting_value', '[+prefix+]user_settings', "user='{$mgrid}'")) {
                         while ($row= $this->db->getRow($result, 'both')) {
                             $usrSettings[$row[0]]= $row[1];
                         }
@@ -503,7 +514,7 @@ class DocumentParser {
                         if ($this->config['unauthorized_page']) {
                             // check if file is not public
                             $tbldg= $this->getFullTableName("document_groups");
-                            $secrs= $this->db->query("SELECT id FROM $tbldg WHERE document = '" . $id . "' LIMIT 1;");
+                            $secrs= $this->db->select('id', '[+prefix+]document_groups', "document='{$id}'", '', '1');
                             if ($secrs)
                                 $seclimit= $this->db->getRecordCount($secrs);
                         }
@@ -1765,6 +1776,85 @@ class DocumentParser {
         }
     }
 
+    function sendmail($params=array(), $msg='')
+    {
+        if(isset($params) && is_string($params))
+        {
+            if(strpos($params,'=')===false)
+            {
+                if(strpos($params,'@')!==false) $p['to']      = $params;
+                else                            $p['subject'] = $params;
+            }
+            else
+            {
+                $params_array = explode(',',$params);
+                foreach($params_array as $k=>$v)
+                {
+                    $k = trim($k);
+                    $v = trim($v);
+                    $p[$k] = $v;
+                }
+            }
+        }
+        else
+        {
+            $p = $params;
+            unset($params);
+        }
+        if(isset($p['sendto'])) $p['to'] = $p['sendto'];
+        
+        if(isset($p['to']) && preg_match('@^[0-9]+$@',$p['to']))
+        {
+            $userinfo = $this->getUserInfo($p['to']);
+            $p['to'] = $userinfo['email'];
+        }
+        if(isset($p['from']) && preg_match('@^[0-9]+$@',$p['from']))
+        {
+            $userinfo = $this->getUserInfo($p['from']);
+            $p['from']     = $userinfo['email'];
+            $p['fromname'] = $userinfo['username'];
+        }
+        if($msg==='' && !isset($p['body']))
+        {
+            $p['body'] = $_SERVER['REQUEST_URI'] . "\n" . $_SERVER['HTTP_USER_AGENT'] . "\n" . $_SERVER['HTTP_REFERER'];
+        }
+        elseif(is_string($msg) && 0<strlen($msg)) $p['body'] = $msg;
+        
+        $this->loadExtension('MODxMailer');
+        $sendto = (!isset($p['to']))   ? $this->config['emailsender']  : $p['to'];
+        $sendto = explode(',',$sendto);
+        foreach($sendto as $address)
+        {
+            list($name, $address) = $this->mail->address_split($address);
+            $this->mail->AddAddress($address,$name);
+        }
+        if(isset($p['cc']))
+        {
+            $p['cc'] = explode(',',$sendto);
+            foreach($p['cc'] as $address)
+            {
+                list($name, $address) = $this->mail->address_split($address);
+                $this->mail->AddCC($address,$name);
+            }
+        }
+        if(isset($p['bcc']))
+        {
+            $p['bcc'] = explode(',',$sendto);
+            foreach($p['bcc'] as $address)
+            {
+                list($name, $address) = $this->mail->address_split($address);
+                $this->mail->AddBCC($address,$name);
+            }
+        }
+        if(isset($p['from'])) list($p['fromname'],$p['from']) = $this->mail->address_split($p['from']);
+        $this->mail->From     = (!isset($p['from']))  ? $this->config['emailsender']  : $p['from'];
+        $this->mail->FromName = (!isset($p['fromname'])) ? $this->config['site_name'] : $p['fromname'];
+        $this->mail->Subject  = (!isset($p['subject']))  ? $this->config['emailsubject'] : $p['subject'];
+        $this->mail->Body     = $p['body'];
+        $rs = $this->mail->send();
+        return $rs;
+    }
+    
     function rotate_log($target='event_log',$limit=3000, $trim=100)
     {
         if($limit < $trim) $trim = $limit;
@@ -2303,6 +2393,7 @@ class DocumentParser {
      */
     function toDateFormat($timestamp = 0, $mode = '') {
         $timestamp = trim($timestamp);
+        if($mode !== 'formatOnly' && empty($timestamp)) return '-';
         $timestamp = intval($timestamp);
         
         switch($this->config['datetime_format']) {
@@ -3582,6 +3673,13 @@ class DocumentParser {
 			else     $id = false;
 		}
 		return $id;
+	}
+
+	// php compat
+	function htmlspecialchars($str, $flags = ENT_COMPAT)
+	{
+		$this->loadExtension('PHPCOMPAT');
+		return $this->phpcompat->htmlspecialchars($str, $flags);
 	}
     // End of class.
 

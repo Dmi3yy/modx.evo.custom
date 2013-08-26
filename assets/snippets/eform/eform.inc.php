@@ -367,7 +367,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				}
 			}
 			# set postdate
-			$fields['postdate'] = strftime($modx->toDateFormat(null, 'formatOnly') . " %H:%M:%S",time());
+			$fields['postdate'] = strftime("%d-%b-%Y %H:%M:%S",time());
 
 			//check against email injection and replace suspect content
 			if( hasMailHeaders($fields) ){
@@ -379,29 +379,15 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					foreach($fields as $key => $value)
 						$body .= "<tr><td>$key</td><td><pre>$value</pre></td></tr>";
 					$body .="</table>";
-					include_once MODX_MANAGER_PATH."includes/controls/class.phpmailer.php";
+					$modx->loadExtension('MODxMailer');
 				# send abuse alert
-					$mail = new PHPMailer();
-					//mail or smtp by Dmi3yy
-					if ($smtp == 'smtp') {
-						$mail->IsSMTP();// отсылать используя SMTP
-						$mail->Host	 = $smtphost; // SMTP сервер
-						$mail->SMTPAuth = true;	 // включить SMTP аутентификацию
-						$mail->Username = $smtpfrom; // SMTP username
-						$mail->Password = $smtppass; // SMTP password
-						$mail->From		= $smtpfrom;
-						$mail->Port     = $smtpport;
-					}else{
-						$mail->IsMail();
-						$mail->From		= $modx->config['emailsender'];
-					}
-
-					$mail->IsHTML($isHtml);					
-					$mail->FromName	= $modx->config['site_name'];
-					$mail->Subject	= $_lang['ef_mail_abuse_subject'];
-					$mail->Body		= $body;
-					AddAddressToMailer($mail,"to",$modx->config['emailsender']);
-					$mail->send(); //ignore mail errors in this case
+					$modx->mail->IsHTML($isHtml);
+					$modx->mail->From		= $modx->config['emailsender'];
+					$modx->mail->FromName	= $modx->config['site_name'];
+					$modx->mail->Subject	= $_lang['ef_mail_abuse_subject'];
+					$modx->mail->Body		= $body;
+					AddAddressToMailer($modx->mail,"to",$modx->config['emailsender']);
+					$modx->mail->send(); //ignore mail errors in this case
 				}
 				//return empty form with error message
 				//register css and/or javascript
@@ -484,97 +470,58 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					$replyto = ( $fields[$replyto] && strstr($fields[$replyto],'@') )?$fields[$replyto]:$from;
 
 				# include PHP Mailer
-				include_once MODX_MANAGER_PATH."includes/controls/class.phpmailer.php";
+				$modx->loadExtension('MODxMailer');
 
 				# send form
 				//defaults to html so only test sendasText
 				$isHtml = ($sendAsText==1 || strstr($sendAsText,'report'))?false:true;
 
-				if(!$noemail) {
-					if($sendirect) $to = $fields['email'];
-					$mail = new PHPMailer();
-					//mail or smtp by Dmi3yy
-					if ($smtp == 'smtp') {
-						$mail->IsSMTP();// отсылать используя SMTP
-						$mail->Host	 = $smtphost; // SMTP сервер
-						$mail->SMTPAuth = true;	 // включить SMTP аутентификацию
-						$mail->Username = $smtpfrom; // SMTP username
-						$mail->Password = $smtppass; // SMTP password
-						$mail->From		= $smtpfrom;
-						$mail->Port     = $smtpport;
+				# added in 1.4.4.8 - Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.
+				if ($fields['email']) {
+					$firstEmail = array_shift(explode(',', $fields['email']));
 					}else{
-						$mail->IsMail();
-						$mail->From		= $from;
+					$firstEmail = '';
 					}	
-					$mail->CharSet = $modx->config['modx_charset'];
-					$mail->IsHTML($isHtml);
 					
-					$mail->FromName	= $fromname;
-					$mail->Subject	= $subject;
-					$mail->Body		= $report;
-					AddAddressToMailer($mail,"replyto",$replyto);
-					AddAddressToMailer($mail,"to",$to);
-					AddAddressToMailer($mail,"cc",$cc);
-					AddAddressToMailer($mail,"bcc",$bcc);
-					AttachFilesToMailer($mail,$attachments);
-					if(!$mail->send()) return 'Main mail: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
+				if(!$noemail) {
+					if($sendirect) $to = $firstEmail;
+					$modx->mail->IsHTML($isHtml);
+					$modx->mail->From		= $from;
+					$modx->mail->FromName	= $fromname;
+					$modx->mail->Subject	= $subject;
+					$modx->mail->Body		= $report;
+					AddAddressToMailer($modx->mail,"replyto",$replyto);
+					AddAddressToMailer($modx->mail,"to",$to);
+					AddAddressToMailer($modx->mail,"cc",$cc);
+					AddAddressToMailer($modx->mail,"bcc",$bcc);
+					AttachFilesToMailer($modx->mail,$attachments);
+					if(!$modx->mail->send()) return 'Main mail: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
 				}
 
 				# send user a copy of the report
-				if($ccsender && $fields['email']) {
-					$mail = new PHPMailer();
-					//mail or smtp by Dmi3yy
-					if ($smtp == 'smtp') {
-						$mail->IsSMTP();// отсылать используя SMTP
-						$mail->Host	 = $smtphost; // SMTP сервер
-						$mail->SMTPAuth = true;	 // включить SMTP аутентификацию
-						$mail->Username = $smtpfrom; // SMTP username
-						$mail->Password = $smtppass; // SMTP password
-						$mail->From		= $smtpfrom;
-						$mail->Port     = $smtpport;
-					}else{
-						$mail->IsMail();
-						$mail->From		= $from;
-					}
-
-					$mail->CharSet = $modx->config['modx_charset'];
-					$mail->IsHTML($isHtml);
-					$mail->FromName	= $fromname;
-					$mail->Subject	= $subject;
-					$mail->Body		= $report;
-					AddAddressToMailer($mail,"to",$fields['email']);
-					AttachFilesToMailer($mail,$attachments);
-					if(!$mail->send()) return 'CCSender: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
+				if($ccsender && $firstEmail != '') {
+					$modx->mail->IsHTML($isHtml);
+					$modx->mail->From		= $from;
+					$modx->mail->FromName	= $fromname;
+					$modx->mail->Subject	= $subject;
+					$modx->mail->Body		= $report;
+					AddAddressToMailer($modx->mail,"to",$firstEmail);
+					AttachFilesToMailer($modx->mail,$attachments);
+					if(!$modx->mail->send()) return 'CCSender: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
 				}
 
 				# send auto-respond email
 				//defaults to html so only test sendasText
 				$isHtml = ($sendAsText==1 || strstr($sendAsText,'autotext'))?false:true;
-				if ($autotext && $fields['email']!='') {
+				if ($autotext && $firstEmail != '') {
 					$autotext = formMerge($autotext,$fields);
-					$mail = new PHPMailer();
-					
-					//mail or smtp by Dmi3yy
-					if ($smtp == 'smtp') {
-						$mail->IsSMTP();// отсылать используя SMTP
-						$mail->Host	 = $smtphost; // SMTP сервер
-						$mail->SMTPAuth = true;	 // включить SMTP аутентификацию
-						$mail->Username = $smtpfrom; // SMTP username
-						$mail->Password = $smtppass; // SMTP password
-						$mail->From		= $smtpfrom;
-						$mail->Port     = $smtpport;
-					}else{
-						$mail->IsMail();
-						$mail->From		= ($autosender)? $autosender:$from;
-					}
-
-					$mail->CharSet = $modx->config['modx_charset'];
-					$mail->IsHTML($isHtml);
-					$mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
-					$mail->Subject	= $subject;
-					$mail->Body		= $autotext;
-					AddAddressToMailer($mail,"to",$fields['email']);
-					if(!$mail->send()) return 'AutoText: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
+					$modx->mail->IsHTML($isHtml);
+					$modx->mail->From		= ($autosender)? $autosender:$from;
+					$modx->mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
+					$modx->mail->Subject	= $subject;
+					$modx->mail->Body		= $autotext;
+					AddAddressToMailer($modx->mail,"to",$firstEmail);
+					if(!$modx->mail->send()) return 'AutoText: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
 				}
 
 				//defaults to text - test for sendAsHtml
@@ -582,29 +529,13 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				# send mobile email
 				if ($mobile && $mobiletext) {
 					$mobiletext = formMerge($mobiletext,$fields);
-					$mail = new PHPMailer();
-					
-                    //mail or smtp by Dmi3yy
-					if ($smtp == 'smtp') {
-						$mail->IsSMTP();// отсылать используя SMTP
-						$mail->Host	 = $smtphost; // SMTP сервер
-						$mail->SMTPAuth = true;	 // включить SMTP аутентификацию
-						$mail->Username = $smtpfrom; // SMTP username
-						$mail->Password = $smtppass; // SMTP password
-						$mail->From		= $smtpfrom;
-						$mail->Port     = $smtpport;
-					}else{
-						$mail->IsMail();
-						$mail->From		= $from;
-					}
-
-					$mail->CharSet = $modx->config['modx_charset'];
-					$mail->IsHTML($isHtml);
-					$mail->FromName	= $fromname;
-					$mail->Subject	= $subject;
-					$mail->Body		= $mobiletext;
-					AddAddressToMailer($mail,"to",$mobile);
-					$mail->send();
+					$modx->mail->IsHTML($isHtml);
+					$modx->mail->From		= $from;
+					$modx->mail->FromName	= $fromname;
+					$modx->mail->Subject	= $subject;
+					$modx->mail->Body		= $mobiletext;
+					AddAddressToMailer($modx->mail,"to",$mobile);
+					$modx->mail->send();
 				}
 
 			}//end test nomail

@@ -11,11 +11,6 @@
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
-//setlocale (LC_ALL, 'ru_RU.UTF-8');
-
-$_lang["resource_opt_alvisibled"] = 'in URL'; 
-$_lang["resource_opt_alvisibled_help"] = 'alias in url';
-
 
 $_lang["about_msg"] = 'MODX is a <a href="http://modx.com/" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'About MODX';
@@ -1137,12 +1132,6 @@ $_lang["yourinfo_title"] = 'Your info';
 $_lang["yourinfo_total_logins"] = 'Total number of logins:';
 $_lang["yourinfo_username"] = 'You are logged in as:';
 
-
-$_lang["docid_incrmnt_method_title"] = 'Способ добавления Resource ID ';
-$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
-$_lang["docid_incrmnt_method_1"] = 'Минимальный пропущенный ID';
-$_lang["docid_incrmnt_method_2"] = 'Максимальный ID+1';
-
 $_lang["a17_error_reporting_title"] = 'Detection level of the PHP error';
 $_lang["a17_error_reporting_msg"] = 'Set the detection level of the PHP error.';
 $_lang["a17_error_reporting_opt0"] = 'Ignore all';
@@ -1190,20 +1179,26 @@ $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.
 $_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the all files on server. Please update System configuration if you do not have any problem.';
 
 $_lang['email_method_title'] = 'Sendmail method';
-$_lang['email_method_mail'] = 'mail().';
-$_lang['email_method_smtp'] = 'SMTP.';
-$_lang['email_smtp_sender_title'] = 'SMTP mail';
-$_lang['email_host_title'] = 'smtp host';
-$_lang['email_port_title'] = 'smtp port';
-$_lang['email_pass_title'] = 'smtp password';
-
-$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, '.MGR_DIR.'/index.php, '.MGR_DIR.'/includes/config.inc.php)';
+$_lang['email_method_mail'] = 'mail() PHP function';
+$_lang['email_method_smtp'] = 'SMTP Server';
+$_lang['smtp_auth_title'] = 'SMTP-AUTH';
+$_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_username_title'] = 'SMTP user name';
+$_lang['smtp_password_title'] = 'SMTP password';
+$_lang['smtp_port_title'] = 'SMTP port';
 
 $_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
 
+$_lang["resource_opt_alvisibled"] = 'in URL'; 
+$_lang["resource_opt_alvisibled_help"] = 'alias in url';
+$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, '.MGR_DIR.'/index.php, '.MGR_DIR.'/includes/config.inc.php)';
 $_lang['resource_opt_is_published'] = 'Published';
+$_lang["docid_incrmnt_method_title"] = 'Intsrement method Resource ID';
+$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
+$_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
+$_lang["docid_incrmnt_method_2"] = 'Maximal ID+1';
 
 $_lang["cache_type_title"] = 'Document caching type';
 $_lang["cache_type_1"] = 'Cache is based only on document id (standard)';

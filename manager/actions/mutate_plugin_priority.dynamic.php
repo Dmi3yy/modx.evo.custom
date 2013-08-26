@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_plugin')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -77,7 +77,7 @@ $header = '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>MODx</title>
+	<title>MODX</title>
 	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
 	<link rel="stylesheet" type="text/css" href="media/style/'.$useTheme.'style.css" />
 	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
@@ -160,6 +160,7 @@ foreach ($sortables as $list) {
 	</ul>
 </div>
 
+<div class="section">
 <div class="sectionHeader">'.$_lang['plugin_priority'].'</div>
 <div class="sectionBody">
 <p>'.$_lang['plugin_priority_instructions'].'</p>
@@ -180,5 +181,6 @@ foreach ($sortables as $list) {
             
 echo '	</form>
 	</div>
+</div>
 ';
 ?>

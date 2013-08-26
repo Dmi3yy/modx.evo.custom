@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 if(!$modx->hasPermission('edit_web_user')) {
 	$e->setError(3);
@@ -91,7 +91,7 @@ echo $cm->render();
 <div class="sectionBody">
 	<p><?php echo $_lang['web_user_management_msg']; ?></p>
 	<div class="searchbar">
-		<table border="0" style="width:100%">
+		<table border="0" style="width:100%" class="actionButtons">
 			<tr>
 			<td><a class="searchtoolbarbtn" href="index.php?a=87"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['new_web_user']; ?></a></td>
 			<td nowrap="nowrap">
@@ -105,7 +105,6 @@ echo $cm->render();
 			</tr>
 		</table>
 	</div>
-
 	<div>
 	<?php
 

@@ -5,6 +5,7 @@
 текущая нестабильная версия 1.0.11RC-d5.5  (*.08.2013)
 =======================================================
 - удален aDate (теперь в репозитории Extras-Evolution)
+- удален Sitemap (теперь в репозитории Extras-Evolution)
 - удален ajaxSearch (теперь в репозитории Extras-Evolution)
 - удален splitPaginateon (теперь в репозитории Extras-Evolution)
 - удален ListIndexer (теперь в репозитории Extras-Evolution)

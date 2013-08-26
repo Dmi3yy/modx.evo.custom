@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 if(!$modx->hasPermission('edit_user')) {
 	$e->setError(3);
@@ -18,10 +18,9 @@ $sqlQuery = $modx->db->escape($query);
 <div class="sectionBody">
 <p><?php echo $_lang['role_management_msg']; ?></p>
 
-<ul>
+<ul class="actionButtons">
 	<li><a href="index.php?a=38"><?php echo $_lang['new_role']; ?></a></li>
 </ul>
-<br />
 <ul>
 <?php
 

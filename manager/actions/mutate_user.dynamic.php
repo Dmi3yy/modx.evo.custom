@@ -1,5 +1,5 @@
 <?php
-if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 switch((int) $_REQUEST['a']) {
   case 12:
@@ -800,12 +800,9 @@ if (is_array($evtOut))
           </tr>
 		</table>
 	</div>
-</div>
-</div>
 
+<?php if ($use_udperms == 1):?>
 <?php
-
-if ($use_udperms == 1) {
 	$groupsarray = array ();
 
 	if ($_GET['a'] == '12') { // only do this bit if the user is being edited
@@ -824,10 +821,12 @@ if ($use_udperms == 1) {
 			$groupsarray[] = $v;
 	}
 ?>
-
-<div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
+    <div class="tab-page" id="tabAccess">
+    	<h2 class="tab"><?php echo $_lang["access_permissions"] ?></h2>
+    	<script type="text/javascript">tpUser.addTabPage( document.getElementById( "tabAccess" ) );</script>
+    <div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div>
+    <div class="sectionBody">
 <?php
-
 	echo "<p>" . $_lang['access_permissions_user_message'] . "</p>";
 	$sql = "SELECT name, id FROM $dbase.`" . $table_prefix . "membergroup_names` ORDER BY name";
 	$rs = $modx->db->query($sql);
@@ -838,10 +837,12 @@ if ($use_udperms == 1) {
 	}
 ?>
 </div>
-<?php
+<?php endif; ?>
+    </div>
 
-}
-?>
+</div>
+</div>
+
 <input type="submit" name="save" style="display:none">
 <?php
 

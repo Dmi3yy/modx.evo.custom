@@ -76,13 +76,6 @@ EOD;
         function sendEmail($to) {
             global $modx, $_lang;
 
-            $subject = $_lang['password_change_request'];
-            $headers  = "MIME-Version: 1.0\r\n".
-                "Content-type: text/html; charset=\"{$modx->config['modx_charset']}\"\r\n".
-        "From: MODx <{$modx->config['emailsender']}>\r\n".
-                "Reply-To: no-reply@{$_SERVER['HTTP_HOST']}\r\n".
-                "X-Mailer: PHP/".phpversion();
-
             $user = $this->getUser(0, '', $to);
   
             if($user['username']) {
@@ -92,33 +85,16 @@ EOD;
 <p><small>{$_lang['forgot_password_email_fine_print']}</small></p>
 EOD;
 
-                //add smtp from Dmi3yy
-              if ($modx->config['email_method'] == 'smtp') {
-                include_once MODX_MANAGER_PATH . "includes/controls/class.phpmailer.php";
-                $mail = new PHPMailer();
+                $param = array();
+                $param['from']    = "{$modx->config['site_name']}<{$modx->config['emailsender']}>";
+                $param['to']      = "{$user['username']}<{$to}>";
+                $param['subject'] = $_lang['password_change_request'];
+                $param['body']    = $body;
+                $rs = $modx->sendmail($param); //ignore mail errors in this case
                 
-                $mail->IsSMTP();// отсылать используя SMTP
-                $mail->Host  = $modx->config['email_host']; // SMTP сервер
-                $mail->SMTPAuth = true;  // включить SMTP аутентификацию
-                $mail->Username = $modx->config['email_smtp_sender']; // SMTP username
-                $mail->Password = $modx->config['email_pass']; // SMTP password
-                $mail->Port     = $modx->config['email_port']; 
-                $mail->From     = $modx->config['email_smtp_sender'];
+                if(!$rs) $modx->errors[] = $_lang['error_sending_email'];
                 
-                $mail->CharSet = $modx->config["modx_charset"]; 
-                                $mail->IsHTML(true);    
-                                $mail->FromName = $modx->config["site_name"];
-                                $mail->Subject = $subject;
-                                $mail->Body = $body;
-                                $mail->AddAddress($to);
-                                $mail->Send();
-                     
-              }else{
-                $mail = mail($to, $subject, $body, $headers);
-              } 
-                if(!$mail) { $this->errors[] = $_lang['error_sending_email']; }
-   
-                return $mail;  
+                return $rs;
             }
         }
 

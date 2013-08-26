@@ -719,7 +719,8 @@ class Qm {
 					else $jq_mode = '$';
 					
 					// Add action buttons
-                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/save.png\" />'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"documentDirty=false; parent.'.$jq_mode.'.fn.colorbox.close(); return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
+                    $url = $this->modx->makeUrl($doc_id,'','','full');
+                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/save.png\" />'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"parent.location.href=\''.$url.'\'; return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
                     
                     // Modify head
                     $mc->head = '<script type="text/javascript">document.body.style.display="none";</script>';
@@ -800,7 +801,7 @@ class Qm {
             // Check if current document is assigned to one or more doc groups
             $sql= "SELECT id FROM {$table} WHERE document={$docID}";
             $result= $this->modx->db->query($sql);
-            $rowCount= $this->modx->recordCount($result);
+            $rowCount= $this->modx->db->getRecordCount($result);
             
             // If document is assigned to one or more doc groups, check access
             if ($rowCount >= 1) {
@@ -813,7 +814,7 @@ class Qm {
                     // Check if user has access to current document 
                     $sql= "SELECT id FROM {$table} WHERE document = {$docID} AND document_group IN ({$docGroup})";
                     $result= $this->modx->db->query($sql);
-                    $rowCount = $this->modx->recordCount($result);
+                    $rowCount = $this->modx->db->getRecordCount($result);
                     
                     if ($rowCount >= 1) $access = TRUE;
                 }
@@ -895,7 +896,7 @@ class Qm {
 	    if (!$access) {
 	        $sql = "SELECT id FROM {$table} WHERE tmplvarid = {$tvId}";
             $result = $this->modx->db->query($sql);
-            $rowCount = $this->modx->recordCount($result);
+            $rowCount = $this->modx->db->getRecordCount($result);
             // TV is not in any document group
             if ($rowCount == 0) { $access = TRUE; }    
 	    }
@@ -904,7 +905,7 @@ class Qm {
 	    if (!$access && $this->docGroup != '') {
             $sql = "SELECT id FROM {$table} WHERE tmplvarid = {$tvId} AND documentgroup IN ({$this->docGroup})";
             $result = $this->modx->db->query($sql);
-            $rowCount = $this->modx->recordCount($result);
+            $rowCount = $this->modx->db->getRecordCount($result);
             if ($rowCount >= 1) { $access = TRUE; }
         }    
         

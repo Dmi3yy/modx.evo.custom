@@ -12,10 +12,6 @@ $modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://e
 $modx_manager_charset = 'UTF-8';
 setlocale (LC_ALL, 'ru_RU.UTF-8');
 
-$_lang["resource_opt_alvisibled"] = 'Участвует в URL'; 
-$_lang["resource_opt_alvisibled_help"] = 'Для участия данного документа в адресной строке поставьте галку, и наоборот - снимите, если псевдоним этого документа нужно убрать из URL.';
-
-
 $_lang["about_msg"] = 'MODX - это <a href="http://MODX.com/what-is-MODX.html" target="_blank">PHP Application Framework и Content Management System</a>, распространяемая по лицензии <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'О MODX';
 $_lang["access_permission_denied"] = 'У вас недостаточно прав для просмотра данного ресурса.';
@@ -1130,25 +1126,16 @@ $_lang["yourinfo_role"] = 'Ваша роль:';
 $_lang["yourinfo_title"] = 'Информация о вас';
 $_lang["yourinfo_total_logins"] = 'Всего авторизаций:';
 $_lang["yourinfo_username"] = 'Вы авторизованы как:';
-
-
-$_lang["docid_incrmnt_method_title"] = 'Способ добавления Resource ID ';
-$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
-$_lang["docid_incrmnt_method_1"] = 'Минимальный пропущенный ID';
-$_lang["docid_incrmnt_method_2"] = 'Максимальный ID+1';
-
-$_lang['a17_error_reporting_title'] = 'Обнаружение уровня ошибки РНР';
-$_lang['a17_error_reporting_msg'] = 'Набор обнаружения уровня ошибок РНР';
-$_lang['a17_error_reporting_opt0'] = 'Игнорировать все';
-$_lang['a17_error_reporting_opt1'] = 'Игнорировать предупреждения о незначительных ошибках(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang['a17_error_reporting_opt2'] = 'Обнаружить все ошибки кроме E_NOTICE';
-$_lang['a17_error_reporting_opt99'] = 'Обнаружить все';
-
-$_lang["pwd_hash_algo_title"] = 'Hash algorithm';
-$_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
-
-$_lang["enable_bindings_title"]  = 'Enable @Bindings commands';
-$_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
+$_lang["a17_error_reporting_title"] = 'Обнаружение уровня ошибки РНР';
+$_lang["a17_error_reporting_msg"] = 'Набор обнаружения уровня ошибок РНР';
+$_lang["a17_error_reporting_opt0"] = 'Игнорировать все';
+$_lang["a17_error_reporting_opt1"] = 'Игнорировать предупреждения о незначительных ошибках(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang["a17_error_reporting_opt2"] = 'Обнаружить все ошибки кроме E_NOTICE';
+$_lang["a17_error_reporting_opt99"] = 'Обнаружить все';
+$_lang["pwd_hash_algo_title"] = 'Алгоритм шифрования';
+$_lang["pwd_hash_algo_message"] = 'Алгоритм шифрования паролей.';
+$_lang["enable_bindings_title"] = 'Разрешить @-привязки';
+$_lang["enable_bindings_message"] = 'Предотвращает исполнение PHP-кода через использование @-привязок в TV-параметрах. Требуется, если у вас есть пользователи, которые не должны иметь возможность создавать PHP-код, но но могут создавать или редактировать TV-параметры. Вывод любого TV-параметра @-привязкой будет "@-привязки запрещены".';
 $_lang["bkmgr_alert_mkdir"] = 'Фаил не может быть создан.  Праверьте права на папку assets/backup';
 $_lang["bkmgr_restore_msg"] = '<p>Сайт может быть восстановление с помощью файла SQL. </p>';
 $_lang["bkmgr_restore_title"] = 'Восстановить';
@@ -1164,47 +1151,49 @@ $_lang["bkmgr_snapshot_submit"] = 'Создать бекап';
 $_lang["bkmgr_snapshot_list_title"] = 'Список бекапов';
 $_lang["bkmgr_restore_submit"] = 'Восстановить эти данные';
 $_lang["bkmgr_snapshot_nothing"] = 'Нет бекапов';
-
-$_lang['not_readable_dir'] = 'Директория недоступна для записи';
-$_lang['files.dynamic.php1'] = 'Создать PHP-файл';
-$_lang['confirm_delete_dir'] = 'Вы уверены, что хотите удалить папку? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
-$_lang['confirm_delete_dir_recursive'] = 'Вы уверены, что хотите удалить папку со всем ее содержимым? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
-$_lang['files.dynamic.php2']='files.dynamic.php2';
-$_lang['files.dynamic.php3'] = 'files.dynamic.php3';
-$_lang['files.dynamic.php4'] = 'files.dynamic.php4';
-
-$_lang['make_folders_title'] = 'Make end slash URL at the container';
-$_lang['make_folders_message'] = 'The slash to append to Resources set as containers when using FURLs.';
-
-$_lang['check_files_onlogin_title'] = 'Check core files on login';
-$_lang['check_files_onlogin_message'] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
-
-$_lang['configcheck_sysfiles_mod'] = 'Important System Files have been modified.';
-$_lang['configcheck_sysfiles_mod_msg'] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, manager/index.php, manager/includes/config.inc.php)';
-
+$_lang["files.dynamic.php1"] = 'Создать PHP-файл';
+$_lang["files.dynamic.php2"] = 'files.dynamic.php2';
+$_lang["files.dynamic.php3"] = 'files.dynamic.php3';
+$_lang["files.dynamic.php4"] = 'files.dynamic.php4';
+$_lang["not_readable_dir"] = 'Директория недоступна для записи';
+$_lang["confirm_delete_dir"] = 'Вы уверены, что хотите удалить папку? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
+$_lang["confirm_delete_dir_recursive"] = 'Вы уверены, что хотите удалить папку со всем ее содержимым? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
+$_lang["make_folders_title"] = 'Добавлять слэш к контейнеру';
+$_lang["make_folders_message"] = 'При использовании дружественных URL к ресурсу, который является контейнером, добавляется слэш.';
+$_lang["check_files_onlogin_title"] = 'Проверять системные файлы на наличие изменений';
+$_lang["check_files_onlogin_message"] = 'При включении этой опции, важные системные файлы будут проверяться на наличие изменений, типичных для взломанных сайтов. Это не гарантирует полную защиту, но может помочь в предотвращении взлома.';
+$_lang["configcheck_sysfiles_mod"] = 'Системные файлы были изменены.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'Вы включили проверку системных файлов на наличие изменений, характерных для взломанных сайтов. Это не значит, что сайт был взломан, но желательно просмотреть измененные файлы.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
 
 $_lang['email_method_title'] = 'Метод отправки писем';
-$_lang['email_method_mail'] = 'MAIL - ообщения отправляются с помощью функции mail().';
-$_lang['email_method_smtp'] = 'SMTP - сообщения отправляются почтовым сервером, реквизиты которого нужно указать ниже.';
-$_lang['email_smtp_sender_title'] = 'SMTP почта';
-$_lang['email_host_title'] = 'Адрес SMTP-сервера';
-$_lang['email_port_title'] = 'SMTP порт';
-$_lang['email_pass_title'] = 'SMTP пароль';
+$_lang['email_method_mail'] = 'MAIL - cообщения отправляются с помощью функции mail().';
+$_lang['email_method_smtp'] = 'Через SMTP-сервер';
+$_lang['smtp_auth_title'] = 'SMTP авторизация';
+$_lang['smtp_host_title'] = 'Адрес SMTP-сервера';
+$_lang['smtp_username_title'] = 'SMTP почта';
+$_lang['smtp_password_title'] = 'SMTP пароль';
+$_lang['smtp_port_title'] = 'SMTP порт';
 
-$_lang['setting_resource_tree_node_name'] = 'Имя узла дерева ресурсов';
-$_lang['setting_resource_tree_node_name_desc'] = 'Укажите поле ресурс. Следует использовать при формировании узлов в дереве ресурсов. По умолчанию pagetitle, возможны и другие варианты, например, menutitle, alias и т.д..';
+$_lang["setting_resource_tree_node_name"] = 'Название ресурса в дереве';
+$_lang["setting_resource_tree_node_name_desc"] = 'Выберите поле ресурса, которое будет использоваться в качестве названия ресурса в дереве. По умолчанию используется поле "заголовок"; можно использовать любое другое поле, например, "пункт меню", "псевдоним".';
 
-$_lang['resource_opt_is_published'] = 'Опубликован';
-
+$_lang["resource_opt_alvisibled"] = 'Участвует в URL'; 
+$_lang["resource_opt_alvisibled_help"] = 'Для участия данного документа в адресной строке поставьте галку, и наоборот - снимите, если псевдоним этого документа нужно убрать из URL.';
+$_lang["resource_opt_is_published"] = 'Опубликован';
 $_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+$_lang["docid_incrmnt_method_title"] = 'Способ добавления Resource ID ';
+$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
+$_lang["docid_incrmnt_method_1"] = 'Минимальный пропущенный ID';
+$_lang["docid_incrmnt_method_2"] = 'Максимальный ID+1';
+
 $_lang["cache_type_title"] = 'Способ кеширования страниц ';
 $_lang["cache_type_1"] = 'Только с учетом ID (стандартный метод)';
 $_lang["cache_type_2"] = 'C учетом ID и $_GET';
 $_lang["seostrict_title"] = 'Использовать SEO Strict URLs';
 $_lang["seostrict_message"] = 'использование strict URLs удаляет дубли страниц по разным ссылкам';
-$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
-$_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
-$_lang["user_street"] = 'Street';
-$_lang["user_city"] = 'City';
-$_lang["user_other"] = 'Other';
+$_lang["settings_friendlyurls_alert"] = 'Для использования дружественных URL, необходимо сменить имя файла ht.access в папке, в которую установлен MODX, на .htaccess.';
+$_lang["settings_friendlyurls_alert2"] = 'При установке MODX в подпапку необходимо внести изменения в файл .htaccess.';
+$_lang["user_street"] = 'Улица';
+$_lang["user_city"] = 'Город';
+$_lang["user_other"] = 'Другое';

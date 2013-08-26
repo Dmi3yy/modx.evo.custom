@@ -1,5 +1,5 @@
 <?php
-if (IN_MANAGER_MODE!='true') die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if (IN_MANAGER_MODE!='true') die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 if (isset($_REQUEST['id']))
         $id = (int)$_REQUEST['id'];
@@ -154,7 +154,7 @@ if ($numRecords > 0) {
 		exit;
 	} else {
 		$resource = array();
-		while($row = $modx->fetchRow($rs)){
+		while($row = $modx->db->getRow($rs)){
 			$resource[] = $row;
 		}
 
@@ -277,7 +277,6 @@ function movedocument() {
 	  </ul>
 	</div>
 
-<div class="sectionHeader"><?php echo $_lang['page_data_title']?></div>
 <div class="sectionBody">
 
 <div class="tab-pane" id="childPane">

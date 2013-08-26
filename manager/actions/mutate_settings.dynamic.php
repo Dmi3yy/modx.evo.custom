@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('settings')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -517,18 +517,17 @@ function confirmLangChange(el, lkey, elupd){
 	<input onchange="documentDirty=true;" type="radio" name="docid_incrmnt_method" value="1" 
 			<?php echo ($docid_incrmnt_method=='1') ? 'checked="checked"' : "" ; ?> /> 
 			<?php echo $_lang["docid_incrmnt_method_1"]?><br /> 
-			
-	<input onchange="documentDirty=true;" type="radio" name="docid_incrmnt_method" value="2" 
+        <input onchange="documentDirty=true;" type="radio" name="docid_incrmnt_method" value="2" 
 			<?php echo ($docid_incrmnt_method=='2') ? 'checked="checked"' : "" ; ?> /> 
 			<?php echo $_lang["docid_incrmnt_method_2"]?><br /> 
 	</td>
 </tr>
-
 <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr>     
+
 <tr>
-  <td><?php echo $_lang["cache_type_title"] ?></td>
+    <td nowrap class="warning"><b><?php echo $_lang["cache_type_title"] ?></b></td>
   <td>
       
   <input onchange="documentDirty=true;" type="radio" name="cache_type" value="1" 
@@ -961,44 +960,52 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["email_method_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="email_method" value="mail" <?php echo ($email_method=='mail' || !isset($email_method)) ? 'checked="checked"' : "" ;?> />
-              <?php echo $_lang["email_method_mail"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="email_method" value="smtp" <?php echo ($email_method=='smtp') ? 'checked="checked"' : "" ;?> />
-              <?php echo $_lang["email_method_smtp"]?> </td>
+            <td>
+                <?php echo wrap_label($_lang["email_method_mail"],form_radio('email_method','mail', ($email_method=='mail' || !isset($email_method)) ));?><br />
+                <?php echo wrap_label($_lang["email_method_smtp"],form_radio('email_method','smtp', ($email_method=='smtp') ));?><br />
+            </td>
           </tr>
           <tr>
-            <td colspan="2"><div class='split'></div></td>
+            <td colspan="2"><div class="split"></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["email_smtp_sender_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="email_smtp_sender" value="<?php echo isset($email_smtp_sender) ? $email_smtp_sender : "you@example.com" ; ?>" /></td>
+            <td nowrap class="warning"><b><?php echo $_lang["smtp_auth_title"] ?></b></td>
+            <td>
+                <?php echo wrap_label($_lang["yes"],form_radio('smtp_auth','1', ($smtp_auth=='1' || !isset($smtp_auth)) ));?><br />
+                <?php echo wrap_label($_lang["no"],form_radio('smtp_auth','0', ($smtp_auth=='0') ));?><br />
+            </td>
           </tr>
           <tr>
-            <td colspan="2"><div class='split'></div></td>
+            <td colspan="2"><div class="split"></div></td>
           </tr>
 
           <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["email_host_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="email_host" value="<?php echo isset($email_host) ? $email_host : "smtp.example.com" ; ?>" /></td>
+            <td nowrap class="warning"><b><?php echo $_lang["smtp_host_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_host" value="<?php echo isset($smtp_host) ? $smtp_host : "smtp.example.com" ; ?>" /></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class="split"></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["smtp_port_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_port" value="<?php echo isset($smtp_port) ? $smtp_port : "25" ; ?>" /></td>
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["email_pass_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="email_pass" value="<?php echo isset($email_pass) ? $email_pass : "xxxxxx" ; ?>" /></td>
+            <td nowrap class="warning"><b><?php echo $_lang["smtp_username_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_username" value="<?php echo isset($smtp_username) ? $smtp_username : $emailsender ; ?>" /></td>
           </tr>
            <tr>
-            <td colspan="2"><div class='split'></div></td>
+            <td colspan="2"><div class="split"></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["email_port_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="email_port" value="<?php echo isset($email_port) ? $email_port : "25" ; ?>" /></td>
+            <td nowrap class="warning"><b><?php echo $_lang["smtp_password_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type="password" maxlength="255" style="width: 250px;" name="smtp_password" value="********************" autocomplete="off" /></td>
           </tr>
-          <!--/-->
-
           <tr>
-            <td colspan="2"><div class='split'></div></td>
+            <td colspan="2"><div class="split"></div></td>
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["emailsubject_title"] ?></b>
