@@ -895,6 +895,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('denyZipDownload', '0'),
 ('denyExtensionRename', '0'),
 ('showHiddenFiles', '0'),
+('docid_incrmnt_method', '0'),
 ('make_folders', '0'),
 ('tree_page_click', '27'),
 ('clean_uploaded_filename', '1');
