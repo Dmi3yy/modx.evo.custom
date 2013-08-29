@@ -1,8 +1,5 @@
 <?php
-
-$_Lang['install'] = "Установить";
-$_Lang['install2'] = "Добавить в список для установки";
-
+/*List pack */
 $_Lang['version'] = "Версия";
 $_Lang['author'] = "Автор";
 $_Lang['date'] = "Выпущен";
@@ -13,48 +10,35 @@ $_Lang['update'] = "Обновить";
 $_Lang['installed'] = "Установлен";
 $_Lang['installed2'] = "Установлен";
 $_Lang['exit'] = "Выход";
-$_Lang['install'] = "Установить";
-$_Lang['install'] = "Установить";
-$_Lang['install'] = "Установить";
-$_Lang['install'] = "Установить";
+$_Lang['alert_overwrite'] = "Установка данного дополнения перезапишет существующие. Продолжить?";
 
-
-
-
-
+/*Main*/
 $_Lang['store_name'] = "Управление пакетами";
 $_Lang['version_evailble'] = "Доступна новая версия";
 $_Lang['category'] = "Категории";
+
+/*Login form*/
 $_Lang['enter_in_own_repository'] = "Войти в свой репозиторий";
 $_Lang['password'] = "Пароль";
 $_Lang['enter'] = "Войти";
+$_Lang['email'] = "Email";
 $_Lang['register'] = "Зарегистрироваться";
 $_Lang['own_repository'] = "Мой репозиторий";
+$_Lang['login_errors'] = "Неправильный Email или пароль";
 
-
-
-/*     &tpl filters */
+/* &tpl filters */
 $_Lang['s1_1_reated_on'] = "Дата создания";
 $_Lang['s1_2_name'] = "Названию";
 $_Lang['s1_3_position'] = "Позиции";
 $_Lang['s1_4_published'] = "Опубликован";
-
-
 $_Lang['s2_1_up'] = "По убыванию";
 $_Lang['s2_2_down'] = "Возрастание";
-
-
-
-$_Lang['login_errors'] = "Неправильный Email или пароль";
-$_Lang['install'] = "Установить";
-$_Lang['install'] = "Установить";
+$_Lang['search'] = "Поиск по категории: ";
 
 /* faq */
 $_Lang['faq'] = '
-<li><a href="http://modx-store.com/ru/faq/whatfor.html" target="_blank">Зачем свой репозиторий</a></li>
-<li><a href="http://modx-store.com/ru/faq/howtoadd.html" target="_blank">Как добавить пакет в репозиторий</a></li>
-<li><a href="http://modx-store.com/ru/faq/howtocollect.html" target="_blank">Как правильно собрать пакет для установки</a></li>';
-
-
+<li><a href="http://extras.evolution-cms.com/ru/faq/whatfor.html" target="_blank">Зачем свой репозиторий</a></li>
+<li><a href="http://extras.evolution-cms.com/ru/faq/howtoadd.html" target="_blank">Как добавить пакет в репозиторий</a></li>
+<li><a href="http://extras.evolution-cms.com/ru/faq/howtocollect.html" target="_blank">Как правильно собрать пакет для установки</a></li>';
 
 ?>

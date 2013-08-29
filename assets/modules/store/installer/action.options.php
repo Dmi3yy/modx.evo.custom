@@ -7,6 +7,7 @@
 
 <?php
 
+if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
 
 # load setup information file
 $setupPath = $modulePath;
@@ -16,7 +17,7 @@ echo "<h2>" . $_lang['optional_items'] . "</h2><p>" . $_lang['optional_items_not
 
 if (is_file( MODX_BASE_PATH . 'assets/cache/store/install/install/setup.data.sql')) {
 $chk = isset ($_POST['installdata']) && $_POST['installdata'] == "1" ? 'checked="checked"' : "";
-echo '<img src="/assets/modules/install/img/sample_site.png" class="options" alt="Sample Data" />';
+echo '<img src="/assets/modules/store/installer/img/sample_site.png" class="options" alt="Sample Data" />';
 echo "<h3>" . $_lang['sample_web_site'] . "</h3>";
 echo "<p><input type=\"checkbox\" name=\"installdata\" id=\"installdata_field\" value=\"1\" $chk />&nbsp;<label for=\"installdata_field\" >" . $_lang['install_overwrite'] . " <span class=\"comname\" >" . $_lang['sample_web_site'] . "</span></label></p><p><em style='color:red;'>&nbsp;" . $_lang['sample_web_site_note'] . "</em></p><hr />";
 }

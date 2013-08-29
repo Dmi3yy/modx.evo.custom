@@ -1,4 +1,6 @@
 <?php
+if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
+
 $_POST['installmode'] = 1;
 //$_POST['installdata'] = 0;
 $sqlParser = '';
@@ -189,11 +191,11 @@ if (isset ($_POST['tv']) || $installData) {
                     // add tv -> template assignments
                     foreach ($assignments as $assignment) {
                         $template = $modx->db->escape($assignment);
-                        $ts = $modx->db->query("SELECT id FROM `".$table_prefix."site_templates` WHERE templatename='$template';" );
-						//echo "SELECT id FROM `".$table_prefix."site_templates` WHERE templatename='$template';";
+						$where = "WHERE templatename='$template'";
+						if ($template=='*') $where ='';
+                        $ts = $modx->db->query("SELECT id FROM `".$table_prefix."site_templates` $where;" );
                         if ($ds && $ts) {
                             $tRow = $modx->db->getRow($ts,'assoc');
-							//print_r($tRow);
                             $templateId = $tRow['id'];
                             $modx->db->query("INSERT INTO `" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES($id, $templateId)");
                        }

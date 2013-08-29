@@ -4,20 +4,20 @@
 <meta content="easyui help you build your web page easily!" name="description">
 <title>MODx Store</title>
 <link rel="stylesheet" type="text/css" href="media/style/[+manager_theme+]/style.css" /> 
-<link rel="stylesheet" type="text/css" href="/assets/modules/store/css/style.css" /> 
+<link rel="stylesheet" type="text/css" href="[+site_url+]/assets/modules/store/css/style.css" /> 
 <style>
 .info .version {background: url('media/style/[+manager_theme+]/images/icons/refresh.gif') no-repeat}
 .info .autor {background: url('media/style/[+manager_theme+]/images/icons/user.gif') no-repeat}
 .info .date {background: url('media/style/[+manager_theme+]/images/icons/date.gif') no-repeat}
 .info .download {background: url('media/style/[+manager_theme+]/images/icons/arrow_down.png') no-repeat}
 </style>
-<link rel="stylesheet" type="text/css" href="/assets/modules/store/js/fancybox/jquery.fancybox.css" media="screen" />
-<script src="/assets/modules/store/js/jquery.min.js" type="text/javascript"></script>
-<script src="/assets/modules/store/js/store.js" type="text/javascript"></script>
-<script type="text/javascript" src="/assets/modules/store/js/fancybox/jquery.mousewheel-3.0.6.pack.js"></script>
-<script type="text/javascript" src="/assets/modules/store/js/fancybox/jquery.fancybox.js"></script>
+<link rel="stylesheet" type="text/css" href="[+site_url+]/assets/modules/store/js/fancybox/jquery.fancybox.css" media="screen" />
+<script src="[+site_url+]/assets/modules/store/js/jquery.min.js" type="text/javascript"></script>
+<script src="[+site_url+]/assets/modules/store/js/store.js" type="text/javascript"></script>
+<script type="text/javascript" src="[+site_url+]/assets/modules/store/js/fancybox/jquery.mousewheel-3.0.6.pack.js"></script>
+<script type="text/javascript" src="[+site_url+]/assets/modules/store/js/fancybox/jquery.fancybox.pack.js"></script>
 </head>
-<body style="padding:10px; background: #eeeeee url('media/style/[+manager_theme+]/images/body.jpg');">
+<body>
 	<h1>[+store_name+] <span class="version">[+v+]</span></h1>
 	<br>
 	<div id="actions" style="display:none">
@@ -33,16 +33,16 @@
 			<div class="box mh" id="login">
 				<h4>[+enter_in_own_repository+]:</h4>
 				<div class="cart_list">
-					<label style="width:45px;display: inline-block;">E-mail</label>
-					<input type="email" name="name" value="[+user_email+]">
-					<label style="width:45px;display: inline-block;">[+password+]</label>
-					<input type="password" name="password" type="password">
+					Email:<br / >
+					<input type="email" name="name" value="[+user_email+]" placeholder="[+user_email+]">
+					[+password+]:<br / >
+					<input type="password" name="password" type="password" placeholder="[+password+]">
 					<span class="error" style="display:none">[+login_errors+]</span>
 				</div>
-				<br/>
-				<ul class="actionButtons">
-					<li><a href="javascript:store.login()" class="fr" style="margin-left:10px" >[+enter+]</a><a href="#" target="_blank" class="fr">[+register+]</a></li>
+				<ul class="actionButtons loginul">
+					<li><a href="javascript:store.login()" class="loginbut">[+enter+]</a></li>
 				</ul>
+				<a href="http://extras.evolution-cms.com/my-repo/register.html" target="_blank" class="">[+register+]</a>
 			</div>
 
 				<!-- <div class="box logined" style="display:none;">
@@ -76,7 +76,7 @@
 				<div class="box">
 					<ul>
 						<li>Copyright 2013</li>
-						<li><a href="http://mox-store.com" target="_blank">Bumkaka & Dmi3yy</a></li>
+						<li><a href="http://evolution-cms.com" target="_blank">Bumkaka & Dmi3yy</a></li>
 					</ul>
 
 				</div>	
@@ -95,6 +95,9 @@
 					</select>
 
 					<input type="hidden" name="parent" value="2">
+				</div>
+				<div class="search">
+					[+search+]<input id="store_search" onkeyup="store_search( $(this).val() )" type="text" name="store_search" value="" />
 				</div>
 				<div class="item_list">
 				</div>	
@@ -120,7 +123,7 @@
 			<textarea type="hidden" name="hash">[+hash+]</textarea>
 			<div id="tpl_category">
 				<li>
-					<a href="#" class="row.category" data-id="%id%">%title%</a><span> &nbsp;<small>(%count%) </small></span>
+					<a href="#" class="row.category" data-id="%id%" data-tpl="%tpl%">%title%</a><span> &nbsp;<small>(%count%) </small></span>
 				</li>
 			</div>
 			<div id="tpl_category2">
@@ -128,28 +131,62 @@
 					<a href="#" class="row.category2" data-id="%id%">%category%</a><span> &nbsp;<small>(%count%) </small></span>
 				</li>
 			</div>
-			<div id="tpl_item">
+			<div id="tpl_list">
 				<div class="catalog_item %cls%">
-					<div class="catalog_thumb"><i class="%zip%"></i><img src="" width="80px" height="80px"></div>
-					<div class="catalog_info">
-						<div class="info fr">
-							<span class="version"><strong>%version%</strong></span>
-							<span class="autor"><strong>%author%</strong></span>
-							<span class="date"><strong>%date%</strong></span>
-							<span class="download"><strong>%downloads%</strong></span>
+					<div class="info_block">
+						<div class="catalog_thumb"><i class="%zip%"></i><img src="" width="80px" height="80px"></div>
+						<div class="catalog_info">
+							<div class="info fr">
+								<span class="version"><strong>%version%</strong></span>
+								<span class="autor"><strong>%author%</strong></span>
+								<span class="date"><strong>%date%</strong></span>
+								<span class="download"><strong>%downloads%</strong></span>
+							</div>
+							<a class="row-category"><h3>%title%</h3></a>&nbsp;<i class="types">(%type%)</i><br />
+							<span class="descript">%description%</span>
+							<br>
+							<a href="#" class="item-install" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+install+]</a>
+							<a href="#" class="item-reinstall" data-text="[+alert_overwrite+]"  data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+reinstall+] <i class="curr">([+installed+])</i></a>
+							<a href="#" class="item-update" data-text="[+alert_overwrite+]" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+update+] <i class="curr">([+installed+] - %current_version%)</i></a>
+							<select name="link"></select>
 						</div>
-						<a class="row-category"><h3>%title%</h3></a>&nbsp;<i class="types">(%type%)</i><br />
-						<span class="descript">%description%</span>
-						<br>
-						<a href="#" class="item-install" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+install+]</a>
-						<a href="#" class="item-reinstall" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+reinstall+] <i class="curr">([+installed+])</i></a>
-						<a href="#" class="item-update" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+update+] <i class="curr">([+installed+] - %current_version%)</i></a>
 					</div>
+					<div class="blocked_item"></div>
 					<div class="informer loader"></div>
 					<div class="informer"><div>[+installed2+].</div></div>
 				</div>
 
 			</div>
+			
+			
+			<div id="tpl_cart">
+				<div class="catalog_item tpl-cart %cls%">
+					<div class="info_block">
+						<div class="catalog_thumb"><img src=""></div>
+						<div class="catalog_info">
+							<div class="info fr">
+								<span class="version"><strong>%version%</strong></span>
+								<span class="autor"><strong>%author%</strong></span>
+								<span class="date"><strong>%date%</strong></span>
+								<span class="download"><strong>%downloads%</strong></span>
+							</div>
+							<br />
+							<a class="row-category"><h3>%title%</h3></a>&nbsp;<i class="types">(%type%)</i><br />
+							<span class="descript">%description%</span>
+							<br>
+							<a href="#" class="item-install" data-url="%url%" data-id="%id%" data-name="%title%" data-method="%type%">[+install+]</a>
+							<select name="link"></select>
+						</div>
+					</div>
+					<div class="blocked_item"></div>
+					<div class="informer loader"></div>
+					<div class="informer"><div>[+installed2+].</div></div>
+				</div>
+
+			</div>
+			
+			
+			
 		</div>
 		<div id="loading" style="display:none;"></div>
 	</body>

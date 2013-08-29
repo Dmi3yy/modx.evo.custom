@@ -1,4 +1,5 @@
 <?php
+if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
 
 error_reporting(E_ALL & ~E_NOTICE);
 define('MODX_BASE_PATH',realpath('../../../../').'/');
@@ -239,7 +240,9 @@ if (count($moduleTVs )>0) {
                     // add tv -> template assignments
                     foreach ($assignments as $assignment) {
                         $template = $modx->db->escape($assignment);
-                        $ts = $modx->db->query("SELECT id FROM `".$table_prefix."site_templates` WHERE templatename='$template';",$sqlParser->conn);
+						$where = "WHERE templatename='$template'";
+						if ($template=='*') $where ='';
+                        $ts = $modx->db->query("SELECT id FROM `".$table_prefix."site_templates` ".$where.";" );
                         if ($ds && $ts) {
                             $tRow = $modx->db->getRow($ts,'assoc');
                             $templateId = $tRow['id'];
@@ -499,10 +502,9 @@ if (count($moduleSnippets ) > 0) {
 
 // install data
 
-/*
-if ($installData && $moduleSQLDataFile) {
+if (is_file($installPath.'/'.$moduleSQLDataFile)) {
     echo "<p>" . $_lang['installing_demo_site'];
-    $sqlParser->process($moduleSQLDataFile);
+    $sqlParser->process($installPath.'/'.$moduleSQLDataFile);
     // display database results
     if ($sqlParser->installFailed == true) {
         $errors += 1;
@@ -519,7 +521,6 @@ if ($installData && $moduleSQLDataFile) {
         echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
     }
 }
-*/
 
 // always empty cache after install
 

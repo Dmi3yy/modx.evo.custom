@@ -1,11 +1,11 @@
 // <?php 
 /**
- * Store
+ * Extras
  * 
  * first repository for MODX EVO
  * 
  * @category	module
- * @version 	0.1.0 beta
+ * @version 	0.1.1
  * @internal	@properties
  * @internal	@guid store435243542tf542t5t	
  * @internal	@shareparams 1
