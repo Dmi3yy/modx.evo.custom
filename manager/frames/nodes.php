@@ -164,6 +164,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 				default:
 					$nodetitle = $pagetitle;
 			}
+            $node = '';
         	$nodetitle = htmlspecialchars(str_replace(array("\r\n", "\n", "\r"), ' ', $nodetitle));
             $protectedClass = $hasAccess==0 ? ' protectedNode' : '';
             $nodetitleDisplay = $published==0 ? "<span class=\"unpublishedNode\">$nodetitle</span>" : ($hidemenu==1 ? "<span class=\"notInMenuNode$protectedClass\">$nodetitle</span>":"<span class=\"publishedNode$protectedClass\">$nodetitle</span>");
@@ -178,19 +179,27 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $alt.= " ".$_lang['page_data_web_access'].": ".($privateweb ? $_lang['private']:$_lang['public']);
             $alt.= " ".$_lang['page_data_mgr_access'].": ".($privatemgr ? $_lang['private']:$_lang['public']);
 
-            $data = array('id' => $id, 'pagetitle' => $pagetitle, 'menutitle' => $menutitle,'parent' =>$parent,'isfolder' =>$isfolder,'published' =>$published,'deleted' =>$deleted,'type' =>$type,'menuindex' =>$menuindex,'donthit' =>$donthit,'hidemenu' =>$hidemenu,'alias' =>$alias,'contenttype' =>$contenttype,'privateweb' =>$privateweb,'privatemgr' =>$privatemgr,'hasAccess' => $hasAccess, 'template' => $template);
-            // invoke OnNodePrerender event
-            $evtOut = $modx->invokeEvent('OnManagerNodePrerender',$data);
-            if (is_array($evtOut))
-            $output .= implode("\n", $evtOut);
+            $data = array('id' => $id, 'pagetitle' => $pagetitle, 'menutitle' => $menutitle,'parent' =>$parent,
+                'isfolder' =>$isfolder,'published' =>$published,'deleted' =>$deleted,'type' =>$type,'menuindex' =>$menuindex,
+                'donthit' =>$donthit,'hidemenu' =>$hidemenu,'alias' =>$alias,'contenttype' =>$contenttype,'privateweb' =>$privateweb,
+                'privatemgr' =>$privatemgr,'hasAccess' => $hasAccess, 'template' => $template,
+                'nodetitle' => $nodetitle, 'spacer' => $spacer, 'pad' => $pad, 'url' => $url, 'pageIdDisplay' => $pageIdDisplay,'alt' => $alt,
+                'nodetitleDisplay' => $nodetitleDisplay,'weblinkDisplay' => $weblinkDisplay,'pageIdDisplay' => $pageIdDisplay
+            );
+            // invoke OnManagerNodePrerender event
             
+            $evtOut = $modx->invokeEvent('OnManagerNodePrerender',$data);
+            if (is_array($evtOut)) $evtOut = implode("\n", $evtOut);
+            
+            $node = $evtOut;
+            
+            if ($replace =='') {
             if ($donthit) {
                 $icon = ($privateweb||$privatemgr) ? $_style["tree_folder_secure"] : $_style["tree_folder"];
                 $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.$icon.'" onclick="showPopup('.$id.',\''.addslashes($nodetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\'" />&nbsp;';
                 $output .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.addslashes($nodetitle).'\',0); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div>';
                 continue;
             }
-			
             if (!$isfolder) {
                 $icon = ($privateweb||$privatemgr) ? $_style["tree_page_secure"] : $_style["tree_page"];
 				
@@ -207,8 +216,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 elseif($id == $modx->config['error_page'])            $icon = $_style["tree_page_404"];
                 elseif($id == $modx->config['site_unavailable_page']) $icon = $_style["tree_page_hourglass"];
                 elseif($id == $modx->config['unauthorized_page'])     $icon = $_style["tree_page_info"];
-                $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.$icon.'" onclick="showPopup('.$id.',\''.addslashes($nodetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\'" />&nbsp;';
-                $output .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.addslashes($nodetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div>';
+                    $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.$icon.'" onclick="showPopup('.$id.',\''.addslashes($nodetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\'" />&nbsp;';
+                    $node .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.addslashes($nodetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div>';
             }
             else {
                 // expandAll: two type for partial expansion
@@ -221,22 +230,29 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                     elseif($id == $modx->config['error_page'])            $icon = $_style["tree_page_404"];
                     elseif($id == $modx->config['site_unavailable_page']) $icon = $_style["tree_page_hourglass"];
                     elseif($id == $modx->config['unauthorized_page'])     $icon = $_style["tree_page_info"];
-                    $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="'.$_style["tree_minusnode"].'" onclick="toggleNode(this,'.($indent+1).','.$id.',0,'. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folderopen_secure"] : $_style["tree_folderopen"]).'" onclick="showPopup('.$id.',\''.addslashes($nodetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" />&nbsp;';
-                    $output .= '<span onclick="treeAction('.$id.', \''.addslashes($nodetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'<div style="display:block">';
+                        $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="'.$_style["tree_minusnode"].'" onclick="toggleNode(this,'.($indent+1).','.$id.',0,'. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folderopen_secure"] : $_style["tree_folderopen"]).'" onclick="showPopup('.$id.',\''.addslashes($nodetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" />&nbsp;';
+                        $node .= '<span onclick="treeAction('.$id.', \''.addslashes($nodetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'<div style="display:block">';
+                        $output .= $node;
                     makeHTML($indent+1,$id,$expandAll,$theme);
-                    $output .= '</div></div>';
+                        $node = '</div></div>';
                 }
                 else {
-                    $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="'.$_style["tree_plusnode"].'" onclick="toggleNode(this,'.($indent+1).','.$id.',0,'. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" title="'.$_lang['click_to_context'].'" align="absmiddle" style="cursor: pointer" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folder_secure"] : $_style["tree_folder"]).'" onclick="showPopup('.$id.',\''.addslashes($nodetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" />&nbsp;';
-                   	$output .= '<span onclick="treeAction('.$id.', \''.addslashes($nodetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'<div style="display:none"></div></div>';
+                        $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="'.$_style["tree_plusnode"].'" onclick="toggleNode(this,'.($indent+1).','.$id.',0,'. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" title="'.$_lang['click_to_context'].'" align="absmiddle" style="cursor: pointer" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folder_secure"] : $_style["tree_folder"]).'" onclick="showPopup('.$id.',\''.addslashes($nodetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" />&nbsp;';
+                        $node .= '<span onclick="treeAction('.$id.', \''.addslashes($nodetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'<div style="display:none"></div></div>';
                     array_push($closed2, $id);
                 }
             }
-            // invoke OnNodeRender event
+            } else {
+                $node = $evtOut;
+            }
+            
+            // invoke OnManagerNodeRender event
+            $data['node'] = $node;
             $evtOut = $modx->invokeEvent('OnManagerNodeRender',$data);
-            if (is_array($evtOut))
-            $output .= implode("\n", $evtOut);
+            if (is_array($evtOut)) $evtOut = implode("\n", $evtOut);
+            if ($evtOut != '') $node = $evtOut;
 
+            $output .= $node;
             // store vars in Javascript
             if ($expandAll == 1) {
                 echo '<script type="text/javascript"> ';
