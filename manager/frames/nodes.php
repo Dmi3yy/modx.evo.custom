@@ -115,7 +115,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $access = "AND (1={$mgrRole} OR sc.privatemgr=0".
                       (!$docgrp ? ")":" OR dg.document_group IN ({$docgrp}))");
         }
-        $sql = "SELECT DISTINCT sc.id, pagetitle, menutitle, parent, isfolder, published, deleted, type, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
+        $sql = "SELECT DISTINCT sc.id, pagetitle, menutitle, parent, isfolder, published, deleted, type, template, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
                 MAX(IF(1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ({$docgrp})") . ", 1, 0)) AS has_access
                 FROM {$tblsc} AS sc
                 LEFT JOIN {$tbldg} dg on dg.document = sc.id
@@ -132,7 +132,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		global $modx_textdir;
 
 		$node_name_source = $modx->config['resource_tree_node_name'];
-        while(list($id,$pagetitle,$menutitle,$parent,$isfolder,$published,$deleted,$type,$menuindex,$donthit,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = $modx->db->getRow($result,'num'))
+        while(list($id,$pagetitle,$menutitle,$parent,$isfolder,$published,$deleted,$type,$template,$menuindex,$donthit,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = $modx->db->getRow($result,'num'))
         { 	
 			switch($node_name_source)
 			{
@@ -178,6 +178,12 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $alt.= " ".$_lang['page_data_web_access'].": ".($privateweb ? $_lang['private']:$_lang['public']);
             $alt.= " ".$_lang['page_data_mgr_access'].": ".($privatemgr ? $_lang['private']:$_lang['public']);
 
+            $data = array('id' => $id, 'pagetitle' => $pagetitle, 'menutitle' => $menutitle,'parent' =>$parent,'isfolder' =>$isfolder,'published' =>$published,'deleted' =>$deleted,'type' =>$type,'menuindex' =>$menuindex,'donthit' =>$donthit,'hidemenu' =>$hidemenu,'alias' =>$alias,'contenttype' =>$contenttype,'privateweb' =>$privateweb,'privatemgr' =>$privatemgr,'hasAccess' => $hasAccess, 'template' => $template);
+            // invoke OnNodePrerender event
+            $evtOut = $modx->invokeEvent('OnManagerNodePrerender',$data);
+            if (is_array($evtOut))
+            $output .= implode("\n", $evtOut);
+            
             if ($donthit) {
                 $icon = ($privateweb||$privatemgr) ? $_style["tree_folder_secure"] : $_style["tree_folder"];
                 $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.$icon.'" onclick="showPopup('.$id.',\''.addslashes($nodetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\'" />&nbsp;';
@@ -226,6 +232,11 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                     array_push($closed2, $id);
                 }
             }
+            // invoke OnNodeRender event
+            $evtOut = $modx->invokeEvent('OnManagerNodeRender',$data);
+            if (is_array($evtOut))
+            $output .= implode("\n", $evtOut);
+
             // store vars in Javascript
             if ($expandAll == 1) {
                 echo '<script type="text/javascript"> ';
