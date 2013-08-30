@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
-$version = "0.1.1 beta";
 
+$version = "0.1.1.1";
 $Store = new Store;
 
 switch($_REQUEST['action']){
@@ -50,6 +50,7 @@ case 'install':
 		$Store->removeFolder('../assets/cache/store/tmp_install/install/');
 		
 		$Store->copyFolder('../assets/cache/store/tmp_install/'.$dir, '../');
+		$Store->removeFolder('../install/');
 		$Store->removeFolder('../assets/cache/store/tmp_install/');
 		
 		

@@ -770,7 +770,6 @@ REPLACE INTO `{PREFIX}site_templates`
 (id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Home','','0','0','','0','{{header}}\r\n[*content*]\r\n\{{footer}}','0');
 
 
-
 # Default Site Documents
 
 
