@@ -93,6 +93,7 @@ while ($row = $modx->db->getRow($rs)) {
 }
 // blocked due to number of login errors.
 if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
+    $modx->db->update('blocked=1','[+prefix+]user_attributes',"internalKey='{$internalKey}'");
         @session_destroy();
         session_unset();
         jsAlert($e->errors[902]);
