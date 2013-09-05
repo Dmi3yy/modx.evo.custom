@@ -814,7 +814,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('site_unavailable_message','The site is currently unavailable'),
 ('track_visitors','0'),
 ('top_howmany','10'),
-('auto_template_logic','{AUTOTEMPLATELOGIC}'),
+('auto_template_logic','sibling'),
 ('default_template','3'),
 ('old_template',''),
 ('publish_default','1'),
