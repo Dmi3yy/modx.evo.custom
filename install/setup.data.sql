@@ -261,5 +261,4 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}jot_subscriptions` (`id` mediumint(10) NOT N
 
 
 ALTER TABLE `{PREFIX}site_content` ADD `alias_visible` INT( 2 ) NOT NULL DEFAULT '1';
-
 UPDATE `{PREFIX}site_content` set `alias_visible`='1';
