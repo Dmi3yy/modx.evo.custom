@@ -32,12 +32,14 @@
 		    </ul>
 	    </div>
 	   
+	    <div class="section">
 	    <div class="sectionHeader">[+lang.DM_update_title+]</div> 
 	    <div class="sectionBody"> 
 	       <p>[+update.message+]</p>
 		   <form id="backform" method="post" style="display: none;">
 		      <input type="submit" name="back" value="[+lang.DM_process_back+]" />
 		   </form>
+	    </div>
 	    </div>
     </body>
 </html>
