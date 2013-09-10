@@ -649,9 +649,15 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 
 # Form Merge
 function formMerge($docText, $docFields, $vClasses='') {
-    global $formats, $lastitems;
+	global $modx, $formats, $lastitems;
 	if(!$docText) return '';
 
+    $docText = $modx->mergeDocumentContent($docText);
+    $docText = $modx->mergeSettingsContent($docText);
+    $docText = $modx->mergeChunkContent($docText);
+    if(strpos($docText,'[!')!==false) $docText = str_replace(array('[!','!]'),array('[[',']]'),$docText);
+    $docText = $modx->evalSnippets($docText);
+    
 	preg_match_all('~\[\+(.*?)\+\]~', $docText, $matches);
 	for($i=0;$i<count($matches[1]);$i++) {
 		$name = $matches[1][$i];
@@ -1112,6 +1118,11 @@ function filterEformValue($value,$param){
 			//try snippet if chunk is not found
             if(!$tpl) $tpl = ( $doc=$modx->runSnippet($key) )? $doc : false;
 		}
+    $tpl = $modx->mergeDocumentContent($tpl);
+    $tpl = $modx->mergeSettingsContent($tpl);
+    $tpl = $modx->mergeChunkContent($tpl);
+    if(strpos($tpl,'[!')!==false) $tpl = str_replace(array('[!','!]'),array('[[',']]'),$tpl);
+    $tpl = $modx->evalSnippets($tpl);
 		return $tpl;
 	}
 
