@@ -21,9 +21,13 @@ switch((int) $_REQUEST['a']) {
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
+$tbl_active_users       = $modx->getFullTableName('active_users');
+$tbl_site_plugins       = $modx->getFullTableName('site_plugins');
+$tbl_site_plugin_events = $modx->getFullTableName('site_plugin_events');
+$tbl_system_eventnames  = $modx->getFullTableName('system_eventnames');
 
 // check to see the plugin editor isn't locked
-$rs = $modx->db->select('internalKey, username','[+prefix+]active_users',"action='102' AND id='{$id}'");
+$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action='102' AND id='{$id}'");
 $limit = $modx->db->getRecordCount($rs);
 if($limit>1)
 {
@@ -41,7 +45,7 @@ if($limit>1)
 
 if(isset($_GET['id']))
 {
-    $rs = $modx->db->select('*','[+prefix+]site_plugins',"id='{$id}'");
+    $rs = $modx->db->select('*',$tbl_site_plugins,"id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1)
     {
@@ -335,30 +339,30 @@ if(is_array($evtOut)) echo implode("",$evtOut);
         <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
       </tr>
 <?php if($modx->hasPermission('save_role')):?>
-          <tr>
+      <tr>
         <td valign="top" colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?></label> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></td>
-          </tr>
+      </tr>
 <?php endif;?>
-        </table>
-        <!-- PHP text editor start -->
+    </table>
+    <!-- PHP text editor start -->
     <div class="section">
         <div class="sectionHeader">
             <span style="float:left;">&nbsp;<?php echo $_lang['plugin_code']; ?></span>
             <span style="float:right;"><?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : "" ;?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
         </div>
         <div class="sectionBody">
-            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['plugincode']); ?></textarea>
+        <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['plugincode']); ?></textarea>
         </div>
     </div>
-        <!-- PHP text editor end -->
-        </div>
+    <!-- PHP text editor end -->
+</div>
 
 <!-- Configuration/Properties -->
 <div class="tab-page" id="tabProps">
     <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
     <script type="text/javascript">tp.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table>
-          <tr>
+      <tr>
         <td valign="top" colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span></label>":$_lang['plugin_disabled']; ?></td>
       </tr>
           <tr>
@@ -366,7 +370,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
             <td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
                 <?php
-                    $sql =	"SELECT sm.id,sm.name,sm.guid " .
+                    $sql =    "SELECT sm.id,sm.name,sm.guid " .
                             "FROM ".$modx->getFullTableName("site_modules")." sm ".
                             "INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=30 ".
                             "INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource ".
@@ -406,11 +410,11 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     // get selected events
     if(is_numeric($id) && $id > 0) {
         $evts = array();
-        $rs = $modx->db->select('*','[+prefix+]site_plugin_events',"pluginid='{$id}'");
-	$limit = $modx->db->getRecordCount($rs);
+        $rs = $modx->db->select('*',$tbl_site_plugin_events,"pluginid='{$id}'");
+        $limit = $modx->db->getRecordCount($rs);
         for ($i=0; $i<$limit; $i++) {
-	   $row = $modx->db->getRow($rs);
-           $evts[] = $row['evtid'];
+            $row = $modx->db->getRow($rs);
+            $evts[] = $row['evtid'];
         }
     } else {
         if(isset($content['sysevents']) && is_array($content['sysevents'])) {
@@ -430,7 +434,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
         "Template Service Events",
         "User Defined Events"
     );
-    $rs = $modx->db->select('*','[+prefix+]system_eventnames','','service DESC, groupname, name');
+    $rs = $modx->db->select('*',$tbl_system_eventnames,'','service DESC, groupname, name');
     $limit = $modx->db->getRecordCount($rs);
     if($limit==0) echo "<tr><td>&nbsp;</td></tr>";
     else for ($i=0; $i<$limit; $i++) {
@@ -460,9 +464,9 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     }
 ?>
     </table>
-                        </td>
-                    </tr>
-                </table>
+            </td>
+          </tr>
+        </table>
 </div>
 
 </div>

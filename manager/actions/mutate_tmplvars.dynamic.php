@@ -12,6 +12,11 @@ if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
 if(isset($_REQUEST['id'])) $id = (int) $_REQUEST['id'];
 else                       $id = 0;
 
+$tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
+$tbl_site_templates         = $modx->getFullTableName('site_templates');
+$tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
+$tbl_documentgroup_names    = $modx->getFullTableName('documentgroup_names');
+
 // check to see the variable editor isn't locked
 $tbl_active_users = $modx->getFullTableName('active_users');
 $rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=301 AND id='{$id}'");
@@ -23,10 +28,10 @@ if($total>1)
 		if($row['internalKey']!=$modx->getLoginUserID())
 		{
 			$msg = sprintf($_lang['lock_msg'], $row['username'], ' template variable');
-            $e->setError(5, $msg);
-            $e->dumpError();
-        }
-    }
+			$e->setError(5, $msg);
+			$e->dumpError();
+		}
+	}
 }
 // end check for lock
 
@@ -41,28 +46,28 @@ global $content;
 $content = array();
 if(isset($_GET['id']))
 {
-	$rs = $modx->db->select('*','[+prefix+]site_tmplvars',"id={$id}");
+	$rs = $modx->db->select('*',$tbl_site_tmplvars,"id='{$id}'");
 	$total = $modx->db->getRecordCount($rs);
 	if($total>1)
 	{
 		echo 'Oops, Multiple variables sharing same unique id. Not good.';
-        exit;
-    }
+		exit;
+	}
 	if($total<1)
 	{
 		header("Location: /index.php?id={$site_start}");
-    }
-    $content = $modx->db->getRow($rs);
-    $_SESSION['itemname']=$content['caption'];
+	}
+	$content = $modx->db->getRow($rs);
+	$_SESSION['itemname'] = $content['caption'];
 	if($content['locked']==1 && $modx->hasPermission('save_role')!=1)
 	{
-        $e->setError(3);
-        $e->dumpError();
-    }
+		$e->setError(3);
+		$e->dumpError();
+	}
 }
 else
 {
-    $_SESSION['itemname']="New Template Variable";
+	$_SESSION['itemname']="New Template Variable";
 }
 
 // get available RichText Editors
@@ -403,15 +408,15 @@ function decode(s){
 <div class="tab-page" id="tabInfo">
 <h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
 <script type="text/javascript">tpTmplvars.addTabPage( document.getElementById( "tabInfo" ) );</script>
-	<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
-	<div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
+<div class="sectionBody">
 	<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
 	<style type="text/css">
 		label {display:block;}
 	</style>
 <table>
 	<?php
-	    $from = '[+prefix+]site_templates as tpl LEFT JOIN [+prefix+]site_tmplvar_templates as stt ON stt.templateid=tpl.id AND stt.tmplvarid='.$id;
+	    $from = "{$tbl_site_templates} as tpl LEFT JOIN {$tbl_site_tmplvar_templates} as stt ON stt.templateid=tpl.id AND stt.tmplvarid='{$id}'";
 	    $rs = $modx->db->select('id,templatename,tmplvarid',$from);
 ?>
   <tr>
@@ -460,33 +465,33 @@ function decode(s){
 ?>
 <?php if($modx->hasPermission('access_permissions')) { ?>
 <div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
-		<script type="text/javascript">
-		    function makePublic(b){
-		        var notPublic=false;
-		        var f=document.forms['mutate'];
-		        var chkpub = f['chkalldocs'];
-		        var chks = f['docgroups[]'];
-		        if(!chks && chkpub) {
-		            chkpub.checked=true;
-		            return false;
-		        }
-		        else if (!b && chkpub) {
-		            if(!chks.length) notPublic=chks.checked;
-		            else for(i=0;i<chks.length;i++) if(chks[i].checked) notPublic=true;
-		            chkpub.checked=!notPublic;
-		        }
-		        else {
-		            if(!chks.length) chks.checked = (b)? false:chks.checked;
-		            else for(i=0;i<chks.length;i++) if (b) chks[i].checked=false;
-		            chkpub.checked=true;
-		        }
-		    }
-		</script>
+<script type="text/javascript">
+    function makePublic(b){
+        var notPublic=false;
+        var f=document.forms['mutate'];
+        var chkpub = f['chkalldocs'];
+        var chks = f['docgroups[]'];
+        if(!chks && chkpub) {
+            chkpub.checked=true;
+            return false;
+        }
+        else if (!b && chkpub) {
+            if(!chks.length) notPublic=chks.checked;
+            else for(i=0;i<chks.length;i++) if(chks[i].checked) notPublic=true;
+            chkpub.checked=!notPublic;
+        }
+        else {
+            if(!chks.length) chks.checked = (b)? false:chks.checked;
+            else for(i=0;i<chks.length;i++) if (b) chks[i].checked=false;
+            chkpub.checked=true;
+        }
+    }
+</script>
 <p><?php echo $_lang['tmplvar_access_msg']; ?></p>
-		<?php
-		    }
-		    $chk ='';
-		$rs = $modx->db->select('name, id','[+prefix+]documentgroup_names');
+<?php
+		}
+		$chk ='';
+		$rs = $modx->db->select('name, id', $tbl_documentgroup_names);
 		    $limit = $modx->db->getRecordCount($rs);
 		    if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
 		    	$groupsarray = $_POST['docgroups'];
@@ -510,7 +515,7 @@ function decode(s){
 	</div>
 <?php }?>
 
-            </div>
+	</div>
 
 
 	<input type="submit" name="save" style="display:none">

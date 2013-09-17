@@ -105,9 +105,11 @@ top.mainMenu.reloadtree();
 function run()
 {
 	global $modx;
+	$tbl_site_content = $modx->getFullTableName('site_content');
+	
 	$output = '';
-
-    $maxtime = $_POST['maxtime'];
+	
+	$maxtime = $_POST['maxtime'];
 	if(!is_numeric($maxtime)) $maxtime = 30;
 	@set_time_limit($maxtime);
 	
@@ -116,34 +118,33 @@ function run()
 	
 	if ($_POST['reset']=='on')
 	{
-		$tbl_site_content = $modx->getFullTableName('site_content');
-		$modx->db->delete('[+prefix+]site_content');
+		$modx->db->truncate($tbl_site_content);
 		$modx->db->query("ALTER TABLE {$tbl_site_content} AUTO_INCREMENT = 1");
-    }
-
+	}
+	
 	$parent = intval($_POST['parent']);
 	
 	if(is_dir(MODX_BASE_PATH . 'temp/import'))       $filedir = MODX_BASE_PATH . 'temp/import/';
 	elseif(is_dir(MODX_BASE_PATH . 'assets/import')) $filedir = MODX_BASE_PATH . 'assets/import/';
-
-    $filesfound = 0;
-
+	
+	$filesfound = 0;
+	
 	$files = getFiles($filedir);
 	$files = pop_index($files);
-
-    // no. of files to import
+	
+	// no. of files to import
 	$output .= sprintf('<p>' . $_lang['import_files_found'] . '</p>', $filesfound);
-
-    // import files
+	
+	// import files
 	if(0 < count($files))
 	{
-		$rs = $modx->db->update(array('isfolder'=>1),'[+prefix+]site_content',"id={$parent}");
+		$rs = $modx->db->update(array('isfolder'=>1),$tbl_site_content,"id={$parent}");
 		importFiles($parent,$filedir,$files,'root');
-    }
-
+	}
+	
 	$mtime = microtime(); $mtime = explode(' ', $mtime); $mtime = $mtime[1] + $mtime[0];
 	$importend = $mtime;
-    $totaltime = ($importend - $importstart);
+	$totaltime = ($importend - $importstart);
 	$output .= sprintf ('<p>'.$_lang['import_site_time'].'</p>', round($totaltime, 3));
 	
 	if($_POST['convert_link']=='on') convertLink();
@@ -155,7 +156,10 @@ function importFiles($parent,$filedir,$files,$mode) {
     global $modx;
     global $_lang, $allowedfiles;
     global $search_default, $cache_default, $publish_default;
-
+    
+	$tbl_site_content    = $modx->getFullTableName('site_content');
+	$tbl_system_settings = $modx->getFullTableName('system_settings');
+	
     $createdon = time();
     $createdby = $modx->getLoginUserID();
     if (!is_array($files)) return;
@@ -173,7 +177,7 @@ function importFiles($parent,$filedir,$files,$mode) {
 	{
 		if(is_array($value))
 		{
-            // create folder
+			// create folder
 			$alias = $id;
 			printf('<span>'.$_lang['import_site_importing_document'].'</span>', $alias);
 			$field = array();
@@ -197,7 +201,7 @@ function importFiles($parent,$filedir,$files,$mode) {
 				{
 					$file = getFileContent($filepath);
 					list($pagetitle,$content,$description) = treatContent($file,$filename,$alias);
-
+			
 					$date = filemtime($filepath);
 					$field['pagetitle'] = $pagetitle;
 					$field['longtitle'] = $pagetitle;
@@ -205,7 +209,7 @@ function importFiles($parent,$filedir,$files,$mode) {
 					$field['content'] = $modx->db->escape($content);
 					$field['createdon'] = $date;
 					$field['editedon'] = $date;
-					$newid = $modx->db->insert($field,'[+prefix+]site_content');
+					$newid = $modx->db->insert($field, $tbl_site_content);
 					if($newid)
 					{
 						$find = true;
@@ -219,7 +223,7 @@ function importFiles($parent,$filedir,$files,$mode) {
 						exit;
 					}
 				}
-        }
+			}
 			if($find===false)
 			{
 				$date = time();
@@ -228,7 +232,7 @@ function importFiles($parent,$filedir,$files,$mode) {
 				$field['createdon'] = $date;
 				$field['editedon'] = $date;
 				$field['hidemenu'] = '1';
-				$newid = $modx->db->insert($field,'[+prefix+]site_content');
+				$newid = $modx->db->insert($field, $tbl_site_content);
 				if($newid)
 				{
 					$find = true;
@@ -247,10 +251,10 @@ function importFiles($parent,$filedir,$files,$mode) {
 		{
 			// create document
 			if($mode=='sub' && $value == 'index.html') continue;
-            $filename = $value;
+			$filename = $value;
 			$fparts = explode('.',$value);
 			$alias = $fparts[0];
-            $ext = (count($fparts)>1)? $fparts[count($fparts)-1]:"";
+			$ext = (count($fparts)>1)? $fparts[count($fparts)-1]:"";
 			printf("<span>".$_lang['import_site_importing_document']."</span>", $filename);
 			
 			if(!in_array($ext,$allowedfiles)) echo ' - <span class="fail">'.$_lang["import_site_skip"].'</span><br />' . "\n";
@@ -259,7 +263,7 @@ function importFiles($parent,$filedir,$files,$mode) {
 				$filepath = $filedir . $filename;
 				$file = getFileContent($filepath);
 				list($pagetitle,$content,$description) = treatContent($file,$filename,$alias);
-
+				
 				$date = filemtime($filepath);
 				$field = array();
 				$field['type'] = 'document';
@@ -280,7 +284,7 @@ function importFiles($parent,$filedir,$files,$mode) {
 				$field['editedon'] = $date;
 				$field['isfolder'] = 0;
 				$field['menuindex'] = ($alias=='index') ? 0 : 2;
-				$newid = $modx->db->insert($field,'[+prefix+]site_content');
+				$newid = $modx->db->insert($field, $tbl_site_content);
 				if($newid)
 				{
 					echo ' - <span class="success">'.$_lang['import_site_success'] . '</span><br />' . "\n";
@@ -289,57 +293,57 @@ function importFiles($parent,$filedir,$files,$mode) {
 				{
 					echo '<span class="fail">'.$_lang["import_site_failed"]."</span> "
 					.$_lang["import_site_failed_db_error"].$modx->db->getLastError();
-                    exit;
-                }
+					exit;
+				}
 				
 				$is_site_start = false;
 				if($filename == 'index.html') $is_site_start = true;
 				if($is_site_start==true && $_POST['reset']=='on')
 				{
-					$modx->db->update("setting_value={$newid}",'[+prefix+]system_settings',"setting_name='site_start'");
-					$modx->db->update('menuindex=0','[+prefix+]site_content',"id='{$newid}'");
+					$modx->db->update(array('setting_value'=>$newid),$tbl_system_settings,"setting_name='site_start'");
+					$modx->db->update('menuindex=0',$tbl_site_content,"id='{$newid}'");
 				}
-            }
-        }
-    }
+			}
+		}
+	}
 }
 
 function getFiles($directory,$listing = array(), $count = 0)
 {
-    global $_lang;
-    global $filesfound;
-    $dummy = $count;
+	global $_lang;
+	global $filesfound;
+	$dummy = $count;
 	if ($files = scandir($directory))
 	{
 		foreach($files as $file)
 		{
-            if ($file=='.' || $file=='..') continue;
+			if ($file=='.' || $file=='..') continue;
 			elseif ($h = @opendir($directory.$file."/"))
 			{
-                closedir($h);
-                $count = -1;
+				closedir($h);
+				$count = -1;
 				$listing[$file] = getFiles($directory.$file."/",array(), $count + 1);
-            }
+			}
 			elseif(strpos($file,'.htm')!==false)
 			{
-                $listing[$dummy] = $file;
-                $dummy = $dummy + 1;
-                $filesfound++;
-            }
-        }
-    }
+				$listing[$dummy] = $file;
+				$dummy = $dummy + 1;
+				$filesfound++;
+			}
+		}
+	}
 	else
 	{
 		echo '<p><span class="fail">'.$_lang["import_site_failed"]."</span> "
 		.$_lang["import_site_failed_no_open_dir"].$directory.".</p>";
-    }
-    return ($listing);
+	}
+	return ($listing);
 }
 
 function getFileContent($filepath)
 {
-    global $_lang;
-    // get the file
+	global $_lang;
+	// get the file
 	if(!$buffer=file_get_contents($filepath))
 	{
 		echo '<p><span class="fail">' . $_lang['import_site_failed']."</span> "
@@ -356,7 +360,7 @@ function pop_index($array)
 		if($v!=='index.html' && $v!=='index.htm')
 		{
 			$new_array[$k] = $v;
-        }
+		}
 		else
 		{
 			array_unshift($new_array, $v);
@@ -414,8 +418,9 @@ function treatContent($src,$filename,$alias)
 function convertLink()
 {
 	global $modx;
+	$tbl_site_content = $modx->getFullTableName('site_content');
 	
-	$rs = $modx->db->select('id,content','[+prefix+]site_content');
+	$rs = $modx->db->select('id,content', $tbl_site_content);
 	while($row=$modx->db->getRow($rs))
 	{
 		$id = $row['id'];
@@ -431,7 +436,7 @@ function convertLink()
 				if(strpos($_,$modx->config['site_url'])!==false)
 				{
 					$_ = $modx->config['base_url'] . str_replace($modx->config['site_url'],'',$_);
-    }
+				}
 				if($_[0]==='/') $_ = substr($_,1);
 				$_ = str_replace('/index.html','.html',$_);
 				$level = substr_count($_,'../');
@@ -443,11 +448,11 @@ function convertLink()
 					{
 						$dir = array_shift($k);
 						$level--;
-    }
+					}
 					if($dir!='') $dir .= '/';
-}
+				}
 				else $dir = '';
-
+				
 				$_ = trim($_,'./');
 				if(strpos($_,'/')!==false) $_ = substr($_,strrpos($_,'/'));
 				$_ = $dir . str_replace('.html','',$_);
@@ -460,7 +465,7 @@ function convertLink()
 		}
 		$content = join('',$array);
 		$f['content'] = $modx->db->escape($content);
-		$modx->db->update($f,'[+prefix+]site_content',"id='{$id}'");
+		$modx->db->update($f,$tbl_site_content,"id='{$id}'");
 	}
 }
 function clearCache()
