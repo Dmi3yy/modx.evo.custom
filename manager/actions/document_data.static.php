@@ -23,10 +23,6 @@ $tbl_site_keywords         = $modx->getFullTableName('site_keywords');
 $tbl_site_metatags         = $modx->getFullTableName('site_metatags');
 $tbl_site_templates        = $modx->getFullTableName('site_templates');
 
-$parent = $id ? ($modx->db->getValue("SELECT parent FROM " . $tbl_site_content . " WHERE id=$id LIMIT 1")) : 0;
-$donthit = $parent ? ($modx->db->getValue("SELECT donthit FROM " . $tbl_site_content . " WHERE id=$parent LIMIT 1")) : 0;
-if ($donthit) {$id=$_REQUEST['id']=$parent;}
-
 // Get access permissions
 if($_SESSION['mgrDocgroups'])
 	$docgrp = implode(",",$_SESSION['mgrDocgroups']);
