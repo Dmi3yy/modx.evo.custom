@@ -4,7 +4,7 @@
 		global $modx;
 		global $base_url;
 		global $rb_base_url;
-		global $manager_theme;
+		global $_style;
 		global $_lang;
 		global $content;
 
@@ -33,7 +33,7 @@
 				$field_id = str_replace(array('-', '.'),'_', urldecode($field_id));	
                 if($field_value=='') $field_value=0;
 				$field_html .=  '<input id="tv'.$field_id.'" name="tv'.$field_id.'" class="DatePicker" type="text" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;" />';
-				$field_html .=  ' <a onclick="document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/'.($manager_theme ? "$manager_theme/":"").'images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>';
+				$field_html .=  ' <a onclick="document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].value=\'\';document.forms[\'mutate\'].elements[\'tv'.$field_id.'\'].onblur(); return true;" onmouseover="window.status=\'clear the date\'; return true;" onmouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="<?php echo $_style["icons_cal_nodate"]?>" border="0" alt="No date"></a>';
 
 				$field_html .=  '<script type="text/javascript">';
 				$field_html .=  '	window.addEvent(\'domready\', function() {';
@@ -148,11 +148,17 @@
 							function SetUrl(url, width, height, alt){
 								if(lastFileCtrl) {
 									var c = document.mutate[lastFileCtrl];
-									if(c) c.value = url;
+									if(c && c.value != url) {
+									    c.value = url;
+									    $(c).change();
+									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
 									var c = document.mutate[lastImageCtrl];
-									if(c) c.value = url;
+									if(c && c.value != url) {
+									    c.value = url;
+									    $(c).change();
+									}
 									lastImageCtrl = '';
 								} else {
 									return;
@@ -204,11 +210,17 @@
 							function SetUrl(url, width, height, alt){
 								if(lastFileCtrl) {
 									var c = document.mutate[lastFileCtrl];
-									if(c) c.value = url;
+									if(c && c.value != url) {
+									    c.value = url;
+									    $(c).change();
+									}
 									lastFileCtrl = '';
 								} else if(lastImageCtrl) {
 									var c = document.mutate[lastImageCtrl];
-									if(c) c.value = url;
+									if(c && c.value != url) {
+									    c.value = url;
+									    $(c).change();
+									}
 									lastImageCtrl = '';
 								} else {
 									return;
