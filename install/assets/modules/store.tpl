@@ -5,7 +5,7 @@
  * first repository for MODX EVO
  * 
  * @category	module
- * @version 	0.1.1.1
+ * @version 	0.1.2
  * @internal	@properties
  * @internal	@guid store435243542tf542t5t	
  * @internal	@shareparams 1

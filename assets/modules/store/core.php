@@ -1,7 +1,10 @@
 <?php
+//@ini_set("display_errors","0");
+//error_reporting(0);
+
 if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
 
-$version = "0.1.1.1";
+$version = "0.1.2";
 $Store = new Store;
 
 switch($_REQUEST['action']){
@@ -16,10 +19,8 @@ case 'exituser':
 case 'install':
 	if (is_dir(MODX_BASE_PATH.'assets/cache/store/')) $Store->removeFolder(MODX_BASE_PATH.'assets/cache/store/');
 	$id = (int)$_REQUEST['cid'];
-	//$NAME = md5($_GET['name']);
 	@mkdir("../assets/cache/store", 0777);
 	@mkdir("../assets/cache/store/tmp_install", 0777);
-	//@mkdir("../assets/cache/store/tmp_install/".$NAME, 0777);
 	@mkdir("../assets/cache/store/install", 0777);
 	
 	$file = $_POST['file']==''? $_GET['file'] : $_POST['file'];
@@ -35,7 +36,6 @@ case 'install':
 	
 	$zip = new ZipArchive;
 	$res = $zip->open(MODX_BASE_PATH."assets/cache/store/temp.zip");
-
 	if ($res === TRUE) {
 			echo 'Archive open';
 		$zip->extractTo(MODX_BASE_PATH."assets/cache/store/tmp_install");
@@ -64,7 +64,6 @@ case 'install':
 			require "instprocessor-fast.php";
 			$content = ob_get_contents();
 			ob_end_clean();
-			echo $content;
 		} 
 	} else {
 		
@@ -140,23 +139,43 @@ class Store{
 	public function downloadFile ($url, $path) {
 		$newfname = $path;
 		try {
-			$file = fopen ($url, "rb");
-			if ($file) {
-				$newf = fopen ($newfname, "wb");
-				if ($newf)
-				while(!feof($file)) {
-					fwrite($newf, fread($file, 1024 * 8 ), 1024 * 8 );
+			if (ini_get('allow_url_fopen') == true) {
+				$file = fopen ($url, "rb");
+				if (! $file) {
+					throw new Exception("Could not open the file!");
 				}
+				if ($file) {
+					$newf = fopen ($newfname, "wb");
+					if ($newf)
+					while(!feof($file)) {
+						fwrite($newf, fread($file, 1024 * 8 ), 1024 * 8 );
+					}
+				}
+				if ($file) fclose($file);
+				if ($newf) fclose($newf);
+				return true;
+			} else if (function_exists('curl_init')) {
+					$ch = curl_init();
+					curl_setopt($ch, CURLOPT_URL, $url);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					curl_setopt($ch, CURLOPT_HEADER, 0);
+					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+					$safeMode = @ini_get('safe_mode');
+					$openBasedir = @ini_get('open_basedir');
+					if (empty($safeMode) && empty($openBasedir)) {
+						curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+					}
+					$content = curl_exec ($ch);
+					file_put_contents($newfname,$content);				
+				return true;
+			} else {
+			  $this->errors[] = 'Error:Download: '.$e->getFile(). 'line '.$e->getLine().'): '.$e->getMessage();
+			  return false;
 			}
-			
-			
 		} catch(Exception $e) {
-			$this->errors[] = array('ERROR:Download',$e->getMessage());
-			return false;
-		}
-		if ($file) fclose($file);
-		if ($newf) fclose($newf);
-		return true;
+				$this->errors[] = 'Error:Download: '.$e->getFile(). 'line '.$e->getLine().'): '.$e->getMessage();
+				return false;
+			}
 	}
 	
 	
@@ -204,5 +223,4 @@ class Store{
 		}
 	}
 }
-
 ?>
