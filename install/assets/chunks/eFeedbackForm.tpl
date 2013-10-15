@@ -39,7 +39,7 @@
     <input type="text" class="ver" name="vericode" /><img class="feed" src="[+verimageurl+]" alt="Введите код" />
 </p>            
 <p>
-    <input type="submit" name="submit" class="grid_2" value="Отправить сообщение"  class="subeform"/>
+    <input type="submit" name="submit" class="subeform grid_2" value="Отправить сообщение"/>
  </p>
 
 </form>
