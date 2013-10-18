@@ -1328,8 +1328,12 @@ class DocumentParser {
                 $qstring = isset($url_query_string) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string) : ''; // Strip conflicting id/q from query string
                 if ($qstring) $url = "{$site_url}?{$qstring}";
                 else          $url = $site_url;
-                $this->sendRedirect($url,0,'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
-                        exit(0);
+                if (empty($_POST)){
+	                if (('/?'.$qstring) != $_SERVER['REQUEST_URI']) {
+	                	$this->sendRedirect($url,0,'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
+	                	exit(0);
+	            	}
+            	}
                     }
         }elseif ($url_path != $strictURL && $this->documentIdentifier != $this->config['error_page']){
                      // Force page redirect
