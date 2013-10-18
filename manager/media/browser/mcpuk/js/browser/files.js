@@ -163,8 +163,8 @@ browser.returnFile = function(file) {
         window.close();
 
     } else if (this.opener.FCKeditor) {
-        window.opener.SetUrl(fileURL) ;
         window.close() ;
+        window.opener.SetUrl(fileURL) ;
 
     } else if (this.opener.TinyMCE) {
         var win = tinyMCEPopup.getWindowArg('window');
