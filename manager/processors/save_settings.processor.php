@@ -29,9 +29,7 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 				}
 			}
 		}
-	else
-	{
-		if(is_file($sample_htaccess))
+	elseif(is_file($sample_htaccess))
 		{
 			if(!@rename($sample_htaccess,$htaccess))
             {
@@ -48,7 +46,6 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 	}
 }
 	}
-}
 
 $data['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$data['filemanager_path']);
 $data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb_base_dir']); 

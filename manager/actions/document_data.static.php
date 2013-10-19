@@ -21,6 +21,7 @@ $tbl_site_templates        = $modx->getFullTableName('site_templates');
 
 
 
+
 // Get access permissions
 if($_SESSION['mgrDocgroups'])
 	$docgrp = implode(",",$_SESSION['mgrDocgroups']);
