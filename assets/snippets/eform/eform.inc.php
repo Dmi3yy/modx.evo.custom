@@ -194,6 +194,8 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 		}
 
         # sanitize the values with slashes stripped to avoid remote execution of Snippets
+		$version = $modx->getVersionData();
+		if (version_compare($version['version'], '1.0.9', '<=')) {
         modx_sanitize_gpc($fields, array (
             '@<script[^>]*?>.*?</script>@si',
             '@&#(\d+);@e',
@@ -205,6 +207,7 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
             '@\[\[(.*?)\]\]@si',
             '@\[!(.*?)!\]@si'
         ));
+		}
 
 		# validate fields
 		foreach($fields as $name => $value) {
