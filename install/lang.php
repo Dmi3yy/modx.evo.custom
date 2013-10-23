@@ -13,9 +13,9 @@
 $_lang = array ();
 
 #default fallback language file - english
-require_once("lang/english.inc.php");
+require_once("lang/russian-UTF8.inc.php");
 
-$install_language = "english";
+$install_language = "russian-UTF8";
 
 if (isset($_POST['language']) && !stristr($_POST['language'],"..")) {
 	$install_language = $_POST['language'];
