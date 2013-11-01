@@ -9,7 +9,7 @@ if($input === '' || !file_exists(MODX_BASE_PATH . $input)){
   $input = 'assets/snippets/phpthumb/noimage.png';
 }
 
-  $options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "="));
+  $options = strtr($options, Array("," => "&", "_" => "="));
   $path_parts=pathinfo($input);
   require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
   $phpThumb = new phpthumb();
@@ -20,6 +20,11 @@ if($input === '' || !file_exists(MODX_BASE_PATH . $input)){
     $thumb = explode("=", $value);
     $phpThumb->setParameter($thumb[0], $thumb[1]);
     $op[$thumb[0]]=$thumb[1];
+  }
+  if (empty($op['f'])) {
+	$ext = explode ('.',$input);
+	$op['f'] = array_pop ($ext);
+	$phpThumb->setParameter('f', $op['f']);
   }
 
   $tmp=str_replace(MODX_BASE_PATH . "assets/images","",$path_parts['dirname']);
