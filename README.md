@@ -3,6 +3,16 @@
 
 !!Ченжлог не содержит те правки которые не отличаются с офф версией 
 
+текущая версия 1.0.12-d6.5  (01.11.2013)
+=======================================================
+- phpthumb @escapeshellarg
+- fix tv type date
+- new emmet shorts for evo
+- fix matchBrackets in CodeMirror
+- fix bug with site_url and get
+- fix save web user
+
+
 текущая версия 1.0.12-d6.4  (15.10.2013)
 =======================================================
 - обновлен Репозиторий Extras.Evo до версии 0.1.2
