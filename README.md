@@ -11,6 +11,7 @@
 - fix matchBrackets in CodeMirror
 - fix bug with site_url and get
 - fix save web user
+- update tinyMCE to 3.5.10
 
 
 текущая версия 1.0.12-d6.4  (15.10.2013)
