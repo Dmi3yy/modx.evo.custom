@@ -83,7 +83,7 @@ if ($_REQUEST['a'] == '12') {
 	$userdata = array ();
 	$usersettings = array ();
 	$usernamedata = array ();
-	$_SESSION['itemname'] = "New user";
+	$_SESSION['itemname'] = $_lang["new_user"];
 }
 
 // restore saved form
@@ -374,7 +374,7 @@ while ($row = $modx->db->getRow($rs)) {
 			<td>&nbsp;</td>
 			<td><input type="text" name="fax" class="inputBox" value="<?php echo htmlspecialchars($userdata['fax']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
-		  <tr>
+		<tr>
 			<td><?php echo $_lang['user_street']; ?>:</td>
 			<td>&nbsp;</td>
 			<td><input type="text" name="street" class="inputBox" value="<?php echo htmlspecialchars($userdata['street']); ?>" onchange="documentDirty=true;" /></td>
@@ -414,7 +414,7 @@ while ($row = $modx->db->getRow($rs)) {
 			<td>&nbsp;</td>
 			<td>
 				<input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo ($userdata['dob'] ? $modx->toDateFormat($userdata['dob'],'dateOnly'):""); ?>" onblur='documentDirty=true;'>
-				<a onclick="document.userform.dob.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="<?php echo $_style["icons_cal_nodate"]?>" border="0" alt="<?php echo $_lang['remove_date']; ?>"></a>
+				<a onclick="document.userform.dob.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="<?php echo $_style["icons_cal_nodate"]?>" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>
 		  <tr>
@@ -800,7 +800,7 @@ if (is_array($evtOut))
           </tr>
 		</table>
 	</div>
-
+	
 <?php if ($use_udperms == 1):?>
 <?php
 	$groupsarray = array ();
@@ -836,7 +836,7 @@ if (is_array($evtOut))
 		echo "<input type='checkbox' name='user_groups[]' value='" . $row['id'] . "'" . (in_array($row['id'], $groupsarray) ? " checked='checked'" : "") . " />" . $row['name'] . "<br />";
 	}
 ?>
-</div>
+    </div>
 <?php endif; ?>
     </div>
 

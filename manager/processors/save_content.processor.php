@@ -99,7 +99,7 @@ if ($friendly_urls) {
                         }
                         $alias = $tempAlias;
                 }                       
-        }
+		}
 	}
 
 	// check for duplicate alias name if not allowed
@@ -342,7 +342,7 @@ switch ($actionToTake) {
 			"mode" => "new",
 			"id" => $id
 		));
-		
+
 		// deny publishing if not permitted
 		if (!$modx->hasPermission('publish_document')) {
 			$pub_date = 0;
@@ -475,6 +475,9 @@ switch ($actionToTake) {
 		include MODX_MANAGER_PATH . "includes/secure_mgr_documents.inc.php";
 		secureMgrDocument($key);
 
+		// Set the item name for logger
+		$_SESSION['itemname'] = $pagetitle;
+		
 		if ($syncsite == 1) {
 			// empty cache
 			$modx->clearCache('full');
@@ -707,6 +710,9 @@ switch ($actionToTake) {
 		// secure manager documents - flag as private
 		include MODX_MANAGER_PATH . "includes/secure_mgr_documents.inc.php";
 		secureMgrDocument($id);
+
+		// Set the item name for logger
+		$_SESSION['itemname'] = $pagetitle;
 
 		if ($syncsite == 1) {
 			// empty cache

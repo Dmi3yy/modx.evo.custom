@@ -83,6 +83,9 @@ if($content['disabled']) {
 	exit;
 }
 
+// Set the item name for logger
+$_SESSION['itemname'] = $content['name'];
+
 // load module configuration
 $parameter = array();
 if(!empty($content["properties"])){
@@ -111,8 +114,8 @@ function evalModule($moduleCode,$params){
 		extract($params, EXTR_SKIP);
 	}
 	ob_start();
-		$mod = eval($moduleCode);
-		$msg = ob_get_contents();
+	$mod = eval($moduleCode);
+	$msg = ob_get_contents();
 	ob_end_clean();
 	if (isset($php_errormsg))
 	{
@@ -138,6 +141,6 @@ function evalModule($moduleCode,$params){
 			$modx->event->alert("An error occurred while loading. Please see the event log for more information<p>{$msg}</p>");
 		}
 	}
-	unset($modx->event->params); 
+	unset($modx->event->params);
 	return $mod.$msg;
 }

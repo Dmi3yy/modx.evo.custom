@@ -78,7 +78,7 @@ if($_REQUEST['a']=='88') {
 	$userdata = array();
 	$usersettings = array();
 	$usernamedata = array();
-	$_SESSION['itemname']="New web user";
+	$_SESSION['itemname'] = $_lang["new_web_user"];
 }
 
 // restore saved form
@@ -332,7 +332,7 @@ function showHide(what, onoff){
 			<td>&nbsp;</td>
 			<td><input type="text" name="fax" class="inputBox" value="<?php echo isset($_POST['fax']) ? $_POST['fax'] : $userdata['fax']; ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
-		  <tr>
+		<tr>
 			<td><?php echo $_lang['user_street']; ?>:</td>
 			<td>&nbsp;</td>
 			<td><input type="text" name="street" class="inputBox" value="<?php echo htmlspecialchars($userdata['street']); ?>" onchange="documentDirty=true;" /></td>
@@ -372,7 +372,7 @@ function showHide(what, onoff){
 			<td>&nbsp;</td>
 			<td>
 				<input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? $modx->toDateFormat($userdata['dob'],'dateOnly'):""); ?>" onblur='documentDirty=true;'>
-				<a onclick="document.userform.dob.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="<?php echo $_style["icons_cal_nodate"]?>" border="0" alt="<?php echo $_lang['remove_date']; ?>"></a>
+				<a onclick="document.userform.dob.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="<?php echo $_style["icons_cal_nodate"]?>" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>
 		  <tr>

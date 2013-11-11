@@ -363,12 +363,6 @@ input[type="button"] {
 	width: auto !important;
 	cursor:pointer;cursor:hand;
 }
-input.checkbox,
-input.radio,
-input[type="checkbox"],
-input[type="radio"] {
-	vertical-align: -2px;
-}
 select {
 	border: 1px solid #c3c3c3 !important;
 	border: 0;
@@ -1795,7 +1789,24 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .sectionBody th	{
 	padding: 1px 5px;
     text-align:left;
+	vertical-align: top;
 }
+.sectionBody .displayparams, .sectionBody .permissiongroup {
+	margin-bottom: 3px;
+	background-color: #eee;
+	border-collapse: separate;
+	border-spacing: 1px;
+}
+.sectionBody .displayparams th, .sectionBody .displayparams td {
+	padding: 2px 4px;
+}
+.sectionBody .displayparams thead td, .sectionBody .permissiongroup thead td {
+	border-top: none;
+}
+.sectionBody .permissiongroup input, .sectionBody .permissiongroups input {
+	width: 200px;
+}
+
 /* replace warning red color in tabs */
 strong[style*='color:#EF1D1D'] {
 	color: yellow !important;
