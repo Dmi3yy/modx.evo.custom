@@ -1070,7 +1070,6 @@ class ditto {
         }
 			}
 			$cID = ($id !== false) ? $id : $modx->documentObject['id'];
-			if ($cID > 1) {$cID = '0';}
 			$url = $modx->makeURL(trim($cID), '', $queryString);
 			return ($modx->config['xhtml_urls']) ? $url : str_replace("&","&amp;",$url);
 	}
