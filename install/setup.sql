@@ -876,7 +876,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('custom_contenttype','application/rss+xml,application/pdf,application/vnd.ms-word,application/vnd.ms-excel,text/html,text/css,text/xml,text/javascript,text/plain,application/json'),
 ('auto_menuindex','1'),
 ('session.cookie.lifetime','604800'),
-('mail_check_timeperiod','60'),
+('mail_check_timeperiod','600'),
 ('manager_direction','ltr'),
 ('tinymce_editor_theme','editor'),
 ('tinymce_custom_plugins','style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media'),
