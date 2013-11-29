@@ -56,12 +56,14 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 }
 
 ?>
+
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 
 <h1><?php echo $_lang['element_management']; ?></h1>
 
 <div class="sectionBody">
 <div class="tab-pane" id="resourcesPane">
+
     <script type="text/javascript">
         tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ), true);
     </script>
@@ -236,9 +238,10 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
         </ul>
     </div>
 <?php
-    if (is_numeric($_GET['resourcesPane'])) {
-        echo '<script type="text/javascript"> tpResources.setSelectedIndex( '.$_GET['resourcesPane'].' );</script>';
+    if (is_numeric($_GET['tab'])) {
+        echo '<script type="text/javascript"> tpResources.setSelectedIndex( '.$_GET['tab'].' );</script>';
     }
 ?>
 </div>
 </div>
+

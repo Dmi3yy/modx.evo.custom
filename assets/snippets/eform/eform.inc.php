@@ -298,7 +298,7 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 
 		//New in 1.4.2 - classes are set in labels and form elements for invalid fields
 		foreach($rClass as $n => $class){
-			$fields[$n.'_class'] = $fields[$n.'_class']?$fields[$n.'_class'].' '. $class:$class;
+				$fields[$n . '_class'] = $fields[$n . '_class'] ? ' ' . $fields[$n . '_class'] . ' ' . $class : ' ' . $class;
 			$fields[$n.'_vClass'] = $fields[$n.'_vClass']?$fields[$n.'_vClass'].' '. $class:$class;
 			//work around for checkboxes
 			if( isset($formats[$n][6] )){ //have separate id's for check and option tags - set classes as well
@@ -321,7 +321,7 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 
 			#set validation message
 			if (count($rMsg) > 0) {
-			    $rMsg = "<ul><li>" . implode("</li><li>",$rMsg) . "</li></ul>";
+			    $rMsg = "<span>" . implode("</span><span>",$rMsg) . "</span>";
 			    $tmp = str_replace("{fields}", $rMsg, $_lang['ef_required_message']);
 			} else {
 			    $tmp = "";
@@ -498,7 +498,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $report;
+					$modx->mail->Body		= ($isHtml) ? $report : htmlspecialchars_decode($report, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"replyto",$replyto);
 					AddAddressToMailer($modx->mail,"to",$to);
 					AddAddressToMailer($modx->mail,"cc",$cc);
@@ -515,7 +515,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $report;
+					$modx->mail->Body		= ($isHtml) ? $report : htmlspecialchars_decode($report, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$firstEmail);
 					AttachFilesToMailer($modx->mail,$attachments);
 					if(!$modx->mail->send()) return 'CCSender: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
@@ -532,7 +532,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					$modx->mail->From		= ($autosender)? $autosender:$from;
 					$modx->mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $autotext;
+					$modx->mail->Body		= ($isHtml) ? $autotext : htmlspecialchars_decode($autotext, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$firstEmail);
 					if(!$modx->mail->send()) return 'AutoText: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
 					$modx->mail->ClearAllRecipients();
@@ -547,7 +547,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
 					$modx->mail->Subject	= $subject;
-					$modx->mail->Body		= $mobiletext;
+					$modx->mail->Body		= ($isHtml) ? $mobiletext : htmlspecialchars_decode($mobiletext, ENT_QUOTES);
 					AddAddressToMailer($modx->mail,"to",$mobile);
 					$modx->mail->send();
 					$modx->mail->ClearAllRecipients();
@@ -792,9 +792,10 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 		#special case. We need to set the class placeholder but forget about the rest
 		if($name=="vericode"){
 			if(isset($tagAttributes['class'])){
-				$fields[$name.'_class'] = substr($tagAttributes['class'],1,-1);
+				$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
+			} else {
+				$tagAttributes['class'] = '"[+' . $name . '_class+]"';
 			}
-			$tagAttributes['class'] = '"[+'.$name.'_class+]"';
 			$tagAttributes['value'] = '';
 			$newTag = buildTagPlaceholder('input',$tagAttributes,$name);
 			$tpl = str_replace($fieldTags[$i],$newTag,$tpl);
@@ -819,9 +820,10 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 
 		//added in 1.4.2 - add placeholder to class attribute
 		if(isset($tagAttributes['class'])){
-			$fields[$name.'_class'] = substr($tagAttributes['class'],1,-1);
+			$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
+		} else {
+			$tagAttributes['class'] = '"[+' . $name . '_class+]"';
 		}
-		$tagAttributes['class'] = '"[+'.$name.'_class+]"';
 
 		switch($type){
 			case "select":
