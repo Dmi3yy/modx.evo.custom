@@ -232,6 +232,7 @@ $lastInstallTime = '.time().';
 $site_sessionname = \'' . $site_sessionname . '\';
 $https_port = \'443\';
 
+if(!defined(\'MGR_DIR\'))
 '.$mgrdir.'
 
 // automatically assign base_path and base_url
@@ -264,9 +265,25 @@ if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'ba
     $base_url= $url . (substr($url, -1) != "/" ? "/" : "");
     $base_path= $pth . (substr($pth, -1) != "/" && substr($pth, -1) != "\\\\" ? "/" : "");
 }
+
+// check for valid hostnames
+$site_hostname = str_replace(\':\' . $_SERVER[\'SERVER_PORT\'], \'\', $_SERVER[\'HTTP_HOST\']);
+if (!defined(\'MODX_SITE_HOSTNAMES\')) {
+	$site_hostnames_path = $base_path . \'assets/cache/siteHostnames.php\';
+	if (is_file($site_hostnames_path)) {
+		include_once($site_hostnames_path);
+	} else {
+		define(\'MODX_SITE_HOSTNAMES\', \'\');
+	}
+}
+$site_hostnames = explode(\',\', MODX_SITE_HOSTNAMES);
+if (count($site_hostnames) && !in_array($site_hostname, $site_hostnames)) {
+    $site_hostname = $site_hostnames[0];
+}
+
 // assign site_url
 $site_url= ((isset ($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\']) == \'on\') || $_SERVER[\'SERVER_PORT\'] == $https_port) ? \'https://\' : \'http://\';
-$site_url .= $_SERVER[\'HTTP_HOST\'];
+$site_url .= $site_hostname;
 if ($_SERVER[\'SERVER_PORT\'] != 80)
     $site_url= str_replace(\':\' . $_SERVER[\'SERVER_PORT\'], \'\', $site_url); // remove port from HTTP_HOST  
 $site_url .= ($_SERVER[\'SERVER_PORT\'] == 80 || (isset ($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\']) == \'on\') || $_SERVER[\'SERVER_PORT\'] == $https_port) ? \'\' : \':\' . $_SERVER[\'SERVER_PORT\'];

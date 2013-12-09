@@ -206,6 +206,7 @@ foreach ($files as $filename => $filevalue) {
 
 //---Initiate Class-------------------------------------------------- //
 if (class_exists('ditto')) {
+	$dbg_templates = (isset($dbg_templates)) ? $dbg_templates : NULL;
     $ditto = new ditto($dittoID,$format,$_lang,$dbg_templates);
         // create a new Ditto instance in the specified format and language with the requested debug level
 } else {
@@ -703,11 +704,11 @@ $save = (isset($save))? $save : 0;
 */
 $templates = array(
     "default" => "@CODE ".$_lang['default_template'],
-    "base" => $tpl,
-    "alt" => $tplAlt,
-    "first" => $tplFirst,
-    "last" => $tplLast,
-    "current" => $tplCurrentDocument
+	"base" => (isset($tpl)) ? $tpl : NULL,
+	"alt" => (isset($tplAlt)) ? $tplAlt : NULL,
+	"first" => (isset($tplFirst)) ? $tplFirst : NULL,
+	"last" => (isset($tplLast)) ? $tplLast : NULL,
+	"current" => (isset($tplCurrentDocument)) ? $tplCurrentDocument : NULL
 );
 /*
     Param: tpl
@@ -1080,14 +1081,10 @@ if ($debug == 1) {
         $output = $ditto->debug->render_link($dittoID,$ditto_base).$output;
     }
 }
-//outerTpl by Dmi3yy
-if ($outerTpl && $resource) { 
-  if ($modx->getChunk($outerTpl) != "") {
-                        $outerTpl = $modx->getChunk($outerTpl);
-        } else if(substr($outerTpl, 0, 5) == "@CODE") {
-                        $outerTpl = trim(substr($outerTpl, 6));
-        } 
-  $output = str_replace('[+ditto+]',$output,$outerTpl);
+// outerTpl by Dmi3yy & Jako
+if (isset($outerTpl) && $resource) {
+	$outerTpl = $ditto->template->fetch($outerTpl);
+	$output = str_replace(array('[+ditto+]', '[+wrapper+]'), $output, $outerTpl);
 }
 
 return ($save != 3) ? $output : "";
