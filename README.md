@@ -3,7 +3,7 @@
 
 !!Ченжлог не содержит те правки которые не отличаются с офф версией 
 
-текущая версия 1.0.12-d6.5  (01.11.2013)
+текущая версия 1.0.13RC2-d6.5  (19.12.2013)
 =======================================================
 - phpthumb @escapeshellarg
 - fix tv type date
@@ -12,6 +12,8 @@
 - fix bug with site_url and get
 - fix save web user
 - update tinyMCE to 3.5.10
+- fix backup format file Y-m-d_H-i-s - now new always top
+- all fix from (evo 1.0.13 http://tracker.modx.com/versions/278) 
 
 
 текущая версия 1.0.12-d6.4  (15.10.2013)
