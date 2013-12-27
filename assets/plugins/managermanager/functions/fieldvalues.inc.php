@@ -5,7 +5,7 @@
 // mmdefault
 // Sets a default value for a field when creating a new document
 //---------------------------------------------------------------------------------
-function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
+function mm_default($field, $value='', $roles='', $templates='', $eval=false) {	
 	
 	
 	global $mm_fields, $modx;
@@ -125,7 +125,7 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 					$output .= '$j("input[name=isfoldercheck]").removeAttr("checked"); '."\n";
 				}
 			break;
-			
+
 			case 'alias_visible':
 				$new_value = ($value)?'1':'0';
 				$output .= '$j("input[name=alias_visible]").val("'.$new_value.'"); '."\n";

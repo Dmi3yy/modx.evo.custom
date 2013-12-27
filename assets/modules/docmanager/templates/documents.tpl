@@ -18,6 +18,6 @@
     </form>
     <br />
     [+lang.DM_select_range_text+]
-    <div style="clear:both;"></div> 
+    <div style="clear:both;"></div>
     </div>
 </div>

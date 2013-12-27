@@ -276,7 +276,7 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 						toMove.appendTo("#tab'.$newtab.'>table:first").after(toMoveRuler); // Move the table row
 						$j("[name=\''.$fieldname.'\']:first").parents("td").removeAttr( "style" );  // This prevents an IE6/7 bug where the moved field would not be visible until you switched tabs
 						';
-					}	
+					}
 								
 						
 				break;

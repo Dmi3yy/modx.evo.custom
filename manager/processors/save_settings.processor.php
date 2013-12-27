@@ -19,33 +19,33 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 		if(strpos($_,'RewriteBase')===false)
 		{
 			$warnings[] = $_lang["settings_friendlyurls_alert2"];
-			}
+		}
 		elseif(is_writable($htaccess))
-			{
+		{
 			$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$dir}", $_);
-				if(!@file_put_contents($htaccess,$_))
-				{
-					$warnings[] = $_lang["settings_friendlyurls_alert2"];
-				}
+			if(!@file_put_contents($htaccess,$_))
+			{
+				$warnings[] = $_lang["settings_friendlyurls_alert2"];
 			}
 		}
-	elseif(is_file($sample_htaccess))
-		{
-			if(!@rename($sample_htaccess,$htaccess))
-            {
-            	$warnings[] = $_lang["settings_friendlyurls_alert"];
 	}
-			elseif($modx->config['base_url']!=='/')
+	elseif(is_file($sample_htaccess))
 	{
-		$_ = file_get_contents($htaccess);
-				$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$dir}", $_);
-				if(!@file_put_contents($htaccess,$_))
+		if(!@rename($sample_htaccess,$htaccess))
+        {
+        	$warnings[] = $_lang["settings_friendlyurls_alert"];
+		}
+		elseif($modx->config['base_url']!=='/')
 		{
-			$warnings[] = $_lang["settings_friendlyurls_alert2"];
+			$_ = file_get_contents($htaccess);
+			$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$dir}", $_);
+			if(!@file_put_contents($htaccess,$_))
+			{
+				$warnings[] = $_lang["settings_friendlyurls_alert2"];
+			}
 		}
 	}
 }
-	}
 
 $data['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$data['filemanager_path']);
 $data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb_base_dir']); 
@@ -58,9 +58,9 @@ if (isset($data) && count($data) > 0) {
             case 'settings_version':{
                 if($modx->getVersionData('version')!=$data['settings_version']){
                     $modx->logEvent(17,2,'<pre>'.var_export($data['settings_version'],true).'</pre>','fake settings_version');
-                $v = $modx->getVersionData('version');
-            }
-            break;
+                    $v = $modx->getVersionData('version');
+                }
+                break;
             }
 			case 'error_page':
 			case 'unauthorized_page':

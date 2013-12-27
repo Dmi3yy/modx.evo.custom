@@ -9,7 +9,7 @@ class synccache{
     var $parents = array();
     var $aliasVisible = array();
 	
-	
+
     function setCachepath($path) {
         $this->cachePath = $path;
     }
@@ -36,7 +36,7 @@ class synccache{
             //$sql = "SELECT id, IF(alias='', id, alias) AS alias, parent FROM ".$modx->getFullTableName('site_content');
             $sql = "SELECT id, IF(alias='', id, alias) AS alias, parent, alias_visible FROM ".$modx->getFullTableName('site_content');
 			
-			$qh = $modx->db->query($sql);
+            $qh = $modx->db->query($sql);
             if ($qh && $modx->db->getRecordCount($qh) > 0)  {
                 while ($row = $modx->db->getRow($qh)) {
                     $this->aliases[$row['id']] = $row['alias'];
@@ -283,7 +283,7 @@ class synccache{
 
         // Write $somecontent to our opened file.
         if (fwrite($handle, $somecontent) === FALSE) {
-           echo 'Cannot write main MODx cache file! Make sure the assets/cache directory is writable!';
+           echo 'Cannot write main MODX cache file! Make sure the assets/cache directory is writable!';
            exit;
         }
         fclose($handle);

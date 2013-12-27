@@ -3,7 +3,7 @@
  * @name ManagerManager
  * @version 0.3.11 (2012-02-15)
  * 
- * @for MODx Evolution 1.0.x
+ * @for MODX Evolution 1.0.x
  * 
  * @author Nick Crossland - www.rckt.co.uk, studio DivanDesign - www.DivanDesign.biz
  * 
@@ -14,7 +14,7 @@
  * @inspiration HideEditor plugin by Timon Reinhard and Gildas; HideManagerFields by Brett @ The Man Can!
  * 
  * @license Released under the GNU General Public License: http://creativecommons.org/licenses/GPL/2.0/
- */
+*/
 
 $mm_version = '0.3.11'; 
 
@@ -417,7 +417,7 @@ $j(document).ready(function() {
 </script>
 <!-- ManagerManager Plugin :: End -->
 		');
-break;
+	break;
 
 
 

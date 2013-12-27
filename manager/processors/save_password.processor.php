@@ -29,7 +29,7 @@ if(strlen($pass1)<6){
 	echo "An error occured while attempting to save the new password.";
 	exit;
 }
-
+    
 	// invoke OnManagerChangePassword event
 	$modx->invokeEvent('OnManagerChangePassword', array (
 		'userid' => $uid,

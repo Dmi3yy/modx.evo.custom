@@ -22,7 +22,7 @@ $base_path = "";
 // get the required includes
 if($database_user=='') {
         if (!$rt = @include_once MGR_DIR."/includes/config.inc.php") {
-           exit('Could not load MODx configuration file!');
+           exit('Could not load MODX configuration file!');
         }
 }
 
@@ -36,17 +36,17 @@ if($axhandler = (strtoupper($_SERVER['REQUEST_METHOD'])=='GET') ? $_GET['q'] : $
 
     if ($axhandler_rel && strtolower(substr($axhandler_rel, -4)) == '.php') {
     // permission check
-        $allowed = false;
-        foreach($allowed_dirs as $allowed_dir) {
+		$allowed = false;
+		foreach($allowed_dirs as $allowed_dir) {
             if (substr($axhandler_rel, 0, strlen($allowed_dir)) == $allowed_dir) {
                 $allowed = true;
                 break;
             }
         }
 
-        if ($allowed) {
+		if ($allowed) {
             include_once($axhandler);
         }
-    }
+	}
 }
 ?>

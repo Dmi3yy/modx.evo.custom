@@ -55,7 +55,7 @@ function mm_widget_template($fields, $other_param='defaultValue', $roles='', $te
 		
 		}
 		
-		
+	
 		$e->output($output . "\n");	// Send the output to the browser
 	} // end if
 	
