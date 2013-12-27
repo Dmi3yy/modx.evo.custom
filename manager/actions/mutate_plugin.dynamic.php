@@ -365,7 +365,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
     <script type="text/javascript">tp.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table>
-          <tr>
+      <tr>
             <th><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</th>
             <td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                 <option>&nbsp;</option>

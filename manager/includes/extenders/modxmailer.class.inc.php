@@ -28,7 +28,7 @@ class MODxMailer extends PHPMailer
 		
 		$this->mb_language = 'UNI';
 		$this->encode_header_method = '';
-		
+
 		$this->PluginDir = MODX_MANAGER_PATH . 'includes/controls/phpmailer/';
 
 		switch($modx->config['email_method'])

@@ -337,7 +337,7 @@ $reportsmenu = array();
 // site-sched
 if($modx->hasPermission('view_eventlog')) {
 	// eventlog
-$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=70" target="main">'.$_lang['site_schedule'].'</a></li>';
+	$reportsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=70" target="main">'.$_lang['site_schedule'].'</a></li>';
 }	
 if($modx->hasPermission('view_eventlog')) {
 	// eventlog

@@ -79,7 +79,7 @@ table.settings td.head {white-space:nowrap;vertical-align:top;padding-right:20px
 </form>
 
 <?php
-	}
+}
 ?>
 
 

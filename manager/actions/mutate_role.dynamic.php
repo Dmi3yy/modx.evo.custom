@@ -3,23 +3,23 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 switch((int) $_REQUEST['a'])
 {
-  case 35:
+	case 35:
 		if(!$modx->hasPermission('edit_role'))
 		{
-      $e->setError(3);
-      $e->dumpError();
-    }
-    break;
-  case 38:
+			$e->setError(3);
+			$e->dumpError();
+		}
+		break;
+	case 38:
 		if(!$modx->hasPermission('new_role'))
 		{
-      $e->setError(3);
-      $e->dumpError();
-    }
-    break;
-  default:
-    $e->setError(3);
-    $e->dumpError();
+			$e->setError(3);
+			$e->dumpError();
+		}
+		break;
+	default:
+		$e->setError(3);
+		$e->dumpError();
 }
 
 $role = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
@@ -308,7 +308,7 @@ table td {vertical-align:top;}
 function render_form($name, $label, $status='')
 {
 	global $modx,$roledata;
-
+	
 	$tpl = <<< EOT
 <label>
 	<input name="[+name+]check" class="click" type="checkbox" onchange="changestate(document.userform.[+name+])" [+checked+] [+status+]>

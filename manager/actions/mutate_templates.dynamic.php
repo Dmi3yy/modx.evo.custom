@@ -174,7 +174,7 @@ function deletedocument() {
         <div class="sectionBody">
         <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height: 370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['content']); ?></textarea>
         </div>
-        </div>
+    </div>
     <!-- HTML text editor end -->
     <input type="submit" name="save" style="display:none">
 

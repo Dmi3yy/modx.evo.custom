@@ -594,7 +594,7 @@ function confirmLangChange(el, lkey, elupd){
             <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
-			<tr>
+            <tr>
               <td nowrap class="warning"><b><?php echo $_lang["valid_hostnames_title"] ?></b></td>
               <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="valid_hostnames" value="<?php echo isset($valid_hostnames) ? htmlspecialchars($valid_hostnames) : "" ; ?>" /></td>
             </tr>

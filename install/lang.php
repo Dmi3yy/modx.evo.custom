@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Multilanguage functions for MODx Installer
+ * Multilanguage functions for MODX Installer
  *
  * @author davaeron
- * @package MODx
+ * @package MODX
  * @version 1.0
  * 
  * Filename:       /install/lang.php
@@ -20,7 +20,7 @@ $install_language = "russian-UTF8";
 if (isset($_POST['language']) && !stristr($_POST['language'],"..")) {
 	$install_language = $_POST['language'];
 } else {
-	if (isset($_GET['language']) && !stristr($_GET['language'],".."))
+	if (isset($_GET['language']) && !stristr($_GET['language'],"..")) 
 		$install_language = $_GET['language'];
 }
 
@@ -29,7 +29,7 @@ $manager_language = "english";
 if (isset($_POST['managerlanguage']) && !stristr($_POST['managerlanguage'],"..")) {
 	$manager_language = $_POST['managerlanguage'];
 } else {
-	if (isset($_GET['managerlanguage']) && !stristr($_GET['managerlanguage'],".."))
+	if (isset($_GET['managerlanguage']) && !stristr($_GET['managerlanguage'],"..")) 
 		$manager_language = $_GET['managerlanguage'];
 }
 

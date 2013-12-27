@@ -389,7 +389,7 @@ function movedocument() {
 		echo $buffer;
 ?>
 	</div><!-- end tab-page -->
-<?php } ?>
+<?php } ?>	
 
 </div><!-- end documentPane -->
 </div><!-- end sectionBody -->

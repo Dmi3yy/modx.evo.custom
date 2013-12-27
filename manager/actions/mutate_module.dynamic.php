@@ -145,10 +145,10 @@ function showParameters(ctrl) {
         for(p = 0; p < dp.length; p++) {
             dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
             ar = dp[p].split("=");
-            key = ar[0];		// param
+            key = ar[0];     // param
             ar = (ar[1]+'').split(";");
-            desc = ar[0];	// description
-            dt = ar[1];		// data type
+            desc = ar[0];   // description
+            dt = ar[1];     // data type
             value = decode((ar[2])? ar[2]:'');
 
             // store values for later retrieval
@@ -175,7 +175,7 @@ function showParameters(ctrl) {
                         ls = (ar[2]+'').split(",");
                         if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
                         c = '<select name="prop_'+key+'" size="'+ls.length+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
-                        for(i=0;i<ls.length;i++){
+                        for(i=0;i<ls.length;i++) {
                             c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
                         }
                         c += '</select>';
@@ -183,19 +183,19 @@ function showParameters(ctrl) {
                     case 'list-multi':
                         value = (ar[3]+'').replace(/^\s|\s$/,"");
                         arrValue = value.split(",")
-                        ls = (ar[2]+'').split(",");
+                            ls = (ar[2]+'').split(",");
                         if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
                         c = '<select name="prop_'+key+'" size="'+ls.length+'" multiple="multiple" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
-                        for(i=0;i<ls.length;i++){
-                            if(arrValue.length){
-                                for(j=0;j<arrValue.length;j++){
-                                    if (ls[i] == arrValue[j]) {
-                                    c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
-                                }else{
-                                    c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
+                        for(i=0;i<ls.length;i++) {
+                            if(arrValue.length) {
+                                for(j=0;j<arrValue.length;j++) {
+                                    if(ls[i]==arrValue[j]) {
+                                        c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
+                                    } else {
+                                        c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
+                                    }
                                 }
-                                }
-                            }else{
+                            } else {
                                 c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
                             }
                         }
@@ -379,7 +379,7 @@ function SetUrl(url, width, height, alt) {
         </div>
         <div class="sectionBody">
         <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? 'soft' : 'off'?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['modulecode'])?></textarea>
-    </div>
+        </div>
     <!-- PHP text editor end -->
     </div>
 

@@ -306,21 +306,21 @@ class ditto {
 		}
 
 		if (in_array("date",$this->fields["display"]["custom"])) {
-			$timestamp = ($resource[$dateSource] != "0") ? $resource[$dateSource] : $resource["createdon"];
+			$timestamp = ($resource[$dateSource] != "0") ? $resource[$dateSource] : $resource["createdon"];	
 			if (is_array($timestamp)) {
 			    $timestamp[1] = is_int($timestamp[1]) ? $timestamp[1] : strtotime($timestamp[1]);
                 $timestamp = $timestamp[1] + $timestamp[0];
-            }
+            }   
 			$placeholders['date'] = strftime($dateFormat,$timestamp);
 		}
 		
 		if (in_array("content",$this->fields["display"]["db"]) && $this->format != "html") {
-			$placeholders['content'] = $this->relToAbs($resource['content'], $modx->config['site_url']);
-		}
-		
-		if (in_array("introtext",$this->fields["display"]["db"]) && $this->format != "html") {
-			$placeholders['introtext'] = $this->relToAbs($resource['introtext'], $modx->config['site_url']);
-		}
+            $placeholders['content'] = $this->relToAbs($resource['content'], $modx->config['site_url']);
+        }
+         
+        if (in_array("introtext",$this->fields["display"]["db"]) && $this->format != "html") {
+            $placeholders['introtext'] = $this->relToAbs($resource['introtext'], $modx->config['site_url']);
+        }
 		
 		$customPlaceholders = $ph;
 		// set custom placeholder
@@ -859,7 +859,7 @@ class ditto {
 
 	// ---------------------------------------------------
 
-    function getChildIDs($IDs, $depth) {
+	function getChildIDs($IDs, $depth) {
 		global $modx;
 		$depth = intval($depth);
 		$kids = array();
@@ -901,7 +901,7 @@ class ditto {
       $where = ($where == "") ? "" : substr(str_replace('@eq','=',$where), 5);
       $left_join_tvc = "LEFT JOIN $tbltvc tvc ON sc.id = tvc.contentid";
     }else{
-      $where = ($where == "") ? "" : 'AND sc.' . implode('AND sc.', preg_replace("/^\s/i", "", explode('AND', $where)));
+			$where= ($where == "") ? "" : 'AND sc.' . implode('AND sc.', preg_replace("/^\s/i", "", explode('AND', $where)));
       $left_join_tvc = '';
     }
       
@@ -1027,7 +1027,7 @@ class ditto {
 	// Function: buildURL
 	// Build a URL with regard to Ditto ID
 	// ---------------------------------------------------
-
+	
 	public static function buildURL($args,$id=false,$dittoIdentifier=false) {
 		global $modx, $dittoID;
 			$dittoID = ($dittoIdentifier !== false) ? $dittoIdentifier : $dittoID;
@@ -1057,7 +1057,7 @@ class ditto {
 				}
 			}
 			$queryString = "";
-			foreach ($query as $param=>$value){
+			foreach ($query as $param=>$value) {
 				
         //$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
         
@@ -1115,7 +1115,7 @@ class ditto {
 			$previousplaceholder = "";
 			$nextplaceholder = "";
 		}
-	$split = "";
+		$split = "";
 		if ($previous > -1 && $next < $total)
 			$split = $paginateSplitterCharacter;
 		if ($previous > -1)
@@ -1156,15 +1156,15 @@ class ditto {
 			}
 		}
 		if ($totalpages>1){
-			$modx->setPlaceholder($dittoID."next", $nextplaceholder);
-			$modx->setPlaceholder($dittoID."previous", $previousplaceholder);
-			$modx->setPlaceholder($dittoID."pages", $pages);	
+		$modx->setPlaceholder($dittoID."next", $nextplaceholder);
+		$modx->setPlaceholder($dittoID."previous", $previousplaceholder);
+		$modx->setPlaceholder($dittoID."pages", $pages);
 		}	
 		$modx->setPlaceholder($dittoID."splitter", $split);
 		$modx->setPlaceholder($dittoID."start", $start +1);
 		$modx->setPlaceholder($dittoID."urlStart", $start);
 		$modx->setPlaceholder($dittoID."stop", $limiter);
-		$modx->setPlaceholder($dittoID."total", $total);
+		$modx->setPlaceholder($dittoID."total", $total);	
 		$modx->setPlaceholder($dittoID."perPage", $summarize);
 		$modx->setPlaceholder($dittoID."totalPages", $totalpages);
 		$modx->setPlaceholder($dittoID."ditto_pagination_set", true);

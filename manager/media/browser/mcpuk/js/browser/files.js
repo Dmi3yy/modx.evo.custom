@@ -165,7 +165,7 @@ browser.returnFile = function(file) {
     } else if (this.opener.FCKeditor) {
         window.close() ;
         window.opener.SetUrl(fileURL) ;
-
+        
     } else if (this.opener.TinyMCE) {
         var win = tinyMCEPopup.getWindowArg('window');
         win.document.getElementById(tinyMCEPopup.getWindowArg('input')).value = fileURL;

@@ -49,7 +49,7 @@ class logHandler {
     function writeToLog() {
         global $modx;
         $tbl_manager_log = $modx->getFullTableName('manager_log');
-
+        
         if($this->entry['internalKey'] == "") {
             $this->logError("internalKey not set.");
             return;

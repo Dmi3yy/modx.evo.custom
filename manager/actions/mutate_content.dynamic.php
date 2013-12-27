@@ -339,15 +339,15 @@ function templateWarning() {
     if (curTemplate == newTemplate) {return;}
 
     if(documentDirty===true) {
-    if (confirm('<?php echo $_lang['tmplvar_change_template_msg']?>')) {
-        documentDirty=false;
-        document.mutate.a.value = <?php echo $action?>;
-        document.mutate.newtemplate.value = newTemplate;
-        document.mutate.submit();
-    } else {
-        dropTemplate[curTemplateIndex].selected = true;
+        if (confirm('<?php echo $_lang['tmplvar_change_template_msg']?>')) {
+            documentDirty=false;
+            document.mutate.a.value = <?php echo $action?>;
+            document.mutate.newtemplate.value = newTemplate;
+            document.mutate.submit();
+        } else {
+            dropTemplate[curTemplateIndex].selected = true;
+        }
     }
-}
     else {
         document.mutate.a.value = <?php echo $action?>;
         document.mutate.newtemplate.value = newTemplate;
@@ -798,7 +798,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
 						$tvDescription = (!empty($row['description'])) ? '<br /><span class="comment">' . $row['description'] . '</span>' : '';
 						$tvInherited = (substr($tvPBV, 0, 8) == '@INHERIT') ? '<br /><span class="comment inherited">(' . $_lang['tmplvars_inherited'] . ')</span>' : '';
-                        
+                       
                         echo "\t\t",'<tr style="height: 24px;"><td align="left" valign="top" width="150"><span class="warning">',$row['caption'],"</span>\n",
                              "\t\t\t",$tvDescription,$tvInherited,"</td>\n",
                              "\t\t\t",'<td valign="top" style="position:relative;',($row['type'] == 'date' ? '' : ''),'">',"\n",

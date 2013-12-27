@@ -233,7 +233,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
             $value = parseInput($value);
             $id = '_'.time();
             if(!$params['vpid']) $params['vpid'] = $id;
-                $sTag = "<iframe"; $eTag = "</iframe>";
+            $sTag = "<iframe"; $eTag = "</iframe>";
             $autoMode = "0";
             $w = $params['width'];
             $h = $params['height'];
@@ -264,7 +264,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
             break;
 
         case "datagrid":
-            include_once MODX_MANAGER_PATH . "includes/controls/datagrid.class.php";
+            include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
             $grd = new DataGrid('',$value);
 
             $grd->noRecordMsg		=$params['egmsg'];
@@ -366,7 +366,7 @@ function decodeParamValue($s){
 // returns an array if a delimiter is present. returns array is a recordset is present
 function parseInput($src, $delim="||", $type="string", $columns=true) { // type can be: string, array
 	global $modx;
-   if (is_resource($src)) {
+    if (is_resource($src)) {
         // must be a recordset
         $rows = array();
         while ($cols = $modx->db->getRow($src,'num')) $rows[] = ($columns)? $cols : implode(" ",$cols);

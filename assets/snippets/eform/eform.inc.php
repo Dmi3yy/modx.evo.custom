@@ -43,11 +43,11 @@ $GLOBALS['optionsName'] = "eform"; //name of pseudo attribute used for format se
 $GLOBALS['efPostBack'] = false;
 
 function eForm($modx,$params) {
-global $_lang;
-global $debugText;
-global $formats,$fields,$efPostBack;
+	global $_lang;
+	global $debugText;
+	global $formats,$fields,$efPostBack;
 
-$fields = array(); //reset fields array - needed in case of multiple forms
+	$fields = array(); //reset fields array - needed in case of multiple forms
 
 // define some variables used as array index
 $_dfnMaxlength = 6;
@@ -141,18 +141,18 @@ $_dfnMaxlength = 6;
 			if ($isDebug && !function_exists($beforeFormParse)) {
 				$fields['debug'] .= 'eFormOnBeforeFormParse event: Could not find the function ' . $beforeFormParse;
 			} else {
-			$templates = array('tpl'=>$tpl,'report'=>$report,'thankyou'=>$thankyou,'autotext'=>$autotext);
+				$templates = array('tpl' => $tpl, 'report' => $report, 'thankyou' => $thankyou, 'autotext' => $autotext);
 				if ($beforeFormParse($fields, $templates) === false) {
 					return '';
 				} elseif (is_array($templates)) {
-				extract($templates); // extract back into original variables
-		}
-	}
+					extract($templates); // extract back into original variables
+				}
+			}
 		}
 	}
 
-# parse form for formats and generate placeholders
-$tpl = eFormParseTemplate($tpl,$isDebug);
+	# parse form for formats and generate placeholders
+	$tpl = eFormParseTemplate($tpl,$isDebug);
 
 	if ($efPostBack) {
 
@@ -171,11 +171,11 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 				$fields[$name] = array_filter($value,create_function('$v','return (!empty($v));'));
 			} else {
 				if ($allowhtml && $formats[$name][2]=='html') {
-                    $fields[$name] = stripslashes($value);
-                } else {
-                    $fields[$name] = strip_tags(stripslashes($value));
-                }
-            }
+					$fields[$name] = stripslashes($value);
+				} else {
+					$fields[$name] = strip_tags(stripslashes($value));
+				}
+			}
 		}
 
 		# get uploaded files
@@ -193,20 +193,20 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 			}
 		}
 
-        # sanitize the values with slashes stripped to avoid remote execution of Snippets
+		# sanitize the values with slashes stripped to avoid remote execution of Snippets
 		$version = $modx->getVersionData();
 		if (version_compare($version['version'], '1.0.9', '<=')) {
-        modx_sanitize_gpc($fields, array (
-            '@<script[^>]*?>.*?</script>@si',
-            '@&#(\d+);@e',
-            '@\[\~(.*?)\~\]@si',
-            '@\[\((.*?)\)\]@si',
-            '@{{(.*?)}}@si',
-            '@\[\+(.*?)\+\]@si',
-            '@\[\*(.*?)\*\]@si',
-            '@\[\[(.*?)\]\]@si',
-            '@\[!(.*?)!\]@si'
-        ));
+			modx_sanitize_gpc($fields, array(
+				'@<script[^>]*?>.*?</script>@si',
+				'@&#(\d+);@e',
+				'@\[\~(.*?)\~\]@si',
+				'@\[\((.*?)\)\]@si',
+				'@{{(.*?)}}@si',
+				'@\[\+(.*?)\+\]@si',
+				'@\[\*(.*?)\*\]@si',
+				'@\[\[(.*?)\]\]@si',
+				'@\[!(.*?)!\]@si'
+			));
 		}
 
 		# validate fields
@@ -277,9 +277,9 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 			}
 		}
 
-// Changed in 1.4.4.5  - now expects 4 parameters
+		// Changed in 1.4.4.5 - now expects 4 parameters
 		// Changed in 1.4.4.8 - Multiple event functions separated by comma.
-	if ($eFormOnValidate) {
+		if ($eFormOnValidate) {
 			$eFormOnValidate = explode(',', $eFormOnValidate);
 			foreach ($eFormOnValidate as $onValidate) {
 				$onValidate = trim($onValidate);
@@ -291,33 +291,33 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 					}
 				}
 			}
-	}
+		}
 
 
-	if(count($vMsg)>0 || count($rMsg)>0){
+		if(count($vMsg)>0 || count($rMsg)>0){
 
-		//New in 1.4.2 - classes are set in labels and form elements for invalid fields
-		foreach($rClass as $n => $class){
+			//New in 1.4.2 - classes are set in labels and form elements for invalid fields
+			foreach($rClass as $n => $class){
 				$fields[$n . '_class'] = $fields[$n . '_class'] ? ' ' . $fields[$n . '_class'] . ' ' . $class : ' ' . $class;
-			$fields[$n.'_vClass'] = $fields[$n.'_vClass']?$fields[$n.'_vClass'].' '. $class:$class;
-			//work around for checkboxes
-			if( isset($formats[$n][6] )){ //have separate id's for check and option tags - set classes as well
-				foreach( explode(',',$formats[$n][6]) as $id)
-					$fields[$id.'_vClass'] =	$fields[$id.'_vClass'] ? $fields[$id.'_vClass'].' '. $class : $class;
+				$fields[$n.'_vClass'] = $fields[$n.'_vClass']?$fields[$n.'_vClass'].' '. $class:$class;
+				//work around for checkboxes
+				if( isset($formats[$n][6] )){ //have separate id's for check and option tags - set classes as well
+					foreach( explode(',',$formats[$n][6]) as $id)
+						$fields[$id.'_vClass'] =	$fields[$id.'_vClass'] ? $fields[$id.'_vClass'].' '. $class : $class;
+				}
 			}
-		}
 
-		//add debugging info to fields array
-		if($isDebug){
-			ksort($fields);
-			if($isDebug>1){
-				$debugText .= "<br /><strong>Formats array:</strong><pre>". var_export($formats,true).'</pre>';
-				$debugText .= "<br /><strong>Fields array:</strong><pre>". var_export($fields,true).'</pre>';
-				$debugText .= "<br /><strong>Classes parsed :</strong><pre>" . var_export($rClass,true) ."</pre>";
+			//add debugging info to fields array
+			if($isDebug){
+				ksort($fields);
+				if($isDebug>1){
+					$debugText .= "<br /><strong>Formats array:</strong><pre>". var_export($formats,true).'</pre>';
+					$debugText .= "<br /><strong>Fields array:</strong><pre>". var_export($fields,true).'</pre>';
+					$debugText .= "<br /><strong>Classes parsed :</strong><pre>" . var_export($rClass,true) ."</pre>";
+				}
+				$debugText .= "<br /><strong>eForm configuration:</strong><pre>\n". var_export($params,true).'</pre>';
+				$fields['debug']=$debugText;
 			}
-			$debugText .= "<br /><strong>eForm configuration:</strong><pre>\n". var_export($params,true).'</pre>';
-			$fields['debug']=$debugText;
-		}
 
 			#set validation message
 			if (count($rMsg) > 0) {
@@ -331,7 +331,7 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 				$modx->setPlaceholder('validationmessage',str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']));
 			else
 				$fields['validationmessage'] .= str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']);
-	} else {
+		} else {
 
 			# format report fields
 			foreach($fields as $name => $value) {
@@ -341,14 +341,14 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 					switch ($datatype)  {
 
 						case "integer":
-							$value = number_format( (float) $value);  //EM~
+							$value = number_format( (float) $value);	//EM~
 							break;
 						case "float":
 							$localeInfo = localeconv();
 							$th_sep = empty($_lang['ef_thousands_separator'])?$localeInfo['thousands_sep']:$_lang['ef_thousands_separator'];
 							$dec_point= $localeInfo['decimal_point'];
-$debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
-							$value = number_format((float) $value, 2, $dec_point, $th_sep);  //EM~
+							$debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
+							$value = number_format((float) $value, 2, $dec_point, $th_sep);	//EM~
 							break;
 						case "date":
 							$format_string = isset($_lang['ef_date_format']) ? $_lang['ef_date_format'] : '%d-%b-%Y %H:%M:%S';
@@ -421,12 +421,12 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					if ($isDebug && !function_exists($beforeMailSent)) {
 						$fields['debug'] .= 'eFormOnBeforeMailSent event: Could not find the function ' . $beforeMailSent;
 					} elseif ($beforeMailSent($fields) === false) {
-					if( isset($fields['validationmessage']) && !empty($fields['validationmessage']) ){
-						//register css and/or javascript
+						if (isset($fields['validationmessage']) && !empty($fields['validationmessage'])) {
+							//register css and/or javascript
 							if (isset($startupSource)) {
 								efRegisterStartupBlock($startupSource);
 							}
-						return formMerge($tpl,$fields);
+							return formMerge($tpl, $fields);
 						} else {
 							return;
 						}
@@ -488,10 +488,10 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				# added in 1.4.4.8 - Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.
 				if ($fields['email']) {
 					$firstEmail = array_shift(explode(',', $fields['email']));
-					}else{
+				} else {
 					$firstEmail = '';
-					}	
-					
+				}
+
 				if(!$noemail) {
 					if($sendirect) $to = $firstEmail;
 					$modx->mail->IsHTML($isHtml);
@@ -554,15 +554,15 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				}
 
 			}//end test nomail
-			 # added in 1.4.2 - Protection against multiple submit with same form data
-			 if($protectSubmit) $_SESSION[$formid.'_hash'] = $hash; //hash is set earlier
+			# added in 1.4.2 - Protection against multiple submit with same form data
+			if($protectSubmit) $_SESSION[$formid.'_hash'] = $hash; //hash is set earlier
 
-			 # added in 1.4.2 - Limit the time between form submissions
-			 if($submitLimit>0) $_SESSION[$formid.'_limit'] = time();
+			# added in 1.4.2 - Limit the time between form submissions
+			if($submitLimit>0) $_SESSION[$formid.'_limit'] = time();
 
-				# invoke OnMailSent event set by another script
+			# invoke OnMailSent event set by another script
 			// Changed in 1.4.4.8 - Multiple event functions separated by comma.
-				if ($eFormOnMailSent) {
+			if ($eFormOnMailSent) {
 				$eFormOnMailSent = explode(',', $eFormOnMailSent);
 				foreach ($eFormOnMailSent as $mailSent) {
 					$mailSent = trim($mailSent);
@@ -574,15 +574,15 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 						}
 					}
 				}
-				}
+			}
 
 
 			if($isDebug){
 				$debugText .="<strong>Mail Headers:</strong><br />From: $from ($fromname)<br />Reply-to:$replyto<br />To: $to<br />Subject: $subject<br />CC: $cc<br /> BCC:$bcc<br />";
-			if($isDebug>1){
-				$debugText .= "<br /><strong>Formats array:</strong><pre>". var_export($formats,true).'</pre>';
-				$debugText .= "<br /><strong>Fields array:</strong><pre>". var_export($fields,true).'</pre>';
-			}
+				if($isDebug>1){
+					$debugText .= "<br /><strong>Formats array:</strong><pre>". var_export($formats,true).'</pre>';
+					$debugText .= "<br /><strong>Fields array:</strong><pre>". var_export($fields,true).'</pre>';
+				}
 				$fields['debug'] = $debugText;
 			}
 
@@ -673,7 +673,7 @@ function formMerge($docText, $docFields, $vClasses='') {
 		list($listName,$listValue) = explode(":",$name);
 		$value = isset($docFields[$listName])? $docFields[$listName]:'';
 
-// support for multi checkbox, radio and select - Djamoer
+		// support for multi checkbox, radio and select - Djamoer
 		if(is_array($value)) $value=implode(', ', $value);
 
 		$fld = $formats[$name];
@@ -753,7 +753,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 	global $modx,$formats,$optionsName,$_lang,$debugText,$fields,$validFormId;
 	global $efPostBack;
 
-	$formats = array(); //clear formats so values don't persist through multiple snippet calls
+	$formats = array();  //clear formats so values don't persist through multiple snippet calls
 	$labels = array();
 
 	$regExpr = "#(<label[^>]*?>)(.*?)</label>#si";;
@@ -761,14 +761,14 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 	foreach($matches[1] as $key => $fld){
 		$attr = attr2array($fld);
 		if(isset($attr['for'])){
-				$name = substr($attr['for'],1,-1);
-				//add class to fields array
-				$fields[$name."_vClass"] = isset($attr['class'])?substr($attr['class'],1,-1):'';
-				$labels[$name] = strip_tags($matches[2][$key]);
-				//create placeholder for class
-				$attr['class'] = '"[+'.$name.'_vClass+]"';
-				$newTag = buildTagPlaceholder('label',$attr,$name);
-				$tpl = str_replace($fld,$newTag,$tpl);
+			$name = substr($attr['for'],1,-1);
+			//add class to fields array
+			$fields[$name."_vClass"] = isset($attr['class'])?substr($attr['class'],1,-1):'';
+			$labels[$name] = strip_tags($matches[2][$key]);
+			//create placeholder for class
+			$attr['class'] = '"[+'.$name.'_vClass+]"';
+			$newTag = buildTagPlaceholder('label',$attr,$name);
+			$tpl = str_replace($fld,$newTag,$tpl);
 		}
 	}
 
@@ -791,7 +791,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 		#skip vericode field - updated in 1.4.4
 		#special case. We need to set the class placeholder but forget about the rest
 		if($name=="vericode"){
-			if(isset($tagAttributes['class'])){
+			if (isset($tagAttributes['class'])) {
 				$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
 			} else {
 				$tagAttributes['class'] = '"[+' . $name . '_class+]"';
@@ -819,7 +819,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 		unset($tagAttributes[$optionsName]);
 
 		//added in 1.4.2 - add placeholder to class attribute
-		if(isset($tagAttributes['class'])){
+		if (isset($tagAttributes['class'])) {
 			$tagAttributes['class'] = '"' . substr($tagAttributes['class'], 1, -1) . '[+' . $name . '_class+]"';
 		} else {
 			$tagAttributes['class'] = '"[+' . $name . '_class+]"';
@@ -844,7 +844,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 				$validValues = array();
 				foreach($matches[1] as $option){
 					$attr = attr2array($option);
-//* debug */ print __LINE__.': <pre>'.print_r($attr,true) .'</pre><br />';
+					//* debug */ print __LINE__.': <pre>'.print_r($attr,true) .'</pre><br />';
 					$value = substr($attr['value'],1,-1); //strip outer quotes
 					if( trim($value)!='' ) $validValues[] = $value;
 					$newTag = buildTagPlaceholder('option',$attr,$name);
@@ -1009,7 +1009,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 
 			case "#LIST":		// List of comma separated values (not case sensitive)
 				//added in 1.4 - file upload filetype test
-//FS#960 - removed trimming of $param - values with leading or trailing spaces would always fail validation
+				//FS#960 - removed trimming of $param - values with leading or trailing spaces would always fail validation
 				if($fld[2]=='file')$value = substr($value,strrpos($value,'.')+1); //file extension
 				if(!isset($vlist)){
 					$vlist = 	explode(',',strtolower($param)); //cached
@@ -1123,28 +1123,28 @@ function filterEformValue($value,$param){
 	return $value;
 }
 
-	function efLoadTemplate($key){
-		global $modx;
-		if( strlen($key)>50 ) return $key;
-		$tpl = false;
-		if( is_numeric($key) ) { //get from document id
-			//try unpublished docs first
-			$tpl = ( $doc=$modx->getDocument($key,'content',0) )? $doc['content'] :false;
-			if(!$tpl )
-				$tpl = ( $doc=$modx->getDocument($key,'content',1) )? $doc['content'] : false;
+function efLoadTemplate($key){
+	global $modx;
+	if( strlen($key)>50 ) return $key;
+	$tpl = false;
+	if( is_numeric($key) ) { //get from document id
+		//try unpublished docs first
+		$tpl = ( $doc=$modx->getDocument($key,'content',0) )? $doc['content'] :false;
+		if(!$tpl )
+			$tpl = ( $doc=$modx->getDocument($key,'content',1) )? $doc['content'] : false;
 
-		}elseif( $key ){
-			$tpl = ( $doc=$modx->getChunk($key) )? $doc : false;
-			//try snippet if chunk is not found
-            if(!$tpl) $tpl = ( $doc=$modx->runSnippet($key) )? $doc : false;
-		}
+	}elseif( $key ){
+		$tpl = ( $doc=$modx->getChunk($key) )? $doc : false;
+		//try snippet if chunk is not found
+		if(!$tpl) $tpl = ( $doc=$modx->runSnippet($key) )? $doc : false;
+	}
     $tpl = $modx->mergeDocumentContent($tpl);
     $tpl = $modx->mergeSettingsContent($tpl);
     $tpl = $modx->mergeChunkContent($tpl);
     if(strpos($tpl,'[!')!==false) $tpl = str_replace(array('[!','!]'),array('[[',']]'),$tpl);
     $tpl = $modx->evalSnippets($tpl);
-		return $tpl;
-	}
+	return $tpl;
+}
 
 
 # registers css and/or javascript to modx class

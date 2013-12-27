@@ -110,7 +110,7 @@ elseif ($mode=='snapshot')
 	//$today = str_replace(':', '', $today);
 	//$today = strtolower($today);
     $today = date('Y-m-d_H-i-s');
-	global $path;
+    global $path;
 	$path = "{$modx->config['snapshot_path']}{$today}.sql";
 	
 	@set_time_limit(120); // set timeout limit to 2 minutes

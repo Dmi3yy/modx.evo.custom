@@ -14,7 +14,7 @@ if($input === '' || !file_exists(MODX_BASE_PATH . $input)){
   require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
   $phpThumb = new phpthumb();
   $phpThumb->setSourceFilename(MODX_BASE_PATH . $input);
-  
+
   parse_str($options, $params);
   foreach ($params as $key => $value) {
     $phpThumb->setParameter($key, $value);

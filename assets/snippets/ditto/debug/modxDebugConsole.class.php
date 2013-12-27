@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Title: MODx Debug Console
+ * Title: MODX Debug Console
  * Purpose:
  *  	A class designed to help developers impliment a debug console
  * 		like to the one in Ditto 2
@@ -77,7 +77,7 @@ class modxDebugConsole{
 			foreach ($_GET as $param=>$value) {
 				if ($param != 'id' && $param != 'q') {
 					if (!is_array($value)) {
-					$query[htmlspecialchars($param, ENT_QUOTES)] = htmlspecialchars($value, ENT_QUOTES);					
+						$query[htmlspecialchars($param, ENT_QUOTES)] = htmlspecialchars($value, ENT_QUOTES);
 					} else {
 						foreach ($value as $k => $v) {
 							$value[$k] = htmlspecialchars($v, ENT_QUOTES);
@@ -119,7 +119,7 @@ class modxDebugConsole{
 
 	// ---------------------------------------------------
 	// Function: makeMODxSafe
-	// Make all MODx tags safe for the output
+	// Make all MODX tags safe for the output
 	// ---------------------------------------------------
 	function makeMODxSafe($value) {
 		global $modx;

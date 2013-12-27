@@ -1,6 +1,6 @@
 <?php
 /*
- * MODx Manager API Class
+ * MODX Manager API Class
  * Written by Raymond Irving 2005
  *
  */
@@ -62,8 +62,8 @@ class ManagerAPI {
 		unset($_SESSION["mgrFormValues"]);
 		unset($_SESSION["mgrFormValueId"]);	
 	}
-
-		function genHash($password, $seed='1')
+	
+	function genHash($password, $seed='1')
 	{ // $seed is user_id basically
 		global $modx;
 		
@@ -164,7 +164,7 @@ class ManagerAPI {
 			$file = MODX_BASE_PATH . $file;
 			if(!is_file($file)) continue;
 			$_[$file]= md5_file($file);
-}
+		}
 		return serialize($_);
 	}
 	
@@ -179,7 +179,7 @@ class ManagerAPI {
 		global $modx;
 
 		if(!isset($modx->config['check_files_onlogin']) || empty($modx->config['check_files_onlogin'])) return '0';
-	
+		
 		$current = $this->getSystemChecksum($modx->config['check_files_onlogin']);
 		if(empty($current)) return;
 		

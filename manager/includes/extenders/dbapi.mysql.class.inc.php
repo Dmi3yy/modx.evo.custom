@@ -128,7 +128,7 @@ class DBAPI {
             $modx->queryCode .= "<fieldset style='text-align:left'><legend>Database connection</legend>" . sprintf("Database connection was created in %2.4f s", $totaltime) . "</fieldset><br />";
          }
             if (function_exists('mysql_set_charset')) {
-               mysql_set_charset($this->config['charset']);
+                mysql_set_charset($this->config['charset']);
             } else {
                 @mysql_query("SET NAMES {$this->config['charset']}", $this->conn);
             }
@@ -315,7 +315,7 @@ class DBAPI {
       mysql_select_db($name);
    }
    
-   
+
    /**
     * @name:  getInsertId
     *
@@ -350,7 +350,7 @@ class DBAPI {
    function getRecordCount($ds) {
       return (is_resource($ds)) ? mysql_num_rows($ds) : 0;
    }
-  
+
    /**
     * @name:  getRow
     * @desc:  returns an array of column values

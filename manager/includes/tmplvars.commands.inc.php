@@ -22,7 +22,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
     if (substr($nvalue, 0, 1) != '@')
         return $value;
     elseif(isset($modx->config['enable_bindings']) && $modx->config['enable_bindings']!=1 && $src==='docform') {
-         return '@Bindings is disabled.';
+        return '@Bindings is disabled.';
     }
     else {
         list ($cmd, $param) = ParseCommand($nvalue);
@@ -139,5 +139,5 @@ function ParseCommand($binding_string)
             break;
         }
     }
-        return $binding_array;
-    }
+    return $binding_array;
+}
