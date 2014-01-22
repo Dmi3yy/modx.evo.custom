@@ -14,6 +14,7 @@
 - update tinyMCE to 3.5.10
 - fix backup format file Y-m-d_H-i-s - now new always top
 - all fix from (evo 1.0.13 http://tracker.modx.com/versions/278) 
+- update ManagerManager to 0.6
 
 
 текущая версия 1.0.12-d6.4  (15.10.2013)
