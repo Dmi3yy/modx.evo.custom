@@ -1,22 +1,22 @@
 <?php
-/*
+/**
  * Filename:       assets/plugins/tinymce/lang/english.inc.php
  * Function:       English language file for TinyMCE
  * Encoding:       ISO-Latin-1
  * Author:         Jeff Whitfield and yama
- * Date:           2012/09/29
- * Version:        3.5.7
- * MODX version:   0.9.5-1.0.6
+ * Date:           2014/02/01
+ * Version:        3.5.10
+ * MODX version:   0.9.5-1.0.13
 */
 
 $_lang['mce_editor_theme_title'] = 'Theme:';
 $_lang['mce_editor_theme_message'] = 'Here you can select which theme or skin to use with the editor.';
 $_lang['mce_editor_custom_plugins_title'] = 'Custom Plugins:';
-$_lang['mce_editor_custom_plugins_message'] = "Enter the plugins to use for the 'custom' theme as a comma separated list.<br />Default : template,visualblocks,autolink,inlinepopups,autosave,save,advlist,style,fullscreen, advimage,paste,advlink,media,contextmenu,table";
+$_lang['mce_editor_custom_plugins_message'] = 'Enter the plugins to use for the \'custom\' theme as a comma separated list.<br />Default : template,visualblocks,autolink,inlinepopups,autosave,save,advlist,style,fullscreen, advimage,paste,advlink,media,contextmenu,table';
 $_lang['mce_editor_custom_buttons_title'] = 'Custom Buttons:';
-$_lang['mce_editor_custom_buttons_message'] = "Enter the buttons to use for the 'custom' theme as a comma separated list for each row. Be sure that each button has the required plugin enabled in the 'Custom Plugins' setting.";
+$_lang['mce_editor_custom_buttons_message'] = 'Enter the buttons to use for the \'custom\' theme as a comma separated list for each row. Be sure that each button has the required plugin enabled in the \'Custom Plugins\' setting.';
 $_lang['mce_editor_css_selectors_title'] = 'CSS selectors:';
-$_lang['mce_editor_css_selectors_message'] = "Here you can enter a list of selectors that should be available in the editor. Enter them as follows:<br />'displayName=selectorName;displayName2=selectorName2'<br />For instance, say you have <b>.mono</b> and <b>.smallText</b> selectors in your CSS file, you could add them here as:<br />'Monospaced text=mono;Small text=smallText'<br />Note that the last entry should not have a semi-colon after it.";
+$_lang['mce_editor_css_selectors_message'] = 'Here you can enter a list of selectors that should be available in the editor. Enter them as follows:<br />\'displayName=selectorName;displayName2=selectorName2\'<br />For instance, say you have <b>.mono</b> and <b>.smallText</b> selectors in your CSS file, you could add them here as:<br />\'Monospaced text=mono;Small text=smallText\'<br />Note that the last entry should not have a semi-colon after it.';
 $_lang['mce_settings'] = 'TinyMCE Settings';
 $_lang['mce_theme_simple'] = 'Simple';
 $_lang['mce_theme_full'] = 'Full';
@@ -42,7 +42,7 @@ $_lang['mce_schema_message'] = 'The schema option enables you to switch between 
 $_lang['mce_toolbar1_msg'] = 'Default : undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,fontsizeselect, pastetext,pasteword,code,|,fullscreen,help';
 $_lang['mce_toolbar2_msg'] = 'Default : image,media,link,unlink,anchor,|,justifyleft,justifycenter,justifyright,|,bullist, numlist,|,blockquote,outdent,indent,|,table,hr,|,template,visualblocks,styleprops,removeformat';
 
-$_lang['mce_tpl_title'] = 'Template button';
-$_lang['mce_tpl_msg'] = 'You can insert the HTML block which you registered beforehand from toolbar. You make HTML block as resource or a chunk, and can appoint plural number with a comma.';
+$_lang['mce_tpl_title'] = 'Template Button';
+$_lang['mce_tpl_msg'] = 'You could define templates on chunk or ressource base for the template button in TinyMCE (won\'t be displayed by default). The content of the chunk/of the resource will be inserted at the cursor position as html code in TinyMCE. Multiple chunk names or ressource IDs have to be separated by comma.';
 $_lang['mce_tpl_docid'] = 'Resource IDs';
-$_lang['mce_tpl_chunkname'] = 'Chunk names';
+$_lang['mce_tpl_chunkname'] = 'Chunk Names';

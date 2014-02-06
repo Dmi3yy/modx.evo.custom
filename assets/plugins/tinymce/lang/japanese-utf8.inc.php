@@ -1,15 +1,13 @@
 <?php
-/*
+/**
  * Filename:       assets/plugins/tinymce/lang/japanese-utf8.inc.php
  * Function:       Japanese language file for TinyMCE.
  * Encoding:       UTF-8
  * Author:         yama
- * Date:           2012/09/29
- * Version:        3.5.7
- * MODX version:   0.9.5-1.0.6
+ * Date:           2014/02/01
+ * Version:        3.5.10
+ * MODX version:   0.9.5-1.0.13
 */
-
-include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults or new additions
 
 $_lang['mce_editor_theme_title'] = 'テーマ:';
 $_lang['mce_editor_theme_message'] = 'テーマを選択し、ツールバーアイコンのセットおよびエディタのデザインを変更できます。';
@@ -21,6 +19,7 @@ $_lang['mce_editor_css_selectors_title'] = 'CSSスタイルセレクタ:';
 $_lang['mce_editor_css_selectors_message'] = 'class=xxxxxという形で任意のタグに割り当てる「CSSクラス」をここで設定できます。<br />書式：本のタイトル=booktitle;著者=author<br />上記のように、複数のクラスをセミコロンで区切って指定します。';
 $_lang['mce_settings'] = 'TinyMCEの設定';
 $_lang['mce_theme_simple'] = 'シンプル';
+$_lang['mce_theme_full'] = 'Full';
 $_lang['mce_theme_advanced'] = 'TinyMCEデフォルト';
 $_lang['mce_theme_editor'] = 'MODXデフォルト';
 $_lang['mce_theme_custom'] = 'カスタム';
