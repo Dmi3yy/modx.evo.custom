@@ -3,10 +3,10 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 //[[phpthumb? &input=`[+image+]` &options=`w=150,h=76,far=C,bg=FFFFFF`]]
 //Author: Bumkaka
 
-$base="assets/cache/images";   // тут можно менять путь
+$base=isset($cacheFolder) ? $cacheFolder : "assets/cache/images";   // тут можно менять путь
 
 if($input === '' || !file_exists(MODX_BASE_PATH . $input)){
-  $input = 'assets/snippets/phpthumb/noimage.png';
+  $input = isset($noImage) ? $noImage : 'assets/snippets/phpthumb/noimage.png';
 }
 
   $options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "=", '{' => '[', '}' => ']'));
