@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4.4.9 - Electronic Form Snippet
+# eForm 1.4.5 - Electronic Form Snippet
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -54,7 +54,7 @@ $_dfnMaxlength = 6;
 
 	extract($params,EXTR_SKIP); // extract params into variables
 
-	$fileVersion = '1.4.4';
+	$fileVersion = '1.4.5';
 	$version = isset($version)?$version:'prior to 1.4.2';
 
 	#include default language file
@@ -321,7 +321,7 @@ $_dfnMaxlength = 6;
 
 			#set validation message
 			if (count($rMsg) > 0) {
-			    $rMsg = "<span>" . implode("</span><span>",$rMsg) . "</span>";
+			    $rMsg = "<span class=\"requiredlist\"><span>" . implode("</span><span>",$rMsg) . "</span></span>";
 			    $tmp = str_replace("{fields}", $rMsg, $_lang['ef_required_message']);
 			} else {
 			    $tmp = "";
@@ -458,6 +458,17 @@ $_dfnMaxlength = 6;
 			$keywords	= ($keywords)? formMerge($keywords,$fields):"";
 			$from = ($from)? formMerge($from,$fields):"";
 			$fromname	= ($from)? formMerge($fromname,$fields):"";
+
+			# added in 1.4.5 - Use a field for attachments
+			if ($attachmentField != '' && isset($fields[$attachmentField]) && !empty($fields[$attachmentField])) {
+				$attachmentPath = realpath(MODX_BASE_PATH . $attachmentPath) . '/';
+				$filenames = explode(',', $fields[$attachmentField]);
+				foreach ($filenames as $filename) {
+					if (file_exists($attachmentPath . $filename)) {
+						$attachments[count($attachments)] = $attachmentPath . $filename;
+					}
+				}
+			}
 
 			$to = formMerge($to,$fields);
 			if(empty($to) || !strpos($to,'@')) $nomail=1;
@@ -1000,7 +1011,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 						$range = array($p,$p); //yes,.. I know - cheating :)
 
 					if($isDebug && (!is_numeric($range[0]) || !is_numeric($range[1])) )
-						$modx->messageQuit('Error in validating form field!', '',$false,E_USER_WARNING,__FILE__,'','#RANGE rule contains non-numeric values: '.$fld[5],__LINE__);
+						$modx->messageQuit('Error in validating form field!', '',false,E_USER_WARNING,__FILE__,'','#RANGE rule contains non-numeric values: '.$fld[5],__LINE__);
 					sort($range);
 					if( $value>=$range[0] && $value<=$range[1] ) break 2; //valid
 				}
@@ -1019,7 +1030,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 
 				if( $isDebug && count($vlist)==1 && empty($vlist[0])  ){
 					 //if debugging bail out big time
-					 $modx->messageQuit('Error in validating form field!', '',$false,E_USER_WARNING,__FILE__,'','#LIST rule declared but no list values supplied: '.$fld[5],__LINE__);
+					 $modx->messageQuit('Error in validating form field!', '',false,E_USER_WARNING,__FILE__,'','#LIST rule declared but no list values supplied: '.$fld[5],__LINE__);
 				}elseif(!in_array(strtolower($value),$vlist))
 					$errMsg = ($fld[2]=='file')? $_lang["ef_failed_upload"]: $_lang['ef_failed_list'];
 				break;
