@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('delete_snippet')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id=intval($_GET['id']);
@@ -14,12 +13,8 @@ $modx->invokeEvent("OnBeforeSnipFormDelete",
 						));
 
 //ok, delete the snippet.
-$sql = "DELETE FROM $dbase.`".$table_prefix."site_snippets` WHERE $dbase.`".$table_prefix."site_snippets`.id=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	echo "Something went wrong while trying to delete the snippet...";
-	exit;
-} else {
+$modx->db->delete($modx->getFullTableName('site_snippets'), "id='{$id}'");
+
 		// invoke OnSnipFormDelete event
 		$modx->invokeEvent("OnSnipFormDelete",
 								array(
@@ -37,6 +32,5 @@ if(!$rs) {
 
 	$header="Location: index.php?a=76&r=2";
 	header($header);
-}
 
 ?>

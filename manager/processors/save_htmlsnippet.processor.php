@@ -1,8 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_chunk')) {
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = intval($_POST['id']);
@@ -13,17 +12,18 @@ $locked = $_POST['locked']=='on' ? 1 : 0 ;
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = $modx->db->escape($_POST['categoryid']);
+    $categoryid = intval($_POST['categoryid']);
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
-    include_once "categories.inc.php";
-    $catCheck = checkCategory($modx->db->escape($_POST['newcategory']));
-    if ($catCheck) {
-        $categoryid = $catCheck;
-    } else {
+    include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+    $categoryid = checkCategory($_POST['newcategory']);
+    if (!$categoryid) {
         $categoryid = newCategory($_POST['newcategory']);
     }
+}
+if (empty($categoryid)) {
+	$modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 if($name=="") $name = "Untitled chunk";
@@ -39,38 +39,21 @@ switch ($_POST['mode']) {
 								));
 
 		// disallow duplicate names for new chunks
-		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_htmlsnippets` WHERE name = '{$name}'";
-		$rs = $modx->db->query($sql);
+		$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('site_htmlsnippets'), "name='{$name}'");
 		$count = $modx->db->getValue($rs);
 		if($count > 0) {
-			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name));
-
-			// prepare a few variables prior to redisplaying form...
-			$content = array();
-			$_REQUEST['id'] = 0;
-			$_REQUEST['a'] = '77';
-			$_GET['stay'] = $_POST['stay'];
-			$content['id'] = 0;
-			$content['locked'] = $_POST['locked'] == 'on' ? 1 : 0;
-			$content['category'] = $_POST['categoryid'];
-
-			include 'header.inc.php';
-			include(MODX_MANAGER_PATH.'actions/mutate_htmlsnippet.dynamic.php');
-			include 'footer.inc.php';
-			
-			exit;
+			$modx->manager->saveFormValues(77);
+			$modx->webAlertAndQuit(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name), "index.php?a=77");
 		}
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name, description, snippet, locked, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."', ".$categoryid.");";
-		$rs = $modx->db->query($sql);
-		if(!$rs){
-			echo "\$rs not set! New Chunk not saved!";
-		} else {	
-			// get the id
-			if(!$newid=$modx->db->getInsertId()) {
-				echo "Couldn't get last insert key!";
-				exit;
-			}
+		$newid = $modx->db->insert(
+			array(
+				'name'    => $name,
+				'description' => $description,
+				'snippet' => $snippet,
+				'locked' => $locked,
+				'category' => $categoryid,
+			), $modx->getFullTableName('site_htmlsnippets'));
 
 			// invoke OnChunkFormSave event
 			$modx->invokeEvent("OnChunkFormSave",
@@ -94,7 +77,6 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}
-		}		
         break;
     case '78':
 
@@ -106,11 +88,15 @@ switch ($_POST['mode']) {
 								));
 		
 		//do stuff to save the edited doc
-		$sql = "UPDATE $dbase.`".$table_prefix."site_htmlsnippets` SET name='".$name."', description='".$description."', snippet='".$snippet."', locked='".$locked."', category=".$categoryid." WHERE id='".$id."';";
-		$rs = $modx->db->query($sql);
-		if(!$rs){
-			echo "\$rs not set! Edited htmlsnippet not saved!";
-		} else {		
+		$modx->db->update(
+			array(
+				'name'        => $name,
+				'description' => $description,
+				'snippet'     => $snippet,
+				'locked'      => $locked,
+				'category'    => $categoryid,
+			), $modx->getFullTableName('site_htmlsnippets'), "id='{$id}'");
+
 			// invoke OnChunkFormSave event
 			$modx->invokeEvent("OnChunkFormSave",
 									array(
@@ -133,7 +119,6 @@ switch ($_POST['mode']) {
 				$header="Location: index.php?a=76&r=2";
 				header($header);
 			}
-		}		
 
 		
 		

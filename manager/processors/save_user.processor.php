@@ -1,8 +1,7 @@
 <?php
-if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if (!$modx->hasPermission('save_user')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $tbl_manager_users   = $modx->getFullTableName('manager_users');
@@ -50,78 +49,60 @@ $user_groups          = $input['user_groups'];
 
 // verify password
 if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confirmpassword']) {
-	webAlert("Password typed is mismatched");
-	exit;
+	webAlertAndQuit("Password typed is mismatched");
 }
 
 // verify email
 if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $email)) {
-	webAlert("E-mail address doesn't seem to be valid!");
-	exit;
+	webAlertAndQuit("E-mail address doesn't seem to be valid!");
 }
 
 // verify admin security
 if ($_SESSION['mgrRole'] != 1) {
 	// Check to see if user tried to spoof a "1" (admin) role
 	if ($role == 1) {
-		webAlert("Illegal attempt to create/modify administrator by non-administrator!");
-		exit;
+		webAlertAndQuit("Illegal attempt to create/modify administrator by non-administrator!");
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
-	$rs = $modx->db->select('role', $tbl_user_attributes, "internalKey='{$id}'");
-	if ($rs) {
-		$limit = $modx->db->getRecordCount($rs);
+	$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "internalKey='{$id}' AND role=1");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			// There should only be one if there is one
-			$row = $modx->db->getRow($rs);
-			if ($row['role'] == 1) {
-				webAlert("You cannot alter an administrative user.");
-				exit;
-			}
+				webAlertAndQuit("You cannot alter an administrative user.");
 		}
-	}
 
 }
 
 switch ($input['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
-		$rs = $modx->db->select('id', $tbl_manager_users, "username='{$esc_newusername}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(id)', $tbl_manager_users, "username='{$esc_newusername}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			webAlert("User name is already in use!");
-			exit;
+			webAlertAndQuit("User name is already in use!");
 		}
 
 		// check if the email address already exist
-		$rs = $modx->db->select('id', $tbl_user_attributes, "email='{$esc_email}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "email='{$esc_email}' AND id!='{$id}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			$row = $modx->db->getRow($rs);
-			if ($row['id'] != $id) {
-				webAlert("Email is already in use!");
-				exit;
-			}
+				webAlertAndQuit("Email is already in use!");
 		}
 
 		// generate a new password for this user
 		if ($specifiedpassword != "" && $passwordgenmethod == "spec") {
 			if (strlen($specifiedpassword) < 6) {
-				webAlert("Password is too short!");
-				exit;
+				webAlertAndQuit("Password is too short!");
 			} else {
 				$newpassword = $specifiedpassword;
 			}
 		}
 		elseif ($specifiedpassword == "" && $passwordgenmethod == "spec") {
-			webAlert("You didn't specify a password for this user!");
-			exit;
+			webAlertAndQuit("You didn't specify a password for this user!");
 		}
 		elseif ($passwordgenmethod == 'g') {
 			$newpassword = generate_password(8);
 		} else {
-			webAlert("No password generation method specified!");
-			exit;
+			webAlertAndQuit("No password generation method specified!");
 		}
 
 		// invoke OnBeforeUserFormSave event
@@ -131,24 +112,16 @@ switch ($input['mode']) {
 
 		// create the user account
 		$field = array();
-		$field['username'] = $newusername;
-		$field = $modx->db->escape($field);
+		$field['username'] = $esc_newusername;
 		$internalKey = $modx->db->insert($field, $tbl_manager_users);
-		if (!$internalKey) {
-			webAlert("An error occurred while attempting to save the user.");
-			exit;
-		}
 
+		$field = array();
 		$field['password'] = $modx->manager->genHash($newpassword, $internalKey);
 		$modx->db->update($field, $tbl_manager_users, "id='{$internalKey}'");
 		
 		$field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
-        $f = $modx->db->escape($f);
-		$rs = $modx->db->insert($field, $tbl_user_attributes);
-		if (!$rs) {
-			webAlert("An error occurred while attempting to save the user's attributes.");
-			exit;
-		}
+		$field = $modx->db->escape($field);
+		$modx->db->insert($field, $tbl_user_attributes);
 
 		// Save user settings
 		saveUserSettings($internalKey);
@@ -182,12 +155,7 @@ switch ($input['mode']) {
 					$f = array();
 					$f['user_group'] = intval($user_groups[$i]);
 					$f['member']     = $internalKey;
-					$f = $modx->db->escape($f);
-					$rs = $modx->db->insert($f, $tbl_member_groups);
-					if (!$rs) {
-						webAlert("An error occurred while attempting to add the user to a user_group.");
-						exit;
-					}
+					$modx->db->insert($f, $tbl_member_groups);
 				}
 			}
 		}
@@ -241,21 +209,18 @@ switch ($input['mode']) {
 		if ($genpassword == 1) {
 			if ($specifiedpassword != "" && $passwordgenmethod == "spec") {
 				if (strlen($specifiedpassword) < 6) {
-					webAlert("Password is too short!");
-					exit;
+					webAlertAndQuit("Password is too short!");
 				} else {
 					$newpassword = $specifiedpassword;
 				}
 			}
 			elseif ($specifiedpassword == "" && $passwordgenmethod == "spec") {
-				webAlert("You didn't specify a password for this user!");
-				exit;
+				webAlertAndQuit("You didn't specify a password for this user!");
 			}
 			elseif ($passwordgenmethod == 'g') {
 				$newpassword = generate_password(8);
 			} else {
-				webAlert("No password generation method specified!");
-				exit;
+				webAlertAndQuit("No password generation method specified!");
 			}
 		}
 		if ($passwordnotifymethod == 'e') {
@@ -263,25 +228,17 @@ switch ($input['mode']) {
 		}
 
 		// check if the username already exist
-		$rs = $modx->db->select('id', $tbl_manager_users, "username='{$esc_newusername}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(id)', $tbl_manager_users, "username='{$esc_newusername}' AND id!='{$id}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			$row = $modx->db->getRow($rs);
-			if ($row['id'] != $id) {
-				webAlert("User name is already in use!");
-				exit;
-			}
+				webAlertAndQuit("User name is already in use!");
 		}
 
 		// check if the email address already exists
-		$rs = $modx->db->select('internalKey', $tbl_user_attributes, "email='{$esc_email}'");
-		$limit = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select('count(internalKey)', $tbl_user_attributes, "email='{$esc_email}' AND internalKey!='{$id}'");
+		$limit = $modx->db->getValue($rs);
 		if ($limit > 0) {
-			$row = $modx->db->getRow($rs);
-			if ($row['internalKey'] != $id) {
-				webAlert("Email is already in use!");
-				exit;
-			}
+				webAlertAndQuit("Email is already in use!");
 		}
 
 		// invoke OnBeforeUserFormSave event
@@ -292,24 +249,14 @@ switch ($input['mode']) {
 
 		// update user name and password
 		$field = array();
-		$field['username'] = $newusername;
-		$field = $modx->db->escape($field);
+		$field['username'] = $esc_newusername;
 		if($genpassword == 1) {
 		    $field['password'] = $modx->manager->genHash($newpassword, $id);
 		}
-		$rs = $modx->db->update($field, $tbl_manager_users, "id='{$id}'");
-		if (!$rs) {
-			webAlert("An error occurred while attempting to update the user's data.");
-			exit;
-		}
-		$field = array();
+		$modx->db->update($field, $tbl_manager_users, "id='{$id}'");
 		$field = compact('fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
 		$field = $modx->db->escape($field);
-		$rs = $modx->db->update($field, $tbl_user_attributes, "internalKey='{$id}'");
-		if (!$rs) {
-			webAlert("An error occurred while attempting to update the user's attributes.");
-			exit;
-		}
+		$modx->db->update($field, $tbl_user_attributes, "internalKey='{$id}'");
 
 		// Save user settings
 		saveUserSettings($id);
@@ -349,38 +296,20 @@ switch ($input['mode']) {
 		// first, check that up_perms are switched on!
 		if ($use_udperms == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
-			$rs = $modx->db->delete($tbl_member_groups, "member='{$id}'");
-			if (!$rs) {
-				webAlert("An error occurred while attempting to delete previous user_groups entries.");
-				exit;
-			}
+			$modx->db->delete($tbl_member_groups, "member='{$id}'");
 			if (count($user_groups) > 0) {
 				for ($i = 0; $i < count($user_groups); $i++) {
-					$f = array();
-					$f['user_group'] = intval($user_groups[$i]);
-					$f['member']  = $id;
-					$f = $modx->db->escape($f);
-					$rs = $modx->db->insert($f, $tbl_member_groups);
-					if (!$rs) {
-						webAlert("An error occurred while attempting to add the user to a user_group.<br />$sql;");
-						exit;
-					}
+					$field = array();
+					$field['user_group'] = intval($user_groups[$i]);
+					$field['member']  = $id;
+					$modx->db->insert($field, $tbl_member_groups);
 				}
 			}
 		}
 		// end of user_groups stuff!
 		/*******************************************************************************/
 		if ($id == $modx->getLoginUserID() && ($genpassword !==1 && $passwordnotifymethod !='s')) {
-?>
-			<body bgcolor='#efefef'>
-			<script language="JavaScript">
-			alert("<?php echo $_lang["user_changeddata"]; ?>");
-			top.location.href='index.php?a=8';
-			</script>
-			</body>
-		<?php
-
-			exit;
+			$modx->webAlertAndQuit($_lang["user_changeddata"], 'javascript:top.location.href="index.php?a=8";');
 		}
 		if ($genpassword == 1 && $passwordnotifymethod == 's') {
 			if ($input['stay'] != '') {
@@ -422,8 +351,7 @@ switch ($input['mode']) {
 		}
 		break;
 	default :
-		webAlert("Unauthorized access");
-		exit;
+		webAlertAndQuit("Unauthorized access");
 }
 
 // in case any plugins include a quoted_printable function
@@ -459,8 +387,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$param['to']      = $email;
 	$rs = $modx->sendmail($param);
 	if (!$rs) {
-		webAlert("{$email} - {$_lang['error_sending_email']}");
-		exit;
+		webAlertAndQuit("{$email} - {$_lang['error_sending_email']}");
 	}
 }
 
@@ -529,8 +456,7 @@ function saveUserSettings($id) {
 		unset($settings['default_'.$k]);
 	}
 
-    $esc_id = $modx->db->escape($id);
-	$modx->db->delete($tbl_user_settings,"user='{$esc_id}'");
+	$modx->db->delete($tbl_user_settings,"user='{$id}'");
 
 	foreach ($settings as $n => $vl) {
 		if (is_array($vl)) {
@@ -542,25 +468,17 @@ function saveUserSettings($id) {
 		    $f['setting_name']  = $n;
 		    $f['setting_value'] = $vl;
 		    $f = $modx->db->escape($f);
-		    $rs = $modx->db->insert($f, $tbl_user_settings);
-			if (!$rs) {
-				webAlert("Failed to update user setting!<br />User: $id, Setting: '$n', Value: '$v'");
-				exit;
-			}
+		    $modx->db->insert($f, $tbl_user_settings);
 		}
 	}
 }
 
 // Web alert -  sends an alert to web browser
-function webAlert($msg) {
+function webAlertAndQuit($msg) {
 	global $id, $modx;
-	global $dbase, $table_prefix;
-	$mode = intval($_POST['mode']);
-	$url = "index.php?a={$mode}" . ($mode == '12' ? "&id={$id}" : '');
+	$mode = $_POST['mode'];
 	$modx->manager->saveFormValues($mode);
-	include_once "header.inc.php";
-	$modx->webAlert($msg, $url);
-	include_once "footer.inc.php";
+	$modx->webAlertAndQuit($msg, "index.php?a={$mode}" . ($mode == '12' ? "&id={$id}" : ""));
 }
 
 // Generate password

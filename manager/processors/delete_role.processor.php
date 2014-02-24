@@ -1,37 +1,23 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('delete_role')) {	
-	$e->setError(3);
-	$e->dumpError();	
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id=$_GET['id'];
 
 if($id==1){
-	echo "The role you are trying to delete is the admin role. This role cannot be deleted!";
-	exit;
+	$modx->webAlertAndQuit("The role you are trying to delete is the admin role. This role cannot be deleted!");
 }
 
-
-$sql = "SELECT count(*) FROM $dbase.`".$table_prefix."user_attributes` WHERE $dbase.`".$table_prefix."user_attributes`.role=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	echo "Something went wrong while trying to find users with this role...";
-	exit;
-} 
-$row=$modx->db->getRow($rs);
-if($row['count(*)']>0){
-	echo "There are users with this role. It can't be deleted.";
-	exit;
+$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_roles'), "role='{$id}'");
+$count=$modx->db->getValue($rs);
+if($count>0){
+	$modx->webAlertAndQuit("There are users with this role. It can't be deleted.");
 }
 
 // delete the attributes
-$sql = "DELETE FROM $dbase.`".$table_prefix."user_roles` WHERE $dbase.`".$table_prefix."user_roles`.id=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	echo "Something went wrong while trying to delete the role...";
-	exit;
-}
+$modx->db->delete($modx->getFullTableName('user_roles'), "id='{$id}'");
 
 // Set the item name for logger
 $name = $modx->db->getValue($modx->db->select('name', $modx->getFullTableName('user_roles'), "id='{$id}'"));

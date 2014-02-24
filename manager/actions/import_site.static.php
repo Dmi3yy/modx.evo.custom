@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('import_static')) {
-    $e->setError(3);
-    $e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // Files to upload
@@ -137,7 +136,7 @@ function run()
 	// import files
 	if(0 < count($files))
 	{
-		$rs = $modx->db->update(array('isfolder'=>1),$tbl_site_content,"id={$parent}");
+		$rs = $modx->db->update(array('isfolder'=>1),$tbl_site_content,"id='{$parent}'");
 		importFiles($parent,$filedir,$files,'root');
 	}
 	
@@ -300,7 +299,7 @@ function importFiles($parent,$filedir,$files,$mode) {
 				if($is_site_start==true && $_POST['reset']=='on')
 				{
 					$modx->db->update(array('setting_value'=>$newid),$tbl_system_settings,"setting_name='site_start'");
-					$modx->db->update('menuindex=0',$tbl_site_content,"id='{$newid}'");
+					$modx->db->update(array('menuindex'=>0),$tbl_site_content,"id='{$newid}'");
 				}
 			}
 		}

@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('manage_metatags')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // initialize page view state - the $_PAGE object
@@ -18,11 +17,8 @@ $modx->manager->initPageViewState();
 		var requireConfirm=false;
 		var deleteList="";
 	<?php 
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` ORDER BY keyword ASC";
-		$rs = $modx->db->query($sql);
-		$limit = $modx->db->getRecordCount($rs); 
-		for($i=0;$i<$limit;$i++) {
-		$row=$modx->db->getRow($rs);
+		$rs = $modx->db->select('*', $modx->getFullTableName('site_keywords'), '', 'keyword ASC')
+		while ($row=$modx->db->getRow($rs)) {
 		?>
 
 		if(document.getElementById('delete<?php echo $row['id']; ?>').checked==true) {
@@ -164,10 +160,7 @@ $modx->manager->initPageViewState();
 	<div>
 	<?php
 
-		$sql = "SELECT * " .
-				"FROM ".$modx->getFullTableName("site_metatags")." st ".
-				"ORDER BY name";
-		$ds = $modx->db->query($sql);
+		$ds = $modx->db->select('*', $modx->getFullTableName("site_metatags"), '', 'name');
 		include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 		$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 		$grd->noRecordMsg = $_lang["no_records_found"];
@@ -200,8 +193,7 @@ $modx->manager->initPageViewState();
 <div class="sectionHeader"><?php echo $_lang['keywords'] ;?></div><div class="sectionBody">
 <?php echo $_lang['keywords_intro'] ;?><br /><br />
 <?php
-	$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` ORDER BY keyword ASC";
-	$ds = $modx->db->query($sql);
+	$ds = $modx->db->select('*', $modx->getFullTableName('site_keywords'), '', 'keyword ASC');
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_keywords_found"];
 	$grd->cssClass="grid";

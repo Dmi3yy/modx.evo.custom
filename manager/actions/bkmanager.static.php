@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('bk_manager')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $dbase = trim($dbase,'`');
@@ -48,10 +47,7 @@ elseif ($mode=='backup')
 	$tables = isset($_POST['chk']) ? $_POST['chk'] : '';
 	if (!is_array($tables))
 	{
-		echo '<html><body>'.
-		     '<script type="text/javascript">alert(\'Please select a valid table from the list below\');</script>'.
-		     '</body></html>';
-		exit;
+		$modx->webAlertAndQuit("Please select a valid table from the list below.");
 	}
 
 	/*
@@ -70,9 +66,7 @@ elseif ($mode=='backup')
 	}
 	else
 	{
-		$e->setError(1, 'Unable to Backup Database');
-		$e->dumpError();
-		exit;
+		$modx->webAlertAndQuit('Unable to Backup Database');
 	}
 
 	// MySQLdumper class can be found below
@@ -91,20 +85,12 @@ elseif ($mode=='snapshot')
 	}
 	if(!is_writable(rtrim($modx->config['snapshot_path'],'/')))
 	{
-		echo parsePlaceholder($_lang["bkmgr_alert_mkdir"],array('snapshot_path'=>$modx->config['snapshot_path']));
-		exit;
+		$modx->webAlertAndQuit(parsePlaceholder($_lang["bkmgr_alert_mkdir"],array('snapshot_path'=>$modx->config['snapshot_path'])));
 	}
 	$escaped_table_prefix = str_replace('_', '\\_', $table_prefix);
 	$sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$escaped_table_prefix}%'";
 	$rs = $modx->db->query($sql);
-	$tables = array();
-	if(0<$modx->db->getRecordCount($rs))
-	{
-		while($db_status = $modx->db->getRow($rs))
-		{
-			$tables[] = $db_status['Name'];
-		}
-	}
+		$tables = $modx->db->getColumn('Name', $rs);
 	//$today = $modx->toDateFormat(time());
 	//$today = str_replace(array('/',' '), '-', $today);
 	//$today = str_replace(':', '', $today);
@@ -137,9 +123,7 @@ elseif ($mode=='snapshot')
 		header("Location: index.php?a=93");
 		exit;
 	} else {
-		$e->setError(1, 'Unable to Backup Database');
-		$e->dumpError();
-		exit;
+		$modx->webAlertAndQuit('Unable to Backup Database');
 	}
 }
 else
@@ -225,10 +209,9 @@ else
 			<?php
 $sql = "SHOW TABLE STATUS FROM `{$dbase}` LIKE '{$table_prefix}%'";
 $rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-for ($i = 0; $i < $limit; $i++) {
-	$db_status = $modx->db->getRow($rs);
-	$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
+$i = 0;
+while ($db_status = $modx->db->getRow($rs)) {
+	$bgcolor = ($i++ % 2) ? '#EEEEEE' : '#FFFFFF';
 
 	if (isset($tables))
 		$table_string = implode(',', $table);
@@ -618,13 +601,10 @@ function import_sql($source,$result_code='import_ok')
 	global $modx,$e;
 	$tbl_active_users = $modx->getFullTableName('active_users');
 	
-	$rs = $modx->db->select('*',$tbl_active_users,"action='27'");
-	if(0 < $modx->db->getRecordCount($rs))
+	$rs = $modx->db->select('count(*)',$tbl_active_users,"action='27'");
+	if(0 < $modx->db->getValue($rs))
 	{
-		include_once "header.inc.php";  // start normal header
-		$e->setError(5, 'Resource is edit now by any user');
-		$e->dumpError();
-		exit;
+		$modx->webAlertAndQuit("Resource is edit now by any user.");
 	}
 	
 	$settings = getSettings();
@@ -640,13 +620,8 @@ function import_sql($source,$result_code='import_ok')
 	restoreSettings($settings);
 	
 	$modx->clearCache();
-	if(0 < $modx->db->getRecordCount($rs))
-	{
-		while($row = $modx->db->getRow($rs))
-		{
-			$_SESSION['last_result'][] = $row;
-		}
-	}
+
+	$_SESSION['last_result'] = $modx->db->makeArray($rs);
 	
 	$_SESSION['result_msg'] = $result_code;
 }

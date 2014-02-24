@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('delete_module')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id=intval($_GET['id']);
@@ -14,20 +13,13 @@ $modx->invokeEvent("OnBeforeModFormDelete",
 						));
 
 //ok, delete the module.
-$sql = "DELETE FROM ".$modx->getFullTableName("site_modules")." WHERE id=".$id.";";
-$rs = $modx->db->query($sql);
-if(!$rs) {
-	echo "Something went wrong while trying to delete the module...";
-	exit;
-}
+$modx->db->delete($modx->getFullTableName("site_modules"), "id='{$id}'");
 
 //ok, delete the module dependencies.
-$sql = "DELETE FROM ".$modx->getFullTableName("site_module_depobj")." WHERE module='".$id."';";
-$rs = $modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName("site_module_depobj"), "module='{$id}'");
 
 //ok, delete the module user group access.
-$sql = "DELETE FROM ".$modx->getFullTableName("site_module_access")." WHERE module='".$id."';";
-$rs = $modx->db->query($sql);
+$modx->db->delete($modx->getFullTableName("site_module_access"), "module='{$id}'");
 
 // invoke OnModFormDelete event
 $modx->invokeEvent("OnModFormDelete",

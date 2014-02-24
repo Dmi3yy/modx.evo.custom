@@ -116,7 +116,7 @@ class DBAPI {
          $modx->messageQuit("Failed to create the database connection!");
          exit;
       } else {
-         $dbase = str_replace('`', '', $dbase); // remove the `` chars
+         $dbase = trim($dbase,'`'); // remove the `` chars
          if (!@ mysql_select_db($dbase, $this->conn)) {
             $modx->messageQuit("Failed to select the database '" . $dbase . "'!");
             exit;
@@ -203,13 +203,14 @@ class DBAPI {
     *
     */
    function delete($from, $where='', $orderby='', $limit = '') {
+      global $modx;
       if (!$from)
-         return false;
+         $modx->messageQuit("Empty \$from parameters in DBAPI::delete().");
       else {
          $from = $this->replaceFullTableName($from);
-         if($where != '') $where = "WHERE {$where}";
-         if($orderby !== '') $orderby = "ORDER BY {$orderby}";
-         if($limit != '') $limit = "LIMIT {$limit}";
+         $where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
+         $orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
+         $limit   = !empty($limit)   ? (strpos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
          return $this->query("DELETE FROM {$from} {$where} {$orderby} {$limit}");
       }
    }
@@ -219,14 +220,15 @@ class DBAPI {
     *
     */
    function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "") {
+      global $modx;
       if (!$from)
-         return false;
+         $modx->messageQuit("Empty \$from parameters in DBAPI::select().");
       else {
          $from = $this->replaceFullTableName($from);
-         $where = ($where != "") ? "WHERE $where" : "";
-         $orderby = ($orderby != "") ? "ORDER BY $orderby " : "";
-         $limit = ($limit != "") ? "LIMIT $limit" : "";
-         return $this->query("SELECT $fields FROM $from $where $orderby $limit");
+         $where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
+         $orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
+         $limit   = !empty($limit)   ? (strpos(ltrim($limit),   "LIMIT")!==0    ? "LIMIT {$limit}"      : $limit)   : '';
+         return $this->query("SELECT {$fields} FROM {$from} {$where} {$orderby} {$limit}");
       }
    }
 
@@ -235,23 +237,18 @@ class DBAPI {
     *
     */
    function update($fields, $table, $where = "") {
+      global $modx;
       if (!$table)
-         return false;
+         $modx->messageQuit("Empty \$from parameters in DBAPI::update().");
       else {
          $table = $this->replaceFullTableName($table);
-         if (!is_array($fields))
-            $flds = $fields;
-         else {
-            $flds = '';
-            foreach ($fields as $key => $value) {
-               if (!empty ($flds))
-                  $flds .= ",";
-               $flds .= $key . "=";
-               $flds .= "'" . $value . "'";
-            }
+         if (is_array($fields)) {
+            foreach ($fields as $key => $value)
+               $fields[$key] = "`{$key}` = '{$value}'";
+            $fields = implode(",", $fields);
          }
-         $where = ($where != "") ? "WHERE $where" : "";
-         return $this->query("UPDATE $table SET $flds $where");
+         $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
+         return $this->query("UPDATE {$table} SET {$fields} {$where}");
       }
    }
 
@@ -260,27 +257,35 @@ class DBAPI {
     * @desc:  returns either last id inserted or the result from the query
     */
    function insert($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "") {
+      global $modx;
       if (!$intotable)
-         return false;
+         $modx->messageQuit("Empty \$from parameters in DBAPI::insert().");
       else {
-         if (!is_array($fields))
-            $flds = $fields;
-         else {
-            $keys = array_keys($fields);
-            $values = array_values($fields);
-            $flds = "(" . implode(",", $keys) . ") " .
-             (!$fromtable && $values ? "VALUES('" . implode("','", $values) . "')" : "");
-            if ($fromtable) {
-               $fromtable = $this->replaceFullTableName($fromtable);
-               $where = ($where != "") ? "WHERE $where" : "";
-               $limit = ($limit != "") ? "LIMIT $limit" : "";
-               $sql = "SELECT $fromfields FROM $fromtable $where $limit";
+         $intotable = $this->replaceFullTableName($intotable);
+         if (!is_array($fields)) {
+            $query = $this->query("INSERT INTO {$intotable} {$fields}");
+         } else {
+            if (empty($fromtable)) {
+               $fields = "(`".implode("`, `", array_keys($fields))."`) VALUES('".implode("', '", array_values($fields))."')";
+               $rt = $this->query("INSERT INTO {$intotable} {$fields}");
+            } else {
+               if (version_compare($this->getVersion(),"4.0.14")>=0) {
+                  $fromtable = $this->replaceFullTableName($fromtable);
+                  $fields = "(".implode(",", array_keys($fields)).")";
+                  $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
+                  $limit = !empty($limit) ? (strpos(ltrim($limit), "LIMIT")!==0 ? "LIMIT {$limit}" : $limit) : '';
+                  $rt = $this->query("INSERT INTO {$intotable} {$fields} SELECT {$fromfields} FROM {$fromtable} {$where} {$limit}");
+               } else {
+                  $ds = $this->select($fromfields, $fromtable, $where, '', $limit);
+                  while ($row = $this->getRow($ds)) {
+                     $fields = "(".implode(",", array_keys($fields)).") VALUES('".implode("', '", $row)."')";
+                     $rt = $this->query("INSERT INTO {$intotable} {$fields}");
+                  }
+               }
             }
          }
-         $intotable = $this->replaceFullTableName($intotable);
-         $rt = $this->query("INSERT INTO $intotable $flds $sql");
-         $lid = $this->getInsertId();
-         return $lid ? $lid : $rt;
+         if (($lid = $this->getInsertId())===false) $modx->messageQuit("Couldn't get last insert key!");
+         return $lid;
       }
    }
    /**
@@ -577,8 +582,9 @@ class DBAPI {
    function makeArray($rs=''){
       if(!$rs) return false;
       $rsArray = array();
-      $qty = $this->getRecordCount($rs);
-      for ($i = 0; $i < $qty; $i++) $rsArray[] = $this->getRow($rs);
+      while ($row = $this->getRow($rs)) {
+            $rsArray[] = $row;
+      }
       return $rsArray;
    }
    

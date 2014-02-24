@@ -1,78 +1,51 @@
 <?php
-if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
 switch((int) $_REQUEST['a']) {
   case 88:
     if(!$modx->hasPermission('edit_web_user')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   case 87:
     if(!$modx->hasPermission('new_web_user')) {
-      $e->setError(3);
-      $e->dumpError();
+      $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
     break;
   default:
-    $e->setError(3);
-    $e->dumpError();
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 
 // check to see the snippet editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=88 AND $dbase.`".$table_prefix."active_users`.id=$user";
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1) {
-	for ($i=0;$i<$limit;$i++) {
-		$lock = $modx->db->getRow($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {
-			$msg = sprintf($_lang["lock_msg"],$lock['username'],"web user");
-			$e->setError(5, $msg);
-			$e->dumpError();
-		}
+$rs = $modx->db->select('internalKey, username', $modx->getFullTableName('active_users'), "action=88 AND id='{$user}' AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($lock = $modx->db->getRow($rs)) {
+			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"], $lock['username'], "web user"));
 	}
-}
 // end check for lock
 
 if($_REQUEST['a']=='88') {
 	// get user attributes
-	$sql = "SELECT * FROM $dbase.`".$table_prefix."web_user_attributes` WHERE $dbase.`".$table_prefix."web_user_attributes`.internalKey = ".$user.";";
-	$rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
-	if($limit>1) {
-		echo "More than one user returned!<p>";
-		exit;
-	}
-	if($limit<1) {
-		echo "No user returned!<p>";
-		exit;
-	}
+	$rs = $modx->db->select('*', $modx->getFullTableName('web_user_attributes'), "internalKey = '{$user}'");
 	$userdata = $modx->db->getRow($rs);
+	if(!$userdata) {
+		$modx->webAlertAndQuit("No user returned!");
+	}
 
 	// get user settings
-	$sql = "SELECT wus.* FROM $dbase.`".$table_prefix."web_user_settings` wus WHERE wus.webuser = ".$user.";";
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select('*', $modx->getFullTableName('web_user_settings'), "webuser = '{$user}'");
 	$usersettings = array();
 	while($row=$modx->db->getRow($rs)) $usersettings[$row['setting_name']]=$row['setting_value'];
 	extract($usersettings, EXTR_OVERWRITE);
 
 	// get user name
-	$sql = "SELECT * FROM $dbase.`".$table_prefix."web_users` WHERE $dbase.`".$table_prefix."web_users`.id = ".$user.";";
-	$rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
-	if($limit>1) {
-		echo "More than one user returned while getting username!<p>";
-		exit;
+	$rs = $modx->db->select('*', $modx->getFullTableName('web_users'), "id = '{$user}'");
+	$usernamedata = $modx->db->getRow($rs)
+	if(!$usernamedata) {
+		$modx->webAlertAndQuit("No user returned while getting username!");
 	}
-	if($limit<1) {
-		echo "No user returned while getting username!<p>";
-		exit;
-	}
-	$usernamedata = $modx->db->getRow($rs);
 	$_SESSION['itemname']=$usernamedata['username'];
 } else {
 	$userdata = array();
@@ -525,11 +498,8 @@ if($use_udperms==1) {
 $groupsarray = array();
 
 if($_GET['a']=='88') { // only do this bit if the user is being edited
-	$sql = "SELECT * FROM $dbase.`".$table_prefix."web_groups` where webuser=".$_GET['id']."";
-	$rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
-	for ($i = 0; $i < $limit; $i++) {
-		$currentgroup=$modx->db->getRow($rs);
+	$rs = $modx->db->select('*', $modx->getFullTableName('web_groups'), "webuser='{$_GET['id']}'");
+	while ($currentgroup=$modx->db->getRow($rs)) {
 		$groupsarray[$i] = $currentgroup['webgroup'];
 	}
 }
@@ -544,11 +514,8 @@ if(is_array($_POST['user_groups'])) {
               <script type="text/javascript">tpUser.addTabPage( document.getElementById( "tabPermissions" ) );</script>
             ';
     echo '<p>'. $_lang['access_permissions_user_message'] . '</p>';
-	$sql = "SELECT name, id FROM $dbase.`".$table_prefix."webgroup_names` ORDER BY name";
-	$rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
-	for($i=0; $i<$limit; $i++) {
-	   $row=$modx->db->getRow($rs);
+	$rs = $modx->db->select('name, id', $modx->getFullTableName('webgroup_names'), '', 'name');
+	while ($row=$modx->db->getRow($rs)) {
            echo '<input type="checkbox" name="user_groups[]" value="'.$row['id'].'"'.(in_array($row['id'], $groupsarray) ? ' checked="checked"' : '').' />'.$row['name'].'<br />';
 	}
     

@@ -39,9 +39,7 @@ class ditto {
 		$table = $modx->getFullTableName("site_tmplvars");
 		$tvs = $modx->db->select("name", $table);
 			// TODO: make it so that it only pulls those that apply to the current template
-		$dbfields = array();
-		while ($dbfield = $modx->db->getRow($tvs))
-			$dbfields[] = $dbfield['name'];
+		$dbfields = $modx->db->getColumn('name', $tvs);
 		return $dbfields;
 	}
 	
@@ -472,8 +470,7 @@ class ditto {
 		global $modx,$dittoID;
 		$table = $modx->getFullTableName("site_modules");
 		$idResult = $modx->db->select("id", $table,"name='QuickEdit'","id","1");
-		$id = $modx->db->getRow($idResult);
-		$id = $id["id"];
+		$id = $modx->db->getValue($idResult);
 		$custom = array("author","date","url","title");
 		$set = $modx->hasPermission('exec_module');
 		foreach ($fields as $dv) {
@@ -782,23 +779,20 @@ class ditto {
 		$tb1 = $modx->getFullTableName("site_tmplvar_contentvalues");
 		$tb2 = $modx->getFullTableName("site_tmplvars");
 
-		$query = "SELECT stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value";
-		$query .= " FROM ".$tb1." stc LEFT JOIN ".$tb2." stv ON stv.id=stc.tmplvarid ";
-		$query .= " WHERE stv.name='".$tvname."' AND stc.contentid IN (".implode($docIDs,",").") ORDER BY stc.contentid ASC;";
-		$rs = $modx->db->query($query);
-		$tot = $modx->db->getRecordCount($rs);
+		$rs= $modx->db->select(
+			"stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value",
+			"{$tb1} AS stc LEFT JOIN {$tb2} AS stv ON stv.id=stc.tmplvarid",
+			"stv.name='{$tvname}' AND stc.contentid IN (".implode($docIDs,",").")",
+			"stc.contentid ASC"
+			);
 		$resourceArray = array();
-		for($i=0;$i<$tot;$i++)  {
-			$row = @$modx->db->getRow($rs);
+		while ($row = $modx->db->getRow($rs)) {
 			$resourceArray["#".$row['contentid']][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);   
 			$resourceArray["#".$row['contentid']]["tv".$row['name']] = $resourceArray["#".$row['contentid']][$row['name']];
 		}
-		if ($tot != count($docIDs)) {
-			$query = "SELECT name,type,display,display_params,default_text";
-			$query .= " FROM $tb2";
-			$query .= " WHERE name='".$tvname."' LIMIT 1";
-			$rs = $modx->db->query($query);
-			$row = @$modx->db->getRow($rs);
+		if (count($resourceArray) != count($docIDs)) {
+			$rs = $modx->db->select("name,type,display,display_params,default_text", $tb2, "name='{$tvname}'", '', 1);
+			$row = $modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
 				foreach ($docIDs as $id) {
 					$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
@@ -884,7 +878,6 @@ class ditto {
 		return false;
 	} else {
 		sort($ids);
-		$limit= ($limit != "") ? "LIMIT $limit" : ""; // LIMIT capabilities - rad14701
 		$tblsc= $modx->getFullTableName("site_content");
 		$tbldg= $modx->getFullTableName("document_groups");
     $tbltvc = $modx->getFullTableName("site_tmplvar_contentvalues");
@@ -899,7 +892,7 @@ class ditto {
     //Added by Andchir (http://modx-shopkeeper.ru/)
 		if(substr($where, 0, 5)=="@SQL:"){
       $where = ($where == "") ? "" : substr(str_replace('@eq','=',$where), 5);
-      $left_join_tvc = "LEFT JOIN $tbltvc tvc ON sc.id = tvc.contentid";
+      $left_join_tvc = "LEFT JOIN $tbltvc AS tvc ON sc.id = tvc.contentid";
     }else{
 			$where= ($where == "") ? "" : 'AND sc.' . implode('AND sc.', preg_replace("/^\s/i", "", explode('AND', $where)));
       $left_join_tvc = '';
@@ -915,21 +908,19 @@ class ditto {
 		
 		$published = ($published) ? "AND sc.published=1" : ""; 
 		
-		//$sql = "SELECT DISTINCT $fields FROM $tblsc sc 
-    $sql = "SELECT DISTINCT $fields FROM $tblsc sc $left_join_tvc
-		LEFT JOIN $tbldg dg on dg.document = sc.id
-		WHERE sc.id IN (" . join($ids, ",") . ") $published AND sc.deleted=$deleted $where
-		".($public ? 'AND ('.$access.')' : '')." GROUP BY sc.id" .
-		($sort ? " ORDER BY $sort" : "") . " $limit ";
-
-		$result= $modx->db->query($sql);
+		$result= $modx->db->select(
+			"DISTINCT {$fields}",
+			"{$tblsc} AS sc {$left_join_tvc} LEFT JOIN {$tbldg} dg on dg.document = sc.id",
+			"sc.id IN (" . implode(',', $ids) . ") {$published} AND sc.deleted='{$deleted}' {$where} ".($public ? 'AND ('.$access.')' : '')." GROUP BY sc.id",
+			$sort,
+			$limit
+			);
 		$resourceArray= array ();
-		$cnt = @$modx->db->getRecordCount($result);
+		$cnt = $modx->db->getRecordCount($result);
 		$TVData = array();
 		$TVIDs = array();
 		if ($cnt) {
-			for ($i= 0; $i < $cnt; $i++) {
-				$resource = $modx->db->getRow($result);
+			while ($resource = $modx->db->getRow($result)) {
 				if ($modx->config["server_offset_time"] != 0 && $dateSource !== false) {
 					$dateValue = (is_int($resource[$dateSource]) !== true) ? $resource[$dateSource] : strtotime($resource[$dateSource]);
 					$resource[$dateSource] = $dateValue + $modx->config["server_offset_time"];
@@ -983,16 +974,8 @@ class ditto {
 	        $access= ($modx->isFrontend() ? "sc.privateweb=0" : "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0") .
 	         (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
 			$published = ($published) ? "AND sc.published=1" : "";         
-			$sql= "SELECT DISTINCT sc.id FROM $tblsc sc
-	                LEFT JOIN $tbldg dg on dg.document = sc.id
-	                WHERE (sc.id IN (" . join($ids, ",") . ") $published AND sc.deleted=0)
-	                AND ($access)
-	                GROUP BY sc.id ";
-	        $result= $modx->db->query($sql);
-	        $resourceArray= array ();
-	        for ($i= 0; $i < @ $modx->db->getRecordCount($result); $i++) {
-	            array_push($resourceArray, @ $modx->db->getRow($result));
-	        }
+	        $result= $modx->db->select("DISTINCT sc.id", "{$tblsc} sc LEFT JOIN {$tbldg} dg on dg.document = sc.id", "(sc.id IN (" . join($ids, ",") . ") $published AND sc.deleted=0) AND ({$access}) GROUP BY sc.id");
+	        $resourceArray = $modx->db->makeArray($result);
 	        return $resourceArray;
 	    }
 	}

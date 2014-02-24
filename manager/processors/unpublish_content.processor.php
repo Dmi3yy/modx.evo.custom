@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_document')||!$modx->hasPermission('publish_document')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $id = $_REQUEST['id'];
@@ -29,22 +28,20 @@ $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
-	include "header.inc.php";
-	?><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div>
-	<div class="sectionBody">
-	<p><?php echo $_lang['access_permission_denied']; ?></p>
-	<?php
-	include "footer.inc.php";
-	exit;
+	$modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
 
 // update the document
-$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET published=0, pub_date=0, unpub_date=0, editedby=".$modx->getLoginUserID().", editedon=".time().", publishedby=0, publishedon=0 WHERE id=$id;";
-
-$rs = $modx->db->query($sql);
-if(!$rs){
-	echo "An error occured while attempting to unpublish the document.";
-}
+$modx->db->update(
+	array(
+		'published'   => 0,
+		'pub_date'    => 0,
+		'unpub_date'  => 0,
+		'editedby'    => $modx->getLoginUserID(),
+		'editedon'    => time(),
+		'publishedby' => 0,
+		'publishedon' => 0,
+	), $modx->getFullTableName('site_content'), "id='{$id}'");
 
 // invoke OnDocUnPublished  event
 $modx->invokeEvent("OnDocUnPublished",array("docid"=>$id));
