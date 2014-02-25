@@ -2041,7 +2041,9 @@ class DocumentParser {
 	 * @return {array; false} - Result array, or false.
 	 */
     function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
-		$published = ($published !== 'all') ? 'AND sc.published = '.$published : '';
+		$tblsc = $this->getFullTableName('site_content');
+        $tbldg = $this->getFullTableName('document_groups');
+        $published = ($published !== 'all') ? 'AND sc.published = '.$published : '';
 		$deleted = ($deleted !== 'all') ? 'AND sc.deleted = '.$deleted : '';
 		
 		if ($where != ''){
