@@ -443,9 +443,9 @@ class resourse {
 		}
 		if (!empty($this->set)){
 			if($this->newDoc){
-				$this->modx->db->insert($this->set, $this->_table['site_content']);
+				$this->modx->db->query("INSERT into {$this->_table['site_content']} SET ".implode(', ', $this->set));
 			}else{
-				$this->modx->db->update($this->set, $this->_table['site_content'], "id = '{$this->id}'");
+				 $this->modx->db->query("UPDATE {$this->_table['site_content']} SET ".implode(', ', $this->set)." WHERE id = ".$this->id);
 			}
 		}
 		
