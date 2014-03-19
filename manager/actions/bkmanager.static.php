@@ -502,12 +502,13 @@ class Mysqldumper {
 			}
 			if($callBack==='snapshot')
 			{
+				/*
 				switch($tblval)
 				{
 					case $modx->db->config['table_prefix'].'event_log':
 					case $modx->db->config['table_prefix'].'manager_log':
 						continue 2;
-				}
+				}*/
 				if(!preg_match('@^'.$modx->db->config['table_prefix'].'@', $tblval)) continue;
 			}
 			$output .= "{$lf}{$lf}# --------------------------------------------------------{$lf}{$lf}";
