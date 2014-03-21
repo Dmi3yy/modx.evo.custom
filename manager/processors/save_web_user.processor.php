@@ -347,7 +347,7 @@ function save_user_quoted_printable($string) {
 function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $modx,$_lang,$websignupemail_message;
 	global $emailsubject, $emailsender;
-	global $site_name, $site_start, $site_url;
+	global $site_name;
 	$manager_url = MODX_MANAGER_URL;
 	$message = sprintf($websignupemail_message, $uid, $pwd); // use old method
 	// replace placeholders
@@ -366,7 +366,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$param['to']      = $email;
 	$rs = $modx->sendmail($param);
 	if (!$rs) {
-		$modx->manager->saveFormValues($mode);
+		$modx->manager->saveFormValues();
 		$modx->messageQuit("{$email} - {$_lang['error_sending_email']}");
 	}
 }
