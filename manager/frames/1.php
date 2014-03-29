@@ -6,7 +6,7 @@ if(!isset($modx->config['manager_menu_height'])) $modx->config['manager_menu_hei
 if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '260';
 $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 ?>
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
 	<title><?php echo $site_name?> - (MODX CMS Manager)</title>
