@@ -421,13 +421,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             </tr>
         </table>
     </td>
-    <td align="right">
-        <table cellpadding="0" cellspacing="0" border="0">
-            <tr>
-            <td><a href="#" class="treeButton" id="Button6" onClick="top.mainMenu.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><?php echo $_style['hide_tree']; ?></a></td>
-            </tr>
-        </table>
-    </td>
   </tr>
 </table>
 
