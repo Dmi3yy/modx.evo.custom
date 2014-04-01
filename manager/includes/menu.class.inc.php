@@ -49,7 +49,7 @@ class EVOmenu{
 				
 				$countChild++;
 				$output .= '
-				<li id="'.$value[11].'" class="'.(isset($this->menu[$value[0]]) ? $this->defaults['parentClass'] : '').' '.$value[10].'">
+				<li id="'.$value[0].'" class="'.(isset($this->menu[$value[0]]) ? $this->defaults['parentClass'] : '').' '.$value[10].'">
 					<a href="'.$value[3].'" alt="'.$value[4].'" target="'.$value[7].'" onclick="'.$value[5].'"
 						'.(isset($this->menu[$value[0]])?' class="'.$this->defaults['parentLinkClass'].'"':'').' 
 						'.(isset($this->menu[$value[0]])?' '.$this->defaults['parentLinkAttr']:'').'>
