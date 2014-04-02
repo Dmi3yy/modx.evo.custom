@@ -257,7 +257,12 @@ switch ($action) {
         if($frame>9) {
             $enable_debug=false;    // this is to stop the debug thingy being attached to the framesets
         }
-        include_once "frames/".$frame.".php";
+
+        if(is_file(MODX_MANAGER_PATH."media/style/".$manager_theme."/frames/1.php")) {
+            include_once "media/style/".$manager_theme."/frames/".$frame.".php";
+        }else{
+            include_once "frames/".$frame.".php";
+        }
     break;
 /********************************************************************/
 /* show the homepage                                                */
