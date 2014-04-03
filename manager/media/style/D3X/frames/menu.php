@@ -223,8 +223,7 @@ if($modx->hasPermission('help')) { ?>
     <input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id());?>" />
 <div id="Navcontainer">
 <div id="divNav">
-    <?php include('mainmenu.php'); ?>
-</div>
+    <?php include(MODX_MANAGER_PATH.'media/style/'.$manager_theme.'/frames/mainmenu.php'); ?></div>
 </div>
 </form>
 
