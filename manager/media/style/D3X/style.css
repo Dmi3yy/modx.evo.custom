@@ -291,7 +291,7 @@ form select
     vertical-align:middle;
     padding:4px;
     -webkit-font-smoothing: antialiased;
-    margin: 0 0 5px 0;
+    margin: 0 0 0 0;
     width:auto!;
 
 }
@@ -317,7 +317,7 @@ form textarea {
     width: 100%;
     font-size: 13px;
     padding: 0 5px;
-    margin: 0 0 5px 0;
+    margin: 0 0 0 0;
 
 
 	}
@@ -1873,12 +1873,12 @@ code {font-size:inherit;font-family: 'Courier New','Courier', monospace;backgrou
 }
 
 #tabGeneral > table tr td:first-child{
-    width:140px;
+    width:160px;
     padding:5px 4px 7px 0;
 }
 #tabGeneral > table table input[type=button] {
     position: relative;
-    top:-2px
+    top:2px
 }
 #tabGeneral > table table .inputBox {margin-right:5px}
 
