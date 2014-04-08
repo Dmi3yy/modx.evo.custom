@@ -2479,8 +2479,9 @@ class DocumentParser {
      *
      * @return {string; false}
      */
+    /*
     function getTpl($tpl){
-        switch(strpos($tpl,':')>strpos($tpl,' ') ? current(explode(':',$tpl)) : current(explode(' ',$tpl))){
+        switch(strpos($tpl,':')>(strpos($tpl,' ') ? current(explode(':',$tpl)) : current(explode(' ',$tpl) )){
             case '@CODE:': 
             case '@CODE ':
                 $template=substr($tpl,0,6);
@@ -2513,7 +2514,7 @@ class DocumentParser {
         }
         return !empty($template) ? $template : false;
     }
-
+    */
 
     
     /**
