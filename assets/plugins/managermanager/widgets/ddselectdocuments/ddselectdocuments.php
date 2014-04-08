@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddSelectDocuments
- * @version 1.2.2 (2014-02-14)
+ * @version 1.2.1 (2014-01-09)
  * 
  * @desc A widget for ManagerManager that makes selection of documents ids easier.
  * 
@@ -20,7 +20,7 @@
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_ddselectdocuments/1.2.2
+ * @link http://code.divandesign.biz/modx/mm_ddselectdocuments/1.2.1
  * 
  * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
@@ -40,7 +40,7 @@ function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentId
 		
 		$output .= includeJsCss($widgetDir.'ddselectdocuments.css', 'html');
 		$output .= includeJsCss($pluginDir.'js/jquery-ui-1.10.3.min.js', 'html', 'jquery-ui', '1.10.3');
-		$output .= includeJsCss($widgetDir.'jquery.ddMultipleInput-1.2.1.min.js', 'html', 'jquery.ddMultipleInput', '1.2.1');
+		$output .= includeJsCss($widgetDir.'jquery.ddMultipleInput-1.2.min.js', 'html', 'jquery.ddMultipleInput', '1.2');
 		
 		$e->output($output);
 	}else if ($e->name == 'OnDocFormRender'){
