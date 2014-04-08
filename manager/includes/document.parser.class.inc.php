@@ -980,9 +980,8 @@ class DocumentParser {
 		if ((0 < $this->config['error_reporting']) && $msg && isset($php_errormsg)) {
 			$error_info = error_get_last();
 			if ($this->detectError($error_info['type'])) {
-				extract($error_info);
 				$msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
-				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Plugin', $text, $line, $msg);
+				$this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Plugin', $error_info['message'], $error_info['line'], $msg);
 				if ($this->isBackend()) {
 					$this->event->alert('An error occurred while loading. Please see the event log for more information.<p>' . $msg . '</p>');
 				}
@@ -1013,9 +1012,8 @@ class DocumentParser {
 		if ((0 < $this->config['error_reporting']) && isset($php_errormsg)) {
 			$error_info = error_get_last();
 			if ($this->detectError($error_info['type'])) {
-				extract($error_info);
 				$msg = ($msg === false) ? 'ob_get_contents() error' : $msg;
-				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Snippet', $text, $line, $msg);
+				$this->messageQuit('PHP Parse Error', '', true, $error_info['type'], $error_info['file'], 'Snippet', $error_info['message'], $error_info['line'], $msg);
 				if ($this->isBackend()) {
 					$this->event->alert('An error occurred while loading. Please see the event log for more information<p>' . $msg . $snip . '</p>');
 				}
@@ -1816,14 +1814,15 @@ class DocumentParser {
 			'description' => $msg,
 			'user'        => $LoginUserID,
 		), $this->getFullTableName('event_log'));
-        if(isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0')
-        {
-            if($this->config['send_errormail'] <= $type)
-            {
-                $subject = 'Error mail from ' . $this->config['site_name'];
-                $this->sendmail($subject,$source);
-            }
-        }
+		if (isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0') {
+			if ($this->config['send_errormail'] <= $type) {
+				$this->sendmail(array(
+						'subject' => 'MODX System Error on ' . $this->config['site_name'],
+						'body' => 'Source: ' . $source . ' - The details of the error could be seen in the MODX system events log.',
+						'type' => 'text')
+				);
+			}
+		}
     }
 
     function sendmail($params=array(), $msg='')
@@ -1901,6 +1900,7 @@ class DocumentParser {
         $this->mail->FromName = (!isset($p['fromname'])) ? $this->config['site_name'] : $p['fromname'];
         $this->mail->Subject  = (!isset($p['subject']))  ? $this->config['emailsubject'] : $p['subject'];
         $this->mail->Body     = $p['body'];
+        if (isset($p['type']) && $p['type'] == 'text') $this->mail->IsHTML(false);
         $rs = $this->mail->send();
         return $rs;
     }
@@ -2262,6 +2262,7 @@ class DocumentParser {
 				if (preg_match('/\.pageCache/',$name) && !in_array($name, $deletedfiles)) {
 					$deletedfiles[] = $name;
 					unlink($file);
+					clearstatcache();
 				}
 			}
 		}
