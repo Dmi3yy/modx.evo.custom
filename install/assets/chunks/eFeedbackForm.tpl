@@ -16,7 +16,7 @@
 <form  class="eform" method="post" action="[~[*id*]~]">
 
 <input type="hidden" name="formid" value="feedbackForm" />
-
+<input value="" name="special" class="special" type="text" eform="Спец:date:0"  style="display:none;" />
 <p>
     <input type="text" name="name" id="name" class="grid_3" value=""  eform="Имя:string:1"/>
     <label for="name">Ваше имя</label>
@@ -39,7 +39,7 @@
     <input type="text" class="ver" name="vericode" /><img class="feed" src="[+verimageurl+]" alt="Введите код" />
 </p>            
 <p>
-    <input type="submit" name="submit" class="grid_2" value="Отправить сообщение"  class="subeform"/>
+    <input type="submit" name="submit" class="subeform grid_2" value="Отправить сообщение"/>
  </p>
 
 </form>

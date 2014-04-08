@@ -4,11 +4,11 @@ class errorHandler{
 
 var $errorcode;
 var $errors = array();
-		
+
 	function errorHandler() {
-	
+		
 		$_lang = $this->include_lang('errormsg');
-	
+		
 		$this->errors = array(
 		0	=>	$_lang["No errors occured."],
 		1	=>	$_lang["An error occured!"],
@@ -57,7 +57,7 @@ var $errors = array();
 			include_once("{$lang_path}{$manager_language}.inc.php");
 		return $_lang;
 	}
-
+	
 	function setError($errorcode, $custommessage=""){
 		$this->errorcode=$errorcode;
 		$this->errormessage=$this->errors[$errorcode];
@@ -74,7 +74,7 @@ var $errors = array();
 ?>
 	<html>
 	<head>
-	<title>MODx :: Error</title>
+	<title>MODX :: Error</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>">
 	<script>
 		function showError(){

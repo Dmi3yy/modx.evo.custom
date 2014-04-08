@@ -3,7 +3,48 @@
 
 !!Ченжлог не содержит те правки которые не отличаются с офф версией 
 
-текущая версия 1.0.12-d6  (12.09.2013)
+текущая версия 1.0.13RC2-d6.5  (19.12.2013)
+=======================================================
+- phpthumb @escapeshellarg
+- fix tv type date
+- new emmet shorts for evo
+- fix matchBrackets in CodeMirror
+- fix bug with site_url and get
+- fix save web user
+- update tinyMCE to 3.5.10
+- fix backup format file Y-m-d_H-i-s - now new always top
+- all fix from (evo 1.0.13 http://tracker.modx.com/versions/278) 
+- update ManagerManager to 0.6
+
+
+текущая версия 1.0.12-d6.4  (15.10.2013)
+=======================================================
+- обновлен Репозиторий Extras.Evo до версии 0.1.2
+- исправлен баг при использовании кавычек в имени сайта
+- возвращена на место тема FULL для TinyMCE
+- [+prefix+] изменен назад на $modx->getFullTableName
+- DocInfo обновлен до 0.3 теперь не нужно ставить tv=1 при использовании TV параметров
+- fix @CHUNK in TV
+- добавлен @EVAL для значений по умолчанию
+- TV выбор шаблона вернул в первую вкладку
+- Исправленно сохранение пароля для SMTP соединения
+- Patch findTemplateVars for compatibility with HPx
+- Fix MODX_BASE_PATH use
+- Make one point to clearCache
+- Trim slash in base url & path
+- Add hide plugin in sort
+- Correct preview link 
+- Change input size in access permissions
+- Add dumpPlugins & pluginsCode out
+- Add backtrace info to dumpSql
+- Delete old function and compare for old php version
+- Add ID in QM+ toolbar.
+- Bugfix for source file name (and log errors) 
+- Кнопку выключения плагина вернул на первую страничку
+
+
+
+версия 1.0.12-d6  (12.09.2013)
 =======================================================
 - удален aDate (теперь в репозитории Extras-Evolution)
 - удален Sitemap (теперь в репозитории Extras-Evolution)

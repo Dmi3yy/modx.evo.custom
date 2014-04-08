@@ -11,11 +11,11 @@ class ContextMenu {
 		$this->html = "";
 		$this->visible = $visible ? $visible:false;
 		$this->width = is_numeric($width) ? intval($width):120;
-                $this->id = $id ? $id:"cntxMnu".$ContextMenuCnt;	// set id
+        $this->id = $id ? $id:"cntxMnu".$ContextMenuCnt;	// set id
 	}
 
 	function addItem($text,$action="",$img="",$disabled=0){
-		global $base_url, $manager_theme, $_style;
+		global $base_url, $_style;
 		if(!$img) $img = $base_url.$_style['tx'];
 		if(substr($action,0,3)=="js:") $action = substr($action,3);
 		else if(substr($action,0,3)=="hl:") $action = "window.location.href='".substr($action,3)."'";

@@ -108,5 +108,6 @@
 	    </div>
 	</div>
 	[+view.documents+]
+    [+view.tab+]
     </body>
 </html>

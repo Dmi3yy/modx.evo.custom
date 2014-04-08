@@ -3,23 +3,20 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 switch((int) $_REQUEST['a'])
 {
-  case 35:
+	case 35:
 		if(!$modx->hasPermission('edit_role'))
 		{
-      $e->setError(3);
-      $e->dumpError();
-    }
-    break;
-  case 38:
+			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+		}
+		break;
+	case 38:
 		if(!$modx->hasPermission('new_role'))
 		{
-      $e->setError(3);
-      $e->dumpError();
-    }
-    break;
-  default:
-    $e->setError(3);
-    $e->dumpError();
+			$modx->webAlertAndQuit($_lang["error_no_privileges"]);
+		}
+		break;
+	default:
+		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $role = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
@@ -28,18 +25,10 @@ $tbl_active_users = $modx->getFullTableName('active_users');
 $tbl_user_roles   = $modx->getFullTableName('user_roles');
 
 // check to see the role editor isn't locked
-$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=35 and id='{$role}'");
-$total = $modx->db->getRecordCount($rs);
-if($total>1) {
-	for ($i=0;$i<$total;$i++) {
-		$lock = $modx->db->getRow($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {
-			$msg = sprintf($_lang["lock_msg"],$lock['username'],$_lang['role']);
-			$e->setError(5, $msg);
-			$e->dumpError();
-		}
+$rs = $modx->db->select('username',$tbl_active_users,"action=35 and id='{$role}' AND internalKey!='".$modx->getLoginUserID()."'");
+	if ($username = $modx->db->getValue($rs)) {
+			$modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$username,$_lang['role']));
 	}
-}
 // end check for lock
 
 
@@ -47,20 +36,14 @@ if($total>1) {
 if($_REQUEST['a']=='35')
 {
 	$rs = $modx->db->select('*',$tbl_user_roles, "id='{$role}'");
-	$total = $modx->db->getRecordCount($rs);
-	if($total>1) {
-		echo "More than one role returned!<p>";
-		exit;
-	}
-	if($total<1) {
-		echo "No role returned!<p>";
-		exit;
-	}
 	$roledata = $modx->db->getRow($rs);
+	if(!$roledata) {
+		$modx->webAlertAndQuit("No role returned!");
+	}
 	$_SESSION['itemname']=$roledata['name'];
 } else {
 	$roledata = 0;
-	$_SESSION['itemname']="New role";
+	$_SESSION['itemname']=$_lang["new_role"];
 }
 
 
@@ -308,7 +291,7 @@ table td {vertical-align:top;}
 function render_form($name, $label, $status='')
 {
 	global $modx,$roledata;
-
+	
 	$tpl = <<< EOT
 <label>
 	<input name="[+name+]check" class="click" type="checkbox" onchange="changestate(document.userform.[+name+])" [+checked+] [+status+]>

@@ -48,7 +48,7 @@ class EXPORT_SITE
 		{
 			$modx->config['friendly_urls']  = 1;
 			$modx->config['use_alias_path'] = 1;
-			$this->clearCache();
+			$modx->clearCache('full');
 		}
 		$modx->config['make_folders'] = '1';
 	}
@@ -58,26 +58,21 @@ class EXPORT_SITE
 		global $modx;
 		$tbl_site_content = $modx->getFullTableName('site_content');
 		
-		if($ignore_ids !== '')
+		$ignore_ids = array_filter(array_map('intval', explode(',', $ignore_ids)));
+		if(count($ignore_ids)>0)
 		{
-			$ignore_ids = explode(',', $ignore_ids);
-			foreach($ignore_ids as $i=>$v)
-			{
-				$v = $modx->db->escape(trim($v));
-				$ignore_ids[$i] = "'{$v}'";
-			}
-			$ignore_ids = join(',', $ignore_ids);
-			$ignore_ids = "AND NOT id IN ({$ignore_ids})";
+			$ignore_ids = "AND NOT id IN ('".implode("','", $ignore_ids)."')";
+		} else {
+			$ignore_ids = '';
 		}
 		
 		$this->ignore_ids = $ignore_ids;
 		
-		$noncache = $include_noncache==1 ? '' : 'AND cacheable=1';
+		$noncache = ($noncache == 1) ? '' : 'AND cacheable=1';
 		$where = "deleted=0 AND ((published=1 AND type='document') OR (isfolder=1)) {$noncache} {$ignore_ids}";
-		$rs  = $modx->db->select('count(id) as total',$tbl_site_content,$where);
-		$row = $modx->db->getRow($rs);
-		$this->total = $row['total'];
-		return $row['total'];
+		$rs  = $modx->db->select('count(id)',$tbl_site_content,$where);
+		$this->total = $modx->db->getValue($rs);
+		return $this->total;
 	}
 	
 	function removeDirectoryAll($directory='')
@@ -247,7 +242,7 @@ class EXPORT_SITE
 				$this->run($row['id']);
 			}
 		}
-		return join("\n", $this->output);
+		return implode("\n", $this->output);
 	}
 	
     function curl_get_contents($url, $timeout = 30 )
@@ -274,12 +269,4 @@ class EXPORT_SITE
     	return $tpl;
     }
 
-    function clearCache()
-    {
-		include_once(MODX_BASE_PATH . 'manager/processors/cache_sync.class.processor.php');
-		$sync = new synccache();
-		$sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
-		$sync->setReport(false);
-		$sync->emptyCache();
-    }
 }

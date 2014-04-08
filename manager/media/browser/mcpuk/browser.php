@@ -7,7 +7,7 @@
 			callBack: function(url) {
 				window.opener.KCFinder = null;
 				window.opener.SetUrl(url);
-		}
+			}
 		};
 <?php
 	if(isset($_GET['type']))     $type = strip_tags(trim($_GET['type']));

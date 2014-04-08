@@ -3,7 +3,7 @@ $installMode = intval($_POST['installmode']);
 if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
     include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
 }else{
-    define('MGR_DIR', 'manager');
+define('MGR_DIR', 'manager');
 }
 
 // Determine upgradeability
@@ -28,7 +28,7 @@ if ($installMode > 0) {
       }
   }
 } else {
-    $database_name= 'modx';
+    $database_name= '';
     $database_server= 'localhost';
     $table_prefix= 'modx_';
 }

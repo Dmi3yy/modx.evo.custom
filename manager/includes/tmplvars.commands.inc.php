@@ -22,7 +22,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
     if (substr($nvalue, 0, 1) != '@')
         return $value;
     elseif(isset($modx->config['enable_bindings']) && $modx->config['enable_bindings']!=1 && $src==='docform') {
-         return '@Bindings is disabled.';
+        return '@Bindings is disabled.';
     }
     else {
         list ($cmd, $param) = ParseCommand($nvalue);
@@ -34,7 +34,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
                 break;
 
             case "CHUNK" : // retrieve a chunk and process it's content
-                $chunk = $modx->getChunk($param);
+                $chunk = $modx->getChunk(trim($param));
                 $output = $chunk;
                 break;
 
@@ -120,15 +120,8 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
 
 function ProcessFile($file) {
     // get the file
-    if (file_exists($file) && @ $handle = fopen($file, "r")) {
-        $buffer = "";
-        while (!feof($handle)) {
-            $buffer .= fgets($handle, 4096);
-        }
-        fclose($handle);
-    } else {
-        $buffer = " Could not retrieve document '$file'.";
-    }
+	$buffer = @file_get_contents($file);
+	if ($buffer===false) $buffer = " Could not retrieve document '$file'.";
     return $buffer;
 }
 
@@ -146,5 +139,5 @@ function ParseCommand($binding_string)
             break;
         }
     }
-        return $binding_array;
-    }
+    return $binding_array;
+}

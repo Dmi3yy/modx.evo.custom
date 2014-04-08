@@ -3,6 +3,8 @@
  *    Protect against some common security flaws
  */
 
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+
 // php bug 53632 (php 4 <= 4.4.9 and php 5 <= 5.3.4)
 if (strstr(str_replace('.','',serialize(array_merge($_GET, $_POST, $_COOKIE))), '22250738585072011')) {
     header('Status: 422 Unprocessable Entity');
@@ -31,21 +33,21 @@ if (!function_exists('modx_sanitize_gpc')) {
         }
         foreach ($target as $key => $value) {
             if (is_array($value)) {
-                    $count++;
-                    if (10 < $count) {
-                    echo 'too many nested array';
-                        exit;
-                    }
+                $count++;
+                if(10 < $count) {
+                    echo 'GPC Array nested too deep!';
+                    exit;
+                }
                 modx_sanitize_gpc($value, $count);
+				$count--;
             }
             else {
                 $value = str_replace($brackets,$r,$value);
                 $value = preg_replace('/<script/i', 'sanitized_by_modx<s cript', $value);
                 $value = preg_replace('/&#(\d+);/', 'sanitized_by_modx& #$1', $value);
                 $target[$key] = $value;
-                }
-                $count = 0;
             }
+        }
         return $target;
     }
 }
