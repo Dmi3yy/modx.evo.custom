@@ -1,13 +1,11 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_template')) {
-    $e->setError(3);
-    $e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 if (!is_numeric($_REQUEST['id'])) {
-    echo 'Template ID is NaN';
-    exit;
+    $modx->webAlertAndQuit($_lang["error_id_nan"]);
 }
 
 $tbl_site_templates         = $modx->getFullTableName('site_templates');
@@ -26,32 +24,32 @@ if(isset($_POST['listSubmitted'])) {
         foreach($orderArray as $key => $item) {
             if (strlen($item) == 0) continue; 
             $tmplvar = ltrim($item, 'item_');
-            $sql = 'UPDATE '.$tbl_site_tmplvar_templates.' SET rank='.$key.' WHERE tmplvarid='.$tmplvar.' AND templateid='.$_REQUEST['id'];
-            $modx->db->query($sql);
+            $modx->db->update(array('rank'=>$key), $tbl_site_tmplvar_templates, "tmplvarid='{$tmplvar}' AND templateid='{$_REQUEST['id']}'");
         }
     }
     // empty cache
     $modx->clearCache('full');
 }
 
-$sql = 'SELECT tv.name AS `name`, tv.id AS `id`, tr.templateid, tr.rank, tm.templatename '.
-       'FROM '.$tbl_site_tmplvar_templates.' AS tr '.
-       'INNER JOIN '.$tbl_site_tmplvars.' AS tv ON tv.id = tr.tmplvarid '.
-       'INNER JOIN '.$tbl_site_templates.' AS tm ON tr.templateid = tm.id '.
-       'WHERE tr.templateid='.(int)$_REQUEST['id'].' ORDER BY tr.rank, tv.rank, tv.id';
-
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select(
+	"tv.name AS name, tv.id AS id, tr.templateid, tr.rank, tm.templatename",
+	"{$tbl_site_tmplvar_templates} AS tr
+		INNER JOIN {$tbl_site_tmplvars} AS tv ON tv.id = tr.tmplvarid
+		INNER JOIN {$tbl_site_templates} AS tm ON tr.templateid = tm.id",
+	"tr.templateid='".(int)$_REQUEST['id']."'",
+	"tr.rank, tv.rank, tv.id"
+	);
 $limit = $modx->db->getRecordCount($rs);
 
 if($limit>1) {
-    for ($i=0;$i<$limit;$i++) {
-        $row = $modx->db->getRow($rs);
-        if ($i == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
+    $i = 0;
+    while ($row = $modx->db->getRow($rs)) {
+        if ($i++ == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
         $evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$row['name'].'</li>';
     }
+    $evtLists .= '</ul>';
 }
 
-$evtLists .= '</ul>';
 
 $header = '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">

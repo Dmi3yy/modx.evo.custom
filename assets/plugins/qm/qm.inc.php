@@ -59,12 +59,7 @@ class Qm {
         $manager_language = $this->modx->config['manager_language'];
         
         // Individual user language setting (if set)
-        $query = 'SELECT setting_name, setting_value FROM '.$this->modx->getFullTableName('user_settings').' WHERE setting_name=\'manager_language\' AND user='.$_SESSION['mgrInternalKey'];
-        $records = $this->modx->db->query($query);
-        if ($this->modx->db->getRecordCount($records) > 0) {
-            $record = $this->modx->db->getRow($records);
-            $manager_language = $record['setting_value'];
-        }
+        if (isset($_SESSION['mgrUsrConfigSet']['manager_language'])) $manager_language = $_SESSION['mgrUsrConfigSet']['manager_language'];
 	
 		// Include_once the language file
         if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
@@ -162,10 +157,9 @@ class Qm {
                     $imagePreview = '';
                     
                     // Includes
-                    $manager_path = MGR_DIR.'/';
-                    include_once($manager_path.'includes/tmplvars.inc.php');
-                    include_once($manager_path.'includes/tmplvars.commands.inc.php');
-                    include_once($manager_path.'includes/tmplvars.format.inc.php');
+                    include_once(MODX_MANAGER_PATH.'includes/tmplvars.inc.php');
+                    include_once(MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
+                    include_once(MODX_MANAGER_PATH.'includes/tmplvars.format.inc.php');
                     
                     // Get save status
                     if (isset($_POST['save'])) $save = intval($_POST['save']); 
@@ -343,11 +337,9 @@ class Qm {
                         }
                         
                         $userID = $_SESSION['mgrInternalKey'];
-                        //$docID = $this->modx->documentIdentifier;
-                        $doc = $this->modx->getDocument($docID);
                         
                         // Add ID
-                        $controls .= '<li class="qmId">ID: '.($this->modx->documentIdentifier).'</li>';
+                        $controls .= '<li class="qmId">ID: '.$docID.'</li>';
 
                         // Edit button
                         
@@ -800,9 +792,8 @@ class Qm {
             $table= $this->modx->getFullTableName("document_groups");
             
             // Check if current document is assigned to one or more doc groups
-            $sql= "SELECT id FROM {$table} WHERE document={$docID}";
-            $result= $this->modx->db->query($sql);
-            $rowCount= $this->modx->db->getRecordCount($result);
+            $result = $this->modx->db->select('count(id)', $table, "document='{$docID}'");
+            $rowCount= $this->modx->db->getValue($result);
             
             // If document is assigned to one or more doc groups, check access
             if ($rowCount >= 1) {
@@ -813,9 +804,8 @@ class Qm {
                     $docGroup = implode(",", $mrgDocGroups); 
                     
                     // Check if user has access to current document 
-                    $sql= "SELECT id FROM {$table} WHERE document = {$docID} AND document_group IN ({$docGroup})";
-                    $result= $this->modx->db->query($sql);
-                    $rowCount = $this->modx->db->getRecordCount($result);
+                    $result = $this->modx->db->select('count(id)', $table, "document = '{$docID}' AND document_group IN ({$docGroup})");
+                    $rowCount = $this->modx->db->getValue($result);
                     
                     if ($rowCount >= 1) $access = TRUE;
                 }
@@ -832,16 +822,12 @@ class Qm {
     // Function from: processors/cache_sync.class.processor.php 
     //_____________________________________________________
     function getParents($id, $path = '') { // modx:returns child's parent
-		global $modx;
 		if(empty($this->aliases)) {
-			$sql = "SELECT id, IF(alias='', id, alias) AS alias, parent FROM ".$modx->getFullTableName('site_content');
-			$qh = $modx->db->query($sql);
-			if ($qh && $modx->db->getRecordCount($qh) > 0)	{
-				while ($row = $modx->db->getRow($qh)) {
+			$qh = $this->modx->db->select("id, IF(alias='', id, alias) AS alias, parent", $this->modx->getFullTableName('site_content'));
+				while ($row = $this->modx->db->getRow($qh)) {
 					$this->aliases[$row['id']] = $row['alias'];
 					$this->parents[$row['id']] = $row['parent'];
 				}
-			}
 		}
 		if (isset($this->aliases[$id])) {
 			$path = $this->aliases[$id] . ($path != '' ? '/' : '') . $path;
@@ -895,18 +881,16 @@ class Qm {
 	    
 	    // Check permission to TV, is TV in document group?  
 	    if (!$access) {
-	        $sql = "SELECT id FROM {$table} WHERE tmplvarid = {$tvId}";
-            $result = $this->modx->db->query($sql);
-            $rowCount = $this->modx->db->getRecordCount($result);
+	        $result = $this->modx->db->select('count(id)', $table, "tmplvarid = '{$tvId}'");
+            $rowCount = $this->modx->db->getValue($result);
             // TV is not in any document group
             if ($rowCount == 0) { $access = TRUE; }    
 	    }
 	    
 	    // Check permission to TV, TV is in document group 
 	    if (!$access && $this->docGroup != '') {
-            $sql = "SELECT id FROM {$table} WHERE tmplvarid = {$tvId} AND documentgroup IN ({$this->docGroup})";
-            $result = $this->modx->db->query($sql);
-            $rowCount = $this->modx->db->getRecordCount($result);
+            $result = $this->modx->db->select('count(id)', $table, "tmplvarid = '{$tvId}' AND documentgroup IN ({$this->docGroup})");
+            $rowCount = $this->modx->db->getValue($result);
             if ($rowCount >= 1) { $access = TRUE; }
         }    
         
@@ -941,14 +925,9 @@ class Qm {
 		$locked = TRUE;
 		$userId = $_SESSION['mgrInternalKey'];
 
-		$sql = "SELECT `internalKey`
-    	          FROM {$activeUsersTable}
-    	          WHERE (`action` = 27)
-    	          AND `internalKey` != '{$userId}'
-    	          AND `id` = '{$pageId}';";
-		$result = $this->modx->db->query($sql);
+		$result = $this->modx->db->select('count(internalKey)', $activeUsersTable, "(action = 27) AND internalKey != '{$userId}' AND `id` = '{$pageId}'");
 
-		if ($this->modx->db->getRecordCount($result) === 0) {
+		if ($this->modx->db->getValue($result) === 0) {
 			$locked = FALSE;
 		}
 
@@ -979,7 +958,7 @@ class Qm {
     		);    
         }
 		
-		$where = 'internalKey = "' . $userId . '"';
+		$where = "internalKey = '{$userId}'";
 		
         $result = $this->modx->db->update($fields, $activeUsersTable, $where);
 	}
@@ -1006,67 +985,51 @@ class Qm {
         
         // Handle checkboxes and other arrays, TV to be saved must be e.g. value1||value2||value3
         if (is_array($tvContent)) {
-            foreach($tvContent as $key => $value) {
-                $tvContentTemp .= $value . '||';
-            }
-            $tvContentTemp = substr($tvContentTemp, 0, -2);  // Remove last ||
-            $tvContent = $tvContentTemp;
+            $tvContent = implode("||", $tvContent);
         }
         
         // Save TV
         if ($tvId != '') {
-            $sql = "SELECT id
-                    FROM {$tmplvarContentValuesTable}
-                    WHERE `tmplvarid` = '{$tvId}'
-                    AND `contentid` = '{$pageId}';";
-            $result = $this->modx->db->query($sql);
+            $fields = array(
+                'tmplvarid' => $tvId,
+                'contentid' => $pageId,
+                'value'     => $tvContent,
+                );
+            $result = $this->modx->db->select('count(id)', $tmplvarContentValuesTable, "tmplvarid = '{$fields['tmplvarid']}' AND contentid = '{$fields['contentid']}'");
             
             // TV exists, update TV   
-            if($this->modx->db->getRecordCount($result)) {
-            
-                $sql = "UPDATE {$tmplvarContentValuesTable}
-                     SET `value` = '{$tvContent}'
-                     WHERE `tmplvarid` = '{$tvId}'
-                     AND `contentid` = '{$pageId}';";
+            if($this->modx->db->getValue($result)) {
+                $this->modx->db->update($fields, $tmplvarContentValuesTable, "tmplvarid = '{$fields['tmplvarid']}' AND contentid = '{$fields['contentid']}'");
             } 
         
             // TV does not exist, create new TV   
             else {
-                $sql = "INSERT INTO {$tmplvarContentValuesTable} (tmplvarid, contentid, value)
-                         VALUES('{$tvId}', '{$pageId}', '{$tvContent}');";        
+                $this->modx->db->insert($fields, $tmplvarContentValuesTable);
             }
             
             // Page edited by
-            $this->modx->db->update(array('editedon'=>$time, 'editedby'=>$user), $siteContentTable, 'id = "' . $pageId . '"');
+            $this->modx->db->update(
+                array(
+                    'editedon' => $time,
+                    'editedby' => $user
+                    ), $siteContentTable, "id = '{$pageId}'");
         } 
         
         // Save default field, e.g. pagetitle
         else {                
-            $sql = "UPDATE {$siteContentTable}
-                    SET 
-                    `{$tvName}` = '{$tvContent}',
-                    `editedon` = '{$time}',
-                    `editedby` = '{$user}'
-                    WHERE `id` = '{$pageId}';"; 
-                    
+            $this->modx->db->update(
+                array(
+                    $tvName    => $tvContent,
+                    'editedon' => $time,
+                    'editedby' => $user
+                    ), $siteContentTable, "id = '{$pageId}'");
         }
         
-        // Update TV
-        if($sql) { $result = $this->modx->db->query($sql); }
-        
-        // Log possible errors
-        if(!$result) {
-            $this->modx->logEvent(0, 0, "<p>Save failed!</p><strong>SQL:</strong><pre>{$sql}</pre>", 'QuickManager+');     
-        } 
-        
-        // No errors
-        else {
             // Invoke OnDocFormSave event
             $this->modx->invokeEvent('OnDocFormSave', array('mode'=>'upd', 'id'=>$pageId));
             
             // Clear cache
             $this->modx->clearCache('full');
-        }   
     }
 	
 }

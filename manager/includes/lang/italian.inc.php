@@ -3,13 +3,10 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
- * @author Nicola Lambathakis (Banzai)
- * @author Kudolink
- * @author Diego Meozzi
- * @author luigif
+ * @date 2014/02/24
+ * @author The MODX Project Team
  *
- * @language Italian
+ * @language English
  * @package modx
  * @subpackage manager
  *
@@ -375,7 +372,7 @@ $_lang["go"] = 'Vai';
 $_lang["group_access_permissions"] = 'Gruppi di accesso';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Aiuto';
-$_lang["help_msg"] = '<p>Se avete bisogno di aiuto nell\'utilizzo di MODX, vi consigliamo di visitare i <a href="http://forums.modx.com/" target="_blank">Forum MODX</a>. Inoltre, il sito MODX contiene tutta la <a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">documentazione</a> riguardo l\'uso di MODX o su come configurarlo, la risposta che state cercando potrebbe essere qui.</p><p>Prevediamo anche di offrire servizi di supporto di tipo commerciale per MODX. Se siete interessati, <a href="mailto:hello@modx.com?subject=MODX Commercial Support Inquiry">inviateci un messaggio email</a>.';
+$_lang["help_msg"] = '<p>Se avete bisogno di aiuto nell\'utilizzo di MODX, vi consigliamo di visitare i <a href="http://forums.modx.com/" target="_blank">Forum MODX</a>. Inoltre, il sito MODX contiene tutta la <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">documentazione</a> riguardo l\'uso di MODX o su come configurarlo, la risposta che state cercando potrebbe essere qui.</p><p>Prevediamo anche di offrire servizi di supporto di tipo commerciale per MODX. Se siete interessati, <a href="mailto:hello@modx.com?subject=MODX Commercial Support Inquiry">inviateci un messaggio email</a>.';
 $_lang["help_title"] = 'Aiuto';
 $_lang["hide_tree"] = 'Nascondi struttura ad albero';
 $_lang["home"] = 'Home';
@@ -1217,3 +1214,25 @@ $_lang["export_site.static.php7"] = 'Impossibile salvare i files su [+rb_base_ur
 $_lang["mutate_settings.dynamic.php6"] = 'Invia una mail per gli errori MODX';
 $_lang["mutate_settings.dynamic.php7"] = 'non notificare';
 $_lang["mutate_settings.dynamic.php8"] = 'Verrà inviata una mail con la descrizione dell\'errore MODX a [(emailsender)] ([+emailsender+]). Si potranno vedere i dettagli dell\'errore dal Log Eventi.';
+
+$_lang["error_no_privileges"]         = "Non avete i diritti necessari per effettuare questa operazione!";
+$_lang["error_no_optimise_tablename"] = "Impossibile trovare la tabella da ottimizzare!";
+$_lang["error_no_truncate_tablename"] = "Impossibile trovare la tabella da troncare!";
+$_lang["error_double_action"]         = "E' stata inviata una doppia azione (GET e POST)!";
+$_lang["error_no_id"]                 = "Nella richiesta manca l'ID del documento!";
+$_lang["error_id_nan"]                = "L'ID passato nella richiesta è NaN!";
+$_lang["error_no_parent"]             = "Impossibile trovare il nome del documento genitore!";
+$_lang["error_many_results"]          = "Sono stati trovati troppi risultati nel database!";
+$_lang["error_no_results"]            = "Sono stati trovati pochi risultati (o nessuno) nel database!";
+$_lang["error_no_user_selected"]      = "Non è stato selezionato l'utente a cui inviare questo messaggio!";
+$_lang["error_no_group_selected"]     = "Non è stato selezionato il gruppo a cui inviare questo messaggio!";
+$_lang["error_movedocument1"]         = "Il documento non può essere genitore di se stesso!";
+$_lang["error_movedocument2"]         = "Nella richiesta manca l'ID del documento!";
+$_lang["error_movedocument3"]         = "Nella richiesta non è stato indicato il nuovo genitore!";
+
+$_lang["login_processor_unknown_user"]       = "Username o password errati!";
+$_lang["login_processor_wrong_password"]     = "Username o password errati!";
+$_lang["login_processor_many_failed_logins"] = "Accesso bloccato a causa di troppi tentativi falliti!";
+$_lang["login_processor_blocked1"]           = "Impossibile accedere, l'accesso è stato bloccato!";
+$_lang["login_processor_blocked2"]           = "L'accesso è stato bloccato! Riprovare più tardi.";
+$_lang["login_processor_bad_code"]           = "Codice di sicurezza errato! Riprovare!";

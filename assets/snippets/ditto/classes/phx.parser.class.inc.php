@@ -16,7 +16,7 @@ class PHxParser {
 		$this->name = "PHx";
 		$this->version = "2.1.2";
 		$this->user["mgrid"] = intval(isset($_SESSION['mgrInternalKey']) ? $_SESSION['mgrInternalKey'] : 0);
-		$this->user["usrid"] = intval(isset($_SESSION['webInternalKey']) ? $_SESSION['mgrInternalKey'] : 0);
+		$this->user["usrid"] = intval(isset($_SESSION['webInternalKey']) ? $_SESSION['webInternalKey'] : 0);
 		$this->user["id"] = ($this->user["usrid"] > 0 ) ? (-$this->user["usrid"]) : $this->user["mgrid"];
 		$this->cache["cm"] = array();
 		$this->cache["ui"] = array();
@@ -205,7 +205,7 @@ class PHxParser {
 					case "lowerthan":	case "lt":$condition[] = intval(($output<$modifier_value[$i]));break;
 					case "isinrole": case "ir": case "memberof": case "mo": // Is Member Of  (same as inrole but this one can be stringed as a conditional)
 						if ($output == "&_PHX_INTERNAL_&") $output = $this->user["id"];
-						$grps = (strlen($modifier_value) > 0 ) ? explode(",",$modifier_value[$i]) :array();
+						$grps = (strlen($modifier_value) > 0 ) ? array_filter(array_map('trim', explode(',', $modifier_value[$i]))) :array();
 						$condition[] = intval($this->isMemberOfWebGroupByUserId($output,$grps));
 						break;
 					case "or":$condition[] = "||";break;
@@ -282,16 +282,14 @@ class PHxParser {
 						break;
 					case "inrole": // deprecated
 						if ($output == "&_PHX_INTERNAL_&") $output = $this->user["id"];
-						$grps = (strlen($modifier_value) > 0 ) ? explode(",",$modifier_value[$i]) :array();
+						$grps = (strlen($modifier_value) > 0 ) ? array_filter(array_map('trim', explode(',', $modifier_value[$i]))) :array();
 						$output = intval($this->isMemberOfWebGroupByUserId($output,$grps));
 						break;
 					default:
 						if (!array_key_exists($modifier_cmd[$i], $this->cache["cm"])) {
-							$sql = "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='phx:" . $modifier_cmd[$i] . "';";
-			             	$result = $modx->db->query($sql);
-			             	if ($modx->db->getRecordCount($result) == 1) {
-								$row = $modx->db->getRow($result);
-						 		$cm = $this->cache["cm"][$modifier_cmd[$i]] = $row["snippet"];
+			             	$result = $modx->db->select('snippet', $modx->getFullTableName("site_snippets"), "name='phx:".$modifier_cmd[$i]."'");
+			             	if ($snippet = $modx->db->getValue($result)) {
+						 		$cm = $this->cache["cm"][$modifier_cmd[$i]] = $snippet;
 						 		$this->Log("  |--- DB -> Custom Modifier");
 						 	}
 						 } else {
@@ -381,8 +379,8 @@ class PHxParser {
 		if (!array_key_exists($userid, $this->cache["mo"])) {
 			$tbl = $modx->getFullTableName("webgroup_names");
 			$tbl2 = $modx->getFullTableName("web_groups");
-			$sql = "SELECT wgn.name FROM $tbl wgn INNER JOIN $tbl2 wg ON wg.webgroup=wgn.id AND wg.webuser='".$userid."'";
-			$this->cache["mo"][$userid] = $grpNames = $modx->db->getColumn("name",$sql);
+			$rs = $modx->db->select('wgn.name', "$tbl AS wgn INNER JOIN $tbl2 AS wg ON wg.webgroup=wgn.id AND wg.webuser='{$userid}'");
+			$this->cache["mo"][$userid] = $grpNames = $modx->db->getColumn("name",$rs);
 		} else {
 			$grpNames = $this->cache["mo"][$userid];
 		}

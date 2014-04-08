@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_plugin')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 $siteURL = $modx->config['site_url'];
@@ -11,7 +10,7 @@ $updateMsg = '';
 
 if(isset($_POST['listSubmitted'])) {
     $updateMsg .= "<span class=\"warning\" id=\"updated\">Updated!<br /><br /> </span>";
-	$tbl = $dbase.'.`'.$table_prefix.'site_plugin_events`';
+	$tbl = $modx->getFullTableName('site_plugin_events');
 
 	foreach ($_POST as $listName=>$listValue) {
         if ($listName == 'listSubmitted') continue;
@@ -21,8 +20,7 @@ if(isset($_POST['listSubmitted'])) {
 	    	foreach($orderArray as $key => $item) {
 	    		if ($item == '') continue;
 	    		$pluginId = ltrim($item, 'item_');
-	    		$sql = "UPDATE $tbl set priority=".$key." WHERE pluginid=".$pluginId." and evtid=".$listName;
-	    		$modx->db->query($sql);
+	    		$modx->db->update(array('priority'=>$key), $tbl, "pluginid='{$pluginId}' AND evtid='{$listName}'");
 	    	}
     	}
     }
@@ -30,24 +28,20 @@ if(isset($_POST['listSubmitted'])) {
     $modx->clearCache('full');
 }
 
-$sql = "
-	SELECT sysevt.name as 'evtname', sysevt.id as 'evtid', pe.pluginid, plugs.name, pe.priority, plugs.disabled
-	FROM $dbase.`".$table_prefix."system_eventnames` sysevt
-	INNER JOIN $dbase.`".$table_prefix."site_plugin_events` pe ON pe.evtid = sysevt.id
-	INNER JOIN $dbase.`".$table_prefix."site_plugins` plugs ON plugs.id = pe.pluginid
-	ORDER BY sysevt.name,pe.priority
-";
-
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
+$rs = $modx->db->select(
+	"sysevt.name as evtname, sysevt.id as evtid, pe.pluginid, plugs.name, pe.priority, plugs.disabled",
+	$modx->getFullTableName('system_eventnames')." sysevt
+		INNER JOIN ".$modx->getFullTableName('site_plugin_events')." pe ON pe.evtid = sysevt.id
+		INNER JOIN ".$modx->getFullTableName('site_plugins')." plugs ON plugs.id = pe.pluginid",
+	'',
+	'sysevt.name,pe.priority'
+	);
 
 $insideUl = 0;
 $preEvt = '';
 $evtLists = '';
 $sortables = array();
-if($limit>1) {
-    for ($i=0;$i<$limit;$i++) {
-        $plugins = $modx->db->getRow($rs);
+    while ($plugins = $modx->db->getRow($rs)) {
         if ($preEvt !== $plugins['evtid']) {
             $sortables[] = $plugins['evtid'];
             $evtLists .= $insideUl? '</ul><br />': '';
@@ -57,12 +51,10 @@ if($limit>1) {
         $evtLists .= '<li id="item_'.$plugins['pluginid'].'"'.($plugins['disabled']?' style="color:#AAA"':'').'>'.$plugins['name'].($plugins['disabled']?' (hide)':'').'</li>';
         $preEvt = $plugins['evtid'];
     }
-}
+    if ($insideUl) $evtLists .= '</ul>';
 
-$evtLists .= '</ul>';
 
-$header = '
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+$header = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 	<title>MODX</title>

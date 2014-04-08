@@ -37,7 +37,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			// Delay first run until we're ready...
 			xx=updateMail.delay(1000 * 60,'',true);
 		}
-	};
+	}
 
 	function showResponse(request) {
 		var counts = request.split(',');
@@ -272,11 +272,13 @@ if($modx->hasPermission('exec_module')) {
 	// Each module
 	if ($_SESSION['mgrRole'] != 1) {
 		// Display only those modules the user can execute
-		$rs = $modx->db->query('SELECT DISTINCT sm.id, sm.name, mg.member
-				FROM '.$modx->getFullTableName('site_modules').' AS sm
-				LEFT JOIN '.$modx->getFullTableName('site_module_access').' AS sma ON sma.module = sm.id
-				LEFT JOIN '.$modx->getFullTableName('member_groups').' AS mg ON sma.usergroup = mg.user_group
-				WHERE (mg.member IS NULL OR mg.member = '.$modx->getLoginUserID().') AND sm.disabled != 1');
+		$rs = $modx->db->select(
+			'DISTINCT sm.id, sm.name, mg.member',
+			$modx->getFullTableName('site_modules')." AS sm
+				LEFT JOIN ".$modx->getFullTableName('site_module_access')." AS sma ON sma.module = sm.id
+				LEFT JOIN ".$modx->getFullTableName('member_groups')." AS mg ON sma.usergroup = mg.user_group",
+			"(mg.member IS NULL OR mg.member = ".$modx->getLoginUserID().") AND sm.disabled != 1"
+			);
 	} else {
 		// Admins get the entire list
 		$rs = $modx->db->select('*', $modx->getFullTableName('site_modules'), 'disabled != 1');

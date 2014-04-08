@@ -3,7 +3,7 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author The MODX Project Team
  *
  * @language Bulgarian
@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'Създайте препратка тук';
 $_lang["createdon"] = 'Дата на създаване';
 $_lang["credits"] = 'Екипът на MODX';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - основатели на проекта</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Архитектура на ядрото &amp; Дизайн</li></ul>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Тук можете да добавите типовете потребителско съдържание, които могат да бъдат използвани във Вашите документи. За да добавите нов запис, въведете типа на съдържанието в текстовото поле и след това щракнете на бутона \'Добавяне\'.';
 $_lang["custom_contenttype_title"] = 'Потребителски типове съдържание:';
 $_lang["database_charset"] = 'Кодова таблица на базата от данни';
@@ -372,7 +372,7 @@ $_lang["go"] = 'Отиди';
 $_lang["group_access_permissions"] = 'Права за достъп на Група Потребители';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Помощ';
-$_lang["help_msg"] = '<p>Можете да получите безплатна помощ на <a href="http://forums.modx.com" target="_blank">адреса на Форума на MODX</a>. Също така можете да посетите и <a href="http://modx.com/documentation" target="_blank">MODX Документация и Ръководства</a> , където са засегнати почти всички аспекти на MODX.</p><p>Екипът планира да предложи и платена помощ като услуга също. Моля да се информирате за платената помощ на адрес <a href="mailto:modx@vertexworks.com?subject=MODX Commercial Support Inquiry"></a>.';
+$_lang["help_msg"] = '<p>Можете да получите безплатна помощ на <a href="http://forums.modx.com" target="_blank">адреса на Форума на MODX</a>. Също така можете да посетите и <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">MODX Документация и Ръководства</a> , където са засегнати почти всички аспекти на MODX.</p><p>Екипът планира да предложи и платена помощ като услуга също. Моля да се информирате за платената помощ на адрес <a href="mailto:modx@vertexworks.com?subject=MODX Commercial Support Inquiry"></a>.';
 $_lang["help_title"] = 'Помощ';
 $_lang["hide_tree"] = 'Скриване на дървото';
 $_lang["home"] = 'Начало';
@@ -1238,3 +1238,25 @@ $_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]
 $_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
 $_lang["mutate_settings.dynamic.php7"] = 'not notify';
 $_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
+
+$_lang["error_no_privileges"]         = "You don't have enough privileges for this action!";
+$_lang["error_no_optimise_tablename"] = "Table to optimise not found in request!";
+$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_double_action"]         = "Double action (GET & POST) posted!";
+$_lang["error_no_id"]                 = "ID not passed in request!";
+$_lang["error_id_nan"]                = "ID passed in request is NaN!";
+$_lang["error_no_parent"]             = "Couldn't find parent document's name!";
+$_lang["error_many_results"]          = "Too many results returned from database!";
+$_lang["error_no_results"]            = "Not enough/ no results returned from database!";
+$_lang["error_no_user_selected"]      = "No user selected as recipient of this message!";
+$_lang["error_no_group_selected"]     = "No group selected as recipient of this message!";
+$_lang["error_movedocument1"]         = "Document cannot be it's own parent!";
+$_lang["error_movedocument2"]         = "Document's ID not passed in request!";
+$_lang["error_movedocument3"]         = "New parent not set in request!";
+
+$_lang["login_processor_unknown_user"]       = "Incorrect username or password entered!";
+$_lang["login_processor_wrong_password"]     = "Incorrect username or password entered!";
+$_lang["login_processor_many_failed_logins"] = "Due to too many failed logins, you have been blocked!";
+$_lang["login_processor_blocked1"]           = "You are blocked and cannot log in!";
+$_lang["login_processor_blocked2"]           = "You are blocked and cannot log in! Please try again later.";
+$_lang["login_processor_bad_code"]           = "The security code you entered didn't validate! Please try to login again!";

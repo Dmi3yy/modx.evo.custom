@@ -1,8 +1,7 @@
 <?php
-if(IN_MANAGER_MODE != 'true') die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('access_permissions')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // Get table names (alphabetical)
@@ -73,12 +72,14 @@ if ($modx->db->getRecordCount($rs) < 1) {
 	</table>
 	<br />
 <?php
-	$sql = 'SELECT groupnames.*, users.id AS user_id, users.username user_name '.
-	       'FROM '.$tbl_membergroup_names.' AS groupnames '.
-	       'LEFT JOIN '.$tbl_member_groups.' AS groups ON groups.user_group = groupnames.id '.
-	       'LEFT JOIN '.$tbl_manager_users.' AS users ON users.id = groups.member '.
-	       'ORDER BY groupnames.name';
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select(
+		'groupnames.*, users.id AS user_id, users.username user_name',
+		"{$tbl_membergroup_names} AS groupnames
+			LEFT JOIN {$tbl_member_groups} AS groups ON groups.user_group = groupnames.id
+			LEFT JOIN {$tbl_manager_users} AS users ON users.id = groups.member",
+		'',
+		'groupnames.name'
+		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
 	} else {
@@ -141,12 +142,14 @@ if ($modx->db->getRecordCount($rs) < 1) {
 	</table>
 	<br />
 <?php
-	$sql = 'SELECT dgnames.id, dgnames.name, sc.id AS doc_id, sc.pagetitle AS doc_title '.
-	       'FROM '.$tbl_documentgroup_names.' AS dgnames '.
-	       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document_group = dgnames.id '.
-	       'LEFT JOIN '.$tbl_site_content.' AS sc ON sc.id = dg.document '.
-	       'ORDER BY dgnames.name, sc.id';
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select(
+		'dgnames.id, dgnames.name, sc.id AS doc_id, sc.pagetitle AS doc_title',
+		"{$tbl_documentgroup_names} AS dgnames
+			LEFT JOIN {$tbl_document_groups} AS dg ON dg.document_group = dgnames.id
+			LEFT JOIN {$tbl_site_content} AS sc ON sc.id = dg.document",
+		"",
+		"dgnames.name, sc.id"
+		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
 	} else {
@@ -193,12 +196,14 @@ if ($modx->db->getRecordCount($rs) < 1) {
 
 	echo '<p>'.$_lang['access_permissions_links_tab'].'</p>';
 
-	$sql = 'SELECT groupnames.*, groupacc.id AS link_id, dgnames.id AS dg_id, dgnames.name AS dg_name '.
-	       'FROM '.$tbl_membergroup_names.' AS groupnames '.
-	       'LEFT JOIN '.$tbl_membergroup_access.' AS groupacc ON groupacc.membergroup = groupnames.id '.
-	       'LEFT JOIN '.$tbl_documentgroup_names.' AS dgnames ON dgnames.id = groupacc.documentgroup '.
-	       'ORDER BY name';
-	$rs = $modx->db->query($sql);
+	$rs = $modx->db->select(
+		"groupnames.*, groupacc.id AS link_id, dgnames.id AS dg_id, dgnames.name AS dg_name",
+		"{$tbl_membergroup_names} AS groupnames
+			LEFT JOIN {$tbl_membergroup_access} AS groupacc ON groupacc.membergroup = groupnames.id
+			LEFT JOIN {$tbl_documentgroup_names} AS dgnames ON dgnames.id = groupacc.documentgroup",
+		'',
+		'name'
+		);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span><br />';
 	} else {

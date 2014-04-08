@@ -3,8 +3,8 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
- * @author Mikko Lammi, www.maagit.fi
+ * @date 2014/02/24
+ * @author Mikko Lammi, www.maagit.fi, Kari Söderholm
  *
  * @language Finnish
  * @package modx
@@ -372,7 +372,7 @@ $_lang["go"] = 'OK';
 $_lang["group_access_permissions"] = 'Käyttäjäryhmän oikeudet';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Ohjeet';
-$_lang["help_msg"] = '<p>Ongelmatilanteissa tutustu <a href="http://forums.modx.com" target="_blank">MODX:n keskustelufoorumeihin</a>. Lisäksi kannattaa tutustua <a href="http://modx.com/documentation" target="_blank">MODX:n ohjeisiin ja oppaisiin</a> sekä <a href="http://wiki.modx.com/index.php/Main_Page" target="_blank">MODX Wikiin</a>.</p><p>Suunnitteilla on myös kaupallisen MODX-tuen tarjoaminen - ota <a href="mailto:modx@vertexworks.com?subject=MODX Commercial Support Inquiry">yhteyttä</a>, jos olet kiinnostunut.</p>';
+$_lang["help_msg"] = '<p>Ongelmatilanteissa tutustu <a href="http://forums.modx.com" target="_blank">MODX:n keskustelufoorumeihin</a>. Lisäksi kannattaa tutustua <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">MODX:n ohjeisiin ja oppaisiin</a> sekä <a href="http://wiki.modx.com/index.php/Main_Page" target="_blank">MODX Wikiin</a>.</p><p>Suunnitteilla on myös kaupallisen MODX-tuen tarjoaminen - ota <a href="mailto:hello@modx.com?subject=MODX Commercial Support Inquiry">yhteyttä</a>, jos olet kiinnostunut.</p>';
 $_lang["help_title"] = 'Ohjeet';
 $_lang["hide_tree"] = 'Piilota sivukartta';
 $_lang["home"] = 'Alkuun';
@@ -576,7 +576,7 @@ $_lang["new_template"] = 'Uusi sivupohja';
 $_lang["new_tmplvars"] = 'Uusi sivupohjan muuttuja';
 $_lang["new_user"] = 'Uusi ylläpidon käyttäjä';
 $_lang["new_web_user"] = 'Uusi web-käyttäjä';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = 'Uusi sivu';
 $_lang["no"] = 'Ei';
 $_lang["no_active_users_found"] = 'Ei aktiivisia käyttäjiä.';
 $_lang["no_activity_message"] = 'Ei luotu tai muokattu yhtään sivua.';
@@ -1094,8 +1094,8 @@ $_lang["user_use_config"] = 'Käytä järjestelmän asetusta';
 $_lang["user_zip"] = 'Postinumero';
 $_lang["username"] = 'Käyttäjänimi';
 $_lang["users"] = 'Turvallisuus';
-$_lang["valid_hostnames_message"] = 'Help prevent XSS exploits misusing the site_url system setting by providing a comma separated list of valid hostnames for this installation. This is important for some types of shared hosts or hosts direct accessible via an IP address. First hostname in the list is used if the HTTP_HOST does not match any valid hostname.';
-$_lang["valid_hostnames_title"] = 'Valid hostnames';
+$_lang["valid_hostnames_message"] = 'Auta estämään site_url järjestelmäasetusta hyväksikäyttäviä XSS haavoittuvuuksia antamalla pilkuilla eroteltu lista hyväksytyistä palvelimen nimistä (hostname) tälle asennukselle. Tämä on tärkeää tietyn tyyppisissä jaetuissa palvelinympäristöissä tai palvelimilla joita voidaan käyttää myös suoraan IP-osoitteen avulla. Jos HTTP_HOST arvo ei täsmää mihinkään hyväksyttyyn nimeen, käytetään listan ensimmäistä nimeä.';
+$_lang["valid_hostnames_title"] = 'Hyväksytyt palvelimen nimet (hostname)';
 $_lang["validate_referer_message"] = 'Tarkasta HTTP_REFERER tunnisteet vähentääksesi mahdollisuutta, että ylläpidon käyttäjiä huijataan suorittamaan tietämättään ei-toivottuja toimintoja (Cross Site Request Forgery Attack). Asetusta ei mahdollisesti voida käyttää, jos palvelin ei lähetä HTTP_REFERER tunnistetta.';
 $_lang["validate_referer_title"] = 'Tarkasta HTTP_REFERER tunnisteet?';
 $_lang["value"] = 'Arvo';
@@ -1171,8 +1171,8 @@ $_lang["files.dynamic.php1"] = 'create text file';
 $_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
 $_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
 $_lang["files.dynamic.php4"] = 'The text file was created.';
-$_lang["files_dynamic_new_folder_name"] = 'Enter new directory name:';
-$_lang["files_dynamic_new_file_name"] = 'Enter new file name:';
+$_lang["files_dynamic_new_folder_name"] = 'Syötä uuden hakemiston nimi:';
+$_lang["files_dynamic_new_file_name"] = 'Syötä uusi tiedostonimi:';
 $_lang["not_readable_dir"] = 'Can not read this directory.';
 $_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
 $_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
@@ -1198,13 +1198,13 @@ $_lang['smtp_port_title'] = 'SMTP port';
 $_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
 
-$_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
-$_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Published';
-$_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
-$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
-$_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
-$_lang["docid_incrmnt_method_2"] = 'Maximal ID + 1';
+$_lang["resource_opt_alvisibled"] = 'Käytä nykyistä aliasta aliaspolussa';
+$_lang["resource_opt_alvisibled_help"] = 'Sivun alias tulee osaksi osoitteen selkokielistä aliaspolkua';
+$_lang['resource_opt_is_published'] = 'Julkaistu';
+$_lang["docid_incrmnt_method_title"] = 'Tapa jonka mukaan uuden sivun ID numero määräytyy';
+$_lang["docid_incrmnt_method_0"] = 'Tietokantajärjestelmän automaattinen ID numeron kasvatus (auto increment)';
+$_lang["docid_incrmnt_method_1"] = 'Pienin vapaana oleva luku';
+$_lang["docid_incrmnt_method_2"] = 'Suurin käytössä oleva ID numero + 1';
 
 $_lang["cache_type_title"] = 'Document caching type';
 $_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
@@ -1221,19 +1221,41 @@ $_lang["user_other"] = 'Other';
 
 $_lang["import_site.static.php1"] = 'Reset resource tree';
 $_lang["import_site.static.php2"] = 'Reset resource tree and initialize all Resource IDs.';
-$_lang["import_site.static.php3"] = 'Target';
-$_lang["import_site.static.php4"] = 'Only &lt;body&gt;&lt;/body&gt; part';
-$_lang["import_site.static.php5"] = 'Whole file content';
+$_lang["import_site.static.php3"] = 'Kohde';
+$_lang["import_site.static.php4"] = 'Vain &lt;body&gt;&lt;/body&gt; osio';
+$_lang["import_site.static.php5"] = 'Tiedoston koko sisältö';
 
-$_lang["a83_ignore_ids_title"] = 'Ignore IDs (comma separated)';
-$_lang["export_site.static.php1"] = 'Target';
-$_lang["export_site.static.php2"] = 'Only edited Resources';
-$_lang["export_site.static.php3"] = 'All Resources';
-$_lang["export_site.static.php4"] = 'Search for';
-$_lang["export_site.static.php5"] = 'Replace with';
-$_lang["export_site.static.php6"] = 'Target';
-$_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]';
+$_lang["a83_ignore_ids_title"] = 'Jätä huomiotta ID numerot (pilkuilla eroteltuina)';
+$_lang["export_site.static.php1"] = 'Kohde';
+$_lang["export_site.static.php2"] = 'Vain muokatut sivut';
+$_lang["export_site.static.php3"] = 'Kaikki sivut';
+$_lang["export_site.static.php4"] = 'Etsi';
+$_lang["export_site.static.php5"] = 'Korvaa';
+$_lang["export_site.static.php6"] = 'Kohde';
+$_lang["export_site.static.php7"] = 'Tiedostoja ei voitu tallentaa sijaintiin [+rb_base_url+]';
 
-$_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
-$_lang["mutate_settings.dynamic.php7"] = 'not notify';
-$_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
+$_lang["mutate_settings.dynamic.php6"] = 'Lähetä sähköpostia kun MODX kohtaa virheen';
+$_lang["mutate_settings.dynamic.php7"] = 'älä huomauta';
+$_lang["mutate_settings.dynamic.php8"] = 'MODX virheen sattuessa, tieto virheen alkuperä lähetetään sähköpostilla vastaanottajalle [(emailsender)] ([+emailsender+]). Virheen yksityiskohdat voidaan nähdä MODX järjestelmän tapahtumalokista.';
+
+$_lang["error_no_privileges"]         = "Sinulla ei ole tarvittavia käyttöoikeuksia tämän toiminnon suorittamiseksi!";
+$_lang["error_no_optimise_tablename"] = "Pyynnöstä puuttui optimoitavaksi valittu taulukko!";
+$_lang["error_no_truncate_tablename"] = "Pyynnöstä puuttui tyhjennettäväksi valittu taulukko!";
+$_lang["error_double_action"]         = "Toiminto annettu kahteen kertaan (GET & POST)!";
+$_lang["error_no_id"]                 = "Pyynnöstä puuttuu ID numero!";
+$_lang["error_id_nan"]                = "Pyyntöön sisältyvä ID ei ole numeerinen!";
+$_lang["error_no_parent"]             = "Ylemmän tason sivunimeä ei löytynyt!";
+$_lang["error_many_results"]          = "Tietokanta palautti liikaa tuloksia!";
+$_lang["error_no_results"]            = "Tietokanta palautti liian vähän tai ei ollenkaan tuloksia!";
+$_lang["error_no_user_selected"]      = "Yhtään käyttäjää ei valittu tämän viestin vastaanottajaksi!";
+$_lang["error_no_group_selected"]     = "Yhtään ryhmää ei valittu tämän viestin vastaanottajaksi!";
+$_lang["error_movedocument1"]         = "Sivua ei voi asettaa itsensä alle!";
+$_lang["error_movedocument2"]         = "Pyynnöstä puuttui sivun ID numero!";
+$_lang["error_movedocument3"]         = "Pyynnöstä puuttui uuden ylätason/pääryhmän valinta!";
+
+$_lang["login_processor_unknown_user"]       = "Virheellinen käyttäjätunnus tai salasana!";
+$_lang["login_processor_wrong_password"]     = "Virheellinen käyttäjätunnus tai salasana!";
+$_lang["login_processor_many_failed_logins"] = "Kirjautumisesi on estetty liian monen epäonnistuneen kirjautumisyrityksen johdosta!";
+$_lang["login_processor_blocked1"]           = "Et voi kirjautua sisään, koska kirjautumisesi on estetty!";
+$_lang["login_processor_blocked2"]           = "Et voi kirjautua sisään, koska kirjautumisesi on estetty! Ole hyvä ja yritä myöhemmin uudelleen.";
+$_lang["login_processor_bad_code"]           = "Syöttämäsi varmistuskoodi oli virheellinen! Ole hyvä ja yritä uudelleen!";

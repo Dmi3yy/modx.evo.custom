@@ -3,7 +3,7 @@
  * MODX Country list language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author Mohsen (MotSmart), www.modxcms.ir
  *
  * @language Persian
@@ -65,7 +65,7 @@ $_country_lang["48"] = 'کامرون'; // Comoros
 $_country_lang["49"] = 'جمهوری کنگو'; // Congo
 $_country_lang["50"] = 'جزایر کوک'; // Cook Islands
 $_country_lang["51"] = 'کاستاریکا'; // Costa Rica
-$_country_lang["52"] = 'کوت د و یور'; // Cote D’Ivoire
+$_country_lang["52"] = 'کوت د و یور'; // Cote D'Ivoire
 $_country_lang["53"] = 'کرواسی'; // Croatia
 $_country_lang["54"] = 'کوبا'; // Cuba
 $_country_lang["55"] = 'قبرس'; // Cyprus

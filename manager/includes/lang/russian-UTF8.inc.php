@@ -3,7 +3,7 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author Russian MODX community
  * @author gabdullin
  * @author Jaroslav Sidorkin
@@ -21,7 +21,7 @@ $modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://e
 $modx_manager_charset = 'UTF-8';
 setlocale (LC_ALL, 'ru_RU.UTF-8');
 
-$_lang["about_msg"] = 'MODX - это <a href="http://MODX.com/what-is-MODX.html" target="_blank">PHP Application Framework и Content Management System</a>, распространяемая по лицензии <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_msg"] = 'MODX - это <a href="http://rtfm.modx.com/evolution/1.0/getting-started/what-is-modx" target="_blank">PHP Application Framework и Content Management System</a>, распространяемая по лицензии <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'О MODX';
 $_lang["access_permission_denied"] = 'У вас недостаточно прав для просмотра данного ресурса.';
 $_lang["access_permission_parent_denied"] = 'У вас недостаточно прав для создания ресурса в данном разделе';
@@ -247,7 +247,7 @@ $_lang["duplicate_name_found_general"] = 'Объект %s с именем \'%s\'
 $_lang["duplicate_name_found_module"] = 'Модуль с именем \'%s\' уже существует. Пожайлуста, введите другое имя.';
 $_lang["edit"] = 'Редактировать';
 $_lang["edit_resource"] = 'Редактировать';
-$_lang["edit_resource_title"] = 'Создать / редактировать ресурс';
+$_lang["edit_resource_title"] = 'Редактировать ресурс';
 $_lang["edit_settings"] = 'Конфигурация';
 $_lang["editedon"] = 'Дата редактирования';
 $_lang["editing_file"] = 'Редактируемый файл: ';
@@ -377,7 +377,7 @@ $_lang["go"] = 'Перейти';
 $_lang["group_access_permissions"] = 'Доступ групп пользователей';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Помощь';
-$_lang["help_msg"] = '<p>Вы можете получить бесплатную помощь сообщества MODX <a href="http://forums.modx.com" target="_blank">на форумах MODX</a>. Смотрите также <a href="http://modx.com/documentation" target="_blank">\'Документация и уроки по MODX\'</a>, где подробно описан каждый аспект системы.</p>';
+$_lang["help_msg"] = '<p>Вы можете получить бесплатную помощь сообщества MODX <a href="http://forums.modx.com" target="_blank">на форумах MODX</a>. Смотрите также <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">\'Документация и уроки по MODX\'</a>, где подробно описан каждый аспект системы.</p>';
 $_lang["help_title"] = 'Помощь';
 $_lang["hide_tree"] = 'Спрятать дерево';
 $_lang["home"] = 'Главная';
@@ -1095,8 +1095,8 @@ $_lang["user_use_config"] = 'Использовать системные нас�
 $_lang["user_zip"] = 'Почтовый индекс';
 $_lang["username"] = 'Пользователь';
 $_lang["users"] = 'Пользователи';
-$_lang["valid_hostnames_message"] = 'Help prevent XSS exploits misusing the site_url system setting by providing a comma separated list of valid hostnames for this installation. This is important for some types of shared hosts or hosts direct accessible via an IP address. First hostname in the list is used if the HTTP_HOST does not match any valid hostname.';
-$_lang["valid_hostnames_title"] = 'Valid hostnames';
+$_lang["valid_hostnames_message"] = 'Помогает предотвратить XSS уязвимости в системной настройке site_url предоставляя разделенный запятыми список доступных имен хостов для этой установки. Это важно для некоторых типов шаред-хостингов или хостов, доступных по IP-адресу. Первое имя хоста в списке используется, если HTTP_HOST не совпадает ни с одним доступным именем хоста из списка.';
+$_lang["valid_hostnames_title"] = 'Допустимые имена хостов';
 $_lang["validate_referer_message"] = 'Проверять серверные заголовки HTTP_REFERER для защиты от уязвимостей CSRF (Cross Site Request Forgery). Если сервер не использует заголовки HTTP_REFERER данная функция не будет работать.';
 $_lang["validate_referer_title"] = 'Проверять серверные заголовки HTTP_REFERER?';
 $_lang["value"] = 'Значение';
@@ -1172,8 +1172,8 @@ $_lang["files.dynamic.php1"] = 'Создать PHP-файл';
 $_lang["files.dynamic.php2"] = 'files.dynamic.php2';
 $_lang["files.dynamic.php3"] = 'files.dynamic.php3';
 $_lang["files.dynamic.php4"] = 'files.dynamic.php4';
-$_lang["files_dynamic_new_folder_name"] = 'Enter new directory name:';
-$_lang["files_dynamic_new_file_name"] = 'Enter new file name:';
+$_lang["files_dynamic_new_folder_name"] = 'Укажите новое имя для папки:';
+$_lang["files_dynamic_new_file_name"] = 'Укажите новое имя для файла:';
 $_lang["not_readable_dir"] = 'Директория недоступна для записи';
 $_lang["confirm_delete_dir"] = 'Вы уверены, что хотите удалить папку? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
 $_lang["confirm_delete_dir_recursive"] = 'Вы уверены, что хотите удалить папку со всем ее содержимым? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
@@ -1203,7 +1203,7 @@ $_lang["resource_opt_alvisibled"] = 'Участвует в URL';
 $_lang["resource_opt_alvisibled_help"] = 'Для участия данного документа в адресной строке поставьте галку, и наоборот - снимите, если псевдоним этого документа нужно убрать из URL.';
 $_lang['resource_opt_is_published'] = 'Опубликован';
 $_lang["docid_incrmnt_method_title"] = 'Способ добавления Resource ID ';
-$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
+$_lang["docid_incrmnt_method_0"] = 'DB автоинкримент';
 $_lang["docid_incrmnt_method_1"] = 'Минимальный пропущенный ID';
 $_lang["docid_incrmnt_method_2"] = 'Максимальный ID+1';
 
@@ -1220,21 +1220,43 @@ $_lang["user_street"] = 'Улица';
 $_lang["user_city"] = 'Город';
 $_lang["user_other"] = 'Другое';
 
-$_lang["import_site.static.php1"] = 'Reset resource tree';
-$_lang["import_site.static.php2"] = 'Reset resource tree and initialize all Resource IDs.';
-$_lang["import_site.static.php3"] = 'Target';
-$_lang["import_site.static.php4"] = 'Only &lt;body&gt;&lt;/body&gt; part';
-$_lang["import_site.static.php5"] = 'Whole file content';
+$_lang["import_site.static.php1"] = 'Сбросить дерево ресурсов';
+$_lang["import_site.static.php2"] = 'Сбросить  дерево ресурсов и инициализировать все идентификаторы ресурсов.';
+$_lang["import_site.static.php3"] = 'Цель';
+$_lang["import_site.static.php4"] = 'Только то что в &lt;body&gt;&lt;/body&gt; ';
+$_lang["import_site.static.php5"] = 'Все содержимое файла';
 
-$_lang["a83_ignore_ids_title"] = 'Ignore IDs (comma separated)';
-$_lang["export_site.static.php1"] = 'Target';
-$_lang["export_site.static.php2"] = 'Only edited Resources';
-$_lang["export_site.static.php3"] = 'All Resources';
-$_lang["export_site.static.php4"] = 'Search for';
-$_lang["export_site.static.php5"] = 'Replace with';
-$_lang["export_site.static.php6"] = 'Target';
-$_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]';
+$_lang["a83_ignore_ids_title"] = 'Игнорируемые ID (через запятую)';
+$_lang["export_site.static.php1"] = 'Цель';
+$_lang["export_site.static.php2"] = 'Только отредактированные ресурсы';
+$_lang["export_site.static.php3"] = 'Все ресурсы';
+$_lang["export_site.static.php4"] = 'Найти';
+$_lang["export_site.static.php5"] = 'Заменить';
+$_lang["export_site.static.php6"] = 'Цель';
+$_lang["export_site.static.php7"] = 'Файл не может быть сохранен в [+rb_base_url+]';
 
 $_lang["mutate_settings.dynamic.php6"] = 'Уведомления о системных ошибках';
 $_lang["mutate_settings.dynamic.php7"] = 'Не уведомлять';
 $_lang["mutate_settings.dynamic.php8"] = 'Уведомления приходят на [(emailsender)]([+emailsender+]) в момент генериции ошибки. Детали можно увидеть в журнале ошибок.';
+
+$_lang["error_no_privileges"]         = "У вас нет соответствующих прав для выполнения данного действия.";
+$_lang["error_no_optimise_tablename"] = "Нет таблиц требующих оптимизации!";
+$_lang["error_no_truncate_tablename"] = "Таблица для очистки не найдена!";
+$_lang["error_double_action"]         = "Двойное действие (GET & POST) отправленно!";
+$_lang["error_no_id"]                 = "Не верно указан ID в вашем запросе!";
+$_lang["error_id_nan"]                = "ID переданного запроса пуст!";
+$_lang["error_no_parent"]             = "Не удалось найти имя родительского документа!";
+$_lang["error_many_results"]          = "Слишком много результатов возвращается из базы данных!";
+$_lang["error_no_results"]            = "Результаты из базы данных не вернулись или вернулись не полностью!";
+$_lang["error_no_user_selected"]      = "Не указан получатель этого сообщения!";
+$_lang["error_no_group_selected"]     = "Не указанна группа получателей для этого сообщения!";
+$_lang["error_movedocument1"]         = "Документ не может быть своим родителем!";
+$_lang["error_movedocument2"]         = "ID документа не прошел в запросе!";
+$_lang["error_movedocument3"]         = "Новый родитель не указан!";
+
+$_lang["login_processor_unknown_user"]       = "Неверно указан логин или пароль!";
+$_lang["login_processor_wrong_password"]     = "Неверно указан логин или пароль!";
+$_lang["login_processor_many_failed_logins"] = "Очень много неудачных попыток войти, вы заблокированы!";
+$_lang["login_processor_blocked1"]           = "Вы заблокированы и не можете войти!";
+$_lang["login_processor_blocked2"]           = "Вы заблокированы и не можете войти! Попробуйте войти позже.";
+$_lang["login_processor_bad_code"]           = "Проверочный код введен не правильно! Попробуйте еще раз!";

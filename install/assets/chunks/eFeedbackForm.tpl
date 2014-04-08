@@ -16,7 +16,7 @@
 <form  class="eform" method="post" action="[~[*id*]~]">
 
 <input type="hidden" name="formid" value="feedbackForm" />
-
+<input value="" name="special" class="special" type="text" eform="Спец:date:0"  style="display:none;" />
 <p>
     <input type="text" name="name" id="name" class="grid_3" value=""  eform="Имя:string:1"/>
     <label for="name">Ваше имя</label>

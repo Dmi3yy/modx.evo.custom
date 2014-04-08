@@ -3,7 +3,7 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 2.0.1
+ Version: 2.0.2
  Authors: 
 	Kyle Jaebker (muddydogpaws.com)
 	Ryan Thrash (vertexworks.com)
@@ -29,8 +29,8 @@ class Wayfinder {
 	function run() {
 		global $modx;
 		//setup here checking array
-		$this->parentTree = $modx->getParentIds($modx->documentIdentifier);
-		$this->parentTree[] = $modx->documentIdentifier;
+		$this->parentTree = $modx->getParentIds($this->_config['hereId']);
+		$this->parentTree[] = $this->_config['hereId'];
 		
 		if ($this->_config['debug']) {
 			$this->addDebugInfo("settings","Settings","Settings","Settings used to create this menu.",$this->_config);
@@ -260,7 +260,7 @@ class Wayfinder {
                 $hasClass = 1;
             }
             //Set self class if specified
-            if (!empty($this->_css['self']) && $docId == $modx->documentIdentifier) {
+            if (!empty($this->_css['self']) && $docId == $this->_config['hereId']) {
                 $returnClass .= $hasClass ? ' ' . $this->_css['self'] : $this->_css['self'];
                 $hasClass = 1;
             }
@@ -323,8 +323,8 @@ class Wayfinder {
 			// because site root not included in $modx->getParentIds
 			$ids = $modx->getChildIds($this->_config['id'], 1, $ids);
 
-			$parents = array($modx->documentIdentifier);
-			$parents += $modx->getParentIds($modx->documentIdentifier);
+			$parents = array($this->_config['hereId']);
+			$parents += $modx->getParentIds($this->_config['hereId']);
 
 			// if startId not in parents, only show children of startId
 			if ($this->_config['id'] == 0 || in_array($this->_config['id'], $parents)){
@@ -365,9 +365,13 @@ class Wayfinder {
 			if ($this->_config['excludeDocs']) {
 				$menuWhere .= " AND (sc.id NOT IN ({$this->_config['excludeDocs']}))";
 			}
+			//add custom where conditions
+			if (!empty($this->_config['where'])) {
+				$menuWhere .= " AND ({$this->_config['where']})";
+			}
 			//add the limit to the query
 			if ($this->_config['limit']) {
-				$sqlLimit = " LIMIT 0, {$this->_config['limit']}";
+				$sqlLimit = "0, {$this->_config['limit']}";
 			} else {
 				$sqlLimit = '';
 			}
@@ -377,18 +381,22 @@ class Wayfinder {
 				$dir = '';
 			} else {
 				// modify field names to use sc. table reference
-				$sort = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$this->_config['sortBy'])));
+				$sort = 'sc.'.implode(',sc.',array_filter(array_map('trim', explode(',', $this->_config['sortBy']))));
 			}
 
 	        // get document groups for current user
 	        if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(",",$docgrp);
 	        // build query
 	        $access = ($modx->isFrontend() ? "sc.privateweb=0" : "1='{$_SESSION['mgrRole']}' OR sc.privatemgr=0").(!$docgrp ? "" : " OR dg.document_group IN ({$docgrp})");
-			$sql = "SELECT DISTINCT {$fields} FROM {$tblsc} sc LEFT JOIN {$tbldg} dg ON dg.document = sc.id WHERE sc.published=1 AND sc.deleted=0 AND ({$access}){$menuWhere} AND sc.id IN (".implode(',',$ids).") GROUP BY sc.id ORDER BY {$sort} {$this->_config['sortOrder']} {$sqlLimit};";
 			//run the query
-			$result = $modx->db->query($sql);
+			$result = $modx->db->select(
+				"DISTINCT {$fields}",
+				"{$tblsc} sc LEFT JOIN {$tbldg} dg ON dg.document = sc.id",
+				"sc.published=1 AND sc.deleted=0 AND ({$access}){$menuWhere} AND sc.id IN (".implode(',',$ids).") GROUP BY sc.id",
+				"{$sort} {$this->_config['sortOrder']}",
+				$sqlLimit
+				);
 	        $resourceArray = array();
-			$numResults = @$modx->db->getRecordCount($result);
 			$level = 1;
 			$prevParent = -1;
 			//Setup startlevel for determining each items level
@@ -400,8 +408,7 @@ class Wayfinder {
 			}
 			$resultIds = array();
 			//loop through the results
-			for($i=0;$i<$numResults;$i++)  {
-				$tempDocInfo = $modx->db->getRow($result);
+			while ($tempDocInfo = $modx->db->getRow($result))  {
 				$resultIds[] = $tempDocInfo['id'];
 				//Create the link
 				$linkScheme = $this->_config['fullLink'] ? 'full' : '';
@@ -475,23 +482,20 @@ class Wayfinder {
 		$tb1 = $modx->getFullTableName("site_tmplvar_contentvalues");
 		$tb2 = $modx->getFullTableName("site_tmplvars");
 
-		$query = "SELECT stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value";
-		$query .= " FROM ".$tb1." stc LEFT JOIN ".$tb2." stv ON stv.id=stc.tmplvarid ";
-		$query .= " WHERE stv.name='".$tvname."' AND stc.contentid IN (".implode($docIDs,",").") ORDER BY stc.contentid ASC;";
-		$rs = $modx->db->query($query);
-		$tot = $modx->db->getRecordCount($rs);
+		$rs = $modx->db->select(
+			"stv.name,stc.tmplvarid,stc.contentid,stv.type,stv.display,stv.display_params,stc.value",
+			"{$tb1} stc LEFT JOIN {$tb2} stv ON stv.id=stc.tmplvarid ",
+			"stv.name='{$tvname}' AND stc.contentid IN (".implode($docIDs,",").")",
+			"stc.contentid ASC"
+			);
 		$resourceArray = array();
-		for($i=0;$i<$tot;$i++)  {
-			$row = @$modx->db->getRow($rs);
+		while ($row = $modx->db->getRow($rs))  {
 			$resourceArray["#{$row['contentid']}"][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
 		}
 
-		if ($tot != count($docIDs)) {
-			$query = "SELECT name,type,display,display_params,default_text";
-			$query .= " FROM $tb2";
-			$query .= " WHERE name='".$tvname."' LIMIT 1";
-			$rs = $modx->db->query($query);
-			$row = @$modx->db->getRow($rs);
+		if (count($resourceArray) != count($docIDs)) {
+			$rs = $modx->db->select('name,type,display,display_params,default_text', $tb2, "name='{$tvname}'", 1);
+			$row = $modx->db->getRow($rs);
 			if (strtoupper($row['default_text']) == '@INHERIT') {
 			    foreach ($docIDs as $id) {
 				    $output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
@@ -520,9 +524,7 @@ class Wayfinder {
 		$table = $modx->getFullTableName("site_tmplvars");
 		$tvs = $modx->db->select("name", $table);
 			// TODO: make it so that it only pulls those that apply to the current template
-		$dbfields = array();
-		while ($dbfield = $modx->db->getRow($tvs))
-			$dbfields[] = $dbfield['name'];
+		$dbfields = $modx->db->getColumn('name', $tvs); 
 		return $dbfields;
 	}
 

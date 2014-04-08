@@ -3,7 +3,7 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author Stefan van Zanden
  * @author Gauke Pieter Sietzema - Sterc.nl
  *
@@ -183,7 +183,7 @@ $_lang["create_resource_title"] = 'Nieuw Element';
 $_lang["create_weblink_here"] = 'Nieuwe Weblink';
 $_lang["createdon"] = 'Datum aangemaakt';
 $_lang["credits"] = 'Dankwoord';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Oprichters Project</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li></ul>';
+$_lang["credits_shouts_msg"] = '<p>MODX wordt beheerd en onderhouden via <a href="http://modx.com/" target="_blank">modx.com</ a>.</ p>';
 $_lang["custom_contenttype_message"] = 'Voeg eigen \'content types\' toe. Vul een nieuw type in en klik op de knop \'Toevoegen\' om een nieuw type toe te voegen';
 $_lang["custom_contenttype_title"] = 'Toegevoegde \'content types\':';
 $_lang["database_charset"] = 'Database Karakterset';
@@ -373,7 +373,7 @@ $_lang["go"] = 'Start';
 $_lang["group_access_permissions"] = 'Groepstoegang';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Help';
-$_lang["help_msg"] = '<p>Voor ondersteuning door de MODX gemeenschap kunt u terecht op de <a href="http://forums.modx.com" target="_blank">MODX Forums</a>. Op de MODX website kunt u ook <a href="http://modx.com/documentation" target="_blank">documentatie</a> vinden over MODX.</p><p>In de toekomst zal er commerci&#235;le ondersteuning mogelijk zijn voor MODX. Stuur een <a href=\'mailto:hello@modx.com?subject=MODX Commercial Support Inquiry\'>e-mail</a> als u interesse heeft.</p>';
+$_lang["help_msg"] = '<p>Voor ondersteuning door de MODX gemeenschap kunt u terecht op de <a href="http://forums.modx.com" target="_blank">MODX Forums</a>. Op de MODX website kunt u ook <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">documentatie</a> vinden over MODX.</p><p>In de toekomst zal er commerci&#235;le ondersteuning mogelijk zijn voor MODX. Stuur een <a href=\'mailto:hello@modx.com?subject=MODX Commercial Support Inquiry\'>e-mail</a> als u interesse heeft.</p>';
 $_lang["help_title"] = 'Help';
 $_lang["hide_tree"] = 'Website boomstructuur verbergen';
 $_lang["home"] = 'Start';
@@ -1043,7 +1043,7 @@ $_lang["unblock_message"] = 'Deze Gebruiker zal niet geblokkeerd zijn na het ops
 $_lang["undelete_resource"] = 'Herstel Pagina';
 $_lang["unpublish_date"] = 'Niet-publiceren datum';
 $_lang["unpublish_events"] = 'Niet-publiceren gebeurtenissen';
-$_lang["unpublish_resource"] = 'Publicatie Pagina ongedaan maken';
+$_lang["unpublish_resource"] = 'Publicatie ongedaan maken';
 $_lang["untitled_resource"] = 'Naamloze Pagina';
 $_lang["untitled_weblink"] = 'Naamloze Weblink';
 $_lang["update_params"] = 'Parameter weergave bijwerken';
@@ -1199,7 +1199,7 @@ $_lang['smtp_port_title'] = 'SMTP poort';
 $_lang["setting_resource_tree_node_name"] = 'De hoofdnaam van de boomstructuur';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specificeer het paginaveld om gebruik te maken van de hoofdnaam in de boomstructuur bij het renderen. Standaard staat deze op Pagina Titel, hoewel elk Pagina veld kan worden gebruikt, zoals menutitel en alias.';
 
-$_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
+$_lang["resource_opt_alvisibled"] = 'Gebruik huidige alias als alias pad';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
 $_lang['resource_opt_is_published'] = 'Gepubliceerd';
 $_lang["docid_incrmnt_method_title"] = 'Optellende methode van de pagina ID';
@@ -1238,3 +1238,25 @@ $_lang["export_site.static.php7"] = 'Bestanden kunnen niet worden aangepast naar
 $_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
 $_lang["mutate_settings.dynamic.php7"] = 'not notify';
 $_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
+
+$_lang["error_no_privileges"]         = "Je hebt niet genoeg rechten hebt voor deze actie!";
+$_lang["error_no_optimise_tablename"] = "Tabel optimaliseren niet gevonden in aanvraag!";
+$_lang["error_no_truncate_tablename"] = "Tabel voor truncate niet gevonden!";
+$_lang["error_double_action"]         = "Dubbele actie (GET & POST) geplaatst!";
+$_lang["error_no_id"]                 = "Document ID niet doorgegeven in aanvraag!";
+$_lang["error_id_nan"]                = "Doorgegeven ID is NaN!";
+$_lang["error_no_parent"]             = "Kon naam bovenliggende document niet vinden!";
+$_lang["error_many_results"]          = "Te veel resultaten uit de database!";
+$_lang["error_no_results"]            = "Te weinig / geen resultaten terug van database!";
+$_lang["error_no_user_selected"]      = "Geen gebruiker geselecteerd als ontvanger van dit bericht!";
+$_lang["error_no_group_selected"]     = "Geen groep geselecteerd als ontvanger van dit bericht!";
+$_lang["error_movedocument1"]         = "Document kan niet zijn eigen onderliggende document zijn!";
+$_lang["error_movedocument2"]         = "Document ID niet doorgegeven in aanvraag!";
+$_lang["error_movedocument3"]         = "Nieuwe onderliggende document niet in aanvraag!";
+
+$_lang["login_processor_unknown_user"]       = "Onjuiste gebruikersnaam of wachtwoord ingevoerd!";
+$_lang["login_processor_wrong_password"]     = "Onjuiste gebruikersnaam of wachtwoord ingevoerd!";
+$_lang["login_processor_many_failed_logins"] = "Wegens te veel mislukte aanmeldingen ben je geblokkeerd!";
+$_lang["login_processor_blocked1"]           = "U bent geblokkeerd en kan niet inloggen!";
+$_lang["login_processor_blocked2"]           = "U bent geblokkeerd en kan niet inloggen! Probeer het later opnieuw.";
+$_lang["login_processor_bad_code"]           = "De veiligheidscode klopt niet! Probeer het opnieuw!";

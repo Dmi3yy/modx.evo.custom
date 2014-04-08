@@ -1,9 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
-
 if(!$modx->hasPermission('edit_user')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // initialize page view state - the $_PAGE object
@@ -107,31 +105,19 @@ echo $cm->render();
 	</div>
 	<div>
 	<?php
-	$noAdminSql = ($_SESSION['mgrRole'] != 1)? 'mua.role != 1' : '' ;
-	$sql = "SELECT
-		mu.id,
-		mu.username,
-		rname.name AS role,
-		mua.fullname,
-		mua.email,
-		mua.thislogin,
-		IF(mua.gender=1,'".$_lang['user_male']."',IF(mua.gender=2,'".$_lang['user_female']."','-')) AS gender,
-		IF(mua.blocked,'".$_lang['yes']."','-') as blocked " .
-		"FROM ".$modx->getFullTableName('manager_users')." AS mu ".
-		"INNER JOIN ".$modx->getFullTableName('user_attributes')." AS mua ON mua.internalKey=mu.id ".
-		"LEFT JOIN ".$modx->getFullTableName('user_roles')." AS rname ON mua.role=rname.id ";
-	if ($noAdminSql){
-	    if(!empty($sqlQuery)){
-	        $sql .= "WHERE ((mu.username LIKE '$sqlQuery%') OR (mua.fullname LIKE '%$sqlQuery%') OR (mua.email LIKE '$sqlQuery%')) AND $noAdminSql ";
-	    } else {
-	        $sql .= "WHERE $noAdminSql ";
-	    }
-	} else {
-	    $sql .= (!empty($sqlQuery) ? "WHERE (mu.username LIKE '$sqlQuery%') OR (mua.fullname LIKE '%$sqlQuery%') OR (mua.email LIKE '$sqlQuery%') ":"");
-	}
-	$sql .= "ORDER BY mua.blocked ASC, mua.thislogin DESC";
-
-	$ds = $modx->db->query($sql);
+	$where = "";
+	if ($_SESSION['mgrRole'] != 1)
+		$where .= (empty($where)?"":" AND ") . "mua.role != 1";
+	if (!empty($sqlQuery))
+		$where .= (empty($where)?"":" AND ") . "((mu.username LIKE '{$sqlQuery}%') OR (mua.fullname LIKE '%{$sqlQuery}%') OR (mua.email LIKE '{$sqlQuery}%'))";
+	$ds = $modx->db->select(
+		"mu.id, mu.username, rname.name AS role, mua.fullname, mua.email, ELT(mua.gender, '{$_lang['user_male']}', '{$_lang['user_female']}', '{$_lang['user_other']}') AS gender, IF(mua.blocked,'{$_lang['yes']}','-') as blocked",
+		$modx->getFullTableName('manager_users')." AS mu 
+			INNER JOIN ".$modx->getFullTableName('user_attributes')." AS mua ON mua.internalKey=mu.id 
+			LEFT JOIN ".$modx->getFullTableName('user_roles')." AS rname ON mua.role=rname.id",
+		$where,
+		'mua.blocked ASC, mua.thislogin DESC'
+		);
 	include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 	$grd = new DataGrid('',$ds,$modx->config['number_of_results']); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_records_found"];
@@ -140,10 +126,10 @@ echo $cm->render();
 	$grd->itemClass="gridItem";
 	$grd->altItemClass="gridAltItem";
 	$grd->fields            = "id,username,fullname,role,email,gender,blocked,thislogin";
-	$grd->columns           = join(',', array($_lang["icon"],$_lang["name"],$_lang["user_full_name"],$_lang['role'],
+	$grd->columns           = implode(',', array($_lang["icon"],$_lang["name"],$_lang["user_full_name"],$_lang['role'],
 	                                          $_lang["email"],$_lang["user_gender"],$_lang["user_block"],$_lang["login_button"]));
 	$grd->colAligns="center,,,,,center,center";
-	$grd->colTypes          = join('||',array(
+	$grd->colTypes          = implode('||',array(
 	                          'template:<a class="gridRowIcon" href="#" onclick="return showContentMenu([+id+],event);" title="'.$_lang['click_to_context'].'"><img src="'.$_style['icons_user'] .'" /></a>',
 	                          'template:<a href="index.php?a=12&id=[+id+]" title="'.$_lang['click_to_edit_title'].'">[+value+]</a>',
 	                          'template:[+fullname+]',

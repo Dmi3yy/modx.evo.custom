@@ -3,12 +3,13 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author Łukasz Kowalczyk, lukasz@pixeligence.com
  * @author Piotr Łukańko, piotr.lukanko@gmail.com
  * @author Piotr Grzeszykowski, piotrek@gawinet.pl
  * @author Radosław Włodkowski, radoslaw@wlodkowski.net
  * @author Piotr Matysiak, web@pm-fx.com
+ * @author Witek Galecki
  *
  * @language Polish
  * @package modx
@@ -186,7 +187,7 @@ $_lang["create_resource_title"] = 'Utwórz dokument w tym miejscu';
 $_lang["create_weblink_here"] = 'Utwórz odsyłacz w tym miejscu';
 $_lang["createdon"] = 'Data utworzenia';
 $_lang["credits"] = 'Autorzy';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - założyciele projektu</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - architektura i projekt jądra</li></ul>';
+$_lang["credits_shouts_msg"] = '<p>MODX jest zarządzany i utrzymywany przez <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Tutaj możesz dodać własne typy treści, które zostaną użyte w dokumentach. Aby dodać nową pozycję wprowadź typ treści w polu tekstowym i naciśnij przycisk \'Dodaj\'.';
 $_lang["custom_contenttype_title"] = 'Własne typy treści:';
 $_lang["database_charset"] = 'Baza danych - zestaw znaków';
@@ -376,7 +377,7 @@ $_lang["go"] = 'Dalej';
 $_lang["group_access_permissions"] = 'Dostęp grup użytkowników';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Pomoc';
-$_lang["help_msg"] = '<p>Możesz uzyskać darmową pomoc poprzez <a href="http://forums.modx.com" target="_blank">odwiedzenie Forum MODX</a>. Istnieje również wciąż rozwijana <a href="http://modx.com/documentation" target="_blank">Dokumentacja i Instrukcje dla MODX\'a</a>, dotyczące praktycznie wszystkich aspektów pracy z MODX\'em.</p><p>Planujemy również usługę wsparcia komercyjnego dla MODX\'a. <a href=\'mailto:modx@vertexworks.com?subject=MODX Commercial Support Inquiry\'>Zainteresowanych prosimy o kontakt mailowy</a>.';
+$_lang["help_msg"] = '<p>Możesz uzyskać darmową pomoc poprzez <a href="http://forums.modx.com" target="_blank">odwiedzenie Forum MODX</a>. Istnieje również wciąż rozwijana <a href="http://rtfm.modx.com/evolution/1.0" target="_blank">Dokumentacja i Instrukcje dla MODX\'a</a>, dotyczące praktycznie wszystkich aspektów pracy z MODX\'em.</p><p>Planujemy również usługę wsparcia komercyjnego dla MODX\'a. <a href="mailto:hello@modx.com?subject=MODX Commercial Support Inquiry">Zainteresowanych prosimy o kontakt mailowy</a>.';
 $_lang["help_title"] = 'Pomoc';
 $_lang["hide_tree"] = 'Ukryj drzewo';
 $_lang["home"] = 'Start';
@@ -574,13 +575,13 @@ $_lang["new_keyword"] = 'Dodaj nowe słowo kluczowe:';
 $_lang["new_module"] = 'Nowy moduł';
 $_lang["new_parent"] = 'Nowy dokument nadrzędny';
 $_lang["new_plugin"] = 'Nowa wtyczka';
-$_lang["new_role"] = 'New Role';
+$_lang["new_role"] = 'Nowa Rola';
 $_lang["new_snippet"] = 'Nowy snippet';
 $_lang["new_template"] = 'Nowy szablon';
 $_lang["new_tmplvars"] = 'Nowa Zmienna Szablonu';
 $_lang["new_user"] = 'Nowy użytkownik';
 $_lang["new_web_user"] = 'Nowy użytkownik web';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = 'Nowy dokument';
 $_lang["no"] = 'Nie';
 $_lang["no_active_users_found"] = 'Nie znaleziono aktywnych użytkowników.';
 $_lang["no_activity_message"] = 'Jeszcze nie utworzyłeś lub edytowałeś żadnego dokumentu.';
@@ -1099,8 +1100,8 @@ $_lang["user_use_config"] = 'Używaj ustawienia głównej konfiguracji';
 $_lang["user_zip"] = 'Kod pocztowy';
 $_lang["username"] = 'Nazwa użytkownika';
 $_lang["users"] = 'Użytkownicy';
-$_lang["valid_hostnames_message"] = 'Help prevent XSS exploits misusing the site_url system setting by providing a comma separated list of valid hostnames for this installation. This is important for some types of shared hosts or hosts direct accessible via an IP address. First hostname in the list is used if the HTTP_HOST does not match any valid hostname.';
-$_lang["valid_hostnames_title"] = 'Valid hostnames';
+$_lang["valid_hostnames_message"] = 'Pomóż zapobiegać atakom XSS wykorzystującym ustawienie systemowe site_url. Wprowadź listę prawidłowych nazw hosta dla tej instalacji, oddzielonych przecinkami. Jest to ważne na niektórych typach hostów współdzielonych i hostach dostępnych bezpośrednio pod adresem IP. Pierwsza nazwa hosta na liście zostanie użyta, jeśli HTTP_HOST nie będzie odpowiadał żadnej z prawidłowych nazw hosta na liście.';
+$_lang["valid_hostnames_title"] = 'Prawidłowe nazwy hosta';
 $_lang["validate_referer_message"] = 'Możesz weryfikować nagłówki HTTP_REFERER aby zmniejszyć ryzyko ataków typu CSRF (Cross Site Request Forgery). Niektóre konfiguracje mogą nie mieć możliwości korzystania z tej opcji, jeżeli serwer nie wysyła nagłówków HTTP_REFERER.';
 $_lang["validate_referer_title"] = 'Weryfikuj nagłówki HTTP_REFERER';
 $_lang["value"] = 'Wartość';
@@ -1176,8 +1177,8 @@ $_lang["files.dynamic.php1"] = 'Utwórz plik tekstowy';
 $_lang["files.dynamic.php2"] = 'Ten katalog nie może zostać wyświetlony.';
 $_lang["files.dynamic.php3"] = 'Wystąpił problem z nazwą pliku.';
 $_lang["files.dynamic.php4"] = 'Plik tekstowy został utworzony.';
-$_lang["files_dynamic_new_folder_name"] = 'Enter new directory name:';
-$_lang["files_dynamic_new_file_name"] = 'Enter new file name:';
+$_lang["files_dynamic_new_folder_name"] = 'Podaj nazwę nowego katalogu:';
+$_lang["files_dynamic_new_file_name"] = 'Podaj nową nazwę pliku:';
 $_lang["not_readable_dir"] = 'Nie można odczytać katalogu.';
 $_lang["confirm_delete_dir"] = 'Czy na pewno chcesz usunąć ten katalog?';
 $_lang["confirm_delete_dir_recursive"] = 'Czy na pewno chcesz usunąć ten katalog?\n\nWszystkie jego pliki również zostaną usunięte.';
@@ -1242,3 +1243,25 @@ $_lang["export_site.static.php7"] = 'Files cannot be outputted to [+rb_base_url+
 $_lang["mutate_settings.dynamic.php6"] = 'email notifies system error.';
 $_lang["mutate_settings.dynamic.php7"] = 'not notify';
 $_lang["mutate_settings.dynamic.php8"] = 'It notifies to [(emailsender)]([+emailsender+]) at the time of error generating. The details of the contents of the error should check an event log.';
+
+$_lang["error_no_privileges"]         = "Nie posiadasz wystarczających uprawnień!";
+$_lang["error_no_optimise_tablename"] = "Nie znaleziono tabeli do zoptymalizowania w zapytaniu!";
+$_lang["error_no_truncate_tablename"] = "Nie znaleziono tabeli do skrócenia w zapytaniu!";
+$_lang["error_double_action"]         = "Wysłano podwójną akcję (GET & POST)!";
+$_lang["error_no_id"]                 = "Nie przekazano ID w zapytaniu!";
+$_lang["error_id_nan"]                = "ID przekazane w zapytaniu jest NaN!";
+$_lang["error_no_parent"]             = "Nie znaleziono nazwy dokumentu nadrzędnego!";
+$_lang["error_many_results"]          = "Baza danych zwróciła zbyt wiele wyników!";
+$_lang["error_no_results"]            = "Baza danych zwróciła za mało/brak wyników!";
+$_lang["error_no_user_selected"]      = "Nie wybrano adresata tej wiadomości!";
+$_lang["error_no_group_selected"]     = "Nie wybrano grupy odbiorców tej wiadomości!";
+$_lang["error_movedocument1"]         = "Dokument nie może być swoim rodzicem!";
+$_lang["error_movedocument2"]         = "W zapytaniu nie przekazano ID dokumentu!";
+$_lang["error_movedocument3"]         = "Nowy rodzic nie został ustawiony w zapytaniu!";
+
+$_lang["login_processor_unknown_user"]       = "Podano błędną nazwę użytkownika lub hasło!";
+$_lang["login_processor_wrong_password"]     = "Podano błędną nazwę użytkownika lub hasło!";
+$_lang["login_processor_many_failed_logins"] = "Zostałeś zablokowany z powodu zbyt wielu nieudanych prób zalogowania się!";
+$_lang["login_processor_blocked1"]           = "Zostałeś zablokowany i nie możesz się zalogować!";
+$_lang["login_processor_blocked2"]           = "Zostałeś zablokowany i nie możesz się zalogować! Proszę spróbować później.";
+$_lang["login_processor_bad_code"]           = "Podany kod bezpieczeństwa nie zgadza się! Proszę spróbować ponownie.";

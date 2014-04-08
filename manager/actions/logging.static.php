@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('logs')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 function array_unique_multi($array, $checkKey) {
@@ -31,13 +30,6 @@ function record_sort($array, $key) {
 		$records[$k] = $array[$k];
 
 	return $records;
-}
-
-// function to check date and convert to us date
-function convertdate($date) {
-	global $_lang, $modx;
-	$timestamp = $modx->toTimeStamp($date);
-	return $timestamp;
 }
 
 $rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemname', $modx->getFullTableName('manager_log'));
@@ -181,8 +173,8 @@ if(isset($_REQUEST['log_submit'])) {
 	if($_REQUEST['itemname']!='0')	$sqladd[] = "itemname='".$modx->db->escape($_REQUEST['itemname'])."'";
 	if($_REQUEST['message']!="")	$sqladd[] = "message LIKE '%".$modx->db->escape($_REQUEST['message'])."%'";
 	// date stuff
-	if($_REQUEST['datefrom']!="")	$sqladd[] = "timestamp>".convertdate($_REQUEST['datefrom']);
-	if($_REQUEST['dateto']!="")	$sqladd[] = "timestamp<".convertdate($_REQUEST['dateto']);
+	if($_REQUEST['datefrom']!="")	$sqladd[] = "timestamp>".$modx->toTimeStamp($_REQUEST['datefrom']);
+	if($_REQUEST['dateto']!="")	$sqladd[] = "timestamp<".$modx->toTimeStamp($_REQUEST['dateto']);
 
 	// If current position is not set, set it to zero
 	if( !isset( $_REQUEST['int_cur_position'] ) || $_REQUEST['int_cur_position'] == 0 ){
@@ -204,7 +196,7 @@ if(isset($_REQUEST['log_submit'])) {
 	    $modx->db->select('COUNT(*)', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''))
     );
         
-	$rs = $modx->db->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC', "{$int_cur_position}, {$int_num_result}");
+	$rs = $modx->db->select('*', $modx->getFullTableName('manager_log'), (!empty($sqladd) ? implode(' AND ', $sqladd) : ''), 'timestamp DESC, id DESC', "{$int_cur_position}, {$int_num_result}");
 	if($limit<1) {
 		echo '<p>'.$_lang["mgrlog_emptysrch"].'</p>';
 	} else {

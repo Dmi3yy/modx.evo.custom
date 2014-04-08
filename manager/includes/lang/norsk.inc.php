@@ -3,7 +3,7 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author The MODX Project Team
  *
  * @language Norwegian
@@ -182,7 +182,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = 'Opprett weblink her';
 $_lang["createdon"] = 'Dato opprettet';
 $_lang["credits"] = 'Anerkjennelser';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Prosjektets grunnlegger</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Indre arkitektur &amp; Design</li></ul>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Her kan du legge til egne innholdstyper som kan brukes i dine dokumenter. Skriv inn innholdstypen i det øvre feltet og klikk på \'Legg til\' for å legg til en ny. Marker den innholdstypen i det nedre feltet som du vil fjerne og klikk på \'Fjern\'.';
 $_lang["custom_contenttype_title"] = 'Egne innholdstyper';
 $_lang["database_charset"] = 'Database Charset';
@@ -372,7 +372,7 @@ $_lang["go"] = 'Go';
 $_lang["group_access_permissions"] = 'Brukergruppetilgang';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Hjelp';
-$_lang["help_msg"] = '<p>Besøk <a href="http://forums.modx.com/" target="_blank">MODX Forum</a> hvis du trenger hjelp med MODX. Der finnes også en voksende mengde <a href="http://modx.com/documentation" target="blank">dokumentasjon og guider</a> som berører stort sett alle aspekter av MODX.</p><p>Vi planlegger også å tilby kommersielle supporttjenester. Send oss en <a href=\'mailto:modx@vertexworks.com?subject=MODX Commercial Support Inquiry\'>e-postmelding om du er intressert</a>.';
+$_lang["help_msg"] = '<p>Besøk <a href="http://forums.modx.com/" target="_blank">MODX Forum</a> hvis du trenger hjelp med MODX. Der finnes også en voksende mengde <a href="http://rtfm.modx.com/evolution/1.0" target="blank">dokumentasjon og guider</a> som berører stort sett alle aspekter av MODX.</p><p>Vi planlegger også å tilby kommersielle supporttjenester. Send oss en <a href="mailto:hello@modx.com?subject=MODX Commercial Support Inquiry">e-postmelding om du er intressert</a>.';
 $_lang["help_title"] = 'Hjelp';
 $_lang["hide_tree"] = 'Gjem tre';
 $_lang["home"] = 'Hjem';
@@ -576,7 +576,7 @@ $_lang["new_template"] = 'Ny mal';
 $_lang["new_tmplvars"] = 'Ny malvariabel';
 $_lang["new_user"] = 'Ny bruker';
 $_lang["new_web_user"] = 'Ny webbruker';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = 'Nytt dokument';
 $_lang["no"] = 'Nei';
 $_lang["no_active_users_found"] = 'No active users found.';
 $_lang["no_activity_message"] = 'Du har enda ikke opprettet eller redigert noen dokumenter.';
@@ -1168,7 +1168,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Published';
+$_lang['resource_opt_is_published'] = 'Publisert';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
@@ -1205,3 +1205,25 @@ $_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]
 $_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
 $_lang["mutate_settings.dynamic.php7"] = 'not notify';
 $_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
+
+$_lang["error_no_privileges"]         = "You don't have enough privileges for this action!";
+$_lang["error_no_optimise_tablename"] = "Table to optimise not found in request!";
+$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_double_action"]         = "Double action (GET & POST) posted!";
+$_lang["error_no_id"]                 = "ID not passed in request!";
+$_lang["error_id_nan"]                = "ID passed in request is NaN!";
+$_lang["error_no_parent"]             = "Couldn't find parent document's name!";
+$_lang["error_many_results"]          = "Too many results returned from database!";
+$_lang["error_no_results"]            = "Not enough/ no results returned from database!";
+$_lang["error_no_user_selected"]      = "No user selected as recipient of this message!";
+$_lang["error_no_group_selected"]     = "No group selected as recipient of this message!";
+$_lang["error_movedocument1"]         = "Document cannot be it's own parent!";
+$_lang["error_movedocument2"]         = "Document's ID not passed in request!";
+$_lang["error_movedocument3"]         = "New parent not set in request!";
+
+$_lang["login_processor_unknown_user"]       = "Incorrect username or password entered!";
+$_lang["login_processor_wrong_password"]     = "Incorrect username or password entered!";
+$_lang["login_processor_many_failed_logins"] = "Due to too many failed logins, you have been blocked!";
+$_lang["login_processor_blocked1"]           = "You are blocked and cannot log in!";
+$_lang["login_processor_blocked2"]           = "You are blocked and cannot log in! Please try again later.";
+$_lang["login_processor_bad_code"]           = "The security code you entered didn't validate! Please try to login again!";

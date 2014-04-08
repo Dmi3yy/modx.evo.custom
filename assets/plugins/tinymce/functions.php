@@ -91,7 +91,7 @@ class TinyMCE
 				}
 			}
 		}
-		return join("\n",$option);
+		return implode("\n",$option);
 	}
 	
 	function selected($cond = false)
@@ -146,10 +146,12 @@ class TinyMCE
 		$params['mce_template_docs']  = $mce_settings['mce_template_docs'];
 		$params['mce_template_chunks']= $mce_settings['mce_template_chunks'];
 		
+		// fallback to english
+		include_once("{$mce_path}lang/english.inc.php");
 		// language settings
-		if (! @include_once("{$mce_path}lang/".$modx->config['manager_language'].'.inc.php'))
+		if (file_exists("{$mce_path}lang/".$modx->config['manager_language'].'.inc.php'))
 		{
-			include_once("{$mce_path}lang/english.inc.php");
+			include_once("{$mce_path}lang/".$modx->config['manager_language'].'.inc.php');
 		}
 	
 		include_once("{$mce_path}settings/default_params.php");
@@ -452,7 +454,7 @@ class TinyMCE
 		{
 			$content_css[] = MODX_SITE_URL . $params['editor_css_path'];
 		}
-			$ph['content_css']         = join(',', $content_css);
+			$ph['content_css']         = implode(',', $content_css);
 		$ph['link_list']               = ($params['link_list']=='enabled') ? "'{$mce_url}js/tinymce.linklist.php'" : 'false';
 		
 		$ph['tpl_list']                = "{$mce_url}js/get_template.php";

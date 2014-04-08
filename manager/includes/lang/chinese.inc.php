@@ -3,7 +3,7 @@
  * MODX Manager language file
  *
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  * @author changkong.org rerbin@gmail.com
  * @author modx.cn leepoooo@163.com
  *
@@ -183,7 +183,7 @@ $_lang["create_resource_title"] = 'Create Resource';
 $_lang["create_weblink_here"] = '在这里建立连接';
 $_lang["createdon"] = '建立日期';
 $_lang["credits"] = 'Credits';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li></ul>';
+$_lang["credits_shouts_msg"] = '<p>MODX is managed and maintained at <a href="http://modx.com/" target="_blank">modx.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Here you can add custom content types to be used in your documents. To add a new entry, enter the content type in the text box then click the \'Add\' button.';
 $_lang["custom_contenttype_title"] = '定制内容类型:';
 $_lang["database_charset"] = 'Database Charset';
@@ -577,7 +577,7 @@ $_lang["new_template"] = '新模板';
 $_lang["new_tmplvars"] = '新的模板变量';
 $_lang["new_user"] = '新用户';
 $_lang["new_web_user"] = '新网站用户';
-$_lang["new_resource"] = 'New Resource';
+$_lang["new_resource"] = '新文档';
 $_lang["no"] = '否';
 $_lang["no_active_users_found"] = 'No active users found.';
 $_lang["no_activity_message"] = 'You have not yet created or edited any documents.';
@@ -1202,7 +1202,7 @@ $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to 
 
 $_lang["resource_opt_alvisibled"] = 'Use current alias in alias path';
 $_lang["resource_opt_alvisibled_help"] = 'The alias of this Resource is inserted in Friendly URL alias path';
-$_lang['resource_opt_is_published'] = 'Published';
+$_lang['resource_opt_is_published'] = '发布吗？';
 $_lang["docid_incrmnt_method_title"] = 'Increment Resource ID method';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
 $_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
@@ -1239,3 +1239,25 @@ $_lang["export_site.static.php7"] = 'Files could not be saved to [+rb_base_url+]
 $_lang["mutate_settings.dynamic.php6"] = 'Send mail on MODX errors';
 $_lang["mutate_settings.dynamic.php7"] = 'not notify';
 $_lang["mutate_settings.dynamic.php8"] = 'A mail with the error source will be sent to [(emailsender)] ([+emailsender+]) if a MODX error occurs. The details of the error could be seen in the MODX system events log.';
+
+$_lang["error_no_privileges"]         = "You don't have enough privileges for this action!";
+$_lang["error_no_optimise_tablename"] = "Table to optimise not found in request!";
+$_lang["error_no_truncate_tablename"] = "Table to truncate not found in request!";
+$_lang["error_double_action"]         = "Double action (GET & POST) posted!";
+$_lang["error_no_id"]                 = "ID not passed in request!";
+$_lang["error_id_nan"]                = "ID passed in request is NaN!";
+$_lang["error_no_parent"]             = "Couldn't find parent document's name!";
+$_lang["error_many_results"]          = "Too many results returned from database!";
+$_lang["error_no_results"]            = "Not enough/ no results returned from database!";
+$_lang["error_no_user_selected"]      = "No user selected as recipient of this message!";
+$_lang["error_no_group_selected"]     = "No group selected as recipient of this message!";
+$_lang["error_movedocument1"]         = "Document cannot be it's own parent!";
+$_lang["error_movedocument2"]         = "Document's ID not passed in request!";
+$_lang["error_movedocument3"]         = "New parent not set in request!";
+
+$_lang["login_processor_unknown_user"]       = "Incorrect username or password entered!";
+$_lang["login_processor_wrong_password"]     = "Incorrect username or password entered!";
+$_lang["login_processor_many_failed_logins"] = "Due to too many failed logins, you have been blocked!";
+$_lang["login_processor_blocked1"]           = "You are blocked and cannot log in!";
+$_lang["login_processor_blocked2"]           = "You are blocked and cannot log in! Please try again later.";
+$_lang["login_processor_bad_code"]           = "The security code you entered didn't validate! Please try to login again!";

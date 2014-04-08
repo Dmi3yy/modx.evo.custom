@@ -1,4 +1,5 @@
 <?php
+if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 /**
  * @name FileSource
  * @version 0.1
@@ -96,7 +97,7 @@ switch ($modx->event->name)
             else $content['file_binding'] = '';
             $_SESSION['itemname']=$content['name'];
         }
-        else $_SESSION['itemname']="New snippet";
+        //else $_SESSION['itemname']="New snippet";
         break;
     case 'OnSnipFormRender':
     case 'OnPluginFormRender':

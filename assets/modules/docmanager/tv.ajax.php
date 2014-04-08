@@ -19,18 +19,22 @@ $dm->getTheme();
  $output = '';
  
  if(isset($_POST['tplID']) && is_numeric($_POST['tplID'])) {
- 	$sql = "SELECT * FROM ".$modx->getFullTableName('site_tmplvars')." tv LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." ON tv.id = ".$modx->getFullTableName('site_tmplvar_templates').".tmplvarid WHERE ".$modx->getFullTableName('site_tmplvar_templates').".templateid ='". $_POST['tplID']."'";
- 	$rs = $modx->db->query($sql);
+ 	$rs = $modx->db->select(
+		'*',
+		$modx->getFullTableName('site_tmplvars')." tv
+			LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." AS tvt ON tv.id = tvt.tmplvarid",
+		"tvt.templateid ='{$_POST['tplID']}'"
+		);
  	$limit = $modx->db->getRecordCount($rs);
  	
  	if ($limit > 0) {
 		require (MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
 		$output.= "<table style='position:relative' border='0' cellspacing='0' cellpadding='3' width='96%'>";
 
-		for ($i=0; $i<$limit; $i++) {
- 			$row = $modx->db->getRow($rs);
+		$i = 0;
+		while ($row = $modx->db->getRow($rs)) {
 
-				if($i>0 && $i<$limit) $output .= '<tr><td colspan="2"><div class="split"></div></td></tr>';
+				if($i++>0) $output .= '<tr><td colspan="2"><div class="split"></div></td></tr>';
 				
 				$output.='<tr style="height: 24px;">
 				<td align="left" valign="top" width="200">
@@ -278,7 +282,7 @@ function ParseIntputOptions($v) {
 	$a = array();
 	if(is_array($v)) return $v;
 	else if(is_resource($v)) {
-		while ($cols = $modx->db->getRow($v)) $a[] = $cols;
+		$a = $modx->db->makeArray($v);
 	}
 	else $a = explode("||", $v);
 	return $a;

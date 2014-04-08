@@ -6,7 +6,7 @@
  * @author Safronovich Victor
  * @author Russian MODX Community
  * @version 1.0.13
- * @date 31/12/2013
+ * @date 2014/02/24
  *
  * @language Russian
  * @package modx
@@ -84,14 +84,14 @@ $_lang["database_use_failed"] = 'Невозможно выбрать базу д
 $_lang["database_use_failed_note"] = 'Проверьте, есть ли у вас необходимые права на доступ к базе данных.';
 $_lang["default_language"] = 'Язык по умолчанию менеджера';
 $_lang["default_language_description"] = 'Это язык, который будет по умолчанию использоваться менеджером в административной панели MODX.';
-$_lang["depedency_create"] = 'Depedency created';
-$_lang["depedency_update"] = 'Depedency updated';
+$_lang["depedency_create"] = 'Зависимости созданы ';
+$_lang["depedency_update"] = 'Зависимости обновлены';
 $_lang["during_execution_of_sql"] = ' во время выполнения SQL запроса ';
 $_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'ошибки';
 $_lang["errors"] = 'ошибок';
 $_lang["failed"] = 'ОШИБКА!';
-$_lang["guid_set"] = 'GUID set';
+$_lang["guid_set"] = 'GUID ключ';
 $_lang["help"] = 'Помощь!';
 $_lang["help_link"] = 'http://forums.modx.com/board/230/russian';
 $_lang["help_title"] = 'Помощь в установке на форумах MODX';
@@ -116,7 +116,7 @@ $_lang["installing_demo_site"] = 'Установка примера веб-са�
 $_lang["language_code"] = 'ru';
 $_lang["loading"] = 'Загружается...';
 $_lang["modules"] = 'Модули';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Все права защищены. MODX лицензирован GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. Все права защищены. MODX лицензирован GNU GPL.';
 $_lang["modx_footer2"] = 'MODX &mdash; свободное программное обеспечение. Мы поощряем вас быть творческими и использовать MODX как вы считаете целесообразным. Если вы внесете изменения и решите распространять ваш измененный вариант MODX, то должны сохранять и распространять исходный код бесплатно.';
 $_lang["modx_install"] = 'MODX &raquo; Установка';
 $_lang["modx_requires_php"] = ', а MODX необходим PHP 4.4.9 или более поздний';

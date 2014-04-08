@@ -1,8 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('settings')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 $data = $_POST;
 // lose the POST now, gets rid of quirky issue with Safari 3 - see FS#972
@@ -99,7 +98,8 @@ if (isset($data) && count($data) > 0) {
 				break;
             case 'valid_hostnames':
 				$v = str_replace(array(' ,', ', '), ',', $v);
-				if ($v !== '' || $v !== ',') {
+				if ($v !== ',') {
+					$v = ($v != 'MODX_SITE_HOSTNAMES') ? $v : '';
 					$configString = '<?php' . "\n" . 'define(\'MODX_SITE_HOSTNAMES\', \'' . $v . '\');' . "\n";
 					@file_put_contents(MODX_BASE_PATH . 'assets/cache/siteHostnames.php', $configString);
 				}
@@ -116,19 +116,16 @@ if (isset($data) && count($data) > 0) {
 	// Run a single query to save all the values
 	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value)
 		VALUES ".implode(', ', $savethese);
-	if(!@$rs = $modx->db->query($sql)) {
-		echo "Failed to update setting value!";
-		exit;
-	}
+	$modx->db->query($sql);
 	
 	// Reset Template Pages
 	if (isset($data['reset_template'])) {
-		$template = $data['default_template'];
-		$oldtemplate = $data['old_template'];
-		$tbl = $dbase.".`".$table_prefix."site_content`";
+		$newtemplate = intval($data['default_template']);
+		$oldtemplate = intval($data['old_template']);
+		$tbl = $modx->getFullTableName('site_content');
 		$reset = $data['reset_template'];
-		if($reset==1) $modx->db->query("UPDATE $tbl SET template = '$template' WHERE type='document'");
-		else if($reset==2) $modx->db->query("UPDATE $tbl SET template = '$template' WHERE template = $oldtemplate");
+		if($reset==1) $modx->db->update(array('template' => $newtemplate), $tbl, "type='document'");
+		else if($reset==2) $modx->db->update(array('template' => $newtemplate), $tbl, "template='{$oldtemplate}'");
 	}
 	
 	// empty cache
