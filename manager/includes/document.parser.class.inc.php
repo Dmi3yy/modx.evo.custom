@@ -2283,7 +2283,7 @@ class DocumentParser {
      */
     function makeUrl($id, $alias= '', $args= '', $scheme= '') {
         $url= '';
-        $virtualDir= '';
+        $virtualDir= $this->config['virtual_dir'];
         $f_url_prefix = $this->config['friendly_url_prefix'];
         $f_url_suffix = $this->config['friendly_url_suffix'];
         if (!is_numeric($id)) {
