@@ -2471,6 +2471,50 @@ class DocumentParser {
 		
 		return $this->parseText($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
 	}
+
+    /**
+     * getTpl
+     * get template for snippets
+     * @param $tpl {string}
+     *
+     * @return {string; false}
+     */
+    function getTpl($tpl){
+        switch(strpos($tpl,':')>(strpos($tpl,' ') ? current(explode(':',$tpl)) : current(explode(' ',$tpl))){
+            case '@CODE:': 
+            case '@CODE ':
+                $template=substr($tpl,0,6);
+                break;
+
+            case '@FILE:':
+            case '@FILE ':
+                $template=file_get_contents(MODX_BASE_PATH .substr($tpl,0,6)); 
+                break;
+
+            case '@CHUNK:':
+            case '@CHUNK ':
+                $template = $this->getChunk(substr($tpl,0,7)) != '' ? $this->getChunk(substr($tpl,0,7)) : '';
+                break;
+
+            case '@DOCUMENT:':
+            case '@DOCUMENT ':
+                $doc = $this->getDocument(substr($tpl,0,10), 'content');
+                $template = $doc['content'];
+                break;
+                
+            case '@SELECT:':
+            case '@SELECT ':
+                $template = $this->db->getValue( $this->db->query( 'SELECT '.substr($tpl,0,8)));          
+                break;      
+
+            default:
+                $template = $this->getChunk($tpl) != '' ? $this->getChunk($tpl) : '';
+                break;
+        }
+        return !empty($template) ? $template : false;
+    }
+
+
     
     /**
      * Returns the timestamp in the date format defined in $this->config['datetime_format']
