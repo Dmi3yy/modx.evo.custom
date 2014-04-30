@@ -16,22 +16,22 @@
 // you are using session configuration.
 // See http://kcfinder.sunhater.com/install for setting descriptions
 
-global $settings,$site_url;
+global $modx;
 $_CONFIG = array(
 
     'disabled' => false,
-    'denyZipDownload' => $settings['denyZipDownload'],
-    'denyExtensionRename' => $settings['denyExtensionRename'],
-	'showHiddenFiles' => $settings['showHiddenFiles'],
+    'denyZipDownload' => $modx->config['denyZipDownload'],
+    'denyExtensionRename' => $modx->config['denyExtensionRename'],
+	'showHiddenFiles' => $modx->config['showHiddenFiles'],
 	
     'theme' => "oxygen",
 
-    'uploadURL' => rtrim($settings['rb_base_url'],'/'),
-    'uploadDir' => rtrim($settings['rb_base_dir'],'/'),
-    'siteURL' => $site_url,
-	'assetsURL' => rtrim($settings['rb_base_url'],'/'),
-    'dirPerms' => intval($settings['new_folder_permissions'],8),
-    'filePerms' => intval($settings['new_file_permissions'],8),
+    'uploadURL' => rtrim($modx->config['rb_base_url'],'/'),
+    'uploadDir' => rtrim($modx->config['rb_base_dir'],'/'),
+    'siteURL' => $modx->config['site_url'],
+	'assetsURL' => rtrim($modx->config['rb_base_url'],'/'),
+    'dirPerms' => intval($modx->config['new_folder_permissions'],8),
+    'filePerms' => intval($modx->config['new_file_permissions'],8),
 
     'access' => array(
 
@@ -55,27 +55,27 @@ $_CONFIG = array(
     'types' => array(
 
         // CKEditor & FCKEditor types
-        'files'   =>  str_replace(',',' ',$settings['upload_files']),
-        'flash'   =>  str_replace(',',' ',$settings['upload_flash']),
-        'images'  =>  str_replace(',',' ',$settings['upload_images']),
+        'files'   =>  str_replace(',',' ',$modx->config['upload_files']),
+        'flash'   =>  str_replace(',',' ',$modx->config['upload_flash']),
+        'images'  =>  str_replace(',',' ',$modx->config['upload_images']),
 
         // TinyMCE types
-        'file'    =>  str_replace(',',' ',$settings['upload_files']),
-        'media'   =>  str_replace(',',' ',$settings['upload_media']),
-        'image'   =>  str_replace(',',' ',$settings['upload_images']),
+        'file'    =>  str_replace(',',' ',$modx->config['upload_files']),
+        'media'   =>  str_replace(',',' ',$modx->config['upload_media']),
+        'image'   =>  str_replace(',',' ',$modx->config['upload_images']),
     ),
 
     'mime_magic' => "",
 
-    'maxImageWidth' => $settings['maxImageWidth'],
-    'maxImageHeight' => $settings['maxImageHeight'],
+    'maxImageWidth' => $modx->config['maxImageWidth'],
+    'maxImageHeight' => $modx->config['maxImageHeight'],
 
-    'thumbWidth' => $settings['thumbWidth'],
-    'thumbHeight' => $settings['thumbHeight'],
+    'thumbWidth' => $modx->config['thumbWidth'],
+    'thumbHeight' => $modx->config['thumbHeight'],
 
-    'thumbsDir' => $settings['thumbsDir'],
+    'thumbsDir' => $modx->config['thumbsDir'],
 
-    'jpegQuality' => $settings['jpegQuality'],
+    'jpegQuality' => $modx->config['jpegQuality'],
 
     'cookieDomain' => "",
     'cookiePath' => "",
@@ -92,5 +92,4 @@ $_CONFIG = array(
     //'_sessionDomain' => ".mysite.com",
     //'_sessionPath' => "/my/path",
 );
-
 ?>
