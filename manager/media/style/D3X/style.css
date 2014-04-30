@@ -1038,6 +1038,11 @@ a.hometblink:hover {
 }
 
 
+#searchform {z-index: 1000;position: absolute;right:8px;top:17px;}
+@media (max-width: 940px) {
+  #searchform {display:none;}
+}
+
 /* -------------------------[ Contextual Menu used in the Tree Menu ]--- */
 #mx_contextmenu {
 	position: absolute;
