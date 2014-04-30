@@ -221,7 +221,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		<div id="searchform">
 			<form  action="index.php?a=71#results" method="post" target="main">
 				<input type="hidden" value="Search" name="submitok" />
-				<input type="text" name="searchid" size="25" class="form-control input-sm" placeholder="поиск по сайту...">
+				<input type="text" name="searchid" size="25" class="form-control input-sm" placeholder="<?php echo $_lang['search']?>">
 			</form>
 		</div>
 
