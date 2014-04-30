@@ -25,6 +25,7 @@ include_once('../../../includes/config.inc.php');
 include_once('../../../includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
 $modx->db->connect();
+$modx->getSettings();
 startCMSSession(); 
 if(!isset($_SESSION['mgrValidated'])) {
         die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
