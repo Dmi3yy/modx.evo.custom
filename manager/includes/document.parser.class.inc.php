@@ -867,19 +867,19 @@ class DocumentParser {
      */
     function mergeSettingsContent($content) {
         if (strpos($content, '[(') === false)
-			return $content;
-		$replace = array();
-		$matches = $this->getTagsFromContent($content, '[(', ')]');
-		if ($matches) {
-			for ($i = 0; $i < count($matches[1]); $i++) {
-				if ($matches[1][$i] && array_key_exists($matches[1][$i], $this->config))
-					$replace[$i] = $this->config[$matches[1][$i]];
-			}
-
-			$content = str_replace($matches[0], $replace, $content);
-		}
-		return $content;
-	}
+            return $content;
+        $replace= array ();
+        $matches= array ();
+        if (preg_match_all('~\[\(([a-zA-Z0-9\_]*?)\)\]~', $content, $matches)) {
+            $settingsCount= count($matches[1]);
+            for ($i= 0; $i < $settingsCount; $i++) {
+                if (array_key_exists($matches[1][$i], $this->config)){
+                   $content= str_replace($matches[0][$i], $this->config[$matches[1][$i]], $content);
+               }
+           }
+       }
+       return $content; 
+    }
 
 	/**
      * Merge chunks
@@ -2472,7 +2472,44 @@ class DocumentParser {
 		
 		return $this->parseText($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
 	}
-    
+
+    /**
+     * getTpl
+     * get template for snippets
+     * @param $tpl {string}
+     *
+     * @return {string}
+     */
+    function getTpl($tpl){
+        $template = $tpl;
+        if (preg_match("~^@([^:\s]+)[:\s]+(.+)$~", $tpl, $match)) {
+            $command = strtoupper($match[1]);
+            $template = $match[2];
+        }
+        switch ($command) {
+            case 'CODE': 
+                break;
+            case 'FILE': 
+                $template=file_get_contents(MODX_BASE_PATH . $template); 
+                break;
+            case 'CHUNK': 
+                $template = $this->getChunk($template); 
+                break;
+            case 'DOCUMENT': 
+                $doc = $this->getDocument($template, 'content', 'all'); 
+                $template = $doc['content']; 
+                break;
+            case 'SELECT': 
+                $this->db->getValue($this->db->query("SELECT {$template}")); 
+                break;
+            default:
+                if (!($template = $this->getChunk($tpl))) {
+                    $template = $tpl;
+                }
+        }
+        return $template;
+    }
+ 
     /**
      * Returns the timestamp in the date format defined in $this->config['datetime_format']
      *

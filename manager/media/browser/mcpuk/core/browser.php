@@ -593,6 +593,7 @@ class browser extends uploader {
     }
 
     protected function moveUploadFile($file, $dir) {
+        global $modx;
         $message = $this->checkUploadedFile($file);
 
         if ($message !== true) {
@@ -612,8 +613,14 @@ class browser extends uploader {
             return "{$file['name']}: " . $this->label("Cannot move uploaded file to target folder.");
         } elseif (function_exists('chmod'))
             chmod($target, $this->config['filePerms']);
-
+        
+        $modx->invokeEvent('OnFileBrowserUpload',array(
+            'filepath'=>realpath($dir),
+            'filename'=>$filename
+        ));
+        
         $this->makeThumb($target);
+        
         return "/" . basename($target);
     }
 
@@ -690,7 +697,6 @@ class browser extends uploader {
 
         if (is_array($dirs) && count($dirs) && ($index <= count($path) - 1)) {
 
-            /* Теперь собирается только первый уровень. Остальные подгружаются по мере их просмотра. Спасибо Rekill
             foreach ($dirs as $i => $cdir) {
                 if ($cdir['hasDirs'] &&
                     (
@@ -705,7 +711,6 @@ class browser extends uploader {
                     }
                 }
             }
-            */
         } else
             return false;
 

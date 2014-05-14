@@ -1035,9 +1035,10 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('211','OnManagerTreeRender','2',''),
 ('212','OnManagerNodePrerender','2',''),
 ('213','OnManagerNodeRender','2',''),
+('214','OnManagerMenuPrerender','2',''),
 ('999','OnPageUnauthorized','1',''),
-('1000','OnPageNotFound','1','');
-
+('1000','OnPageNotFound','1',''),
+('1001','OnFileBrowserUpload','1','File Browser Events');
 
 # ^ I don't think we need more than 1000 built-in events. Custom events will start at 1001
 
