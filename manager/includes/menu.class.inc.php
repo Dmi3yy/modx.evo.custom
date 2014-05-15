@@ -7,12 +7,12 @@ class EVOmenu{
 	var $menu;
 	var $output;
 	function Build($menu,$setting=array()){
-		$this->defaults['outerClass'] 	= 'nav';
-		$this->defaults['parentClass'] 		= 'dropdown';
+		$this->defaults['outerClass']      = 'nav';
+		$this->defaults['parentClass']     = 'dropdown';
 		$this->defaults['parentLinkClass'] = 'dropdown-toggle';
-		$this->defaults['parentLinkAttr'] = 'data-toggle="dropdown"';
-		$this->defaults['parentLinkIn'] = '<b class="caret"></b>';
-		$this->defaults['innerClass'] = 'subnav';
+		$this->defaults['parentLinkAttr']  = 'data-toggle="dropdown"';
+		$this->defaults['parentLinkIn']    = '<b class="caret"></b>';
+		$this->defaults['innerClass']      = 'subnav';
 		
 		$this->defaults = $this->defaults + $setting; 
 		$this->Structurise($menu);
@@ -30,8 +30,7 @@ class EVOmenu{
 		foreach($menu as $key=>$value){
 			$new[$value[1]][] = $value;
 		}
-
-
+		
 		$this->menu = $new;
 	}
 	
@@ -41,36 +40,68 @@ class EVOmenu{
 		if (isset($this->menu[$parentid])){
 			
 			$countChild = 0;
+			$itemTpl  = '<li id="[+id+]" class="[+li_class+]"><a href="[+href+]" alt="[+alt+]" target="[+target+]"
+				          onclick="[+onclick+]" [+class+] [+LinkAttr+]>[+itemName+]</a>[+DrawSub+]</li>';
+			$outerTpl = '<ul  id="[+id+]" class="[+class+]">[+output+]</ul>';
 			foreach($this->menu[$parentid] as $key=>$value){
-				$prms = false;
-				$permissions = explode(',',$value[6]);
-				foreach($permissions as $val) if($modx->hasPermission($val)) $prms = true;
-				if (!$prms && $value[6]!='') continue;
+				if($value[6]!=='') {
+					$permissions = explode(',',$value[6]);
+					foreach($permissions as $val) {
+						if(!$modx->hasPermission($val)) continue;
+					}
+				}
 				
 				$countChild++;
-				$output .= '
-				<li id="'.$value[0].'" class="'.(isset($this->menu[$value[0]]) ? $this->defaults['parentClass'] : '').' '.$value[10].'">
-					<a href="'.$value[3].'" alt="'.$value[4].'" target="'.$value[7].'" onclick="'.$value[5].'"
-						'.(isset($this->menu[$value[0]])?' class="'.$this->defaults['parentLinkClass'].'"':'').' 
-						'.(isset($this->menu[$value[0]])?' '.$this->defaults['parentLinkAttr']:'').'>
-						'.$value[2].(isset($this->menu[$value[0]])?$this->defaults['parentLinkIn']:'').'</a>';
+				$id = $value[0];
+				$ph['id']       = $id;
+				$ph['li_class'] = $this->get_li_class() . $value[10];
+				$ph['href']     = $value[3];
+				$ph['alt']      = $value[4];
+				$ph['target']   = $value[7];
+				$ph['onclick']  = $value[5];
+				$ph['a_class']  = $this->get_a_class($id);
+				$ph['LinkAttr'] = $this->getLinkAttr($id);
+				$ph['itemName'] = $value[2] . $this->getItemName($id);
 				
-				if (isset($this->menu[$value[0]])){
+				if (isset($this->menu[$id])){
 					$level++;
-					$output .= $this->DrawSub( $value[0] , $level);
+					$ph['DrawSub'] = $this->DrawSub($id , $level);
 					$level--;
 				}
-				$output .='</li>';
-				if ($value[8]==1) $output .=  '<li class="divider"></li>';
+				else $ph['DrawSub'] = '';
+				
+				$output .= $modx->parseText($itemTpl,$ph);
+				if ($value[8]==1) $output .= '<li class="divider"></li>';
 			}
 
+			$ph = array();
 			if ($countChild>0) {
-				$output =  '<ul  id="'.($level==0?$this->defaults['outerClass']:'').'" class="'.($level==0?$this->defaults['outerClass']:$this->defaults['innerClass']).'">'.$output.'</ul>';
+				$ph['id']     = $level==0 ? $this->defaults['outerClass'] : '';
+				$ph['class']  = $level==0 ? $this->defaults['outerClass'] : $this->defaults['innerClass'];
+				$ph['output'] = $output;
+				$output = $modx->parseText($outerTpl,$ph);
 			}
 		}
 		return $output;
 	}
+	
+	function get_li_class($id) {
+		if(isset($this->menu[$id]))
+			return $this->defaults['parentClass'] . ' ';
+	}
+	
+	function get_a_class($id) {
+		if(isset($this->menu[$id]))
+			return 'class="' . $this->defaults['parentLinkClass'] . '"';
+	}
+	
+	function getLinkAttr($id) {
+		if(isset($this->menu[$id]))
+			return $this->defaults['parentLinkAttr'];
+	}
+	
+	function getItemName($id) {
+		if(isset($this->menu[$id]))
+			return $this->defaults['parentLinkIn'];
+	}
 }
-
-
-?>
