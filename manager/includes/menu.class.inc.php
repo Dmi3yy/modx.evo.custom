@@ -54,7 +54,7 @@ class EVOmenu{
 				$countChild++;
 				$id = $value[0];
 				$ph['id']       = $id;
-				$ph['li_class'] = $this->get_li_class() . $value[10];
+				$ph['li_class'] = $this->get_li_class($id) . $value[10];
 				$ph['href']     = $value[3];
 				$ph['alt']      = $value[4];
 				$ph['target']   = $value[7];
