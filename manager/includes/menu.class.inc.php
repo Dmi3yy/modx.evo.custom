@@ -41,7 +41,7 @@ class EVOmenu{
 			
 			$countChild = 0;
 			$itemTpl  = '<li id="[+id+]" class="[+li_class+]"><a href="[+href+]" alt="[+alt+]" target="[+target+]"
-				          onclick="[+onclick+]" [+class+] [+LinkAttr+]>[+itemName+]</a>[+DrawSub+]</li>';
+				          onclick="[+onclick+]" [+a_class+] [+LinkAttr+]>[+itemName+]</a>[+DrawSub+]</li>';
 			$outerTpl = '<ul  id="[+id+]" class="[+class+]">[+output+]</ul>';
 			foreach($this->menu[$parentid] as $key=>$value){
 				if($value[6]!=='') {

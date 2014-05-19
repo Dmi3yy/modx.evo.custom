@@ -58,7 +58,7 @@ $sitemenu['web_permissions']     = array('web_permissions','users',$_lang['web_p
 
 // Tools Menu
 $sitemenu['bk_manager']     = array('bk_manager','tools',$_lang['bk_manager'],'index.php?a=93',$_lang['bk_manager'],'this.blur();','bk_manager','main',0,10,'');
-$sitemenu['remove_locks']     = array('remove_locks','tools',$_lang['remove_locks'],'javascript:removeLocks();',$_lang['remove_locks'],'this.blur();','remove_locks','main',0,20,'');
+$sitemenu['remove_locks']     = array('remove_locks','tools',$_lang['remove_locks'],'javascript:removeLocks();',$_lang['remove_locks'],'this.blur();','remove_locks','',0,20,'');
 $sitemenu['import_site']     = array('import_site','tools',$_lang['import_site'],'index.php?a=95',$_lang['import_site'],'this.blur();','import_static','main',0,30,'');
 $sitemenu['export_site']     = array('export_site','tools',$_lang['export_site'],'index.php?a=83',$_lang['export_site'],'this.blur();','export_static','main',1,40,'');
 $sitemenu['edit_settings']     = array('edit_settings','tools',$_lang['edit_settings'],'index.php?a=17',$_lang['edit_settings'],'this.blur();','settings','main',0,50,'');
