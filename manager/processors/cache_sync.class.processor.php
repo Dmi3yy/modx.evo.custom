@@ -157,7 +157,11 @@ class synccache{
         $tmpPHP .= '$a = &$this->aliasListing;' . "\n";
         $tmpPHP .= '$d = &$this->documentListing;' . "\n";
         $tmpPHP .= '$m = &$this->documentMap;' . "\n";
-        $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder', $modx->getFullTableName('site_content'), 'deleted=0', 'parent, menuindex');
+        if ($config['aliaslistingfolder'] == 1) {
+            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder', $modx->getFullTableName('site_content'), 'deleted=0 and isfolder=1', 'parent, menuindex');
+        }else{
+            $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder', $modx->getFullTableName('site_content'), 'deleted=0', 'parent, menuindex');
+        }
         while ($tmp1 = $modx->db->getRow($rs)) {
             if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
                 $tmpPath = $this->getParents($tmp1['parent']);

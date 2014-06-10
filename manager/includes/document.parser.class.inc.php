@@ -1253,6 +1253,18 @@ class DocumentParser {
 				$aliases[$val] = $key;
 				$isfolder[$val] = $this->aliasListing[$val]['isfolder'];
             }
+
+            if ($this->config['aliaslistingfolder'] == 1) {
+                preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
+                $ids = implode(',',$match['1']);
+                $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
+                while( $row = $this->db->getRow( $res ) ) {
+                    $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
+                    $isfolder[$row['id']] = '0';
+
+                }
+            }
+
             $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
             $isfriendly= ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
             $pref= $this->config['friendly_url_prefix'];
@@ -1556,7 +1568,33 @@ class DocumentParser {
                     $this->documentIdentifier= $this->documentListing[$alias];
                 } else {
 					//@TODO: check new $alias;
-                    $this->sendErrorPage();
+                    if ($this->config['aliaslistingfolder'] == 1) {
+                        $tbl_site_content = $this->getFullTableName('site_content');
+                        $alias = $this->db->escape($_GET['q']);
+
+                        $parentAlias = dirname($alias);
+                        $parentId = $this->getIdFromAlias($parentAlias);
+                        $parentId = ($parentId > 0) ? $parentId : '0';
+
+                        $docAlias = basename($alias, $this->config['friendly_url_suffix']);
+
+                        $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
+                        if($this->db->getRecordCount($rs)==0)
+                        {
+                            $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and id='{$docAlias}'");
+                        }
+                        $docId = $this->db->getValue($rs);
+
+                        if ($docId > 0)
+                        {
+                            $this->documentIdentifier = $docId;
+                        }else{
+                            $this->sendErrorPage();
+                        }
+                    }else{
+                        $this->sendErrorPage();
+                    }
+
                 }
             } else {
                 if (isset($this->documentListing[$this->documentIdentifier])) {
@@ -1709,32 +1747,52 @@ class DocumentParser {
      * @return array Contains the document Listing (tree) like the sitemap
      */
     function getChildIds($id, $depth= 10, $children= array ()) {
+        if ($this->config['aliaslistingfolder'] == 1) {
 
-        // Initialise a static array to index parents->children
-        static $documentMap_cache = array();
-        if (!count($documentMap_cache)) {
-            foreach ($this->documentMap as $document) {
-                foreach ($document as $p => $c) {
-                    $documentMap_cache[$p][] = $c;
-                }
+            $res = $this->db->select("id,alias,isfolder", $this->getFullTableName('site_content'),  "parent IN (".$ids.") AND deleted = '0'");
+            $idx = array();
+            while( $row = $this->db->getRow( $res ) ) {
+                $children[$row['alias']] = $row['id'];
+                if ($row['isfolder']==1) $idx[] = $row['id'];
             }
-        }
-
-        // Get all the children for this parent node
-        if (isset($documentMap_cache[$id])) {
             $depth--;
-
-            foreach ($documentMap_cache[$id] as $childId) {
-                $pkey = (strlen($this->aliasListing[$childId]['path']) ? "{$this->aliasListing[$childId]['path']}/" : '') . $this->aliasListing[$childId]['alias'];
-                if (!strlen($pkey)) $pkey = "{$childId}";
-                    $children[$pkey] = $childId;
-
-                if ($depth && isset($documentMap_cache[$childId])) {
-                    $children += $this->getChildIds($childId, $depth);
+            $idx = implode(',',$idx);
+            if (!empty($idx)) {
+                if ($depth) {
+                    $children = $this->getChildIds($idx, $depth, $children );
                 }
             }
+            return $children;
+
+        }else{
+
+            // Initialise a static array to index parents->children
+            static $documentMap_cache = array();
+            if (!count($documentMap_cache)) {
+                foreach ($this->documentMap as $document) {
+                    foreach ($document as $p => $c) {
+                        $documentMap_cache[$p][] = $c;
+                    }
+                }
+            }
+
+            // Get all the children for this parent node
+            if (isset($documentMap_cache[$id])) {
+                $depth--;
+
+                foreach ($documentMap_cache[$id] as $childId) {
+                    $pkey = (strlen($this->aliasListing[$childId]['path']) ? "{$this->aliasListing[$childId]['path']}/" : '') . $this->aliasListing[$childId]['alias'];
+                    if (!strlen($pkey)) $pkey = "{$childId}";
+                        $children[$pkey] = $childId;
+
+                    if ($depth && isset($documentMap_cache[$childId])) {
+                        $children += $this->getChildIds($childId, $depth);
+                    }
+                }
+            }
+            return $children;
+
         }
-        return $children;
     }
 
     /**
@@ -2317,7 +2375,13 @@ class DocumentParser {
         elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
             $alias= $id;
             if ($this->config['friendly_alias_urls'] == 1) {
-                $al= $this->aliasListing[$id];
+
+                if ($this->config['aliaslistingfolder'] == 1) {
+                    $al= $this->getAliasListing($id);
+                }else{
+                    $al= $this->aliasListing[$id];
+                }
+
                 if($al['isfolder']===1 && $this->config['make_folders']==='1')
                     $f_url_suffix = '/';
                 $alPath= !empty ($al['path']) ? $al['path'] . '/' : '';
@@ -2351,6 +2415,31 @@ class DocumentParser {
         } else {
         	return $host . $virtualDir . $url;
         }
+    }
+
+    function getAliasListing($id){
+        if(isset($this->aliasListing[$id])){
+            $out = $this->aliasListing[$id];
+        }else{
+            $q = $this->db->query("SELECT id,alias,isfolder,parent FROM ".$this->getFullTableName("site_content")." WHERE id=".(int)$id);
+            if($this->db->getRecordCount($q)=='1'){
+                $q = $this->db->getRow($q);
+                $this->aliasListing[$id] =  array(
+                    'id' => (int)$q['id'],
+                    'alias' => $q['alias']=='' ? $q['id'] : $q['alias'],
+                    'parent' => (int)$q['parent'],
+                    'isfolder' => (int)$q['isfolder'],
+                );
+
+                if($this->aliasListing[$id]['parent']>0){
+                    $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
+                    $this->aliasListing[$id]['path'] = $tmp['path'] . (($tmp['parent']>0) ? '/' : '') .$tmp['alias'];
+                }
+
+                $out = $this->aliasListing[$id];
+            }
+        }
+        return $out;
     }
 
     /**
