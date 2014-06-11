@@ -1749,7 +1749,7 @@ class DocumentParser {
     function getChildIds($id, $depth= 10, $children= array ()) {
         if ($this->config['aliaslistingfolder'] == 1) {
 
-            $res = $this->db->select("id,alias,isfolder", $this->getFullTableName('site_content'),  "parent IN (".$ids.") AND deleted = '0'");
+            $res = $this->db->select("id,alias,isfolder", $this->getFullTableName('site_content'),  "parent IN (".$id.") AND deleted = '0'");
             $idx = array();
             while( $row = $this->db->getRow( $res ) ) {
                 $children[$row['alias']] = $row['id'];
