@@ -1249,22 +1249,22 @@ class DocumentParser {
                 $aliases[$item['id']]= (strlen($item['path']) > 0 ? $item['path'] . '/' : '') . $item['alias'];
                 $isfolder[$item['id']]= $item['isfolder'];
             } */
-			foreach($this->documentListing as $key=>$val){
-				$aliases[$val] = $key;
-				$isfolder[$val] = $this->aliasListing[$val]['isfolder'];
+            foreach($this->documentListing as $key=>$val){
+                $aliases[$val] = $key;
+                $isfolder[$val] = $this->aliasListing[$val]['isfolder'];
             }
 
             if ($this->config['aliaslistingfolder'] == 1) {
                 preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
                 $ids = implode(',',$match['1']);
-                if($ids){
+                if ($ids) {
                     $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
                     while( $row = $this->db->getRow( $res ) ) {
                         $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
                         $isfolder[$row['id']] = '0';
 
                     }
-                }    
+                }
             }
 
             $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
@@ -1733,8 +1733,13 @@ class DocumentParser {
         $parents= array ();
         while ( $id && $height-- ) {
             $thisid = $id;
-            $id = $this->aliasListing[$id]['parent'];
-            if (!$id) break;
+            if ($this->config['aliaslistingfolder'] == 1) {
+                $id = isset($this->aliasListing[$id]['parent']) ? $this->aliasListing[$id]['parent'] : $this->db->getValue("SELECT `parent` FROM " . $this->getFullTableName("site_content") . " WHERE `id` = '{$id}' LIMIT 0,1");
+                if (!$id || $id == '0') break;
+            } else {
+                $id = $this->aliasListing[$id]['parent'];
+                if (!$id) break;
+            }
             $parents[$thisid] = $id;
         }
         return $parents;
@@ -2432,10 +2437,15 @@ class DocumentParser {
                     'parent' => (int)$q['parent'],
                     'isfolder' => (int)$q['isfolder'],
                 );
-
                 if($this->aliasListing[$id]['parent']>0){
                     $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
-                    $this->aliasListing[$id]['path'] = $tmp['path'] . (($tmp['parent']>0) ? '/' : '') .$tmp['alias'];
+                    //fix alias_path_usage
+                    if ($this->config['use_alias_path'] == '1') {
+                        //&& $tmp['path'] != '' - fix error slash with epty path
+                        $this->aliasListing[$id]['path'] = $tmp['path'] . (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'];
+                    } else {
+                        $this->aliasListing[$id]['path'] = '';
+                    }
                 }
 
                 $out = $this->aliasListing[$id];
@@ -3863,6 +3873,7 @@ class DocumentParser {
 	function getIdFromAlias($alias)
 	{
 		$children = array();
+		if (isset($this->documentListing[$alias])) {return $this->documentListing[$alias];}
 
 		$tbl_site_content = $this->getFullTableName('site_content');
 		if($this->config['use_alias_path']==1)
@@ -3959,4 +3970,3 @@ class SystemEvent {
         $this->activated= false;
     }
 }
-?>
