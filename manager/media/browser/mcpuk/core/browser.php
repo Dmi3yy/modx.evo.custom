@@ -616,7 +616,7 @@ class browser extends uploader {
         
         $modx->invokeEvent('OnFileBrowserUpload',array(
             'filepath'=>realpath($dir),
-            'filename'=>str_replace("$dir/","",realpath($target))
+            'filename'=>str_replace("/","",str_replace($dir,"",realpath($target)))
         ));
         
         $this->makeThumb($target);
