@@ -3,7 +3,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 $_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE 1')!==false) ? 'legacy_IE' : 'modern';
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 if(!isset($modx->config['manager_menu_height'])) $modx->config['manager_menu_height'] = '70';
-if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '260';
+if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '250';
 $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 ?>
 <!DOCTYPE html>
@@ -17,9 +17,9 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
         #mainMenu, #tree, #main { position: absolute }
         #mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
         #mainMenu { height: 70px; width: 100%;}
-        #tree { width: 250px; top: 70px; left: 0; bottom: 0; }
-        #main { top: 70px; left: 250px; right: 0; bottom: 0; }
-        #resizer { position: absolute; top: 70px; bottom: 0; left: 250px; width: 4px; cursor: col-resize; z-index: 999 }
+        #tree { width: <?php echo $modx->config['manager_tree_width'];?>px; top: 70px; left: 0; bottom: 0; }
+        #main { top: 70px; left: <?php echo $modx->config['manager_tree_width'];?>px; right: 0; bottom: 0; }
+        #resizer { position: absolute; top: 70px; bottom: 0; left: <?php echo $modx->config['manager_tree_width'];?>px; width: 4px; cursor: col-resize; z-index: 999 }
         #resizer #hideMenu {display:block;
             margin-top:5px;
             margin-left:-8px;
