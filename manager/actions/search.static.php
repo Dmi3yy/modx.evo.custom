@@ -74,7 +74,9 @@ if(isset($_REQUEST['submitok'])) {
     $sqladd .= $searchtitle!=''     ? " OR pagetitle LIKE '%{$searchtitle}%' " : '';
     $sqladd .= $searchlongtitle!='' ? " OR longtitle LIKE '%{$searchlongtitle}%' " : '';
     $sqladd .= $search_alias!='' ? " OR alias LIKE '%{$search_alias}%' " : '';
-    $sqladd .= $searchcontent!=''   ? " AND content LIKE '%{$searchcontent}%' " : '';
+    if($sqladd!=='' && $searchcontent!=='')
+    	$sqladd .= ' AND';
+    $sqladd .= $searchcontent!=''   ? " content LIKE '%{$searchcontent}%' " : '';
 
     $fields = 'id, contenttype, pagetitle, description, deleted, published, isfolder, type';
     $where  = $sqladd;
