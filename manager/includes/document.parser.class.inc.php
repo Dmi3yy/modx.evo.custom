@@ -1562,7 +1562,10 @@ class DocumentParser {
                 if (isset($this->documentListing[$this->documentIdentifier])) {
                     $this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
 				} else {
-					$this->documentIdentifier = (int) $this->documentIdentifier;
+					$alias = $this->db->escape($_GET['q']);
+					$docAlias = basename($alias, $this->config['friendly_url_suffix']);
+					$rs  = $this->db->select('id', $this->getFullTableName('site_content'), "deleted=0 and alias='{$docAlias}'");
+					$this->documentIdentifier = (int) $this->db->getValue($rs);
 				}
             }
             $this->documentMethod= 'id';
