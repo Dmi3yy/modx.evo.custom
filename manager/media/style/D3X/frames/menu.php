@@ -70,6 +70,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		setTreeFrameWidth(pos);
 	}
 
+
 	function hideTreeFrame() {
 		var pos = 0;
 		setTreeFrameWidth(pos);
@@ -79,6 +80,35 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		var pos = 250;
 		setTreeFrameWidth(pos);
 	}
+
+
+	//toggle TopMenu Frame
+		function setMenuFrameHeight(pos) {
+		parent.document.getElementById('tree').style.top    = pos + 'px';
+		parent.document.getElementById('resizer').style.top = pos + 'px';
+		parent.document.getElementById('resizer2').style.top = pos + 'px';
+		parent.document.getElementById('main').style.top    = pos + 'px';
+		parent.document.getElementById('mainMenu').style.height    = pos + 'px';
+
+	}
+
+	function toggleMenuFrame() {
+		var pos = parseInt(parent.document.getElementById('mainMenu').style.height) != 5?5:85;
+		setMenuFrameHeight(pos);
+	}
+
+
+	function hideMenuFrame() {
+		var pos = 5;
+		setMenuFrameHeight(pos);
+	}
+
+	function defaultMenuFrame() {
+		var pos = 85;
+		setMenuFrameHeight(pos);
+	}
+
+
 
 	// TREE FUNCTIONS - Expand/ Collapse
 	// These functions affect the expanded/collapsed state of the tree and any items that may be pointing to it
