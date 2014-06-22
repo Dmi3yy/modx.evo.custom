@@ -1256,7 +1256,7 @@ class DocumentParser {
 
             if ($this->config['aliaslistingfolder'] == 1) {
                 preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
-                $ids = implode(',',$match['1']);
+                $ids = implode(',', array_unique($match['1']));
                 if ($ids) {
                     $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
                     while( $row = $this->db->getRow( $res ) ) {
