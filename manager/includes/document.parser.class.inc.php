@@ -1249,9 +1249,9 @@ class DocumentParser {
                 $aliases[$item['id']]= (strlen($item['path']) > 0 ? $item['path'] . '/' : '') . $item['alias'];
                 $isfolder[$item['id']]= $item['isfolder'];
             } */
-            foreach($this->documentListing as $key=>$val){
-                $aliases[$val] = $key;
-                $isfolder[$val] = $this->aliasListing[$val]['isfolder'];
+			foreach($this->documentListing as $key=>$val){
+				$aliases[$val] = $key;
+				$isfolder[$val] = $this->aliasListing[$val]['isfolder'];
             }
 
             if ($this->config['aliaslistingfolder'] == 1) {
@@ -2379,31 +2379,33 @@ class DocumentParser {
                 $args= '&' . substr($args, 1);
             elseif ($c != '&') $args= '&' . $args;
         }
-        if ($this->config['friendly_urls'] == 1 && $alias != '') {
-            $url= $f_url_prefix . $alias . $f_url_suffix . $args;
-        }
-        elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
-            $alias= $id;
-            if ($this->config['friendly_alias_urls'] == 1) {
+        if ($id != $this->config['site_start']) {
+            if ($this->config['friendly_urls'] == 1 && $alias != '') {
+            } elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
+                $alias = $id;
+                $alPath = '';
+                if ($this->config['friendly_alias_urls'] == 1) {
+         
+					if ($this->config['aliaslistingfolder'] == 1) {
+                    	$al= $this->getAliasListing($id);
+                	}else{
+                    	$al= $this->aliasListing[$id];
+                	}
 
-                if ($this->config['aliaslistingfolder'] == 1) {
-                    $al= $this->getAliasListing($id);
-                }else{
-                    $al= $this->aliasListing[$id];
+                    if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1')
+                        $f_url_suffix = '/';
+                    $alPath = !empty ($al['path']) ? $al['path'] . '/' : '';
+                    if ($al && $al['alias'])
+                        $alias = $al['alias'];
                 }
-
-                if($al['isfolder']===1 && $this->config['make_folders']==='1')
-                    $f_url_suffix = '/';
-                $alPath= !empty ($al['path']) ? $al['path'] . '/' : '';
-                if ($al && $al['alias'])
-                    $alias= $al['alias'];
+                $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
+                $url = $alias . $args;
+            } else {
+                $url = 'index.php?id=' . $id . $args;
             }
-            $alias= $alPath . $f_url_prefix . $alias . $f_url_suffix;
-            $url= $alias . $args;
         } else {
-            $url= 'index.php?id=' . $id . $args;
+            $url = $args;
         }
-
         $host= $this->config['base_url'];
         // check if scheme argument has been set
         if ($scheme != '') {
@@ -2577,7 +2579,7 @@ class DocumentParser {
 		
 		return $this->parseText($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
 	}
-
+    
     /**
      * getTpl
      * get template for snippets
