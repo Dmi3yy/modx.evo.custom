@@ -1522,8 +1522,8 @@ class DocumentParser {
                 $k= array_keys($_GET);
                 unset ($_GET[$k[0]]);
                 unset ($_REQUEST[$k[0]]); // remove 404,405 entry
-                $_SERVER['QUERY_STRING']= $qp['query'];
                 $qp= parse_url(str_replace($this->config['site_url'], '', substr($url, 4)));
+                $_SERVER['QUERY_STRING']= $qp['query'];
                 if (!empty ($qp['query'])) {
                     parse_str($qp['query'], $qv);
                     foreach ($qv as $n => $v)
@@ -3403,7 +3403,7 @@ class DocumentParser {
         $this->regClientScript($html, true);
     }
 
-    /**
+   /**
      * Remove unwanted html tags and snippet, settings and tags
      *
      * @param string $html
@@ -3418,23 +3418,9 @@ class DocumentParser {
         $t= preg_replace('~\[\((.*?)\)\]~', "", $t); //settings
         $t= preg_replace('~\[\+(.*?)\+\]~', "", $t); //placeholders
         $t= preg_replace('~{{(.*?)}}~', "", $t); //chunks
-        $t= preg_replace('~&#x005B;\*(.*?)\*&#x005D;~', "", $t); //encoded tv
-        $t= preg_replace('~&#x005B;&#x005B;(.*?)&#x005D;&#x005D;~', "", $t); //encoded snippet
-        $t= preg_replace('~&#x005B;\!(.*?)\!&#x005D;~', "", $t); //encoded snippet
-        $t= preg_replace('~&#x005B;\((.*?)\)&#x005D;~', "", $t); //encoded settings
-        $t= preg_replace('~&#x005B;\+(.*?)\+&#x005D;~', "", $t); //encoded placeholders
-        $t= preg_replace('~&#x007B;&#x007B;(.*?)&#x007D;&#x007D;~', "", $t); //encoded chunks
         return $t;
     }
 
-	# Decode JSON regarding hexadecimal entity encoded MODX tags
-    function jsonDecode($json, $assoc = false) {
-		// unmask MODX tags
-		$masked = array('&#x005B;', '&#x005D;', '&#x007B;', '&#x007D;');
-		$unmasked = array('[', ']', '{', '}');
-		$json = str_replace($masked, $unmasked, $json);
-		return json_decode($json, $assoc);
-    }
    /**
      * Add an event listner to a plugin - only for use within the current execution cycle
      *
@@ -3842,7 +3828,7 @@ class DocumentParser {
 	/**
 	 * Format alias to be URL-safe. Strip invalid characters.
 	 *
-	 * @param string Alias to be formatted
+	 * @param string $alias Alias to be formatted
 	 * @return string Safe alias
 	 */
     function stripAlias($alias) {
@@ -3943,8 +3929,10 @@ class SystemEvent {
         if ($msg == "")
             return;
         if (is_array($SystemAlertMsgQueque)) {
-            if ($this->name && $this->activePlugin)
+            $title = '';
+            if ($this->name && $this->activePlugin) {
                 $title= "<div><b>" . $this->activePlugin . "</b> - <span style='color:maroon;'>" . $this->name . "</span></div>";
+            }
             $SystemAlertMsgQueque[]= "$title<div style='margin-left:10px;margin-top:3px;'>$msg</div>";
         }
     }
