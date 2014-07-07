@@ -2941,7 +2941,7 @@ class DocumentParser {
 				for ($i= 0; $i < count($result); $i++){
 					$row = $result[$i];
 					
-					if (!isset($row['id'] or !$row['id']){
+					if (!isset($row['id']) or !$row['id']){
 						$output[$row['name']] = $row['value'];
 					}else{
 						$output[$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
@@ -3140,7 +3140,7 @@ class DocumentParser {
             "mu.id = '{$uid}'"
             );
         if ($row = $this->db->getRow($rs)) {
-            if (!isset($row['usertype'] or !$row["usertype"])
+            if (!isset($row['usertype']) or !$row["usertype"])
                 $row["usertype"]= "manager";
             return $row;
         }
@@ -3160,7 +3160,7 @@ class DocumentParser {
             "wu.id='{$uid}'"
             );
         if ($row = $this->db->getRow($rs)) {
-            if (!isset($row['usertype'] or !$row["usertype"])
+            if (!isset($row['usertype']) or !$row["usertype"])
                 $row["usertype"]= "web";
             return $row;
         }
