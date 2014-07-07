@@ -2357,27 +2357,16 @@ class DocumentParser {
         $f_url_prefix = $this->config['friendly_url_prefix'];
         $f_url_suffix = $this->config['friendly_url_suffix'];
         if (!is_numeric($id)) {
-            $this->messageQuit('`' . $id . '` is not numeric and may not be passed to makeUrl()');
+            $this->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
         }
-        if ($args != '' && $this->config['friendly_urls'] == 1) {
-            // add ? to $args if missing
-            $c= substr($args, 0, 1);
-            if (strpos($f_url_prefix, '?') === false) {
-                if ($c == '&')
-                    $args= '?' . substr($args, 1);
-                elseif ($c != '?') $args= '?' . $args;
-            } else {
-                if ($c == '?')
-                    $args= '&' . substr($args, 1);
-                elseif ($c != '&') $args= '&' . $args;
+        if ($args !== '') {
+            // add ? or & to $args if missing
+            $args= ltrim($args, '?&');
+            $_ = strpos($f_url_prefix, '?');
+            if($this->config['friendly_urls'] === '1' && $_ !== false) {
+                $args= "?{$args}";
             }
-        }
-        elseif ($args != '') {
-            // add & to $args if missing
-            $c= substr($args, 0, 1);
-            if ($c == '?')
-                $args= '&' . substr($args, 1);
-            elseif ($c != '&') $args= '&' . $args;
+            else $args= "&{$args}";
         }
         if ($id != $this->config['site_start']) {
             if ($this->config['friendly_urls'] == 1 && $alias != '') {
@@ -2399,9 +2388,9 @@ class DocumentParser {
                         $alias = $al['alias'];
                 }
                 $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
-                $url = $alias . $args;
+                $url = "{$alias}{$args}";
             } else {
-                $url = 'index.php?id=' . $id . $args;
+                $url = "index.php?id={$id}{$args}";
             }
         } else {
             $url = $args;
@@ -2952,7 +2941,7 @@ class DocumentParser {
 				for ($i= 0; $i < count($result); $i++){
 					$row = $result[$i];
 					
-					if (!$row['id']){
+					if (!isset($row['id'] or !$row['id']){
 						$output[$row['name']] = $row['value'];
 					}else{
 						$output[$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
@@ -3151,7 +3140,7 @@ class DocumentParser {
             "mu.id = '{$uid}'"
             );
         if ($row = $this->db->getRow($rs)) {
-            if (!$row["usertype"])
+            if (!isset($row['usertype'] or !$row["usertype"])
                 $row["usertype"]= "manager";
             return $row;
         }
@@ -3171,7 +3160,7 @@ class DocumentParser {
             "wu.id='{$uid}'"
             );
         if ($row = $this->db->getRow($rs)) {
-            if (!$row["usertype"])
+            if (!isset($row['usertype'] or !$row["usertype"])
                 $row["usertype"]= "web";
             return $row;
         }
