@@ -344,7 +344,7 @@ function decode(s){
                         foreach($custom_tvs as $ctv) {
                             if(!in_array($ctv, array('.', '..', '.DS_Store'))){
                                 $selected = ($content['type']=='custom_tv:'.$ctv )? "selected='selected'":"";
-                                echo '<option value="custom_tv:'.$ctv.'"  '.$selected.'>Custom Input:'.$ctv.'</option>';
+                                echo '<option value="custom_tv:'.$ctv.'"  '.$selected.'>'.$ctv.'</option>';
                             }
                         }    
                     ?>
