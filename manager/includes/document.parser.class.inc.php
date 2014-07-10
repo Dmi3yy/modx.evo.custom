@@ -82,9 +82,34 @@ class DocumentParser {
         $this->error_reporting = 1;
     }
 
-    function __call($name,$args) {
+    function __call($method_name,$arguments) {
         include_once(MODX_MANAGER_PATH . 'includes/extenders/deprecated.functions.inc.php');
-        if(method_exists($this->old,$name)) return call_user_func_array(array($this->old,$name),$args);
+        if(method_exists($this->old,$method_name)) $error_type=1;
+        else                                       $error_type=3;
+        
+        if(!isset($this->config['error_reporting'])||1<$this->config['error_reporting'])
+    	{
+    		if($error_type==1)
+        	{
+	        	$title = 'Call deprecated method';
+	        	$msg = htmlspecialchars("\$modx->{$method_name}() is deprecated function");
+    		}
+    		else
+    		{
+	        	$title = 'Call undefined method';
+	        	$msg = htmlspecialchars("\$modx->{$method_name}() is undefined function");
+    		}
+	    	$info = debug_backtrace();
+	    	$m[] = $msg;
+	        if(!empty($this->currentSnippet))          $m[] = 'Snippet - ' . $this->currentSnippet;
+	        elseif(!empty($this->event->activePlugin)) $m[] = 'Plugin - '  . $this->event->activePlugin;
+	    	$m[] = $this->decoded_request_uri;
+	    	$m[] = str_replace('\\','/',$info[0]['file']) . '(line:' . $info[0]['line'] . ')';
+	    	$msg = implode('<br />', $m);
+	        $this->logEvent(0, $error_type, $msg, $title);
+        }
+        if(method_exists($this->old,$method_name))
+        	return call_user_func_array(array($this->old,$method_name),$arguments);
     }
 
     /**
@@ -721,7 +746,7 @@ class DocumentParser {
             $this->db->update(
                 array(
                     'published'   => 1,
-                    'publishedon' => time(),
+                    'publishedon' => $timeNow,
                 ), $this->getFullTableName('site_content'), "pub_date <= {$timeNow} AND pub_date!=0 AND published=0");
 
             // now, check for documents that need un-publishing
@@ -1233,7 +1258,17 @@ class DocumentParser {
         $suff= $this->config['friendly_url_suffix'];
         return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff),array('.xml','.rss','.js','.css'),$text);
     }
-
+    
+    function makeFriendlyURL($pre, $suff, $alias, $isfolder=0, $id=0) {
+    	
+        if ($id == $this->config['site_start'] && $this->config['seostrict']==='1') {return '/';}
+        $Alias = explode('/',$alias);
+        $alias = array_pop($Alias);
+        $dir = implode('/', $Alias);
+        unset($Alias);
+        if($this->config['make_folders']==='1' && $isfolder==1) $suff = '/';
+        return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
+    }
     
     /** 
      * Convert URL tags [~...~] to URLs
@@ -1253,7 +1288,7 @@ class DocumentParser {
 				$aliases[$val] = $key;
 				$isfolder[$val] = $this->aliasListing[$val]['isfolder'];
             }
-            $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
+            $in= '!\[\~([0-9]+)\~\]!is';
             $isfriendly= ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
             $pref= $this->config['friendly_url_prefix'];
             $suff= $this->config['friendly_url_suffix'];
@@ -1809,7 +1844,7 @@ class DocumentParser {
 		array(
 			'eventid'     => $evtid,
 			'type'        => $type,
-			'createdon'   => time(),
+			'createdon'   => time() + $this->config['server_offset_time'],
 			'source'      => $esc_source,
 			'description' => $msg,
 			'user'        => $LoginUserID,
@@ -1927,7 +1962,11 @@ class DocumentParser {
      * @return boolean
      */
     function isBackend() {
-        return $this->insideManager() ? true : false;
+		if(defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true')
+		{
+			return true;
+		}
+		else return false;
     }
 
     /**
@@ -1936,7 +1975,11 @@ class DocumentParser {
      * @return boolean
      */
     function isFrontend() {
-        return !$this->insideManager() ? true : false;
+		if(defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true')
+		{
+			return false;
+		}
+		else return true;
     }
 
     /**
@@ -2928,7 +2971,7 @@ class DocumentParser {
                 'sender'      => $from,
                 'recipient'   => $to,
                 'private'     => $private,
-                'postdate'    => time(),
+                'postdate'    => time() + $this->config['server_offset_time'],
                 'messageread' => 0,
             ), $this->getFullTableName('user_messages'));
     }
