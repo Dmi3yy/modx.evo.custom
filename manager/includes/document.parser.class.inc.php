@@ -1302,8 +1302,7 @@ class DocumentParser {
                 }
             }
 
-            $in= '!\[\~([0-9]+)\~\]!is';
-
+            $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
             $isfriendly= ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
             $pref= $this->config['friendly_url_prefix'];
             $suff= $this->config['friendly_url_suffix'];
