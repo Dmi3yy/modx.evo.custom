@@ -680,6 +680,10 @@ div.treeNode {
     padding: 1px 2px;
 	margin-left:-3px;
 }
+.treeNodeSelected
+{
+    font-weight:700;
+}
 .unpublished a, .unpublishedNode, .unpublish {
 	color: #B68282;
 	font-style: italic;
