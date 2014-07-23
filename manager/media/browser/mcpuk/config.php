@@ -32,6 +32,8 @@ $_CONFIG = array(
 	'assetsURL' => rtrim($modx->config['rb_base_url'],'/'),
     'dirPerms' => intval($modx->config['new_folder_permissions'],8),
     'filePerms' => intval($modx->config['new_file_permissions'],8),
+    'maxfilesize' => $settings['upload_maxsize'],
+
 
     'access' => array(
 
@@ -92,4 +94,5 @@ $_CONFIG = array(
     //'_sessionDomain' => ".mysite.com",
     //'_sessionPath' => "/my/path",
 );
+
 ?>
