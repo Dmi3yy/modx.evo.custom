@@ -1,5 +1,4 @@
 <?php
-<<<<<<< HEAD
 
 $modx_version = '1.1b-d7.0.15';           // Current version number
 $modx_release_date = 'Jul 30, 2014'; // Date of release
