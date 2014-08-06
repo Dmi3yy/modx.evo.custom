@@ -987,3 +987,7 @@
 	border-width: 1px;
 }
 
+.cirkuitSkin span.mce_spellchecker { 
+    background-position: -540px -20px;
+}
+
