@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.13
+ * @version 1.0.14
  * @date 2014/02/24
  * @author Russian MODX community
  * @author gabdullin
@@ -287,7 +287,7 @@ $_lang["existing_category"] = 'Существующие категории';
 $_lang["expand_tree"] = 'Раскрыть дерево';
 $_lang["export_site"] = 'Экспортировать сайт';
 $_lang["export_site_cacheable"] = 'Экспортировать некэшируемые ресурсы:';
-$_lang["export_site_exporting_document"] = 'Экспортируется файл <b>%s</b> из <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = 'Ошибка';
 $_lang["export_site_failed_no_open"] = 'Невозможно открыть файл:';
 $_lang["export_site_failed_no_retrieve"] = 'Невозможно извлечь ресурс.';
@@ -1259,4 +1259,17 @@ $_lang["login_processor_wrong_password"]     = "Неверно указан ло
 $_lang["login_processor_many_failed_logins"] = "Очень много неудачных попыток войти, вы заблокированы!";
 $_lang["login_processor_blocked1"]           = "Вы заблокированы и не можете войти!";
 $_lang["login_processor_blocked2"]           = "Вы заблокированы и не можете войти! Попробуйте войти позже.";
+$_lang["login_processor_blocked3"]           = "You are blocked automatic after a specified date and you cannot log in anymore!";
 $_lang["login_processor_bad_code"]           = "Проверочный код введен не правильно! Попробуйте еще раз!";
+$_lang["login_processor_remotehost_ip"]      = "Your hostname doesn't point back to your IP!";
+$_lang["login_processor_remote_ip"]          = "You are not allowed to login from this location.";
+$_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
+$_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
+
+$_lang["dp_dayNames"]   = "['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']";
+$_lang["dp_monthNames"] = "['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']";
+$_lang["dp_startDay"]   = "1";
+
+$_lang["check_all"] = "Включить все";
+$_lang["check_none"] = "Выключить все";
+$_lang["check_toggle"] = "Переключить";

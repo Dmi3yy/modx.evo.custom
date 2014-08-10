@@ -99,6 +99,13 @@ if (!empty ($id)) {
     $_SESSION['itemname'] = $content['pagetitle'];
 } else {
     $content = array();
+    
+    if (isset($_REQUEST['newtemplate'])){
+    	$content['template'] = $_REQUEST['newtemplate'];
+    }else{
+    	$content['template'] = getDefaultTemplate();
+    }
+    
     $_SESSION['itemname'] = $_lang["new_resource"];
 }
 
@@ -148,8 +155,11 @@ if (isset ($_POST['which_editor'])) {
 window.addEvent('domready', function(){
     var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
     var dpformat = "<?php echo $modx->config['datetime_format']; ?>" + ' hh:mm:00';
-    new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat});
-    new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat});
+    var dpdayNames = <?php echo $_lang['dp_dayNames']; ?>;
+    var dpmonthNames = <?php echo $_lang['dp_monthNames']; ?>;
+    var dpstartDay = <?php echo $_lang['dp_startDay']; ?>;
+    new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
+    new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat, 'dayNames':dpdayNames, 'monthNames':dpmonthNames,'startDay':dpstartDay});
 
     if( !window.ie6 ) {
         $$('img[src=<?php echo $_style["icons_tooltip_over"]?>]').each(function(help_img) {
@@ -488,8 +498,10 @@ function decode(s) {
 <?php
 // invoke OnDocFormPrerender event
 $evtOut = $modx->invokeEvent('OnDocFormPrerender', array(
-    'id' => $id
+    'id' => $id,
+	'template' => $content['template']
 ));
+
 if (is_array($evtOut))
     echo implode('', $evtOut);
 	
@@ -605,17 +617,9 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         echo "\t\t\t\t\t<optgroup label=\"$thisCategory\">\n";
                         $closeOptGroup = true;
                     }
-                    if (isset($_REQUEST['newtemplate'])) {
-                        $selectedtext = $row['id'] == $_REQUEST['newtemplate'] ? ' selected="selected"' : '';
-                    } else {
-                        if (isset ($content['template'])) {
-                            $selectedtext = $row['id'] == $content['template'] ? ' selected="selected"' : '';
-                        } else {
-                            $default_template = getDefaultTemplate();
-                            $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
-                            $content['template'] = $default_template;
-                        }
-                    }
+                    
+                    $selectedtext = ($row['id'] == $content['template']) ? ' selected="selected"' : '';
+                    
                     echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";
                     $currentCategory = $thisCategory;
                 }
@@ -1157,8 +1161,10 @@ if ($use_udperms == 1) {
 
 // invoke OnDocFormRender event
 $evtOut = $modx->invokeEvent('OnDocFormRender', array(
-    'id' => $id,
+	'id' => $id,
+	'template' => $content['template']
 ));
+
 if (is_array($evtOut)) echo implode('', $evtOut);
 ?>
 </div><!--div class="tab-pane" id="documentPane"-->
