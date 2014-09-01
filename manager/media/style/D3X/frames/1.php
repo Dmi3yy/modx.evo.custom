@@ -11,6 +11,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 <head>
     <title><?php echo $site_name?> - (MODX CMS Manager)</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
     <style>
         html, body { margin: 0; padding: 0; width: 100%; height: 100% }
         body { position: relative }
@@ -56,7 +57,8 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
     <div id="main">
         <iframe name="main" src="index.php?a=2" scrolling="auto" frameborder="0" onload="if (mainMenu.stopWork()) mainMenu.stopWork();"></iframe>
     </div>
-
+    
+    <!--<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js'></script>-->
     <script language="JavaScript" type="text/javascript">
         var _startY = 85;
         var _dragElement;
