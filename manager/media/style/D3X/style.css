@@ -510,7 +510,7 @@ input.submit {
 }
 .sectionHeader span, .showHideVisible span{
 	font-weight: normal;
-	font-size: 11px;
+	font-size: 12px;
 }
 .sectionHeader span input, .showHideVisible span input{
 	vertical-align: middle;
@@ -951,7 +951,7 @@ a.hometblink:hover {
     height: 31px !important;
     background: scroll transparent url(images/misc/toptaba.png) !important;
     padding: 0 14px 0 16px !important;
-    font: normal normal 12px/31px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font: normal normal 13px/31px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     color:#BDC1C8 !important;
     text-decoration: none;
     border-radius: 3px 3px 0 0;
@@ -986,7 +986,7 @@ a.hometblink:hover {
     height: 32px !important;
     background: scroll transparent url(images/misc/toptab.jpg) !important;
     padding:0 14px 0 16px !important;
-    font: normal normal 12px/31px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font: normal normal 13px/31px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     color: #fff !important;
     text-shadow: 1px 1px 0 rgba(221,223,233,0.29) !important;
     border-radius: 3px 3px 0 0;
@@ -1019,7 +1019,7 @@ a.hometblink:hover {
     margin:0 0 0 10px !important;
     padding: 0px 10px 3px 10px !important;
     display:inline-block !important;
-    font: normal normal normal 11px/28px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font: normal normal normal 12px/28px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     background: none !important;
     text-shadow: 1px 1px 0 #6c737f !important;
     border-right: 0 solid black;
@@ -1204,7 +1204,7 @@ a.hometblink:hover {
     color: #333;
     cursor: pointer;
     height: 25px;
-    font-size: 12px;
+    font-size: 13px;
     margin: 10px 2px 8px 0;
     text-shadow: none !important;
     padding: 5px 10px 0;
@@ -1514,7 +1514,7 @@ ul.actionButtons {
 	border: 1px solid #BBB;
 	border-radius: 3px 3px 3px 3px;
 	color: #333;
-	font-size: 11px;
+	font-size: 12px;
 	outline: medium none;
 	padding: 7px 8px 7px 4px;
 	text-decoration: none;
