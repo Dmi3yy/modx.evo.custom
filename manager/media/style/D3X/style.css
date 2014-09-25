@@ -14,7 +14,7 @@ html {
 	color: #111;
 }
 body {
-	font-family:  Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
+	font-family:  Ubuntu, Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
 	font-size: 62.5%;
 	font-size: 68.75%;
 	font-size: 75%;
@@ -86,9 +86,8 @@ h1, h2, h3, h4, h5, h6, .subTitle {
 }
 h1 {
     color:#25282c;
-    margin: 15px 15px 5px;
+    margin: 5px 15px 5px;
     font-size: 22px;
-    font-weight: bold;
     padding:0;
     text-shadow: 0 1px white;
 }
@@ -141,7 +140,8 @@ hr {
 	border: 0;
 }
 .split {
-	background: #556476 url(images/misc/line.gif) repeat-x;
+	/*background: #556476 url(images/misc/line.gif) repeat-x;*/
+	border-bottom: 1px solid #eaeaea;
 	height: 1px;
 	font-size: 0;
 	clear: both;
@@ -285,8 +285,8 @@ form select
     color:#000;
     -webkit-box-shadow:0 1px 0 0 rgba(255,255,255,0.3), inset 0 2px 2px -1px rgba(180,188,191,0.7);
     box-shadow:0 1px 0 0 rgba(255,255,255,0.3), inset 0 2px 2px -1px rgba(180,188,191,0.7);
-    font-size:13px;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 13px;
+    font-family: Ubuntu, "Helvetica Neue",Helvetica,Arial,sans-serif;
     height:27px;
     vertical-align:middle;
     padding:4px;
@@ -295,20 +295,23 @@ form select
     width:auto!;
 
 }
+form select[multiple]{
+	height: auto;
+	max-height: 100px;
+}
 form input[type="text"],
 form input[type="password"],
 form textarea {
-
     background: #fdfdff;
-    border:1px solid;
-    border-color:#87919c #959ea9 #9ea7b1 #959ea9;
-    border-radius:4px;
-    color:#000;
-    -webkit-box-shadow:0 1px 0 0 rgba(255,255,255,0.3), inset 0 2px 2px -1px rgba(180,188,191,0.7);
-    box-shadow:0 1px 0 0 rgba(255,255,255,0.3), inset 0 2px 2px -1px rgba(180,188,191,0.7);
-    display:inline-block;
-    outline:none;
-    vertical-align:middle;
+    border: 1px solid;
+    border-color: #ccc;
+    border-radius: 4px;
+    color: #000;
+    -webkit-box-shadow: 0 1px 0 0 rgba(255,255,255,0.3), inset 0 2px 2px -1px rgba(180,188,191,0.7);
+    box-shadow: 0 1px 0 0 rgba(255,255,255,0.3), inset 0 2px 2px -1px rgba(180,188,191,0.7);
+    display: inline-block;
+    outline: none;
+    vertical-align: middle;
     -webkit-font-smoothing: antialiased;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -501,9 +504,16 @@ input.submit {
 .sectionHeader, .showHideVisible {
     color:#000;
     font-size:20px;
-    padding:3px 53px 12px 17px;
+    padding: 3px 11px 0;
     position:relative;
     min-height: 25px;
+}
+.sectionHeader span, .showHideVisible span{
+	font-weight: normal;
+	font-size: 12px;
+}
+.sectionHeader span input, .showHideVisible span input{
+	vertical-align: middle;
 }
 	.tab-page .sectionHeader {
 		margin: 2px 3px 0px;
@@ -519,10 +529,10 @@ input.submit {
 	display: block;
 }
 	.tab-page .sectionBody, .tab-page .section .sectionBody, .sectionBody .sectionBody {
-        background-color:#f5f9f9;
-        border:1px solid;
-        border-color:#c4ced2 #dce7ed #dce7ed;
-        padding:19px;
+        background-color: #f5f9f9;
+        border: 1px solid;
+        border-color: #c4ced2 #dce7ed #dce7ed;
+        padding: 10px;
 	}
  .section .sectionBody {
 	margin:0 15px 15px;
@@ -544,8 +554,10 @@ input.submit {
 		padding: 5px 18px 5px 3px;
 	}
 .comment {
-	font-size: .9em;
-	color: #999;
+	font-size: .8em;
+	color: #777;
+	display: inline-block;
+	line-height: 11px;
 }
 thead, .fancyrow {
 	color: #333;
@@ -571,7 +583,7 @@ li {
 	list-style: disc outside url(images/misc/li.png);
 }
 ul {
-	margin: 10px 20px 0 20px;
+	margin: 0 20px 0 20px;
 }
 	.rtl ul {
 		margin: 0 10px 0 20px;
@@ -631,8 +643,6 @@ div.treeframebody {
 	cursor: default;
 	height: 100%;
 	padding: 6px 8px 0;
-	line-height: 1.7em;
-    text-shadow:0 1px 0 #fff;
 }
 #treeHolder {
 	padding-left:12px;
@@ -929,7 +939,7 @@ a.hometblink:hover {
 	list-style: none;
 	float: left;
 	width: auto;
-	margin: 0 0 0 10px;
+	margin: 0 0 0 5px;
 	padding: 0;
 }
 	.rtl #nav li {
@@ -940,22 +950,16 @@ a.hometblink:hover {
     display: inline-block !important;
     height: 31px !important;
     background: scroll transparent url(images/misc/toptaba.png) !important;
-    padding:0 14px 0 16px !important;
-    font: normal normal bold 15px/31px "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    padding: 0 14px 0 16px !important;
+    font: normal normal 13px/31px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     color:#BDC1C8 !important;
     text-decoration: none;
     border-radius: 3px 3px 0 0;
     border-right: 1px solid #1a1c1f;
 }
 #nav li:hover a{
-    background-color:#3c424e;
     border-right: 1px solid #3c424e;
-    background-image:-webkit-linear-gradient(top, #424957, #323842)!important;
-    background-image:-moz-linear-gradient(top, #424957, #323842)!important;
-    background-image:-ms-linear-gradient(top, #424957, #323842)!important;
-    background-image:-o-linear-gradient(top, #424957, #323842)!important;
-    background-image: linear-gradient(top, #424957, #323842)!important;
-    color:#fff !important;
+    color: #fff !important;
 
 }
 
@@ -982,8 +986,8 @@ a.hometblink:hover {
     height: 32px !important;
     background: scroll transparent url(images/misc/toptab.jpg) !important;
     padding:0 14px 0 16px !important;
-    font: normal normal bold 15px/31px "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    color:#16191a !important;
+    font: normal normal 13px/31px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    color: #fff !important;
     text-shadow: 1px 1px 0 rgba(221,223,233,0.29) !important;
     border-radius: 3px 3px 0 0;
     text-decoration: none;
@@ -996,7 +1000,7 @@ a.hometblink:hover {
 	display: block;
 	position:fixed;
 	bottom:0;
-    padding-bottom:5px;
+    padding-bottom: 4px;
 	left: 0;
 	/*border-top: 1px solid #999;*/
 	border-bottom: 1px solid #434b58;
@@ -1011,26 +1015,21 @@ a.hometblink:hover {
 	cursor: pointer;
 	border-left: none;*/
     color: #e3ecef !important;
-    height: 23px!important;
+    height: 23px !important;
     margin:0 0 0 10px !important;
     padding: 0px 10px 3px 10px !important;
     display:inline-block !important;
-    font: normal normal normal 13px/28px "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    background: none!important;
+    font: normal normal normal 12px/28px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    background: none !important;
     text-shadow: 1px 1px 0 #6c737f !important;
     border-right: 0 solid black;
-    border-radius: 3px!important;
-
 }
 
 #nav li.active ul.subnav a:hover {
-
-    background: scroll transparent url(images/misc/submenuhover.png) repeat-x !important;
-    box-shadow: 1px 1px 2px #484848;
-    border-radius: 3px!important;
+	border-radius: 7px !important;
     color: #fff!important;
     text-shadow: 0px 0px 0 #6c737f !important;
-
+    text-decoration: underline;
 }
 
 #nav li.active ul.subnav li {
@@ -1045,6 +1044,28 @@ a.hometblink:hover {
 #searchform {z-index: 1000;position: absolute;right:8px;top:17px;}
 @media (max-width: 940px) {
   #searchform {display:none;}
+}
+#searchform input[type=text]{
+	margin-top: 35px;
+	height: 29px;
+	width: 55px;
+	box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
+	-moz-box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
+	-webkit-box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
+	border-radius: 25px;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 5px;
+	transition-duration: 0.3s;
+	-moz-transition-duration: 0.3s;
+	-webkit-transition-duration: 0.3s;
+	border: none;
+	background: rgba(0,0,0,0.3);
+	color: white;
+	text-align: center;
+}
+#searchform input[type=text]:focus{
+	width: 200px;
+	text-align: left;
 }
 
 /* -------------------------[ Contextual Menu used in the Tree Menu ]--- */
@@ -1171,28 +1192,26 @@ a.hometblink:hover {
 		direction: rtl;
 	}
 .dynamic-tab-pane-control .tab-row .tab {
-
 	float: left;
 	z-index: 1;
 	position: relative;
-	top: 1px;
-    background:url("images/misc/tabs-border.png") repeat-x!important;
-    display:inline-block;
-    border-radius:4px 4px 0 0;
-    border:1px solid;
-    border-color: #d2dbdd #bec6c8;
-    border-bottom:none;
-    box-shadow:inset 0 1px 0 0 #fff;
-    color:#3f4b54;
-    cursor:pointer;
-    height:25px;
-    font-size:13px;
-    font-weight:bold;
-    margin:10px 6px 8px 0;
-    text-shadow:0 1px #fff;
-    padding:7px 15px 0;
-    vertical-align:top;
-    text-shadow:0 1px #fff;
+	top: 3px;
+    display: inline-block;
+    border-radius: 4px 4px 0 0;
+    border: 1px solid transparent;
+    border-bottom: none;
+    box-shadow: inset 0 1px 0 0 transparent;
+    color: #333;
+    cursor: pointer;
+    height: 25px;
+    font-size: 13px;
+    margin: 10px 2px 8px 0;
+    text-shadow: none !important;
+    padding: 5px 10px 0;
+    vertical-align: top;
+    text-shadow: 0 1px #fff;
+    background: rgba(0,0,0,0);
+
 }
 
 	.rtl .dynamic-tab-pane-control .tab-row .tab {
@@ -1205,19 +1224,25 @@ a.hometblink:hover {
 .dynamic-tab-pane-control .tab-row .tab.selected {
 	color: #333;
 	z-index: 999;
-	top: 1px;
-
-    background:url("images/misc/tabs-border-selected.png") repeat-x!important;
-    color:#000;
-    margin:4px 6px 8px 0;
-    height:26px;
-    padding-top:11px;
-    padding-bottom:1px;
+	top: 8px;
+    color: #000;
+    margin: 4px 2px 8px 0;
+    height: 26px;
+    padding: 5px 10px 0;
+    border-color: #d2dbdd #bec6c8;
     border-bottom: 1px solid #e5eef1;
-    position:relative;
+    position: relative;
     cursor: default;
-    z-index:2;
-    text-shadow:0 1px #fff;
+    z-index: 2;
+    text-shadow: 0 1px #fff;
+    background: #eaf0f2;
+	
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 .dynamic-tab-pane-control .tab-row .tab.selected:first-child:before {
@@ -1233,10 +1258,11 @@ a.hometblink:hover {
 	color: #000;
 	/*background-color:#fff;*/
 	text-shadow: none;
+	padding-top: 1px;
+	display: inline-block;
 }
 .dynamic-tab-pane-control .tab-row .tab:hover {
-	color: #000;
-	text-decoration: none;
+	text-decoration: underline;
 }
 .dynamic-tab-pane-control .tab-row .tab .alert {
 	color:#ffcc72;
@@ -1334,7 +1360,7 @@ a.hometblink, a.hometblink img {
 	vertical-align: middle;
 }
 .sectionBody .tab-page {
-	padding: 20px 15px 15px !important;
+	padding: 10px !important;
 }
 /* -------------------------[ New sortable table class ]--- */
 .sortabletable {
@@ -1425,19 +1451,30 @@ fieldset#preview h2.tab {
 #actions {
 	background: url(images/misc/action-bg.gif) repeat scroll 0 0 rgba(230, 230, 230, 0.8);
 	height: 25px;
-	margin: 8px 1px 0 0;
-	padding: 10px 5px 14px 10px;
+	margin: 5px;
+	padding: 5px 1px 9px 5px;
 	position: fixed;
-	right: 16px;
+	right: 0;
 	text-align: right;
-	top: 1px;
+	top: 0px;
 	z-index: 100;
-    border-radius:4px;
-    border-bottom:1px solid #a0abb0;
-    overflow:hidden;
-
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.7);
+    -moz-box-shadow: 0 0 5px rgba(0,0,0,0.7);
+    -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.7);
+    overflow: hidden;
+    transition-duration: 0.3s;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    opacity: 0.8;
+}
+#actions:hover{
+	opacity: 1;
 }
 select#stay {
+	font-size: 11px;
     margin-top: -6px;
     margin-right:1px;
     height:30px;
@@ -1477,20 +1514,21 @@ ul.actionButtons {
 	border: 1px solid #BBB;
 	border-radius: 3px 3px 3px 3px;
 	color: #333;
-	font-weight: bold;
+	font-size: 12px;
 	outline: medium none;
 	padding: 7px 8px 7px 4px;
 	text-decoration: none;
 	vertical-align: top;
 	white-space: nowrap;
 	text-shadow: 0px 1px 0px #FFF;
-		-moz-box-shadow:1px 1px 2px #ccc;
-		-webkit-box-shadow:1px 1px 2px #ccc;
-		box-shadow:1px 1px 2px #ccc;
-			background:-moz-linear-gradient(#FFFFFF, #E0E0E0);
-			background:-webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E0E0E0));
-			background:-o-linear-gradient(#FFFFFF, #E0E0E0);
-			filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFF,endColorstr=#E0E0E0); zoom:1;
+	-moz-box-shadow:1px 1px 2px #ccc;
+	-webkit-box-shadow:1px 1px 2px #ccc;
+	box-shadow:1px 1px 2px #ccc;
+	background:-moz-linear-gradient(#FFFFFF, #E0E0E0);
+	background:-webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E0E0E0));
+	background:-o-linear-gradient(#FFFFFF, #E0E0E0);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFF,endColorstr=#E0E0E0); 
+	zoom:1;
 }
 .actionButtons a:hover {
 	border-color: #999;
@@ -1780,7 +1818,8 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 }
 
 .dp_cal select {
-	margin: 2px 3px;
+	margin: 2px;
+	font-weight: normal;
 	font-size: 1em;
 }
 .dp_cal select option {
@@ -1950,12 +1989,13 @@ code {font-size:inherit;font-family: 'Courier New','Courier', monospace;backgrou
     padding:4px 0 2px 0;
 }
 .sectionBody table tr TD{
-
-    border:none;
-    color:#000;
-    font-size:13px;
-    height:15px;
-    padding:5px 0 4px 10px!important;
-    text-align:left;
-    vertical-align:top;
+    border: none;
+    color: #000;
+    font-size: 13px;
+    height: 15px;
+    text-align: left;
+    vertical-align: top;
+}
+.sectionBody table tr:first-child TD{
+	vertical-align: middle;
 }

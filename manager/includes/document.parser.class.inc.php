@@ -1257,7 +1257,11 @@ class DocumentParser {
                 if ($ids) {
                     $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
                     while( $row = $this->db->getRow( $res ) ) {
-                        $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
+                        if ($this->config['use_alias_path'] == '1') {
+                            $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
+                        } else {
+                            $aliases[$row['id']] = $row['alias'];
+                        }
                         $isfolder[$row['id']] = '0';
 
                     }

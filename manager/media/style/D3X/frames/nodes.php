@@ -97,6 +97,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     $orderby = $modx->db->escape($_SESSION['tree_sortby']." ".$_SESSION['tree_sortdir']);
 
     // Folder sorting gets special setup ;) Add menuindex and pagetitle
+    /*if(in_array($parent, array(1, 2, 3))) $orderby = "pagetitle ASC"; // tree custom sorting*/
     if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
 
         $tblsc = $modx->getFullTableName('site_content');
