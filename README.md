@@ -12,11 +12,11 @@
 
 Отличия от Master branch
 =======================================================
-- FRAMSET -> iframe (need restore modx_textdir) now work tree only left
+- FRAMSET -> iframe (need restore modx_textdir) now work tree only left (thanks Mihanik71, 64j)
 - Move Folder frame to Theme forder (now can do any change and not take core files)
 - add new default theme D3X
 - refactor Search - group 5 fields in one
-- refactor topMenu - now easy change
+- refactor topMenu - now easy change (thanks Bumkaka)
 - AliasListing only for Folders - on/off in settings(Friendly URL tab)
 - add custom tv in Select (not need use @INCLUDE... only select from list)
 - events: OnDocFormTemplateRender, OnFileBrowserUpload
