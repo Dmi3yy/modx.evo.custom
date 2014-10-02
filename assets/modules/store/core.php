@@ -56,7 +56,7 @@ case 'install':
 		
 		
 		if ($_GET['method']!= 'fast'){
-			header("Location: http://".$_SERVER['HTTP_HOST']."/assets/modules/store/installer/index.php?action=options");
+			header("Location: ".$modx->config['site_url']."assets/modules/store/installer/index.php?action=options");
 			die();
 		} else {
 			chdir('../assets/modules/store/installer/');
