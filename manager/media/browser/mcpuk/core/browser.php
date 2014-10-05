@@ -17,8 +17,8 @@ class browser extends uploader {
     protected $thumbsDir;
     protected $thumbsTypeDir;
 
-    public function __construct() {
-        parent::__construct();
+    public function __construct($modx) {
+        parent::__construct($modx);
 
         if (isset($this->post['dir'])) {
             $dir = $this->checkInputDir($this->post['dir'], true, false);
@@ -593,7 +593,6 @@ class browser extends uploader {
     }
 
     protected function moveUploadFile($file, $dir) {
-        global $modx;
         $message = $this->checkUploadedFile($file);
 
         if ($message !== true) {
@@ -614,7 +613,7 @@ class browser extends uploader {
         } elseif (function_exists('chmod'))
             chmod($target, $this->config['filePerms']);
         
-        $modx->invokeEvent('OnFileBrowserUpload',array(
+        $this->modx->invokeEvent('OnFileBrowserUpload',array(
             'filepath'=>realpath($dir),
             'filename'=>str_replace("/","",str_replace($dir,"",realpath($target)))
         ));
