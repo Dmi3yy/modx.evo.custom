@@ -96,6 +96,7 @@ class uploader {
   * @var string */
     protected $cms = "";
 
+    protected $modx = null;
 /** Magic method which allows read-only access to protected or private class properties
   * @param string $property
   * @return mixed */
@@ -103,13 +104,23 @@ class uploader {
         return property_exists($this, $property) ? $this->$property : null;
     }
 
-    public function __construct() {
+    public function __construct($modx) {
 
         // DISABLE MAGIC QUOTES
         if (function_exists('set_magic_quotes_runtime'))
             @set_magic_quotes_runtime(false);
 
+        //MODX
+        try {
+            if ($modx instanceof DocumentParser) {
+                $this->modx = $modx;
+            } else throw new Exception('MODX should be instance of DocumentParser');
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+
         // INPUT INIT
+
         $input = new input();
         $this->get = &$input->get;
         $this->post = &$input->post;
@@ -308,13 +319,11 @@ class uploader {
     }
 
 	protected function normalizeFilename($filename) {
-        global $modx;
-        return $modx->stripAlias($filename);
+        return $this->modx->stripAlias($filename);
 	}
 
 	protected function normalizeDirname($dirname) {
-		global $modx;
-        return $modx->stripAlias($dirname);
+        return $this->modx->stripAlias($dirname);
     }
 
     protected function checkUploadedFile(array $aFile=null) {
