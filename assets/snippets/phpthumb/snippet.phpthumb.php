@@ -35,17 +35,21 @@ foreach ($tmpImagesFolder as $folder) {
 $fname=$cacheFolder."/".$params['w']."x".$params['h'].'-'.$path_parts['filename'].".".substr(md5(serialize($params)),0,3).".".$params['f'];
 $outputFilename =MODX_BASE_PATH.$fname;
 if (!file_exists($outputFilename)) {
-    require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
-    $phpThumb = new phpthumb();
-    $phpThumb->config_temp_directory = $tmpFolder;
-    $phpThumb->setSourceFilename(MODX_BASE_PATH . $input);
-    foreach ($params as $key => $value) {
-        $phpThumb->setParameter($key, $value);
-    }
-	if ($phpThumb->GenerateThumbnail()) {
-        $phpThumb->RenderToFile($outputFilename);
-	} else {
-        $modx->logEvent(0, 3, implode('<br/>', $phpThumb->debugmessages), 'phpthumb');
+    if ($modx->loadExtension('phpthumb')) {
+        require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
+        $phpThumb = new phpthumb();
+        $phpThumb->config_temp_directory = $tmpFolder;
+        $phpThumb->setSourceFilename(MODX_BASE_PATH . $input);
+        foreach ($params as $key => $value) {
+            $phpThumb->setParameter($key, $value);
+        }
+        if ($phpThumb->GenerateThumbnail()) {
+            $phpThumb->RenderToFile($outputFilename);
+        } else {
+            $modx->logEvent(0, 3, implode('<br/>', $phpThumb->debugmessages), 'phpthumb');
+        }
+    } else {
+        $modx->logEvent(0, 3, 'Unable to load phpthumb class.', 'phpthumb');
     }
 }
 return $fname;
