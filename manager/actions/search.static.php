@@ -17,10 +17,28 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
 <form action="index.php?a=71" method="post" name="searchform" enctype="multipart/form-data">
 <table width="100%" border="0">
   <tr>
+
     <td width="180"><?php echo $_lang['search_criteria_top']; ?></td>
     <td width="0">&nbsp;</td>
     <td width="120"><input name="searchid" type="text" size="50"/></td>
   <td><?php echo $_lang['search_criteria_top_msg']; ?></td>
+  </tr>
+  <tr>
+	<td width="120"><?php echo $_lang['search_criteria_template_id']; ?></td>
+	<td width="20">&nbsp;</td>
+<?php
+	$rs = $modx->db->select('*',$modx->getFullTableName('site_templates'));
+	$option[] = '<option value="">No selected</option>';
+	$option[] = '<option value="0">(blank)</option>';
+	while($row=$modx->db->getRow($rs))
+	{
+		$templatename = htmlspecialchars($row['templatename'], ENT_QUOTES, $modx->config['modx_charset']);
+		$option[] = sprintf('<option value="%s">%s(%s)</option>', $row['id'], $templatename, $row['id']);
+	}
+	$tpls = sprintf('<select name="templateid">%s</select>', join("\n",$option));
+?>
+	<td width="120"><?php echo $tpls;?></td>
+	<td><?php echo $_lang['search_criteria_template_id_msg']; ?></td>
   </tr>
   <tr>
     <td>URL</td>
@@ -53,10 +71,18 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
 //TODO: сделать поиск по уму пока сделаю что б одно поле было для id,longtitle,pagetitle,alias далее нужно думаю добавить что б и в елементах искало
 if(isset($_REQUEST['submitok'])) {
     $searchid = ($_REQUEST['searchid']!=='') ? intval($_REQUEST['searchid']) : '0';
+<<<<<<< HEAD
   $searchtitle = htmlentities($_POST['searchid'], ENT_QUOTES, $modx_manager_charset);
     $search_alias = $modx->db->escape($_REQUEST['searchid']);
   $searchcontent = $modx->db->escape($_REQUEST['content']);
   $searchlongtitle = $modx->db->escape($_REQUEST['searchid']);
+=======
+	$templateid = ($_REQUEST['templateid']!=='') ? intval($_REQUEST['templateid']) : '0';
+	$searchtitle = htmlentities($_POST['pagetitle'], ENT_QUOTES, $modx_manager_charset);
+    $search_alias = $modx->db->escape($_REQUEST['alias']);
+	$searchcontent = $modx->db->escape($_REQUEST['content']);
+	$searchlongtitle = $modx->db->escape($_REQUEST['longtitle']);
+>>>>>>> master
     if(isset($_REQUEST['url']) && $_REQUEST['url']!=='') {
         $url = $modx->db->escape($_REQUEST['url']);
         $friendly_url_suffix = $modx->config['friendly_url_suffix'];
@@ -70,6 +96,7 @@ if(isset($_REQUEST['submitok'])) {
     }
 
     $tbl_site_content = $modx->getFullTableName('site_content');
+<<<<<<< HEAD
     $sqladd .= $searchid!=='0'        ? " id='{$searchid}' " : '';
     $sqladd .= $searchtitle!=''     ? " OR pagetitle LIKE '%{$searchtitle}%' " : '';
     $sqladd .= $searchlongtitle!='' ? " OR longtitle LIKE '%{$searchlongtitle}%' " : '';
@@ -77,6 +104,14 @@ if(isset($_REQUEST['submitok'])) {
     if($sqladd!=='' && $searchcontent!=='')
     	$sqladd .= ' AND';
     $sqladd .= $searchcontent!=''   ? " content LIKE '%{$searchcontent}%' " : '';
+=======
+    $sqladd .= $searchid!=='0'        ? " AND id='{$searchid}' " : '';
+	$sqladd .= $templateid!=='0'        ? " AND template='{$templateid}' " : '';
+    $sqladd .= $searchtitle!=''     ? " AND pagetitle LIKE '%{$searchtitle}%' " : '';
+    $sqladd .= $searchlongtitle!='' ? " AND longtitle LIKE '%{$searchlongtitle}%' " : '';
+    $sqladd .= $search_alias!='' ? " AND alias LIKE '%{$search_alias}%' " : '';
+    $sqladd .= $searchcontent!=''   ? " AND content LIKE '%{$searchcontent}%' " : '';
+>>>>>>> master
 
     $fields = 'id, contenttype, pagetitle, description, deleted, published, isfolder, type';
     $where  = $sqladd;

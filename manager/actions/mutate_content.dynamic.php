@@ -37,9 +37,7 @@ switch ($_REQUEST['a']) {
 }
 
 
-if (isset($_REQUEST['id']))
-        $id = (int)$_REQUEST['id'];
-else    $id = 0;
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // Get table names (alphabetical)
 $tbl_active_users               = $modx->getFullTableName('active_users');
@@ -773,7 +771,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
                         // post back value
                         if(array_key_exists('tv'.$row['id'], $_POST)) {
-                            if($row['type'] == 'listbox-multiple') {
+                            if(is_array($_POST['tv'.$row['id']])) {
                                 $tvPBV = implode('||', $_POST['tv'.$row['id']]);
                             } else {
                                 $tvPBV = $_POST['tv'.$row['id']];
