@@ -37,9 +37,7 @@ switch ($_REQUEST['a']) {
 }
 
 
-if (isset($_REQUEST['id']))
-        $id = (int)$_REQUEST['id'];
-else    $id = 0;
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // Get table names (alphabetical)
 $tbl_active_users               = $modx->getFullTableName('active_users');
@@ -494,7 +492,7 @@ function decode(s) {
 /* ]]> */
 </script>
 
-<form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php">
+<form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php" onsubmit="documentDirty=false;">
 <?php
 // invoke OnDocFormPrerender event
 $evtOut = $modx->invokeEvent('OnDocFormPrerender', array(
@@ -561,6 +559,14 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
     </script>
 
     <!-- General -->
+    <?php
+        $evtOut = $modx->invokeEvent('OnDocFormTemplateRender', array(
+            'id' => $id
+        ));
+        if (is_array($evtOut)) {
+            echo implode('', $evtOut);
+        } else {
+    ?>
     <div class="tab-page" id="tabGeneral">
         <h2 class="tab"><?php echo $_lang['settings_general']?></h2>
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabGeneral" ) );</script>
@@ -765,7 +771,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
                         // post back value
                         if(array_key_exists('tv'.$row['id'], $_POST)) {
-                            if($row['type'] == 'listbox-multiple') {
+                            if(is_array($_POST['tv'.$row['id']])) {
                                 $tvPBV = implode('||', $_POST['tv'.$row['id']]);
                             } else {
                                 $tvPBV = $_POST['tv'.$row['id']];
@@ -937,6 +943,7 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
             </tr>
         </table>
     </div><!-- end #tabSettings -->
+    <?php } ?>
 
 <?php if ($modx->hasPermission('edit_doc_metatags') && $modx->config['show_meta']) {
     // get list of site keywords
