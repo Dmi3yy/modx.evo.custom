@@ -353,7 +353,7 @@ function decode(s){
                     <?php 
                         $custom_tvs = scandir(MODX_BASE_PATH.'assets/tvs'); 
                         foreach($custom_tvs as $ctv) {
-                            if(!in_array($ctv, array('.', '..', '.DS_Store'))){
+                            if(strpos($ctv, '.')!==0){
                                 $selected = ($content['type']=='custom_tv:'.$ctv )? "selected='selected'":"";
                                 echo '<option value="custom_tv:'.$ctv.'"  '.$selected.'>'.$ctv.'</option>';
                             }
