@@ -92,12 +92,12 @@ class DocumentParser {
     		if($error_type==1)
         	{
 	        	$title = 'Call deprecated method';
-	        	$msg = htmlspecialchars("\$modx->{$method_name}() is deprecated function");
+	        	$msg = $this->htmlspecialchars("\$modx->{$method_name}() is deprecated function");
     		}
     		else
     		{
 	        	$title = 'Call undefined method';
-	        	$msg = htmlspecialchars("\$modx->{$method_name}() is undefined function");
+	        	$msg = $this->htmlspecialchars("\$modx->{$method_name}() is undefined function");
     		}
 	    	$info = debug_backtrace();
 	    	$m[] = $msg;
@@ -1221,15 +1221,43 @@ class DocumentParser {
         return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff),array('.xml','.rss','.js','.css'),$text);
     }
     
+	/**
+	 * makeFriendlyURL
+	 * 
+	 * @desc Create an URL.
+	 * 
+	 * @param $pre {string} - Friendly URL Prefix. @required
+	 * @param $suff {string} - Friendly URL Suffix. @required
+	 * @param $alias {string} - Full document path. @required
+	 * @param $isfolder {0; 1} - Is it a folder? Default: 0.
+	 * @param $id {integer} - Document id. Default: 0.
+	 * 
+	 * @return {string} - Result URL.
+	 */
     function makeFriendlyURL($pre, $suff, $alias, $isfolder=0, $id=0) {
-    	
-        if ($id == $this->config['site_start'] && $this->config['seostrict']==='1') {return $this->config['base_url'];}
+		if ($id == $this->config['site_start'] && $this->config['seostrict'] === '1'){
+			$url = $this->config['base_url'];
+		}else{
         $Alias = explode('/',$alias);
         $alias = array_pop($Alias);
         $dir = implode('/', $Alias);
         unset($Alias);
-        if($this->config['make_folders']==='1' && $isfolder==1) $suff = '/';
-        return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
+			
+			if($this->config['make_folders'] === '1' && $isfolder == 1){$suff = '/';}
+			
+			$url = ($dir != '' ? $dir.'/' : '').$pre.$alias.$suff;
+		}
+		
+		$evtOut = $this->invokeEvent('OnMakeDocUrl', array(
+			'id' => $id,
+			'url' => $url
+		));
+		
+		if (is_array($evtOut) && count($evtOut) > 0){
+			$url = array_pop($evtOut);
+		}
+		
+		return $url;
     }
     
     /** 
@@ -2275,49 +2303,59 @@ class DocumentParser {
     }
 
     /**
-     * Create an URL for the given document identifier. The url prefix and
-     * postfix are used, when friendly_url is active.
+	 * makeUrl
      *
-     * @param int $id The document identifier
-     * @param string $alias The alias name for the document
-     *                      Default: Empty string
-     * @param string $args The paramaters to add to the URL
-     *                     Default: Empty string
-     * @param string $scheme With full as valus, the site url configuration is
-     *                       used
-     *                       Default: Empty string
-     * @return string
+	 * @desc Create an URL for the given document identifier. The url prefix and postfix are used, when “friendly_url” is active.
+	 * 
+	 * @param $id {integer} - The document identifier. @required
+	 * @param $alias {string} - The alias name for the document. Default: ''.
+	 * @param $args {string} - The paramaters to add to the URL. Default: ''.
+	 * @param $scheme {string} - With full as valus, the site url configuration is used. Default: ''.
+	 * 
+	 * @return {string} - Result URL.
      */
     function makeUrl($id, $alias= '', $args= '', $scheme= '') {
         $url= '';
         $virtualDir= $this->config['virtual_dir'];
         $f_url_prefix = $this->config['friendly_url_prefix'];
         $f_url_suffix = $this->config['friendly_url_suffix'];
+		
         if (!is_numeric($id)) {
             $this->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
         }
+		
         if ($args !== '') {
             // add ? or & to $args if missing
             $args= ltrim($args, '?&');
             $_ = strpos($f_url_prefix, '?');
+			
             if($this->config['friendly_urls'] === '1' && $_ === false) {
                 $args= "?{$args}";
+			}else{
+				$args = "&{$args}";
             }
-            else $args= "&{$args}";
         }
+		
         if ($id != $this->config['site_start']) {
             if ($this->config['friendly_urls'] == 1 && $alias != '') {
             } elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
                 $alias = $id;
                 $alPath = '';
+				
                 if ($this->config['friendly_alias_urls'] == 1) {
                     $al = $this->aliasListing[$id];
-                    if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1')
+					
+					if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1'){
                         $f_url_suffix = '/';
+					}
+					
                     $alPath = !empty ($al['path']) ? $al['path'] . '/' : '';
-                    if ($al && $al['alias'])
+					
+					if ($al && $al['alias']){
                         $alias = $al['alias'];
                 }
+				}
+				
                 $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
                 $url = "{$alias}{$args}";
             } else {
@@ -2326,7 +2364,9 @@ class DocumentParser {
         } else {
             $url = $args;
         }
+		
         $host= $this->config['base_url'];
+		
         // check if scheme argument has been set
         if ($scheme != '') {
             // for backward compatibility - check if the desired scheme is different than the current scheme
@@ -2334,7 +2374,7 @@ class DocumentParser {
                 $scheme= ($_SERVER['HTTPS'] ? 'http' : 'https');
             }
 
-            // to-do: check to make sure that $site_url incudes the url :port (e.g. :8080)
+			//TODO: check to make sure that $site_url incudes the url :port (e.g. :8080)
             $host= $scheme == 'full' ? $this->config['site_url'] : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
         }
 
@@ -2342,11 +2382,23 @@ class DocumentParser {
         if ($this->config['seostrict']=='1'){
            $url = $this->toAlias($url);
         }
+		
         if ($this->config['xhtml_urls']) {
-        	return preg_replace("/&(?!amp;)/","&amp;", $host . $virtualDir . $url);
+			$url = preg_replace("/&(?!amp;)/","&amp;", $host.$virtualDir.$url);
         } else {
-        	return $host . $virtualDir . $url;
+			$url = $host.$virtualDir.$url;
         }
+		
+		$evtOut = $this->invokeEvent('OnMakeDocUrl', array(
+			'id' => $id,
+			'url' => $url
+		));
+		
+		if (is_array($evtOut) && count($evtOut) > 0){
+			$url = array_pop($evtOut);
+		}
+		
+		return $url;
     }
 
     /**
@@ -3439,7 +3491,7 @@ class DocumentParser {
         }
         if (is_readable($file)) {
             $source= file($file);
-            $source= htmlspecialchars($source[$line -1]);
+            $source= $this->htmlspecialchars($source[$line -1]);
         } else {
             $source= "";
         } //Error $nr in $file at $line: <div><code>$source</code></div>
@@ -3451,9 +3503,9 @@ class DocumentParser {
 	    $version= isset ($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
 		$release_date= isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
 	    $request_uri = "http://".$_SERVER['HTTP_HOST'].($_SERVER["SERVER_PORT"]==80?"":(":".$_SERVER["SERVER_PORT"])).$_SERVER['REQUEST_URI'];
-	    $request_uri = htmlspecialchars($request_uri, ENT_QUOTES, $this->config['modx_charset']);
-	    $ua          = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->config['modx_charset']);
-	    $referer     = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->config['modx_charset']);
+	    $request_uri = $this->htmlspecialchars($request_uri, ENT_QUOTES, $this->config['modx_charset']);
+	    $ua          = $this->htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->config['modx_charset']);
+	    $referer     = $this->htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->config['modx_charset']);
 	    if ($is_error) {
 	        $str = '<h3 style="color:red">&laquo; MODX Parse Error &raquo;</h3>
 	                <table border="0" cellpadding="1" cellspacing="0">
