@@ -133,7 +133,7 @@ if ($limit > 0) {
     </p>
 
 </form>
-<script type="text/javascript" src="/assets/modules/store/installer/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="<?php echo $modx->config['site_url'];?>assets/modules/store/installer/jquery-1.4.4.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
 
