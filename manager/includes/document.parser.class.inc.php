@@ -854,19 +854,19 @@ class DocumentParser {
      */
     function mergeSettingsContent($content) {
         if (strpos($content, '[(') === false)
-			return $content;
-		$replace = array();
-		$matches = $this->getTagsFromContent($content, '[(', ')]');
-		if ($matches) {
-			for ($i = 0; $i < count($matches[1]); $i++) {
-				if ($matches[1][$i] && array_key_exists($matches[1][$i], $this->config))
-					$replace[$i] = $this->config[$matches[1][$i]];
-			}
-
-			$content = str_replace($matches[0], $replace, $content);
-		}
-		return $content;
-	}
+            return $content;
+        $replace= array ();
+        $matches= array ();
+        if (preg_match_all('~\[\(([a-zA-Z0-9\_]*?)\)\]~', $content, $matches)) {
+            $settingsCount= count($matches[1]);
+            for ($i= 0; $i < $settingsCount; $i++) {
+                if (array_key_exists($matches[1][$i], $this->config)){
+                   $content= str_replace($matches[0][$i], $this->config[$matches[1][$i]], $content);
+               }
+           }
+       }
+       return $content; 
+    }
 
 	/**
      * Merge chunks
@@ -1278,6 +1278,24 @@ class DocumentParser {
 				$aliases[$val] = $key;
 				$isfolder[$val] = $this->aliasListing[$val]['isfolder'];
             }
+
+            if ($this->config['aliaslistingfolder'] == 1) {
+                preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
+                $ids = implode(',', array_unique($match['1']));
+                if ($ids) {
+                    $res = $this->db->select("id,alias,isfolder,parent", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
+                    while( $row = $this->db->getRow( $res ) ) {
+                        if ($this->config['use_alias_path'] == '1') {
+                            $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
+                        } else {
+                            $aliases[$row['id']] = $row['alias'];
+                        }
+                        $isfolder[$row['id']] = '0';
+
+                    }
+                }
+            }
+
             $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
             $isfriendly= ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
             $pref= $this->config['friendly_url_prefix'];
@@ -1581,13 +1599,42 @@ class DocumentParser {
                     $this->documentIdentifier= $this->documentListing[$alias];
                 } else {
 					//@TODO: check new $alias;
-                    $this->sendErrorPage();
+                    if ($this->config['aliaslistingfolder'] == 1) {
+                        $tbl_site_content = $this->getFullTableName('site_content');
+                        $alias = $this->db->escape($_GET['q']);
+
+                        $parentAlias = dirname($alias);
+                        $parentId = $this->getIdFromAlias($parentAlias);
+                        $parentId = ($parentId > 0) ? $parentId : '0';
+
+                        $docAlias = basename($alias, $this->config['friendly_url_suffix']);
+
+                        $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
+                        if($this->db->getRecordCount($rs)==0)
+                        {
+                            $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and id='{$docAlias}'");
+                        }
+                        $docId = $this->db->getValue($rs);
+
+                        if ($docId > 0)
+                        {
+                            $this->documentIdentifier = $docId;
+                        }else{
+                            $this->sendErrorPage();
+                        }
+                    }else{
+                        $this->sendErrorPage();
+                    }
+
                 }
             } else {
                 if (isset($this->documentListing[$this->documentIdentifier])) {
                     $this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
 				} else {
-					$this->documentIdentifier = (int) $this->documentIdentifier;
+					$alias = $this->db->escape($_GET['q']);
+					$docAlias = basename($alias, $this->config['friendly_url_suffix']);
+					$rs  = $this->db->select('id', $this->getFullTableName('site_content'), "deleted=0 and alias='{$docAlias}'");
+					$this->documentIdentifier = (int) $this->db->getValue($rs);
 				}
             }
             $this->documentMethod= 'id';
@@ -1718,8 +1765,13 @@ class DocumentParser {
         $parents= array ();
         while ( $id && $height-- ) {
             $thisid = $id;
-            $id = $this->aliasListing[$id]['parent'];
-            if (!$id) break;
+            if ($this->config['aliaslistingfolder'] == 1) {
+                $id = isset($this->aliasListing[$id]['parent']) ? $this->aliasListing[$id]['parent'] : $this->db->getValue("SELECT `parent` FROM " . $this->getFullTableName("site_content") . " WHERE `id` = '{$id}' LIMIT 0,1");
+                if (!$id || $id == '0') break;
+            } else {
+                $id = $this->aliasListing[$id]['parent'];
+                if (!$id) break;
+            }
             $parents[$thisid] = $id;
         }
         return $parents;
@@ -1734,32 +1786,52 @@ class DocumentParser {
      * @return array Contains the document Listing (tree) like the sitemap
      */
     function getChildIds($id, $depth= 10, $children= array ()) {
+        if ($this->config['aliaslistingfolder'] == 1) {
 
-        // Initialise a static array to index parents->children
-        static $documentMap_cache = array();
-        if (!count($documentMap_cache)) {
-            foreach ($this->documentMap as $document) {
-                foreach ($document as $p => $c) {
-                    $documentMap_cache[$p][] = $c;
-                }
+            $res = $this->db->select("id,alias,isfolder", $this->getFullTableName('site_content'),  "parent IN (".$id.") AND deleted = '0'");
+            $idx = array();
+            while( $row = $this->db->getRow( $res ) ) {
+                $children[$row['alias']] = $row['id'];
+                if ($row['isfolder']==1) $idx[] = $row['id'];
             }
-        }
-
-        // Get all the children for this parent node
-        if (isset($documentMap_cache[$id])) {
             $depth--;
-
-            foreach ($documentMap_cache[$id] as $childId) {
-                $pkey = (strlen($this->aliasListing[$childId]['path']) ? "{$this->aliasListing[$childId]['path']}/" : '') . $this->aliasListing[$childId]['alias'];
-                if (!strlen($pkey)) $pkey = "{$childId}";
-                    $children[$pkey] = $childId;
-
-                if ($depth && isset($documentMap_cache[$childId])) {
-                    $children += $this->getChildIds($childId, $depth);
+            $idx = implode(',',$idx);
+            if (!empty($idx)) {
+                if ($depth) {
+                    $children = $this->getChildIds($idx, $depth, $children );
                 }
             }
+            return $children;
+
+        }else{
+
+            // Initialise a static array to index parents->children
+            static $documentMap_cache = array();
+            if (!count($documentMap_cache)) {
+                foreach ($this->documentMap as $document) {
+                    foreach ($document as $p => $c) {
+                        $documentMap_cache[$p][] = $c;
+                    }
+                }
+            }
+
+            // Get all the children for this parent node
+            if (isset($documentMap_cache[$id])) {
+                $depth--;
+
+                foreach ($documentMap_cache[$id] as $childId) {
+                    $pkey = (strlen($this->aliasListing[$childId]['path']) ? "{$this->aliasListing[$childId]['path']}/" : '') . $this->aliasListing[$childId]['alias'];
+                    if (!strlen($pkey)) $pkey = "{$childId}";
+                        $children[$pkey] = $childId;
+
+                    if ($depth && isset($documentMap_cache[$childId])) {
+                        $children += $this->getChildIds($childId, $depth);
+                    }
+                }
+            }
+            return $children;
+
         }
-        return $children;
     }
 
     /**
@@ -2343,7 +2415,12 @@ class DocumentParser {
                 $alPath = '';
 				
                 if ($this->config['friendly_alias_urls'] == 1) {
-                    $al = $this->aliasListing[$id];
+
+                    if ($this->config['aliaslistingfolder'] == 1) {
+                        $al= $this->getAliasListing($id);
+                    }else{
+                        $al= $this->aliasListing[$id];
+                    }
 					
 					if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1'){
                         $f_url_suffix = '/';
@@ -2353,7 +2430,7 @@ class DocumentParser {
 					
 					if ($al && $al['alias']){
                         $alias = $al['alias'];
-                }
+                    }
 				}
 				
                 $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
@@ -2399,6 +2476,36 @@ class DocumentParser {
 		}
 		
 		return $url;
+    }
+
+    function getAliasListing($id){
+        if(isset($this->aliasListing[$id])){
+            $out = $this->aliasListing[$id];
+        }else{
+            $q = $this->db->query("SELECT id,alias,isfolder,parent FROM ".$this->getFullTableName("site_content")." WHERE id=".(int)$id);
+            if($this->db->getRecordCount($q)=='1'){
+                $q = $this->db->getRow($q);
+                $this->aliasListing[$id] =  array(
+                    'id' => (int)$q['id'],
+                    'alias' => $q['alias']=='' ? $q['id'] : $q['alias'],
+                    'parent' => (int)$q['parent'],
+                    'isfolder' => (int)$q['isfolder'],
+                );
+                if($this->aliasListing[$id]['parent']>0){
+                    $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
+                    //fix alias_path_usage
+                    if ($this->config['use_alias_path'] == '1') {
+                        //&& $tmp['path'] != '' - fix error slash with epty path
+                        $this->aliasListing[$id]['path'] = $tmp['path'] . (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'];
+                    } else {
+                        $this->aliasListing[$id]['path'] = '';
+                    }
+                }
+
+                $out = $this->aliasListing[$id];
+            }
+        }
+        return $out;
     }
 
     /**
@@ -2522,6 +2629,43 @@ class DocumentParser {
 		return $this->parseText($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
 	}
     
+    /**
+     * getTpl
+     * get template for snippets
+     * @param $tpl {string}
+     *
+     * @return {string}
+     */
+    function getTpl($tpl){
+        $template = $tpl;
+        if (preg_match("~^@([^:\s]+)[:\s]+(.+)$~", $tpl, $match)) {
+            $command = strtoupper($match[1]);
+            $template = $match[2];
+        }
+        switch ($command) {
+            case 'CODE': 
+                break;
+            case 'FILE': 
+                $template=file_get_contents(MODX_BASE_PATH . $template); 
+                break;
+            case 'CHUNK': 
+                $template = $this->getChunk($template); 
+                break;
+            case 'DOCUMENT': 
+                $doc = $this->getDocument($template, 'content', 'all'); 
+                $template = $doc['content']; 
+                break;
+            case 'SELECT': 
+                $this->db->getValue($this->db->query("SELECT {$template}")); 
+                break;
+            default:
+                if (!($template = $this->getChunk($tpl))) {
+                    $template = $tpl;
+                }
+        }
+        return $template;
+    }
+ 
     /**
      * Returns the timestamp in the date format defined in $this->config['datetime_format']
      *
@@ -3769,6 +3913,7 @@ class DocumentParser {
 	function getIdFromAlias($alias)
 	{
 		$children = array();
+		if (isset($this->documentListing[$alias])) {return $this->documentListing[$alias];}
 
 		$tbl_site_content = $this->getFullTableName('site_content');
 		if($this->config['use_alias_path']==1)

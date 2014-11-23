@@ -810,7 +810,7 @@ REPLACE INTO `{PREFIX}user_roles`
 
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
-('manager_theme','MODxRE'),
+('manager_theme','D3X'),
 ('settings_version',''),
 ('show_meta','0'),
 ('server_offset_time','0'),
@@ -1036,9 +1036,11 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('211','OnManagerTreeRender','2',''),
 ('212','OnManagerNodePrerender','2',''),
 ('213','OnManagerNodeRender','2',''),
+('214','OnManagerMenuPrerender','2',''),
+('224','OnDocFormTemplateRender','1','Documents'),
 ('999','OnPageUnauthorized','1',''),
-('1000','OnPageNotFound','1','');
-
+('1000','OnPageNotFound','1',''),
+('1001','OnFileBrowserUpload','1','File Browser Events');
 
 # ^ I don't think we need more than 1000 built-in events. Custom events will start at 1001
 
@@ -1084,10 +1086,10 @@ UPDATE `{PREFIX}user_roles` SET
 
 
 UPDATE `{PREFIX}user_settings` SET
-  `setting_value`='MODxRE'
+  `setting_value`='D3X'
   WHERE `setting_name`='manager_theme';
 
 
-REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxRE');
+REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','D3X');
 
 UPDATE `{PREFIX}system_settings` set setting_value = if(setting_value REGEXP 'application/json',setting_value,concat_ws(",",setting_value,"application/json")) WHERE setting_name='custom_contenttype';
