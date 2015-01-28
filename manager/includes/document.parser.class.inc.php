@@ -769,51 +769,70 @@ class DocumentParser {
     }
 
     function getTagsFromContent($content,$left='[+',$right='+]') {
-        $hash = explode($left,$content);
-        foreach($hash as $i=>$v) {
-          if(0<$i) $hash[$i] = $left.$v;
+        $_ = $this->_getTagsFromContent($content,$left,$right);
+        if(empty($_)) return array();
+        foreach($_ as $v)
+        {
+            $tags[0][] = "{$left}{$v}{$right}";
+            $tags[1][] = $v;
         }
-        
-        $i=0;
-        $count = count($hash);
-        $safecount = 0;
-        $temp_hash = array();
-        while(0<$count) {
-            $open  = 1;
-            $close = 0;
-            $safecount++;
-            if(1000<$safecount) break;
-            while($close < $open && 0 < $count) {
-                $safecount++;
-                if(!isset($temp_hash[$i])) $temp_hash[$i] = '';
-                if(1000<$safecount) break;
-                $remain = array_shift($hash);
-                $remain = explode($right,$remain);
-                foreach($remain as $v)
-            	{
-            		if($close < $open)
-                	{
-                		$close++;
-                		$temp_hash[$i] .= $v . $right;
-            		}
-            		else break;
+        return $tags;
+    }
+    
+    function _getTagsFromContent($content, $left='[+',$right='+]') {
+        $_tmp = $content;
+        $spacer = md5('dummy');
+        if(strpos($_tmp,']]>')!==false)  $_tmp = str_replace(']]>', "]{$spacer}]>",$_tmp);
+        if(strpos($_tmp,';}}')!==false)  $_tmp = str_replace(';}}', ";}{$spacer}}",$_tmp);
+        if(strpos($_tmp,'{{}}')!==false) $_tmp = str_replace('{{}}',"{{$spacer}{}{$spacer}}",$_tmp);
+        $count_left  = 0;
+        $count_right = 0;
+        $strlen_left  = strlen($left);
+        $strlen_right = strlen($right);
+        $key = '';
+        $c = 0;
+        while($_tmp!=='')
+        {
+            $bt = $_tmp;
+            $key .= substr($_tmp,0,1);
+            $_tmp = substr($_tmp,1);
+            $strpos_left = strpos($key,$left);
+            if($strpos_left!==false && substr($key,-$strlen_right)===$right)
+            {
+                $key = substr($key,$strpos_left);
+                if(substr_count($key,$left)===substr_count($key,$right))
+                {
+                    $key = substr($key, (strpos($key,$left) + $strlen_left) );
+                    $tags[] = substr($key,0,strlen($key)-$strlen_right);
+                    $key = '';
                 }
-                $count = count($hash);
-                if(0<$i && strpos($temp_hash[$i],$right)===false) $open++;
             }
+            if($bt === $_tmp) break;
+            if(1000000<$c) exit('Fetch tags error');
+            $c++;
+        }
+        if(!$tags) return array();
+        
+        foreach($tags as $tag)
+        {
+            if(strpos($tag,$left)!==false)
+            {
+                $fetch = $this->_getTagsFromContent($tag,$left,$right);
+                foreach($fetch as $v)
+                {
+                    $tags[] = $v;
+                }
+            }
+        }
+        $i = 0;
+        foreach($tags as $tag)
+        {
+            if(strpos($tag,"]{$spacer}]>")!==false)           $tags[$i] = str_replace("]{$spacer}]>", ']]>', $tag);
+            if(strpos($tag,";}{$spacer}}")!==false)           $tags[$i] = str_replace(";}{$spacer}}", ';}}', $tag);
+            if(strpos($tag,"{{$spacer}{}{$spacer}}")!==false) $tags[$i] = str_replace("{{$spacer}{}{$spacer}}", '{{}}',$tag);
             $i++;
         }
-        $matches=array();
-        $i = 0;
-        foreach($temp_hash as $v) {
-            if(strpos($v,$left)!==false) {
-                $v = substr($v,0,strrpos($v,$right));
-                $matches[0][$i] = $v . $right;
-                $matches[1][$i] = substr($v,strlen($left));
-                $i++;
-            }
-        }
-        return $matches;
+        return $tags;
     }
     
     /**
@@ -1021,164 +1040,159 @@ class DocumentParser {
      * @param string $documentSource
      * @return string
      */
-   function evalSnippets($documentSource) {
-        if(strpos($documentSource,'[[')===false) return $documentSource;
+    function evalSnippets($content)
+    {
+        if(strpos($content,'[[')===false) return $content;
+        
         $etomite= & $this;
         
-        $stack = $documentSource;
-        unset($documentSource);
+        if(!$this->snippetCache) $this->setSnippetCache();
+        $matches = $this->getTagsFromContent($content,'[[',']]');
         
-        
-        $passes = $this->minParserPasses;
-        
-        for($i= 0; $i < $passes; $i++)
+        if(!$matches) return $content;
+        $i= 0;
+        $replace= array ();
+        foreach($matches['1'] as $value)
         {
-            $stack=$this->mergeSettingsContent($stack);
-            if($i == ($passes -1)) $bt = md5($stack);
-            $pieces = array();
-            $pieces = explode('[[', $stack);
-            $stack = '';
-            $loop_count = 0;
-            
-            foreach($pieces as $piece)
-            {
-                if($loop_count < 1)                 $result = $piece;
-                elseif(strpos($piece,']]')===false) $result = '[[' . $piece;
-                else                                $result = $this->_get_snip_result($piece);
-                
-                $stack .= $result;
-                $loop_count++; // End of foreach loop
-            }
-            if($i == ($passes -1) && $i < ($this->maxParserPasses - 1))
-            {
-                if($bt != md5($stack)) $passes++;
-            }
+            $replace[$i] = $this->_get_snip_result($value);
+            $i++;
         }
-        return $stack;
+        $content = str_replace($matches['0'], $replace, $content);
+        return $content;
     }
     
     private function _get_snip_result($piece)
     {
-        if ($this->dumpSnippets == 1) $sniptime = $this->getMicroTime();
-        $snip_call        = $this->_split_snip_call($piece);
-        $snip_name        = $snip_call['name'];
-        $except_snip_call = $snip_call['except_snip_call'];
-        
-        $key = $snip_call['name'];
+        $snip_call = $this->_split_snip_call($piece);
+        $snip_name = $snip_call['name'];
         
         $snippetObject = $this->_get_snip_properties($snip_call);
-        
-        $params   = array ();
         $this->currentSnippet = $snippetObject['name'];
         
-        if(isset($snippetObject['properties'])) $params = $this->parseProperties($snippetObject['properties']);
-        else                                    $params = '';
         // current params
-        if(!empty($snip_call['params']))
+        $params = $this->_snipParamsToArray($snip_call['params']);
+        
+        if(isset($snippetObject['properties']))
         {
-            $snip_call['params'] = ltrim($snip_call['params'], '?');
-            
-            $i = 0;
-            $limit = 50;
-            $params_stack = $snip_call['params'];
-            while(!empty($params_stack) && $i < $limit)
-            {
-				if(strpos($params_stack,'=')!==false) list($pname,$params_stack) = explode('=',$params_stack,2);
-				else {
-					$pname=$params_stack;
-					$params_stack = '';
-				}
-                $params_stack = trim($params_stack);
-                $delim = substr($params_stack, 0, 1);
-                $temp_params = array();
-                switch($delim)
-                {
-                    case '`':
-                    case '"':
-                    case "'":
-                        $params_stack = substr($params_stack,1);
-                        list($pvalue,$params_stack) = explode($delim,$params_stack,2);
-                        $params_stack = trim($params_stack);
-                        if(substr($params_stack, 0, 2)==='//')
-                        {
-                            $params_stack = strstr($params_stack, "\n");
-                        }
-                        break;
-                    default:
-                        if(strpos($params_stack, '&')!==false)
-                        {
-                            list($pvalue,$params_stack) = explode('&',$params_stack,2);
-                        }
-                        else $pvalue = $params_stack;
-                        $pvalue = trim($pvalue);
-                        $delim = '';
-                }
-                if($delim !== "'")
-                {
-                    $pvalue = (strpos($pvalue,'[*')!==false) ? $this->mergeDocumentContent($pvalue) : $pvalue;
-                    $pvalue = (strpos($pvalue,'[(')!==false) ? $this->mergeSettingsContent($pvalue) : $pvalue;
-                    $pvalue = (strpos($pvalue,'{{')!==false) ? $this->mergeChunkContent($pvalue)    : $pvalue;
-                    $pvalue = (strpos($pvalue,'[+')!==false) ? $this->mergePlaceholderContent($pvalue) : $pvalue;
-                }
-                
-                $pname  = str_replace('&amp;', '', $pname);
-                $pname  = trim($pname);
-                $pname  = trim($pname,'&');
-                $params[$pname] = $pvalue;
-                $params_stack = trim($params_stack);
-                if($params_stack!=='') $params_stack = '&' . ltrim($params_stack,'&');
-                $i++;
-            }
-            unset($temp_params);
+            $default_params = $this->parseProperties($snippetObject['properties']);
+            $params = array_merge($default_params,$params);
         }
+        
         $value = $this->evalSnippet($snippetObject['content'], $params);
         
         if($this->dumpSnippets == 1)
         {
-            $sniptime = $this->getMicroTime() - $sniptime;
-            $this->snippetsCode .= '<fieldset><legend><b>' . $snippetObject['name'] . '</b> (' . sprintf('%2.2f ms', $sniptime*1000) . ')</legend>';
-            if ($this->event->name) $this->snippetsCode .= 'Current Event  => ' . $this->event->name . '<br>';
-            if ($this->event->activePlugin) $this->snippetsCode .= 'Current Plugin => ' . $this->event->activePlugin . '<br>';
-            if (is_array($params)) foreach ($params as $k=>$v) $this->snippetsCode .=  $k . ' => ' . print_r($v, true) . '<br>';
-            $this->snippetsCode .= '<textarea style="width:60%;height:200px">' . htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']) . '</textarea>';
-            $this->snippetsCode .= '</fieldset><br />';
-            $this->snippetsCount[$snippetObject['name']]++;
-            $this->snippetsTime[$snippetObject['name']] += $sniptime;
+            $this->snipCode .= sprintf('<fieldset><legend><b>%s</b></legend><textarea style="width:60%%;height:200px">%s</textarea></fieldset>', $snippetObject['name'], htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']));
         }
-        return $value . $except_snip_call;
+        return $value;
     }
     
-    private function _split_snip_call($src)
+    function _snipParamsToArray($string='')
     {
-        list($call,$snip['except_snip_call']) = explode(']]', $src, 2);
-        if(strpos($call, '?') !== false && strpos($call, "\n")!==false && strpos($call, '?') < strpos($call, "\n"))
+        if(empty($string)) return array();
+        
+        $_tmp = $string;
+        $_tmp = ltrim($_tmp, '?&');
+        $params = array();
+        while($_tmp!==''):
+            $bt = $_tmp;
+            $char = substr($_tmp,0,1);
+            $_tmp = substr($_tmp,1);
+            $doParse = false;
+            
+            if($char==='=')
+            {
+                $_tmp = trim($_tmp);
+                $nextchar = substr($_tmp,0,1);
+                if(in_array($nextchar, array('"', "'", '`')))
+                {
+                    list($null, $value, $_tmp) = explode($nextchar, $_tmp, 3);
+                    if($nextchar !== "'") $doParse = true;
+                }
+                elseif(strpos($_tmp,'&')!==false)
+                {
+                    list($value, $_tmp) = explode('&', $_tmp, 2);
+                    $value = trim($value);
+                    $doParse = true;
+                }
+                else
+                {
+                    $value = $_tmp;
+                    $_tmp = '';
+                }
+            }
+            elseif($char==='&')
+            {
+                $value = '';
+            }
+            else $key .= $char;
+            
+            if(!is_null($value))
+            {
+                if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
+                $key=trim($key);
+                if($doParse)
+                {
+                    if(strpos($value,'[*')!==false) $value = $this->mergeDocumentContent($value);
+                    if(strpos($value,'[(')!==false) $value = $this->mergeSettingsContent($value);
+                    if(strpos($value,'{{')!==false) $value = $this->mergeChunkContent($value);
+                    if(strpos($value,'[[')!==false) $value = $this->evalSnippets($value);
+                    if(strpos($value,'[+')!==false) $value = $this->mergePlaceholderContent($value);
+                }
+                $params[$key]=$value;
+                
+                $key   = '';
+                $value = null;
+
+                $_tmp = ltrim($_tmp, " ,\t");
+                if(substr($_tmp, 0, 2)==='//') $_tmp = strstr($_tmp, "\n");
+            }
+            
+            if($_tmp===$bt)
+            {
+                $key = trim($key);
+                if($key!=='') $params[$key] = '';
+                break;
+            }
+        endwhile;
+        
+        return $params;
+    }
+    
+    private function _split_snip_call($call)
+    {
+        $spacer = md5('dummy');
+        if(strpos($call,']]>')!==false)
+            $call = str_replace(']]>', "]{$spacer}]>",$call);
+        
+        $pos['?']  = strpos($call, '?');
+        $pos['&']  = strpos($call, '&');
+        $pos['=']  = strpos($call, '=');
+        $pos['lf'] = strpos($call, "\n");
+        
+        if($pos['?'] !== false)
         {
-            list($name,$params) = explode('?',$call,2);
+            if($pos['lf']!==false && $pos['?'] < $pos['lf'])
+                list($name,$params) = explode('?',$call,2);
+            elseif($pos['lf']!==false && $pos['lf'] < $pos['?'])
+                list($name,$params) = explode("\n",$call,2);
+            else
+                list($name,$params) = explode('?',$call,2);
         }
-        elseif(strpos($call, '?') !== false && strpos($call, "\n")!==false && strpos($call, "\n") < strpos($call, '?'))
-        {
-            list($name,$params) = explode("\n",$call,2);
-        }
-        elseif(strpos($call, '?') !== false)
-        {
-            list($name,$params) = explode('?',$call,2);
-        }
-        elseif((strpos($call, '&') !== false) && (strpos($call, '=') !== false) && (strpos($call, '?') === false))
-        {
+        elseif($pos['&'] !== false && $pos['='] !== false && $pos['?'] === false)
             list($name,$params) = explode('&',$call,2);
-            $params = "&{$params}";
-        }
-        elseif(strpos($call, "\n") !== false)
-        {
+        elseif($pos['lf'] !== false)
             list($name,$params) = explode("\n",$call,2);
-        }
         else
         {
             $name   = $call;
             $params = '';
         }
+        
         $snip['name']   = trim($name);
-        $snip['params'] = $params;
+        if(strpos($params,$spacer)!==false)
+            $params = str_replace("]{$spacer}]>",']]>',$params);
+        $snip['params'] = $params = ltrim($params,"?& \t\n");
         return $snip;
     }
     
@@ -1197,30 +1211,37 @@ class DocumentParser {
         }
         else
         {
-            $tbl_snippets  = $this->getFullTableName('site_snippets');
             $esc_snip_name = $this->db->escape($snip_name);
             // get from db and store a copy inside cache
-            $result= $this->db->select('name,snippet,properties',$tbl_snippets,"name='{$esc_snip_name}'");
-                if($row = $this->db->getRow($result))
+            $result= $this->db->select('name,snippet,properties','[+prefix+]site_snippets',"name='{$esc_snip_name}'");
+            $added = false;
+            if($this->db->getRecordCount($result) == 1)
+            {
+                $row = $this->db->getRow($result);
+                if($row['name'] == $snip_name)
                 {
                     $snippetObject['name']       = $row['name'];
                     $snippetObject['content']    = $this->snippetCache[$snip_name]           = $row['snippet'];
                     $snippetObject['properties'] = $this->snippetCache[$snip_name . 'Props'] = $row['properties'];
-                } else {
-                    $snippetObject['name']       = $snip_name;
-                    $snippetObject['content']    = $this->snippetCache[$snip_name] = 'return false;';
-                    $snippetObject['properties'] = '';
+                    $added = true;
                 }
+            }
+            if($added === false)
+            {
+                $snippetObject['name']       = $snip_name;
+                $snippetObject['content']    = $this->snippetCache[$snip_name] = 'return false;';
+                $snippetObject['properties'] = '';
+                //$this->logEvent(0,'1','Not found snippet name [['.$snippetObject['name'].']] {$this->decoded_request_uri}',"Parser (ResourceID:{$this->documentIdentifier})");
+            }
         }
         return $snippetObject;
     }
-    
     
     function toAlias($text) {
         $suff= $this->config['friendly_url_suffix'];
         return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff),array('.xml','.rss','.js','.css'),$text);
     }
-    
+	
 	/**
 	 * makeFriendlyURL
 	 * 
@@ -1234,14 +1255,14 @@ class DocumentParser {
 	 * 
 	 * @return {string} - Result URL.
 	 */
-    function makeFriendlyURL($pre, $suff, $alias, $isfolder=0, $id=0) {
+	function makeFriendlyURL($pre, $suff, $alias, $isfolder = 0, $id = 0){
 		if ($id == $this->config['site_start'] && $this->config['seostrict'] === '1'){
 			$url = $this->config['base_url'];
 		}else{
-        $Alias = explode('/',$alias);
-        $alias = array_pop($Alias);
-        $dir = implode('/', $Alias);
-        unset($Alias);
+			$Alias = explode('/',$alias);
+			$alias = array_pop($Alias);
+			$dir = implode('/', $Alias);
+			unset($Alias);
 			
 			if($this->config['make_folders'] === '1' && $isfolder == 1){$suff = '/';}
 			
@@ -1258,7 +1279,7 @@ class DocumentParser {
 		}
 		
 		return $url;
-    }
+	}
     
     /** 
      * Convert URL tags [~...~] to URLs
@@ -2373,10 +2394,10 @@ class DocumentParser {
 			}
 		}
     }
-
-    /**
+	
+	/**
 	 * makeUrl
-     *
+	 * 
 	 * @desc Create an URL for the given document identifier. The url prefix and postfix are used, when “friendly_url” is active.
 	 * 
 	 * @param $id {integer} - The document identifier. @required
@@ -2385,34 +2406,34 @@ class DocumentParser {
 	 * @param $scheme {string} - With full as valus, the site url configuration is used. Default: ''.
 	 * 
 	 * @return {string} - Result URL.
-     */
-    function makeUrl($id, $alias= '', $args= '', $scheme= '') {
-        $url= '';
-        $virtualDir= $this->config['virtual_dir'];
-        $f_url_prefix = $this->config['friendly_url_prefix'];
-        $f_url_suffix = $this->config['friendly_url_suffix'];
+	 */
+	function makeUrl($id, $alias = '', $args = '', $scheme = ''){
+		$url = '';
+		$virtualDir = $this->config['virtual_dir'];
+		$f_url_prefix = $this->config['friendly_url_prefix'];
+		$f_url_suffix = $this->config['friendly_url_suffix'];
 		
-        if (!is_numeric($id)) {
-            $this->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
-        }
+		if (!is_numeric($id)){
+			$this->messageQuit("`{$id}` is not numeric and may not be passed to makeUrl()");
+		}
 		
-        if ($args !== '') {
-            // add ? or & to $args if missing
-            $args= ltrim($args, '?&');
-            $_ = strpos($f_url_prefix, '?');
+		if ($args !== ''){
+			// add ? or & to $args if missing
+			$args = ltrim($args, '?&');
+			$_ = strpos($f_url_prefix, '?');
 			
-            if($this->config['friendly_urls'] === '1' && $_ === false) {
-                $args= "?{$args}";
+			if($this->config['friendly_urls'] === '1' && $_ === false){
+				$args = "?{$args}";
 			}else{
 				$args = "&{$args}";
-            }
-        }
+			}
+		}
 		
-        if ($id != $this->config['site_start']) {
-            if ($this->config['friendly_urls'] == 1 && $alias != '') {
-            } elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
-                $alias = $id;
-                $alPath = '';
+		if ($id != $this->config['site_start']){
+			if ($this->config['friendly_urls'] == 1 && $alias != ''){
+			}elseif ($this->config['friendly_urls'] == 1 && $alias == ''){
+				$alias = $id;
+				$alPath = '';
 				
                 if ($this->config['friendly_alias_urls'] == 1) {
 
@@ -2421,50 +2442,51 @@ class DocumentParser {
                     }else{
                         $al= $this->aliasListing[$id];
                     }
-					
+	
 					if ($al['isfolder'] === 1 && $this->config['make_folders'] === '1'){
-                        $f_url_suffix = '/';
+						$f_url_suffix = '/';
 					}
 					
-                    $alPath = !empty ($al['path']) ? $al['path'] . '/' : '';
+					$alPath = !empty ($al['path']) ? $al['path'] . '/' : '';
 					
 					if ($al && $al['alias']){
                         $alias = $al['alias'];
                     }
+
 				}
 				
-                $alias = $alPath . $f_url_prefix . $alias . $f_url_suffix;
-                $url = "{$alias}{$args}";
-            } else {
-                $url = "index.php?id={$id}{$args}";
-            }
-        } else {
-            $url = $args;
-        }
+				$alias = $alPath.$f_url_prefix.$alias.$f_url_suffix;
+				$url = "{$alias}{$args}";
+			}else{
+				$url = "index.php?id={$id}{$args}";
+			}
+		}else{
+			$url = $args;
+		}
 		
-        $host= $this->config['base_url'];
+		$host = $this->config['base_url'];
 		
-        // check if scheme argument has been set
-        if ($scheme != '') {
-            // for backward compatibility - check if the desired scheme is different than the current scheme
-            if (is_numeric($scheme) && $scheme != $_SERVER['HTTPS']) {
-                $scheme= ($_SERVER['HTTPS'] ? 'http' : 'https');
-            }
-
+		// check if scheme argument has been set
+		if ($scheme != ''){
+			// for backward compatibility - check if the desired scheme is different than the current scheme
+			if (is_numeric($scheme) && $scheme != $_SERVER['HTTPS']){
+				$scheme= ($_SERVER['HTTPS'] ? 'http' : 'https');
+			}
+			
 			//TODO: check to make sure that $site_url incudes the url :port (e.g. :8080)
-            $host= $scheme == 'full' ? $this->config['site_url'] : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
-        }
-
-        //fix strictUrl by Bumkaka
-        if ($this->config['seostrict']=='1'){
-           $url = $this->toAlias($url);
-        }
+			$host = $scheme == 'full' ? $this->config['site_url'] : $scheme.'://'.$_SERVER['HTTP_HOST'].$host;
+		}
 		
-        if ($this->config['xhtml_urls']) {
+		//fix strictUrl by Bumkaka
+		if ($this->config['seostrict'] == '1'){
+			 $url = $this->toAlias($url);
+		}
+		
+		if ($this->config['xhtml_urls']){
 			$url = preg_replace("/&(?!amp;)/","&amp;", $host.$virtualDir.$url);
-        } else {
+		}else{
 			$url = $host.$virtualDir.$url;
-        }
+		}
 		
 		$evtOut = $this->invokeEvent('OnMakeDocUrl', array(
 			'id' => $id,
