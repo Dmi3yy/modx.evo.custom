@@ -53,11 +53,18 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 *
 *  RussAndRussky.org.ua
 **/
+if(!isset($subject)) {
+	$subject = $opers[0];
+}
 $s = isset($separator) ? $separator: ':';
 $math = isset($math) ? $math : 'off';
 $lp = 0;
 $opers=explode($s,$is);
-$subject=$opers[0];
+if(!isset($subject)) {
+	$subject = $opers[0];
+}
+// [tihiy]
+
 $eq=true;
 $and=false;
 for ($i=1;$i<count($opers);$i++){
