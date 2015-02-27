@@ -1074,7 +1074,7 @@ class DocumentParser {
         
         if(isset($snippetObject['properties']))
         {
-            $default_params = $this->parseProperties($snippetObject['properties']);
+            $default_params = $this->parseProperties($snippetObject['properties'], $this->currentSnippet, 'snippet');
             $params = array_merge($default_params,$params);
         }
         
@@ -2480,7 +2480,7 @@ class DocumentParser {
             }
         }
         // load default params/properties
-        $parameters= $this->parseProperties($properties);
+        $parameters= $this->parseProperties($properties, $snippetName, 'snippet');
         $parameters= array_merge($parameters, $params);
         // run snippet
         return $this->evalSnippet($snippet, $parameters);
@@ -3426,7 +3426,7 @@ class DocumentParser {
                 }
 
                 // load default params/properties
-                $parameter= $this->parseProperties($pluginProperties);
+                $parameter= $this->parseProperties($pluginProperties, $evtName, 'plugin');
                 if (!empty ($extParams))
                     $parameter= array_merge($parameter, $extParams);
 
@@ -3452,9 +3452,11 @@ class DocumentParser {
      * Parses a resource property string and returns the result as an array
      *
      * @param string $propertyString
+	 * @param string|null $elementName
+	 * @param string|null $elementType
      * @return array Associative array in the form property name => property value
      */
-    function parseProperties($propertyString) {
+    function parseProperties($propertyString, $elementName = null, $elementType = null) {
         $parameter= array ();
         if (!empty ($propertyString)) {
             $tmpParams= explode("&", $propertyString);
@@ -3470,6 +3472,16 @@ class DocumentParser {
                 }
             }
         }
+		if(!empty($elementName) && !empty($elementType)){
+			$out = $this->invokeEvent('OnParseProperties', array(
+				'element' => $elementName,
+				'type' => $elementType,
+				'params' => $parameter
+			));
+			if(is_array($out)){
+				$parameter = $out;
+			}
+		}
         return $parameter;
     }
 
