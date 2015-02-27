@@ -1022,6 +1022,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('99','OnManagerLoginFormPrerender','2',''),
 ('100','OnStripAlias','1','Documents'),
 ('102','OnMakeDocUrl','5',''),
+('103','onBeforeLoadExtension','5',''),
 ('200','OnCreateDocGroup','1','Documents'),
 ('201','OnManagerWelcomePrerender','2',''),
 ('202','OnManagerWelcomeHome','2',''),
@@ -1038,6 +1039,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('213','OnManagerNodeRender','2',''),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1','');
+
 
 
 # ^ I don't think we need more than 1000 built-in events. Custom events will start at 1001
