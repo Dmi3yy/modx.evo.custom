@@ -1401,7 +1401,7 @@ class DocumentParser {
             $identifier = $this->documentListing[$identifier];
         }
 
-		$out = $this->invokeEvent('OnBeforeLoadDocumentObject', compact('method', 'identifier', 'documentObject'));
+		$out = $this->invokeEvent('OnBeforeLoadDocumentObject', compact('method', 'identifier'));
 		if(is_array($out)){
 			$documentObject = $out;
 		}else{
