@@ -59,6 +59,7 @@ class DocumentParser {
     var $pluginsTime=array();
     var $aliasListing;
     private $version=array();
+	public $extensions = array();
 
     /**
      * Document constructor
@@ -112,6 +113,13 @@ class DocumentParser {
         	return call_user_func_array(array($this->old,$method_name),$arguments);
     }
 
+	function checkSQLconnect($connector = 'db'){
+		$flag = false;
+		if(is_scalar($connector) && !empty($connector) && isset($this->{$connector}) && $this->{$connector} instanceof DBAPI){
+			$flag = (bool)$this->{$connector}->conn;
+		}
+		return $flag;
+	}
     /**
      * Loads an extension from the extenders folder.
      * You can load any extension creating a boot file:
@@ -120,13 +128,21 @@ class DocumentParser {
      *
      * @return boolean
      */
-    function loadExtension($extname) {
-
-        $extname = trim(str_replace(array('..','/','\\'),'',strtolower($extname)));
-
-        $filename = MODX_MANAGER_PATH."includes/extenders/{$extname}.extenders.inc.php";
-
-        return is_file($filename) ? include $filename : false;
+    function loadExtension($extname, $reload = true) {
+		$out = false;
+		$flag = ($reload || !in_array($extname, $this->extensions));
+		if($this->checkSQLconnect('db') && $flag){
+			$out = $this->invokeEvent('onBeforeLoadExtension', array('name' => $extname, 'reload' => $reload));
+		}
+		if( ! $out && $flag){
+			$extname = trim(str_replace(array('..','/','\\'),'',strtolower($extname)));
+			$filename = MODX_MANAGER_PATH."includes/extenders/{$extname}.extenders.inc.php";
+			$out = is_file($filename) ? include $filename : false;
+		}
+		if($out && !in_array($extname, $this->extensions)){
+			$this->extensions[] = $extname;
+		}
+        return $out;
     }
 
     /**
