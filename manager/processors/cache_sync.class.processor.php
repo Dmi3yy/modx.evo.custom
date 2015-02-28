@@ -145,43 +145,43 @@ class synccache{
         // get settings
         $rs = $modx->db->select('*', $modx->getFullTableName('system_settings'));
         $config = array();
-        $tmpPHP .= '$c=&$this->config;'."\n";
+        $tmpPHP .= '$c=&$this->config;';
         while(list($key,$value) = $modx->db->getRow($rs,'num')) {
-            $tmpPHP .= '$c[\'' . $this->escapeSingleQuotes($key) . '\']' . ' = "' . $this->escapeDoubleQuotes($value) . "\";\n";
+            $tmpPHP .= '$c[\'' . $this->escapeSingleQuotes($key) . '\']' . '="' . $this->escapeDoubleQuotes($value) . "\";";
             $config[$key] = $value;
         }
 
         // get aliases modx: support for alias path
         $tmpPath = '';
-        $tmpPHP .= '$this->aliasListing = array();' . "\n";
-        $tmpPHP .= '$a = &$this->aliasListing;' . "\n";
-        $tmpPHP .= '$d = &$this->documentListing;' . "\n";
-        $tmpPHP .= '$m = &$this->documentMap;' . "\n";
+        $tmpPHP .= '$this->aliasListing=array();';
+        $tmpPHP .= '$a=&$this->aliasListing;';
+        $tmpPHP .= '$d=&$this->documentListing;';
+        $tmpPHP .= '$m=&$this->documentMap;';
         $rs = $modx->db->select('IF(alias=\'\', id, alias) AS alias, id, parent, isfolder', $modx->getFullTableName('site_content'), 'deleted=0', 'parent, menuindex');
         while ($tmp1 = $modx->db->getRow($rs)) {
             if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
                 $tmpPath = $this->getParents($tmp1['parent']);
                 $alias= (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$tmp1['alias'];
-                $tmpPHP .= '$d[\'' . $this->escapeSingleQuotes($alias) . '\']' . " = " . $tmp1['id'] . ";\n";
+                $tmpPHP .= '$d[\'' . $this->escapeSingleQuotes($alias) . '\']' . "=" . $tmp1['id'] . ";";
             } else {
-                $tmpPHP .= '$d[\'' . $this->escapeSingleQuotes($tmp1['alias']) . '\']' . " = " . $tmp1['id'] . ";\n";
+                $tmpPHP .= '$d[\'' . $this->escapeSingleQuotes($tmp1['alias']) . '\']' . "=" . $tmp1['id'] . ";";
             }
-            $tmpPHP .= '$a[' . $tmp1['id'] . ']' . " = array('id' => " . $tmp1['id'] . ", 'alias' => '" . $this->escapeSingleQuotes($tmp1['alias']) . "', 'path' => '" . $this->escapeSingleQuotes($tmpPath) . "', 'parent' => " . $tmp1['parent'] . ", 'isfolder' => " . $tmp1['isfolder'] . ");\n";
-            $tmpPHP .= '$m[]'." = array('".$tmp1['parent']."' => '".$tmp1['id']."');\n";
+            $tmpPHP .= '$a[' . $tmp1['id'] . ']' . "=array('id'=>" . $tmp1['id'] . ",'alias'=>'" . $this->escapeSingleQuotes($tmp1['alias']) . "','path'=>'" . $this->escapeSingleQuotes($tmpPath) . "','parent'=>" . $tmp1['parent'] . ",'isfolder'=>" . $tmp1['isfolder'] . ");";
+            $tmpPHP .= '$m[]'."=array('".$tmp1['parent']."'=>'".$tmp1['id']."');";
         }
 
         // get content types
         $rs = $modx->db->select('id, contentType', $modx->getFullTableName('site_content'), "contentType != 'text/html'");
-        $tmpPHP .= '$c = &$this->contentTypes;' . "\n";
+        $tmpPHP .= '$c=&$this->contentTypes;';
         while ($tmp1 = $modx->db->getRow($rs)) {
-            $tmpPHP .= '$c[' . $tmp1['id'] . ']' . " = '" . $this->escapeSingleQuotes($tmp1['contentType']) . "';\n";
+            $tmpPHP .= '$c[' . $tmp1['id'] . ']' . "='" . $this->escapeSingleQuotes($tmp1['contentType']) . "';";
         }
 
         // WRITE Chunks to cache file
         $rs = $modx->db->select('*', $modx->getFullTableName('site_htmlsnippets'));
-        $tmpPHP .= '$c = &$this->chunkCache;' . "\n";
-        while ($tmp1 = $modx->db->getRow($rs)) {
-            $tmpPHP .= '$c[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . " = '" . $this->escapeSingleQuotes($tmp1['snippet']) . "';\n";
+        $tmpPHP .= '$c=&$this->chunkCache;';
+        while ($tmp1 = $modx->db->getRow($rs)) { /** without trim */
+            $tmpPHP .= '$c[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . "='" . $this->escapeSingleQuotes($tmp1['snippet']) . "';";
         }
 
         // WRITE snippets to cache file
@@ -190,11 +190,11 @@ class synccache{
 			$modx->getFullTableName('site_snippets').' ss
 				LEFT JOIN '.$modx->getFullTableName('site_modules').' sm on sm.guid=ss.moduleguid'
 			);
-        $tmpPHP .= '$s = &$this->snippetCache;' . "\n";
+        $tmpPHP .= '$s=&$this->snippetCache;';
         while ($tmp1 = $modx->db->getRow($rs)) {
-            $tmpPHP .= '$s[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . " = '" . $this->escapeSingleQuotes($tmp1['snippet']) . "';\n";
+            $tmpPHP .= '$s[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . "='" . $this->escapeSingleQuotes(trim($tmp1['snippet'])) . "';";
             if ($tmp1['properties'] != '' || $tmp1['sharedproperties'] != '') {
-                $tmpPHP .= '$s[\'' . $this->escapeSingleQuotes($tmp1['name']) . 'Props\']' . " = '" . $this->escapeSingleQuotes($tmp1['properties'] . " " . $tmp1['sharedproperties']) . "';\n";
+                $tmpPHP .= '$s[\'' . $this->escapeSingleQuotes($tmp1['name']) . 'Props\']' . "='" . $this->escapeSingleQuotes($tmp1['properties'] . " " . $tmp1['sharedproperties']) . "';";
             }
         }
 
@@ -204,11 +204,11 @@ class synccache{
 			$modx->getFullTableName('site_plugins').' sp
 				LEFT JOIN '.$modx->getFullTableName('site_modules').' sm on sm.guid=sp.moduleguid',
 			'sp.disabled=0');
-        $tmpPHP .= '$p = &$this->pluginCache;' . "\n";
+        $tmpPHP .= '$p=&$this->pluginCache;';
         while ($tmp1 = $modx->db->getRow($rs)) {
-            $tmpPHP .= '$p[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . " = '" . $this->escapeSingleQuotes($tmp1['plugincode']) . "';\n";
+            $tmpPHP .= '$p[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . "='" . $this->escapeSingleQuotes(trim($tmp1['plugincode'])) . "';";
             if ($tmp1['properties'] != '' || $tmp1['sharedproperties'] != '') {
-                $tmpPHP .= '$p[\'' . $this->escapeSingleQuotes($tmp1['name']) . 'Props\']' . " = '" . $this->escapeSingleQuotes($tmp1['properties'] . ' ' . $tmp1['sharedproperties']) . "';\n";
+                $tmpPHP .= '$p[\'' . $this->escapeSingleQuotes($tmp1['name']) . 'Props\']' . "='" . $this->escapeSingleQuotes($tmp1['properties'] . ' ' . $tmp1['sharedproperties']) . "';";
             }
         }
 
@@ -223,7 +223,7 @@ class synccache{
 			'plugs.disabled=0',
 			'sysevt.name,pe.priority'
 			);
-        $tmpPHP .= '$e = &$this->pluginEvent;' . "\n";
+        $tmpPHP .= '$e = &$this->pluginEvent;';
         while ($evt = $modx->db->getRow($rs)) {
             if (!$events[$evt['evtname']]) {
                 $events[$evt['evtname']] = array();
@@ -231,11 +231,10 @@ class synccache{
             $events[$evt['evtname']][] = $evt['name'];
         }
         foreach($events as $evtname => $pluginnames) {
-            $tmpPHP .= '$e[\'' . $this->escapeSingleQuotes($evtname) . '\'] = array(\'' . implode("','", $this->escapeSingleQuotes($pluginnames)) . "');\n";
+            $tmpPHP .= '$e[\'' . $this->escapeSingleQuotes($evtname) . '\']=array(\'' . implode("','", $this->escapeSingleQuotes($pluginnames)) . "');";
         }
 
         // close and write the file
-        $tmpPHP .= "\n";
         $filename = $this->cachePath.'siteCache.idx.php';
         $somecontent = $tmpPHP;
 
