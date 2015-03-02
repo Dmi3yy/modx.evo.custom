@@ -132,7 +132,7 @@ class DocumentParser {
 		$out = false;
 		$flag = ($reload || !in_array($extname, $this->extensions));
 		if($this->checkSQLconnect('db') && $flag){
-			$out = $this->invokeEvent('onBeforeLoadExtension', array('name' => $extname, 'reload' => $reload));
+			$out = $this->invokeEvent('OnBeforeLoadExtension', array('name' => $extname, 'reload' => $reload));
 		}
 		if( ! $out && $flag){
 			$extname = trim(str_replace(array('..','/','\\'),'',strtolower($extname)));
