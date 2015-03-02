@@ -839,8 +839,8 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 
 if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInternalKey'] == $content['createdby']) {
 ?>
-            <tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['resource_type']?></span></td>
-                <td width="150"><select name="type" class="inputBox" onchange="documentDirty=true;" style="width:200px">
+            <tr style="height: 24px;"><td width="150"><span class="warning"><?php echo $_lang['resource_type']?></span></td>
+                <td><select name="type" class="inputBox" onchange="documentDirty=true;" style="width:200px">
 
                     <option value="document"<?php echo (($content['type'] == "document" || $_REQUEST['a'] == '85' || $_REQUEST['a'] == '4') ? ' selected="selected"' : "");?> ><?php echo $_lang["resource_type_webpage"];?></option>
                     <option value="reference"<?php echo (($content['type'] == "reference" || $_REQUEST['a'] == '72') ? ' selected="selected"' : "");?> ><?php echo $_lang["resource_type_weblink"];?></option>
