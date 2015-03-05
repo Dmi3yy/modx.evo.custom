@@ -60,6 +60,7 @@ class DocumentParser {
     var $aliasListing;
     private $version=array();
 	public $extensions = array();
+	public $cacheKey = null;
 
     /**
      * Document constructor
@@ -272,18 +273,18 @@ class DocumentParser {
         $tbl_web_user_settings = $this->getFullTableName('web_user_settings');
         $tbl_user_settings     = $this->getFullTableName('user_settings');
         if (!is_array($this->config) || empty ($this->config)) {
-            if ($included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
-                $included= include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
+            if ($included= file_exists(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
+                $included= include_once (MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php');
             }
             if (!$included || !is_array($this->config) || empty ($this->config)) {
                 include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
                 $cache = new synccache();
-                $cache->setCachepath(MODX_BASE_PATH . "assets/cache/");
+                $cache->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
                 $cache->setReport(false);
                 $rebuilt = $cache->buildCache($this);
                 $included = false;
-                if($rebuilt && $included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
-                    $included= include MODX_BASE_PATH . 'assets/cache/siteCache.idx.php';
+                if($rebuilt && $included= file_exists(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
+                    $included= include MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php';
                 }
                 if(!$included) {
                     $result= $this->db->select('setting_name, setting_value', $tbl_system_settings);
@@ -497,27 +498,39 @@ class DocumentParser {
             return $q;
         }
     }
-
+	
+	public function getCacheFolder(){
+		return "assets/cache/";
+	}
+	public function getHashFile($key){
+		return $this->getCacheFolder()."/docid_" . $key . ".pageCache.php";
+	}
+	public function makePageCacheKey($id){
+		$hash = $id;
+		if (!empty($GET)) {
+			// Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
+			$params = $_GET;
+			ksort($params);
+			$hash = md5(http_build_query($params));
+			$tmp = $this->invokeEvent("OnMakePageCacheKey", array ("hash" => $hash, "id" => $id, 'params' => $params));
+			$hash = is_scalar($tmp) ? $tmp : $hash;
+		}
+		return $hash;
+	}
     /**
      * Check the cache for a specific document/resource
      *
      * @param int $id
+	 * @param bool $loading
      * @return string
      */
-    function checkCache($id) {
+    function checkCache($id, $loading = false) {
         $tbl_document_groups= $this->getFullTableName("document_groups");
-        if ($this->config['cache_type'] == 2) {
-           $md5_hash = '';
-           if (!empty($_GET)) {
-	           // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
-	           $params = $_GET;
-	           ksort($params);
-	           $md5_hash = '_' . md5(http_build_query($params));
-           }
-           $cacheFile= "assets/cache/docid_" . $id .$md5_hash. ".pageCache.php";
-        }else{
-           $cacheFile= "assets/cache/docid_" . $id . ".pageCache.php";
-        }
+        $key = ($this->config['cache_type'] == 2) ? $this->makePageCacheKey($id) : $id;
+		$cacheFile = $this->getHashFile($key);
+		if($loading){
+			$this->cacheKey = $key;
+		}
         if (file_exists($cacheFile)) {
             $this->documentGenerated= 0;
             $flContent = file_get_contents($cacheFile, false);
@@ -719,7 +732,7 @@ class DocumentParser {
      */
     function checkPublishStatus() {
         $cacheRefreshTime= 0;
-        @include $this->config["base_path"] . "assets/cache/sitePublishing.idx.php";
+        @include $this->config["base_path"] . $this->getCacheFolder() . "sitePublishing.idx.php";
         $timeNow= time() + $this->config['server_offset_time'];
         if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
             // now, check for documents that need publishing
@@ -749,23 +762,10 @@ class DocumentParser {
     function postProcess() {
         // if the current document was generated, cache it!
         if ($this->documentGenerated == 1 && $this->documentObject['cacheable'] == 1 && $this->documentObject['type'] == 'document' && $this->documentObject['published'] == 1) {
-            $basepath= $this->config["base_path"] . "assets/cache";
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
-            if ($this->config['cache_type'] == 2) {
-                $md5_hash = '';
-                if (!empty($_GET)) {
-	                // Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
-	                $params = $_GET;
-	                ksort($params);
-	                $md5_hash = '_' . md5(http_build_query($params));
-                }
-                $pageCache = $md5_hash .".pageCache.php";
-            }else{
-                $pageCache = ".pageCache.php";
-            }
 
-            if ($fp= @ fopen($basepath . "/docid_" . $this->documentIdentifier . $pageCache, "w")) {
+            if (!empty($this->cacheKey) && is_scalar($this->cacheKey) && $fp= @ fopen($this->getHashFile($this->cacheKey), "w")) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
                 $rs = $this->db->select('document_group', $this->getFullTableName("document_groups"), "document='{$this->documentIdentifier}'");
                 $docGroups= $this->db->getColumn("document_group", $rs);
@@ -1668,7 +1668,7 @@ class DocumentParser {
      */
     function prepareResponse() {
         // we now know the method and identifier, let's check the cache
-        $this->documentContent= $this->checkCache($this->documentIdentifier);
+        $this->documentContent= $this->checkCache($this->documentIdentifier, true);
         if ($this->documentContent != "") {
             // invoke OnLoadWebPageCache  event
             $this->invokeEvent("OnLoadWebPageCache");
@@ -2354,11 +2354,11 @@ class DocumentParser {
 		if ($type=='full') {
 		include_once(MODX_MANAGER_PATH . 'processors/cache_sync.class.processor.php');
 		$sync = new synccache();
-		$sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
+		$sync->setCachepath(MODX_BASE_PATH . $this->getCacheFolder());
 		$sync->setReport($report);
 		$sync->emptyCache();
 		} else {
-			$files = glob(MODX_BASE_PATH . 'assets/cache/*');
+			$files = glob(MODX_BASE_PATH . $this->getCacheFolder().'*');
 			$deletedfiles = array();
 			while ($file = array_shift($files)) {
 				$name = basename($file);
@@ -2515,21 +2515,28 @@ class DocumentParser {
      */
     function runSnippet($snippetName, $params= array ()) {
         if (isset ($this->snippetCache[$snippetName])) {
-            $snippet= $this->snippetCache[$snippetName];
-            $properties= $this->snippetCache[$snippetName . "Props"];
+            $snippet = $this->snippetCache[$snippetName];
+            $properties = $this->snippetCache[$snippetName . "Props"];
         } else { // not in cache so let's check the db
-            $result= $this->db->select('name, snippet, properties', $this->getFullTableName("site_snippets"), "name='" . $this->db->escape($snippetName) . "'");
-            if ($row= $this->db->getRow($result)) {
-                $snippet= $this->snippetCache[$row['name']]= $row['snippet'];
-                $properties= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
-            } else {
-                $snippet= $this->snippetCache[$snippetName]= "return false;";
-                $properties= '';
-            }
+			$sql = "SELECT ss.`name`, ss.`snippet`, ss.`properties`, sm.properties as `sharedproperties` FROM " . $this->getFullTableName("site_snippets") . " as ss LEFT JOIN ".$this->getFullTableName('site_modules')." as sm on sm.guid=ss.moduleguid WHERE ss.`name`='" . $this->db->escape($snippetName) . "';";
+			$result = $this->db->query($sql);
+			if ($this->db->getRecordCount($result) == 1) {
+				$row = $this->db->getRow($result);
+				$snippet =  $this->snippetCache[$snippetName]= $row['snippet'];
+				$properties = $this->snippetCache[$snippetName . "Props"]= $row['properties']." ".$row['sharedproperties'];
+			} else {
+				$snippet = $this->snippetCache[$snippetName]= "return false;";
+				$properties = $this->snippetCache[$snippetName . "Props"]= '';
+			}
         }
         // load default params/properties
+<<<<<<< HEAD
         $parameters= $this->parseProperties($properties, $snippetName, 'snippet');
         $parameters= array_merge($parameters, $params);
+=======
+        $parameters = $this->parseProperties($properties);
+        $parameters = array_merge($parameters, $params);
+>>>>>>> 3879bb155d57ba71e6c19e7a66030f6dfb5d66f0
         // run snippet
         return $this->evalSnippet($snippet, $parameters);
     }
@@ -2540,9 +2547,21 @@ class DocumentParser {
      * @param string $chunkName
      * @return boolean|string
      */
-    function getChunk($chunkName) {
-        return isset($this->chunkCache[$chunkName]) ? $this->chunkCache[$chunkName] : null;
-    }
+	function getChunk($chunkName) {
+		$out = null;
+		if (isset ($this->chunkCache[$chunkName])) {
+			$out = $this->chunkCache[$chunkName];
+		} else {
+			$sql= "SELECT `snippet` FROM " . $this->getFullTableName("site_htmlsnippets") . " WHERE " . $this->getFullTableName("site_htmlsnippets") . ".`name`='" . $this->db->escape($chunkName) . "';";
+			$result= $this->db->query($sql);
+			$limit= $this->db->getRecordCount($result);
+			if ($limit == 1) {
+				$row= $this->db->getRow($result);
+				$out = $this->chunkCache[$chunkName]= $row['snippet'];
+			}
+		}
+		return $out;
+	}
 	
     /**
      * parseText
@@ -3018,7 +3037,7 @@ class DocumentParser {
      */
     function getCachePath() {
         global $base_url;
-        $pth= $base_url . 'assets/cache/';
+        $pth= $base_url . $this->getCacheFolder();
         return $pth;
     }
 
