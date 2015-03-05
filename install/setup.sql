@@ -939,6 +939,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('17','OnManagerCreateGroup','2',''),
 ('18','OnBeforeCacheUpdate','4',''),
 ('19','OnCacheUpdate','4',''),
+('107','OnMakePageCacheKey','4',''),
 ('20','OnLoadWebPageCache','4',''),
 ('21','OnBeforeSaveWebPageCache','4',''),
 ('22','OnChunkFormPrerender','1','Chunks'),
