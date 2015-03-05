@@ -3787,7 +3787,8 @@ class DocumentParser {
 			$tmp = 1;
 			$args = array_pad(array(), count($val['args']), '$var');
 			$args = implode(", ", $args);
-			$args = preg_replace_callback('/\$var/', function() use(&$tmp, $val){
+			$modx = $this;
+			$args = preg_replace_callback('/\$var/', function() use($modx, &$tmp, $val){
 				$arg = $val['args'][$tmp - 1];
 				switch(true){
 					case is_null($arg):{
@@ -3799,7 +3800,7 @@ class DocumentParser {
 						break;
 					}
 					case is_scalar($arg):{
-						$out = strlen($arg) > 20 ? 'string $var'.$tmp : ("'" . $this->htmlspecialchars(str_replace("'", "\\'", $arg)) . "'");
+						$out = strlen($arg) > 20 ? 'string $var'.$tmp : ("'" . $modx->htmlspecialchars(str_replace("'", "\\'", $arg)) . "'");
 						break;
 					}
 					case is_bool($arg):{
@@ -3815,7 +3816,7 @@ class DocumentParser {
 						break;
 					}
 					default:{
-					$out = '$var'.$tmp;
+						$out = '$var'.$tmp;
 					}
 				}
 				$tmp++;
