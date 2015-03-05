@@ -317,7 +317,7 @@ class uploader {
 			// Transalias plugin active?
 			$res = $modx->db->select('properties', $modx->getFullTableName('site_plugins'), 'name="TransAlias" AND disabled=0');
 			if ($properties = $modx->db->getValue($res)) {
-				$properties = $modx->parseProperties($properties);
+				$properties = $modx->parseProperties($properties, 'TransAlias', 'plugin');
 			} else {
 				$properties = NULL;
 			}

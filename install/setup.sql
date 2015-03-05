@@ -1015,6 +1015,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('105','OnAfterLoadDocumentObject','5',''),
 ('91','OnLoadWebDocument','5',''),
 ('92','OnParseDocument','5',''),
+('106','OnParseProperties','5',''),
 ('93','OnManagerLoginFormRender','2',''),
 ('94','OnWebPageComplete','5',''),
 ('95','OnLogPageHit','5',''),
