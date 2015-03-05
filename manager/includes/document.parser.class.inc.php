@@ -59,6 +59,8 @@ class DocumentParser {
     var $pluginsTime=array();
     var $aliasListing;
     private $version=array();
+	public $useConditional = false;
+	public $recentUpdate = 0;
 
     /**
      * Document constructor
@@ -576,6 +578,8 @@ class DocumentParser {
 
         // check for non-cached snippet output
         if (strpos($this->documentOutput, '[!') > -1) {
+			$this->recentUpdate = time() + $this->config['server_offset_time'];
+			
             $this->documentOutput= str_replace('[!', '[[', $this->documentOutput);
             $this->documentOutput= str_replace('!]', ']]', $this->documentOutput);
 
@@ -631,6 +635,7 @@ class DocumentParser {
                 header($header);
             }
         }
+		$this->setConditional();
 
         $stats = $this->getTimerStats($this->tstart);
         
@@ -695,14 +700,33 @@ class DocumentParser {
 
         return $stats;
     }
-    
+
+	public function setConditional(){
+		if(!empty($_POST) || (defined('MODX_API_MODE') && MODX_API_MODE) || $this->getLoginUserID('mgr') || !$this->useConditional || empty($this->recentUpdate)) return;
+		$last_modified = gmdate('D, d M Y H:i:s T', $this->recentUpdate);
+		$etag          = md5($last_modified);
+		$HTTP_IF_MODIFIED_SINCE = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false;
+		$HTTP_IF_NONE_MATCH     = isset($_SERVER['HTTP_IF_NONE_MATCH'])     ? $_SERVER['HTTP_IF_NONE_MATCH']     : false;
+		header('Pragma: no-cache');
+
+		if ($HTTP_IF_MODIFIED_SINCE == $last_modified || strpos($HTTP_IF_NONE_MATCH, $etag)!==false) {
+			header('HTTP/1.1 304 Not Modified');
+			header('Content-Length: 0');
+			exit;
+		}  else {
+			header("Last-Modified: {$last_modified}");
+			header("ETag: '{$etag}'");
+		}
+	}
+
     /**
      * Checks the publish state of page
      */
     function checkPublishStatus() {
         $cacheRefreshTime= 0;
         @include $this->config["base_path"] . "assets/cache/sitePublishing.idx.php";
-        $timeNow= time() + $this->config['server_offset_time'];
+		$this->recentUpdate = $recent_update;
+        $timeNow = $_SERVER['REQUEST_TIME'] + $this->config['server_offset_time'];
         if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
             // now, check for documents that need publishing
             $this->db->update(
@@ -1767,6 +1791,8 @@ class DocumentParser {
 		if($this->documentIdentifier==$this->config['error_page'] &&  $this->config['error_page']!=$this->config['site_start']){
 			header('HTTP/1.0 404 Not Found');
 		}
+
+		$this->setConditional();
         register_shutdown_function(array (
             & $this,
             "postProcess"
