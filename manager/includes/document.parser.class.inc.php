@@ -2664,13 +2664,8 @@ class DocumentParser {
 			}
         }
         // load default params/properties
-<<<<<<< HEAD
-        $parameters= $this->parseProperties($properties, $snippetName, 'snippet');
-        $parameters= array_merge($parameters, $params);
-=======
-        $parameters = $this->parseProperties($properties);
+        $parameters = $this->parseProperties($properties, $snippetName, 'snippet');
         $parameters = array_merge($parameters, $params);
->>>>>>> 3879bb155d57ba71e6c19e7a66030f6dfb5d66f0
         // run snippet
         return $this->evalSnippet($snippet, $parameters);
     }
