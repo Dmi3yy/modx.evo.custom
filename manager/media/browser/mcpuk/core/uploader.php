@@ -318,6 +318,27 @@ class uploader {
         $this->callBack($url, $message);
     }
 
+
+	protected function getTransaliasSettings() {
+		global $modx;
+
+		// Cleaning uploaded filename?
+		$setting = $modx->db->select('count(*)', $modx->getFullTableName('system_settings'), 'setting_name="clean_uploaded_filename" AND setting_value=1');
+		if ($modx->db->getValue($setting)>0) {
+			// Transalias plugin active?
+			$res = $modx->db->select('properties', $modx->getFullTableName('site_plugins'), 'name="TransAlias" AND disabled=0');
+			if ($properties = $modx->db->getValue($res)) {
+				$properties = $modx->parseProperties($properties, 'TransAlias', 'plugin');
+			} else {
+				$properties = NULL;
+			}
+		} else {
+			$properties = NULL;
+		}
+		return $properties;
+	}
+
+
 	protected function normalizeFilename($filename) {
         return $this->modx->stripAlias($filename);
 	}
