@@ -3162,16 +3162,25 @@ class DocumentParser {
      * @param string $context. Default is an empty string which indicates the method should automatically pick 'web (frontend) or 'mgr' (backend)
      * @return string
      */
-    function getLoginUserID($context= '') {
-        if ($context && isset ($_SESSION[$context . 'Validated'])) {
-            return $_SESSION[$context . 'InternalKey'];
-        }
-        elseif ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
-            return $_SESSION['webInternalKey'];
-        }
-        elseif ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
-            return $_SESSION['mgrInternalKey'];
-        }
+    public function getLoginUserID($context= '') {
+		switch(true){
+			case (!empty($context) && is_scalar($context) && isset($_SESSION[$context . 'Validated'])):{
+				$out = $_SESSION[$context . 'InternalKey'];
+				break;
+			}
+			case ($this->isFrontend() && isset ($_SESSION['webValidated'])):{
+				$out = $_SESSION['webInternalKey'];
+				break;
+			}
+			case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):{
+				$out = $_SESSION['mgrInternalKey'];
+				break;
+			}
+			default:{
+				$out = false;
+			}
+		}
+		return $out;
     }
 
     /**
