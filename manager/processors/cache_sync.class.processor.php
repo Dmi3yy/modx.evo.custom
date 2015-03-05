@@ -80,49 +80,7 @@ if(!class_exists('synccache')) {
 
         $this->buildCache($modx);
 
-/****************************************************************************/
-/*  PUBLISH TIME FILE                                                       */
-/****************************************************************************/
-
-        // update publish time file
-        $timesArr = array();
-        $result = $modx->db->select('MIN(pub_date) AS minpub', $modx->getFullTableName('site_content'), 'pub_date>'.(time() + $modx->config['server_offset_time']));
-        if($minpub = $modx->db->getValue($result)) {
-            $timesArr[] = $minpub;
-        }
-
-        $result = $modx->db->select('MIN(unpub_date) AS minunpub', $modx->getFullTableName('site_content'), 'unpub_date>'.(time() + $modx->config['server_offset_time']));
-        if($minunpub = $modx->db->getValue($result)) {
-            $timesArr[] = $minunpub;
-        }
-
-        if(count($timesArr)>0) {
-            $nextevent = min($timesArr);
-        } else {
-            $nextevent = 0;
-        }
-
-        // write the file
-        $filename = $this->cachePath.'/sitePublishing.idx.php';
-        $somecontent = '<?php $cacheRefreshTime='.$nextevent.'; ?>';
-
-        if (!$handle = fopen($filename, 'w')) {
-             echo 'Cannot open file ('.$filename.')';
-             exit;
-        }
-
-        // Write $somecontent to our opened file.
-        if (fwrite($handle, $somecontent) === FALSE) {
-           echo 'Cannot write publishing info file! Make sure the assets/cache directory is writable!';
-           exit;
-        }
-
-        fclose($handle);
-
-
-/****************************************************************************/
-/*  END OF PUBLISH TIME FILE                                                */
-/****************************************************************************/
+		$this->publishTimeConfig();
 
         // finished cache stuff.
         if($this->showReport==true) {
@@ -139,13 +97,69 @@ if(!class_exists('synccache')) {
         }
     }
 
+	public function publishTimeConfig($cacheRefreshTime='')
+	{
+
+		$cacheRefreshTimeFromDB = $this->getCacheRefreshTime();
+		if(!preg_match('@^[0-9]+$]@',$cacheRefreshTime) || $cacheRefreshTimeFromDB < $cacheRefreshTime)
+			$cacheRefreshTime = $cacheRefreshTimeFromDB;
+
+
+		// write the file
+		$content = array();
+		$content[] = '<?php';
+		$content[] = sprintf('$recent_update = %s;'   , $_SERVER['REQUEST_TIME']);
+		$content[] = sprintf('$cacheRefreshTime = %s;', $cacheRefreshTime);
+
+		$filename = $this->cachePath.'/sitePublishing.idx.php';
+		if (!$handle = fopen($filename, 'w')) {
+			echo 'Cannot open file ('.$filename.')';
+			exit;
+		}
+
+		// Write $somecontent to our opened file.
+		if (fwrite($handle, implode("\n",$content)) === FALSE) {
+			echo 'Cannot write publishing info file! Make sure the assets/cache directory is writable!';
+			exit;
+		}
+	}
+
+	public function getCacheRefreshTime()
+	{
+		global $modx;
+
+		// update publish time file
+		$timesArr = array();
+		$current_time = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
+
+		$result = $modx->db->select('MIN(pub_date) AS minpub', $modx->getFullTableName('site_content'), 'pub_date>'.$current_time);
+		if(!$result) echo "Couldn't determine next publish event!";
+
+		$minpub = $modx->db->getValue($result);
+		if($minpub!=NULL)
+			$timesArr[] = $minpub;
+
+		$result = $modx->db->select('MIN(unpub_date) AS minunpub', $modx->getFullTableName('site_content'), 'unpub_date>'.$current_time);
+		if(!$result) echo "Couldn't determine next unpublish event!";
+
+		$minunpub = $modx->db->getValue($result);
+		if($minunpub!=NULL)
+			$timesArr[] = $minunpub;
+
+		if(isset($this->cacheRefreshTime) && !empty($this->cacheRefreshTime))
+			$timesArr[] = $this->cacheRefreshTime;
+
+		if(count($timesArr)>0) $cacheRefreshTime = min($timesArr);
+		else                   $cacheRefreshTime = 0;
+		return $cacheRefreshTime;
+	}
+
     /**
      * build siteCache file
      * @param  DocumentParser $modx
      * @return boolean success
      */
-		function buildCache($modx)
-		{
+    public function buildCache($modx) {
         $tmpPHP = "<?php\n";
 
         // SETTINGS & DOCUMENT LISTINGS CACHE
