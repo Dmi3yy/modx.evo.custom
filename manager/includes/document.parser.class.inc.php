@@ -470,7 +470,7 @@ class DocumentParser {
         if ($this->config['use_alias_path'] == 1) {
             $this->virtualDir= dirname($q);
             $this->virtualDir= ($this->virtualDir == '.' ? '' : $this->virtualDir);
-            $q= basename($q);
+            $q = preg_replace('/.*[\/\\\]/', '', $q);
         } else {
             $this->virtualDir= '';
         }
@@ -2361,7 +2361,7 @@ class DocumentParser {
 			$files = glob(MODX_BASE_PATH . $this->getCacheFolder().'*');
 			$deletedfiles = array();
 			while ($file = array_shift($files)) {
-				$name = basename($file);
+				$name = preg_replace('/.*[\/\\\]/', '', $file);
 				if (preg_match('/\.pageCache/',$name) && !in_array($name, $deletedfiles)) {
 					$deletedfiles[] = $name;
 					unlink($file);
