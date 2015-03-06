@@ -63,6 +63,7 @@ class DocumentParser {
 	public $cacheKey = null;
 	public $recentUpdate = 0;
 	public $useConditional = false;
+	protected $systemCacheKey = null;
 
 	/**
      * Document constructor
@@ -135,7 +136,10 @@ class DocumentParser {
 		$out = false;
 		$flag = ($reload || !in_array($extname, $this->extensions));
 		if($this->checkSQLconnect('db') && $flag){
-			$out = $this->invokeEvent('OnBeforeLoadExtension', array('name' => $extname, 'reload' => $reload));
+			$evtOut = $this->invokeEvent('OnBeforeLoadExtension', array('name' => $extname, 'reload' => $reload));
+			if (is_array($evtOut) && count($evtOut) > 0){
+				$out = array_pop($evtOut);
+			}
 		}
 		if( ! $out && $flag){
 			$extname = trim(str_replace(array('..','/','\\'),'',strtolower($extname)));
@@ -243,7 +247,8 @@ class DocumentParser {
      * Redirect to the error page, by calling sendForward(). This is called for example when the page was not found.
      */
     function sendErrorPage($noEvent = false) {
-		if($noEvent) {
+		$this->systemCacheKey = 'notfound';
+		if(!$noEvent) {
 			// invoke OnPageNotFound event
 			$this->invokeEvent('OnPageNotFound');
 		}
@@ -252,10 +257,13 @@ class DocumentParser {
         exit();
     }
 
-    function sendUnauthorizedPage() {
+    function sendUnauthorizedPage($noEvent = false) {
         // invoke OnPageUnauthorized event
         $_REQUEST['refurl'] = $this->documentIdentifier;
-        $this->invokeEvent('OnPageUnauthorized');
+		$this->systemCacheKey = 'unauth';
+		if(!$noEvent) {
+			$this->invokeEvent('OnPageUnauthorized');
+		}
         if ($this->config['unauthorized_page']) {
             $unauthorizedPage= $this->config['unauthorized_page'];
         } elseif ($this->config['error_page']) {
@@ -505,19 +513,27 @@ class DocumentParser {
 		return "assets/cache/";
 	}
 	public function getHashFile($key){
-		return $this->getCacheFolder()."/docid_" . $key . ".pageCache.php";
+		return $this->getCacheFolder()."docid_" . $key . ".pageCache.php";
 	}
 	public function makePageCacheKey($id){
 		$hash = $id;
-		if (!empty($GET)) {
-			// Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
-			$params = $_GET;
-			ksort($params);
-			$hash = md5(http_build_query($params));
-			$tmp = $this->invokeEvent("OnMakePageCacheKey", array ("hash" => $hash, "id" => $id, 'params' => $params));
-			$hash = is_scalar($tmp) ? $tmp : $hash;
+		$tmp = null;
+		$params = array();
+		if(!empty($this->systemCacheKey)){
+			$hash = $this->systemCacheKey;
+		}else {
+			if (!empty($GET)) {
+				// Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
+				$params = $_GET;
+				ksort($params);
+				$hash .= '_'.md5(http_build_query($params));
+			}
 		}
-		return $hash;
+		$evtOut = $this->invokeEvent("OnMakePageCacheKey", array ("hash" => $hash, "id" => $id, 'params' => $params));
+		if (is_array($evtOut) && count($evtOut) > 0){
+			$tmp = array_pop($evtOut);
+		}
+		return empty($tmp) ? $hash : $tmp;
 	}
     /**
      * Check the cache for a specific document/resource
@@ -789,7 +805,7 @@ class DocumentParser {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
 
-            if (!empty($this->cacheKey) && is_scalar($this->cacheKey) && $fp= @ fopen($this->getHashFile($this->cacheKey), "w")) {
+            if (!empty($this->cacheKey) && is_scalar($this->cacheKey) && $fp= @fopen($this->getHashFile(MODX_BASE_PATH.$this->cacheKey), "w")) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
                 $rs = $this->db->select('document_group', $this->getFullTableName("document_groups"), "document='{$this->documentIdentifier}'");
                 $docGroups= $this->db->getColumn("document_group", $rs);
@@ -1643,6 +1659,7 @@ class DocumentParser {
         // check site settings
         if (!$this->checkSiteStatus()) {
             header('HTTP/1.0 503 Service Unavailable');
+			$this->systemCacheKey = 'unavailable';
             if (!$this->config['site_unavailable_page']) {
                 // display offline message
                 $this->documentContent= $this->config['site_unavailable_message'];
@@ -1824,9 +1841,8 @@ class DocumentParser {
 			header('HTTP/1.0 404 Not Found');
 		}
 
-		$this->setConditional();
         register_shutdown_function(array (
-            & $this,
+            &$this,
             "postProcess"
         )); // tell PHP to call postProcess when it shuts down
         $this->outputContent();
