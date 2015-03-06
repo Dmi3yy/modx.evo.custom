@@ -522,7 +522,7 @@ class DocumentParser {
 		if(!empty($this->systemCacheKey)){
 			$hash = $this->systemCacheKey;
 		}else {
-			if (!empty($GET)) {
+			if (!empty($_GET)) {
 				// Sort GET parameters so that the order of parameters on the HTTP request don't affect the generated cache ID.
 				$params = $_GET;
 				ksort($params);
