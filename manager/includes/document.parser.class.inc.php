@@ -805,7 +805,7 @@ class DocumentParser {
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
 
-            if (!empty($this->cacheKey) && is_scalar($this->cacheKey) && $fp= @fopen($this->getHashFile(MODX_BASE_PATH.$this->cacheKey), "w")) {
+            if (!empty($this->cacheKey) && is_scalar($this->cacheKey) && $fp= @fopen(MODX_BASE_PATH.$this->getHashFile($this->cacheKey), "w")) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
                 $rs = $this->db->select('document_group', $this->getFullTableName("document_groups"), "document='{$this->documentIdentifier}'");
                 $docGroups= $this->db->getColumn("document_group", $rs);
