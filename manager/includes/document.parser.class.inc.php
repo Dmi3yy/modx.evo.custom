@@ -3684,9 +3684,8 @@ class DocumentParser {
                 }
 
                 // load default params/properties
-                if($evtName != 'OnParseProperties'){
-                    $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
-                }
+                $parameter= $this->parseProperties($pluginProperties);
+				
                 if(!is_array($parameter)){
                     $parameter = array();
                 }
