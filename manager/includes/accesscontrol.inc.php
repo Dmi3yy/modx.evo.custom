@@ -112,11 +112,7 @@ if(!isset($_SESSION['mgrValidated'])){
 	$modx->setPlaceholder('OnManagerLoginFormRender',$html);
 
 	// load template
-	if(!isset($modx->config['manager_login_tpl']) || empty($modx->config['manager_login_tpl'])) {
-		$modx->config['manager_login_tpl'] = MODX_MANAGER_PATH . 'media/style/common/login.tpl';
-	}
-
-	$target = $modx->config['manager_login_tpl'];
+	$target = $modx->getConfig('manager_login_tpl');
 	$target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
 	$target = $modx->mergeSettingsContent($target);
 
