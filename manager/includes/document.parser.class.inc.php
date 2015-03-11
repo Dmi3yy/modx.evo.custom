@@ -1130,11 +1130,11 @@ class DocumentParser {
         // current params
         $params = $this->_snipParamsToArray($snip_call['params']);
         
-        if(isset($snippetObject['properties']))
-        {
-            $default_params = $this->parseProperties($snippetObject['properties'], $this->currentSnippet, 'snippet');
-            $params = array_merge($default_params,$params);
+        if(!isset($snippetObject['properties'])){
+            $snippetObject['properties'] = '';
         }
+        $default_params = $this->parseProperties($snippetObject['properties'], $this->currentSnippet, 'snippet');
+        $params = array_merge($default_params, $params);
         
         $value = $this->evalSnippet($snippetObject['content'], $params);
         
@@ -3684,7 +3684,11 @@ class DocumentParser {
                 }
 
                 // load default params/properties
-                $parameter= $this->parseProperties($pluginProperties, $evtName, 'plugin');
+                $parameter= $this->parseProperties($pluginProperties);
+				
+                if(!is_array($parameter)){
+                    $parameter = array();
+                }
                 if (!empty ($extParams))
                     $parameter= array_merge($parameter, $extParams);
 
@@ -3734,11 +3738,10 @@ class DocumentParser {
 			$out = $this->invokeEvent('OnParseProperties', array(
 				'element' => $elementName,
 				'type' => $elementType,
-				'params' => $parameter
+				'args' => $parameter
 			));
-			if(is_array($out)){
-				$parameter = $out;
-			}
+			if(is_array($out)) $out = array_pop($out);
+            if(is_array($out)) $parameter = $out;
 		}
         return $parameter;
     }
