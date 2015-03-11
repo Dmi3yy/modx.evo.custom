@@ -1478,8 +1478,8 @@ class DocumentParser {
         }
 
 		$out = $this->invokeEvent('OnBeforeLoadDocumentObject', compact('method', 'identifier'));
-		if(is_array($out)){
-			$documentObject = $out;
+		if(is_array($out) && is_array($out[0])){
+            $documentObject = $out[0];
 		}else{
 			// get document groups for current user
 			if ($docgrp= $this->getUserDocGroups()) $docgrp= implode(",", $docgrp);
@@ -1545,8 +1545,8 @@ class DocumentParser {
 				$documentObject= array_merge($documentObject, $tmplvars);
 			}
 			$out = $this->invokeEvent('OnAfterLoadDocumentObject', compact('method', 'identifier', 'documentObject'));
-			if(is_array($out)){
-				$documentObject = $out;
+			if(is_array($out) && is_array($out[0])){
+				$documentObject = $out[0];
 			}
 		}
 
