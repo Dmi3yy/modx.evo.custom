@@ -203,11 +203,7 @@ if(is_array($evtOut)) {
 }
 
 // load template
-if(!isset($modx->config['manager_welcome_tpl']) || empty($modx->config['manager_welcome_tpl'])) {
-	$modx->config['manager_welcome_tpl'] = MODX_MANAGER_PATH . 'media/style/common/welcome.tpl';
-}
-
-$target = $modx->config['manager_welcome_tpl'];
+$target = $modx->getConfig('manager_welcome_tpl');
 $target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
 $target = $modx->mergeSettingsContent($target);
 
@@ -230,14 +226,14 @@ if(substr($target,0,1)==='@') {
 		$login_tpl = file_get_contents($target);
 	} elseif(is_file($target)) {
 		$login_tpl = file_get_contents($target);
-	} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl')) {
-		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl';
+	} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/welcome.tpl')) {
+		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/welcome.tpl';
 		$login_tpl = file_get_contents($target);
-	} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html')) { // ClipperCMS compatible
-		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html';
+	} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/welcome.html')) { // ClipperCMS compatible
+		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/welcome.html';
 		$login_tpl = file_get_contents($target);
 	} else {
-		$target = MODX_MANAGER_PATH . 'media/style/common/login.tpl';
+		$target = MODX_MANAGER_PATH . 'media/style/common/welcome.tpl';
 		$login_tpl = file_get_contents($target);
 	}
 }
