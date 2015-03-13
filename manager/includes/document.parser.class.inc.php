@@ -2694,6 +2694,7 @@ class DocumentParser {
      */
 	function getChunk($chunkName) {
 		$out = null;
+		if(empty($chunkName)) return $out;
 		if (isset ($this->chunkCache[$chunkName])) {
 			$out = $this->chunkCache[$chunkName];
 		} else {
