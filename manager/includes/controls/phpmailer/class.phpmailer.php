@@ -16,6 +16,8 @@
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.
  */
+ 
+include_once('class.smtp.php');
 
 /**
  * PHPMailer - PHP email creation and transport class.
