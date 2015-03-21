@@ -12,7 +12,7 @@ $documentID = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 // second, new parent must be a folder. If not, set it to folder.
 if($documentID==$newParentID) $modx->webAlertAndQuit($_lang["error_movedocument1"]);
 if($documentID <= 0) $modx->webAlertAndQuit($_lang["error_movedocument2"]);
-if($newParentID <= 0) $modx->webAlertAndQuit($_lang["error_movedocument2"]);
+if($newParentID < 0) $modx->webAlertAndQuit($_lang["error_movedocument2"]);
 
 $rs = $modx->db->select('parent', $modx->getFullTableName('site_content'), "id='{$documentID}'");
 $oldparent = $modx->db->getValue($rs);
