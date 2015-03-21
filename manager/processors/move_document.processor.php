@@ -47,8 +47,9 @@ function allChildren($currDocID) {
 }
 
 $evtOut = $modx->invokeEvent("onBeforeMoveDocument", array (
-	"oldparent" => $oldparent,
-	"newparent" => $newParentID
+	"id_document" => $documentID,
+	"old_parent" => $oldparent,
+	"new_parent" => $newParentID
 ));
 if (is_array($evtOut) && count($evtOut) > 0){
 	$newParent = array_pop($evtOut);
@@ -80,20 +81,20 @@ if (!array_search($newParentID, $children)) {
 			'isfolder' => 0,
 		), $modx->getFullTableName('site_content'), "id='{$oldparent}'");
 	}
-
 	// Set the item name for logger
-	$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+	$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$documentID}'"));
 	$_SESSION['itemname'] = $pagetitle;
 
 	$modx->invokeEvent("onAfterMoveDocument", array (
-		"oldparent" => $oldparent,
-		"newparent" => $newParentID
+		"id_document" => $documentID,
+		"old_parent" => $oldparent,
+		"new_parent" => $newParentID
 	));
 
 	// empty cache & sync site
 	$modx->clearCache('full');
 
-	$header="Location: index.php?r=1&id=$id&a=7";
+	$header="Location: index.php?r=1&id={$documentID}&a=7";
 	header($header);
 } else {
 	$modx->webAlertAndQuit("You cannot move a document to a child document!");
