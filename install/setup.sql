@@ -954,6 +954,8 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('31','OnDocFormSave','1','Documents'),
 ('32','OnBeforeDocFormDelete','1','Documents'),
 ('33','OnDocFormDelete','1','Documents'),
+('1034','onBeforeMoveDocument','1','Documents'),
+('1035','onAfterMoveDocument','1','Documents'),
 ('34','OnPluginFormPrerender','1','Plugins'),
 ('35','OnPluginFormRender','1','Plugins'),
 ('36','OnBeforePluginFormSave','1','Plugins'),
