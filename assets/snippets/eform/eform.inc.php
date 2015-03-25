@@ -256,7 +256,7 @@ $_dfnMaxlength = 6;
 							case "phone":
 							if (strlen($value)>0 && !preg_match(
 								'/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/', $value) ){
-								$vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_phone"];
+								$vMsg[count($vMsg)]=$desc . $_lang["ef_failed_ereg"];
 								$rClass[$name]=$invalidClass;
 							}
 							break;
