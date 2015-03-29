@@ -166,13 +166,13 @@ class POP3
     {
         $this->host = $host;
         // If no port value provided, use default
-        if (false === $port) {
+        if ($port === false) {
             $this->port = $this->POP3_PORT;
         } else {
             $this->port = (integer)$port;
         }
         // If no timeout value provided, use default
-        if (false === $timeout) {
+        if ($timeout === false) {
             $this->tval = $this->POP3_TIMEOUT;
         } else {
             $this->tval = (integer)$timeout;
@@ -215,7 +215,7 @@ class POP3
         //Rather than suppress it with @fsockopen, capture it cleanly instead
         set_error_handler(array($this, 'catchWarning'));
 
-        if (false === $port) {
+        if ($port === false) {
             $port = $this->POP3_PORT;
         }
 
@@ -231,7 +231,7 @@ class POP3
         restore_error_handler();
 
         //  Did we connect?
-        if (false === $this->pop_conn) {
+        if ($this->pop_conn === false) {
             //  It would appear not...
             $this->setError(array(
                 'error' => "Failed to connect to server $host on port $port",
