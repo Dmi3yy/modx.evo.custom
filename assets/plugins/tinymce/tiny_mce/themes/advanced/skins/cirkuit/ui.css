@@ -656,11 +656,11 @@
 	background-position: -40px 0
 }
 
-.cirkuitSkin .mceSplitButton span.mce_bullist {
+.cirkuitSkin span.mce_bullist {
 	background-position: -20px 0
 }
 
-.cirkuitSkin .mceSplitButton span.mce_numlist {
+.cirkuitSkin span.mce_numlist {
 	background-position: -80px 0
 }
 
@@ -987,7 +987,7 @@
 	border-width: 1px;
 }
 
-.cirkuitSkin span.mce_spellchecker { 
+.cirkuitSkin span.mce_spellchecker {
     background-position: -540px -20px;
 }
 
