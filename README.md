@@ -8,7 +8,7 @@
 - Откат PHPMailer с девелоперской до стабильной версии 5.2.9
 - Добавление события OnDocFormUnDelete
 - Фикс от долгой загрузки огромных веток в админке, в дереве документов
-
+- add mm_minimizablesections (http://modx.im//blog/addons/3429.html)
 
 
 1.1b-d7.1  (08.03.2015)
