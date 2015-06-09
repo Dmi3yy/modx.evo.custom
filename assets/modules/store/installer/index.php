@@ -25,8 +25,8 @@ if (version_compare(phpversion(), "5.3") < 0) {
     @ ini_set('magic_quotes_runtime', 0);
     @ ini_set('magic_quotes_sybase', 0);
 }
-$moduleurl = 'assets/modules/store/installer/index.php';
-$modulePath = dirname(__FILE__);
+$moduleurl = $modx->config['site_url'].'assets/modules/store/installer/index.php';
+$modulePath = MODX_BASE_PATH.'assets/modules/store/installer/';
 $self = $modulePath.'/index.php';
 require_once($modulePath."/functions.php");
 
@@ -69,7 +69,7 @@ ob_start();
 echo '<!DOCTYPE html>
 <html><head><title>Install</title>
 <meta http-equiv="Content-Type" content="text/html; charset="utf-8" />
-<link rel="stylesheet" href="/assets/modules/store/installer/style.css" type="text/css" media="screen" /></head>
+<link rel="stylesheet" href="'.$modx->config['site_url'].'assets/modules/store/installer/style.css" type="text/css" media="screen" /></head>
 <body><div id="contentarea"><div class="container_12"><br>';
 
 

@@ -2,6 +2,7 @@
 User-agent: *
 Disallow: /assets/backup/
 Disallow: /assets/cache/
+Allow: /assets/cache/images/
 Disallow: /assets/docs/
 Disallow: /assets/export/
 Disallow: /assets/import/
