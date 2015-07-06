@@ -1037,10 +1037,10 @@ class ditto {
 			foreach ($query as $param=>$value) {
 				
         //$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
-        
         if(!is_array($value)){
-          $queryString .= '&'.$param.'='.$value;
-        }else{
+					if (!($modx->config['seostrict']=='1' and $param == "start" and !$value)) $queryString .= '&'.$param.'='.$value;
+				}
+				else {
           foreach ($value as $key=>$val){
             $queryString .= '&'.$param.'['.$key.']='.$val;
           }
