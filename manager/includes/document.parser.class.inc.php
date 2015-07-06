@@ -827,76 +827,53 @@ class DocumentParser {
     }
 
     function getTagsFromContent($content,$left='[+',$right='+]') {
-        $_ = $this->_getTagsFromContent($content,$left,$right);
-        if(empty($_)) return array();
-        foreach($_ as $v)
-        {
-            $tags[0][] = "{$left}{$v}{$right}";
-            $tags[1][] = $v;
+        $hash = explode($left,$content);
+        foreach($hash as $i=>$v) {
+          if(0<$i) $hash[$i] = $left.$v;
         }
-        return $tags;
-    }
-    
-    function _getTagsFromContent($content, $left='[+',$right='+]') {
-        if(strpos($content,$left)===false) return array();
-        $spacer = md5('<<<MODX>>>');
-        if(strpos($content,'<[!')!==false)  $content = str_replace('<[!', "<[{$spacer}!",$content);
-        if(strpos($content,']]>')!==false)  $content = str_replace(']]>', "]{$spacer}]>",$content);
-        if(strpos($content,'!]>')!==false)  $content = str_replace('!]>', "!{$spacer}]>",$content);
-        if(strpos($content,';}}')!==false)  $content = str_replace(';}}', ";}{$spacer}}",$content);
-        if(strpos($content,'{{}}')!==false) $content = str_replace('{{}}',"{{$spacer}{}{$spacer}}",$content);
         
-        $lp = explode($left,$content);
-        $piece = array();
-        foreach($lp as $lc=>$lv) {
-            if($lc!==0) $piece[] = $left;
-            if(strpos($lv,$right)===false) $piece[] = $lv;
-            else {
-                $rp = explode($right,$lv);
-                foreach($rp as $rc=>$rv) {
-                    if($rc!==0) $piece[] = $right;
-                    $piece[] = $rv;
+        $i=0;
+        $count = count($hash);
+        $safecount = 0;
+        $temp_hash = array();
+        while(0<$count) {
+            $open  = 1;
+            $close = 0;
+            $safecount++;
+            if(1000<$safecount) break;
+            while($close < $open && 0 < $count) {
+                $safecount++;
+                if(!isset($temp_hash[$i])) $temp_hash[$i] = '';
+                if(1000<$safecount) break;
+                $remain = array_shift($hash);
+                $remain = explode($right,$remain);
+                foreach($remain as $v)
+            	{
+            		if($close < $open)
+                	{
+                		$close++;
+                		$temp_hash[$i] .= $v . $right;
+            		}
+            		else break;
                 }
+                $count = count($hash);
+                if(0<$i && strpos($temp_hash[$i],$right)===false) $open++;
+            }
+            $i++;
+        }
+        $matches=array();
+        $i = 0;
+        foreach($temp_hash as $v) {
+            if(strpos($v,$left)!==false) {
+                $v = substr($v,0,strrpos($v,$right));
+                $matches[0][$i] = $v . $right;
+                $matches[1][$i] = substr($v,strlen($left));
+                $i++;
             }
         }
-        $lc=0;
-        $rc=0;
-        $fetch = '';
-        foreach($piece as $v) {
-            if($v===$left) {
-                if(0<$lc) $fetch .= $left;
-                $lc++;
-            }
-            elseif($v===$right) {
-                if($lc===0) continue;
-                $rc++;
-                if($lc===$rc) {
-                    $tags[] = $fetch; // Fetch and reset
-                    $fetch = '';
-                    $lc=0;
-                    $rc=0;
-                }
-                else $fetch .= $right;
-            } else {
-                if(0<$lc) $fetch .= $v;
-                else continue;
-            }
-        }
-        if(!$tags) return array();
-        
-        foreach($tags as $tag) {
-            if(strpos($tag,$left)!==false) {
-                $innerTags = $this->_getTagsFromContent($tag,$left,$right);
-                $tags = array_merge($innerTags,$tags);
-            }
-        }
-        
-        foreach($tags as $i=>$tag) {
-            if(strpos($tag,"$spacer")!==false) $tags[$i] = str_replace("$spacer", '', $tag);
-        }
-        return $tags;
+        return $matches;
     }
-    
+
     /**
      * Merge content fields and TVs
      *
