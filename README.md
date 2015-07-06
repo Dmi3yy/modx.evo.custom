@@ -2,9 +2,13 @@
 Так же рекоменую скачивать сборку с сайта так как на гитхаб не всегда стабильный релиз!!!
 
 
-текущая версия 1.1b-d7.1.+  (**.07.2015)
+текущая версия 1.1b-d7.1.2  (06.07.2015)
 =======================================================
 - Breadcrumbs 1.0.5 (добавил параметр ignoreAliasVisible)
+- Ditto fix &start=0 
+- fix lib resourse.php (fix edit document)
+- codemirror add in settings indentWithTabs
+- revert getTagsFromContent (fix for [[snippet]]> )
 
 
 текущая версия 1.1b-d7.1.1  (09.06.2015)
