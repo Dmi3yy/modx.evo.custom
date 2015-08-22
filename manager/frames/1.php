@@ -42,7 +42,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
     </div>
 
     <div id="main">
-        <iframe name="main" src="index.php?a=2" scrolling="auto" frameborder="0" onload="if (mainMenu.stopWork()) mainMenu.stopWork();"></iframe>
+        <iframe name="main" id="mainframe" src="index.php?a=2" scrolling="auto" frameborder="0" onload="if (mainMenu.stopWork()) mainMenu.stopWork(); scrollWork();"></iframe>
     </div>
 
     <script language="JavaScript" type="text/javascript">
@@ -104,6 +104,39 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
                 document.onmousemove = null;
                 document.onselectstart = null
             }
+        }
+        
+        //save scrollPosition
+        function getQueryVariable(variable, query) {
+            var vars = query.split('&');
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split('=');
+                if (decodeURIComponent(pair[0]) == variable) {
+                    return decodeURIComponent(pair[1]);
+                }
+            }
+        }
+
+        function scrollWork() {
+            var frm = document.getElementById("mainframe").contentWindow;
+            currentPageY = localStorage.getItem('page_y');
+            pageUrl = localStorage.getItem('page_url');
+            if (currentPageY === undefined) {
+                localStorage.setItem('page_y') = 0;
+            }
+            console.log(pageUrl +' '+ frm.location.search.substring(1));
+            if ( getQueryVariable('a', pageUrl) == getQueryVariable('a', frm.location.search.substring(1)) ) {
+                if ( getQueryVariable('id', pageUrl) == getQueryVariable('id', frm.location.search.substring(1)) ){
+                    frm.scrollTo(0,currentPageY);
+                }
+            }
+
+            frm.onscroll = function(){
+                if (frm.pageYOffset > 0) {
+                    localStorage.setItem('page_y', frm.pageYOffset);
+                    localStorage.setItem('page_url', frm.location.search.substring(1));
+                }
+            }        
         }
     </script>
     <?php
