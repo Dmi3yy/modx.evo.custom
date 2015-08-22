@@ -4,6 +4,7 @@
 текущая версия 1.1b-d7.1.*  (*.08.2015)
 =======================================================
 - mainIframe remember scroll position after Save
+- update CodeMirror main script to 5.6 (Now work on iOS)  
 
 
 текущая версия 1.1b-d7.1.2  (06.07.2015)
