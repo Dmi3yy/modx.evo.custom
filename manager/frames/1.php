@@ -1,5 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+header("X-XSS-Protection: 0");
 $_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE 1')!==false) ? 'legacy_IE' : 'modern';
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 if(!isset($modx->config['manager_menu_height'])) $modx->config['manager_menu_height'] = '70';
@@ -123,6 +124,9 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
             pageUrl = localStorage.getItem('page_url');
             if (currentPageY === undefined) {
                 localStorage.setItem('page_y') = 0;
+            }
+            if (pageUrl === null) {
+                pageUrl = frm.location.search.substring(1);
             }
             console.log(pageUrl +' '+ frm.location.search.substring(1));
             if ( getQueryVariable('a', pageUrl) == getQueryVariable('a', frm.location.search.substring(1)) ) {
