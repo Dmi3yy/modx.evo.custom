@@ -75,6 +75,13 @@ $modx->db->update(
 		'deletedon' => 0,
 	), $modx->getFullTableName('site_content'), "id='{$id}'");
 
+// invoke OnDocFormDelete event
+$modx->invokeEvent("OnDocFormUnDelete",
+	array(
+		"id"=>$id,
+		"children"=>$children
+	));
+
 	// Set the item name for logger
 	$_SESSION['itemname'] = $content['pagetitle'];
 

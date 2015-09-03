@@ -7,12 +7,13 @@ $evtOut = $modx->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
 $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
 $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
+$path_theme = 'media/style/' . $modx->config['manager_theme'];
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo  $mxla;?>" dir="<?php echo  $textdir;?>"><head>
     <title>MODX</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
-    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
+    <link rel="stylesheet" type="text/css" href="<?=$path_theme?>/style.css" />
 
     <!-- OnManagerMainFrameHeaderHTMLBlock -->
     <?php echo $onManagerMainFrameHeaderHTMLBlock; ?>
@@ -26,7 +27,6 @@ $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
         
         function document_onload() {
             stopWorker();
-            hideLoader();
 <?php
 	if(isset($_REQUEST['r'])) echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
 ?>
@@ -93,12 +93,6 @@ $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
 
         var managerPath = "";
 
-        function hideLoader() {
-            document.getElementById('preLoader').style.display = "none";
-        }
-
-        hideL = window.setTimeout("hideLoader()", 1500);
-
         // add the 'unsaved changes' warning event handler
         if( window.addEventListener ) {
 			window.addEventListener('beforeunload',checkDirt,false);
@@ -109,7 +103,10 @@ $textdir = $modx_textdir==='rtl' ? 'rtl' : 'ltr';
 		}
 		/* ]]> */
     </script>
+    
+    <?php if (file_exists($path_theme.'/style_ext.htm')) include_once($path_theme.'/style_ext.htm'); ?>
+    
 </head>
 <body ondragstart="return false"<?php echo $modx_textdir ? ' class="rtl"':''?>>
 
-<div id="preLoader"><table width="100%" border="0" cellpadding="0"><tr><td align="center"><div class="preLoaderText"><?php echo $_style['ajax_loader']; ?></div></td></tr></table></div>
+<div id="preLoader"></div>

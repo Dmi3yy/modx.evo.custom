@@ -6,6 +6,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 if(!isset($modx->config['manager_menu_height'])) $modx->config['manager_menu_height'] = '70';
 if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '260';
 $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
+$path = 'media/style/' . $modx->config['manager_theme'];
 ?>
 <!DOCTYPE html>
 <html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
@@ -18,15 +19,15 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
         body { position: relative }
         #mainMenu, #tree, #main { position: absolute }
         #mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
-        #mainMenu { height: 85px; width: 100%; box-shadow: 0px 0px 8px #030303; z-index:1000;}
+        #mainMenu { height: 85px; width: 100%; z-index:1000;}
         #tree { width: 250px; top: 85px; left: 0; bottom: 0; }
         #main { top: 85px; left: 250px; right: 0; bottom: 0; }
         #resizer { position: absolute; top: 85px; bottom: 0; left: 250px; width: 3px; cursor: col-resize; z-index: 999;border-left:1px solid #a4b9cc!important;}
         #resizer #hideMenu {display:block;
             margin-top:10px;
-            margin-left:-9px;
+            margin-left:-25px;
             cursor:pointer;
-            background:transparent url(media/style/<?php echo $modx->config['manager_theme']; ?>/images/icons/application_side_contract.png)!important;
+            background:transparent url(<?=$path?>/images/icons/application_side_contract.png)!important;
             width:16px;
             height:16px;
         }
@@ -35,11 +36,12 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
             margin-top:-4px;
             margin-left:-9px;
             cursor:pointer;
-            background:transparent url(media/style/<?php echo $modx->config['manager_theme']; ?>/images/icons/application_get.png)!important;
+            background:transparent url(<?=$path?>/images/icons/application_get.png)!important;
             width:16px;
             height:16px;
         }
     </style>
+    
 </head>
 <body>
     <div id="resizer">
@@ -59,7 +61,6 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
         <iframe name="main" id="mainframe" src="index.php?a=2" scrolling="auto" frameborder="0" onload="if (mainMenu.stopWork()) mainMenu.stopWork(); scrollWork();"></iframe>
     </div>
     
-    <!--<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js'></script>-->
     <script language="JavaScript" type="text/javascript">
         var _startY = 85;
         var _dragElement;
