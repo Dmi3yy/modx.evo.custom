@@ -15,11 +15,11 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
     <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
     <style>
         html, body { margin: 0; padding: 0; width: 100%; height: 100% }
-        body { position: relative }
+        body { position: relative; }
         #mainMenu, #tree, #main { position: absolute }
         #mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
         #mainMenu { height: 85px; width: 100%; box-shadow: 0px 0px 8px #030303; z-index:1000;}
-        #tree { width: 250px; top: 85px; left: 0; bottom: 0; }
+        #tree { width: 250px; top: 85px; left: 0; bottom: 0; overflow:hidden;}
         #main { top: 85px; left: 250px; right: 0; bottom: 0; }
         #resizer { position: absolute; top: 85px; bottom: 0; left: 250px; width: 3px; cursor: col-resize; z-index: 999;border-left:1px solid #a4b9cc!important;}
         #resizer #hideMenu {display:block;
