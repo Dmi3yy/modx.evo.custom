@@ -1,0 +1,85 @@
+  /***************************/
+ /* vlaCalendar apple_widget */
+/***************************/
+
+/* Picker */
+
+.apple_widget .pickerBackground {
+	background-image: url('../images/apple_widget/calendar_background.png');
+}
+/* Background for IE6 - code does not validate as it is a hack */
+*html .apple_widget .pickerBackground {
+	background-image: url('../images/apple_widget/calendar_background.gif');
+}
+
+/* Calender */
+
+.apple_widget, .apple_widget table {
+	font-family: "Lucida Grande", LucidaGrande, "Lucida Sans", Geneva, Verdana, Sans Serif;
+	font-size: 11px;
+}
+.apple_widget table {
+	color: white;
+	background-color: black;
+}
+
+.apple_widget .arrowLeft {
+	background-image: url('../images/apple_widget/arrowleft.gif');
+}
+.apple_widget .arrowRight {
+	background-image: url('../images/apple_widget/arrowright.gif');
+}
+.apple_widget .arrowLeft:hover {
+	background-image: url('../images/apple_widget/arrowleft_hover.gif');
+}
+.apple_widget .arrowRight:hover {
+	background-image: url('../images/apple_widget/arrowright_hover.gif');
+}
+
+.apple_widget .label {
+	color: #ccff00 
+}
+.apple_widget .noHover:hover {
+	color: #ccff00 !important;
+}
+.apple_widget .label:hover {
+	color: white;
+}
+
+.apple_widget .month th {
+	border-bottom-color: black;
+	color: #999;
+	text-transform: uppercase;
+}
+
+/* Month */
+
+.apple_widget .month td:hover {
+	color: #ccff00;
+}
+
+.apple_widget .month td.today {
+	color: #ccff00;
+}
+
+.apple_widget .month td.outsideDay, .apple_widget .year td.outsideYear {
+	color: #313131;
+}
+.apple_widget .month td.outsideDay:hover, .apple_widget .year td.outsideYear:hover {
+	color: #999;
+}
+
+/* Year & decade */
+
+.apple_widget .year td:hover {
+	color: #ccff00;
+}
+.apple_widget .year td.current {
+	color: white;
+}
+
+.apple_widget .year td.current:hover, .apple_widget .year td.selectedcurrent, .apple_widget .year td.selectedcurrent:hover,
+	.apple_widget .year td.selected:hover, .apple_widget .month td.today:hover, .apple_widget .year td.current, .apple_widget .year td:hover,
+	.apple_widget .month td.today, .apple_widget .month td:hover, .apple_widget .year td.selected {
+	background: none;
+}

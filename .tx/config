@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+lang_map = bg: bulgarian, cs: czech, da: danish, de: german, es: spanish-utf8, fa: persian, fi: finnish, fr: francais-utf8, he: hebrew, it: italian, ja: japanese-utf8, nl: nederlands-utf8, no: norsk, pl: polish-utf8, pt_BR: portuguese-br-utf8, pt: portuguese, ru: russian-UTF8, sv: svenska-utf8, zh: chinese
+
+[modx-evolution-extras.doc-finder]
+file_filter = assets/modules/docfinder/lang/<lang>.php
+source_file = assets/modules/docfinder/lang/english.php
+source_lang = en
+type = PHP_ALT_ARRAY
