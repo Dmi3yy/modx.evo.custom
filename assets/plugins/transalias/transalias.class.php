@@ -66,9 +66,9 @@ class TransAlias {
      * @param bool $destroy
      * @return string
      *
-     * @see *deadlink*http://www.lazycat.org/software/html_entity_decode_full.phps
+     * @see *deadlink* http://www.lazycat.org/software/html_entity_decode_full.phps
      */
-    function convert_entity($matches, $destroy= true) {
+    function convert_entity($matches, $destroy = true) {
         if (isset($this->_tables['named'][$matches[1]]))
             return $this->_tables['named'][$matches[1]];
         else
@@ -173,7 +173,7 @@ class TransAlias {
         // Convert all numeric entities to their actual character
         $alias = preg_replace_callback('/&#x([0-9a-f]{1,7});/i', array($this, 'convert_hex_entity'), $alias);
         $alias = preg_replace_callback('/&#([0-9]{1,7});/', array($this, 'convert_numeric_entity'), $alias);
-        
+
         if (class_exists('Normalizer')) {
             $alias = Normalizer::normalize($alias);
         }
