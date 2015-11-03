@@ -1,9 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html>
 <head>
     <title>MODX CMF Manager Login</title>
     <meta http-equiv="content-type" content="text/html; charset=[+modx_charset+]" />
     <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width">
     <style type="text/css">
 		body {
 			font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
@@ -22,7 +23,7 @@
 		.sectionBody {
 			border: 1px solid #E6E6E6;
 			background: #FEFEFE;
-		    padding: 25px 0 0 20px;
+		    padding: 25px 20px 0 20px;
 			overflow: hidden;
 			-webkit-box-shadow: 0 0 5px rgba(50, 50, 50, 0.2);
 			-moz-box-shadow:    0 0 5px rgba(50, 50, 50, 0.2);
@@ -45,7 +46,9 @@
 			margin: 0 0 11px;
 		}
 		.sectionBody .text {
-			width: 261px;
+			-moz-box-sizing: border-box;
+    		box-sizing: border-box;
+			width: 100%;
 			height: 33px;
 			border: 1px solid #E5E5E5;
 			text-indent: 5px;
@@ -87,7 +90,7 @@
 			font-size: 14px;
 			font-weight: 100;
 		    margin-top: -7px;
-		    margin-right:20px;
+		    margin-right:1px;
 		    margin-bottom:10px;
 			background: url('media/style/[+theme+]/images/misc/enter.png') no-repeat top left;
 		}
@@ -100,7 +103,9 @@
 			margin: 0 0 7px;
 		}
 		#FMP-email {
-			width: 261px;
+			-moz-box-sizing: border-box;
+    		box-sizing: border-box;
+			width:100%;
 			height: 33px;
 			border: 1px solid #E5E5E5;
 			text-indent: 5px;
@@ -125,7 +130,7 @@
 			display: block;
 			float: right;
 			height: 33px;
-			margin: 5px 26px 22px 0;
+			margin: 5px 1px 22px 0;
 			/*text-indent: -9999px;*/
 			color:#fff;
 			font-size: 14px;
@@ -162,7 +167,7 @@
 			right: 0;
 			color: #B2B2B2;
 			margin: 0.5em auto;
-			font-size: 80%;
+			font-size: 60%;
 		}
         .gpl a, .loginLicense a {
 			color: #B2B2B2;
@@ -249,6 +254,6 @@
 <p class="loginLicense" >
 	
 </p>
-<div class="gpl">&copy; 2005-2014 by the <a href="http://modx.com/" target="_blank">MODX</a>. <strong>MODX</strong>&trade; is licensed under the GPL.</div>
+<div class="gpl">&copy; 2005-2014 by the <a href="http://modx.com/" target="_blank">MODX</a>. <strong>MODX</strong>&trade; is licensed under the GPL. &nbsp;</div>
 </body>
 </html>

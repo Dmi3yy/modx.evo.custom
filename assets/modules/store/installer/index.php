@@ -8,8 +8,8 @@ define('MGR',MODX_BASE_PATH.MGR_DIR);
 
 
 define('MODX_API_MODE', true);
-include_once MODX_BASE_PATH.'manager/includes/config.inc.php';
-include_once MODX_BASE_PATH.'manager/includes/document.parser.class.inc.php';
+include_once MGR.'/includes/config.inc.php';
+include_once MGR.'/includes/document.parser.class.inc.php';
 $modx = new DocumentParser;
 $modx->db->connect();
 $modx->getSettings();

@@ -1,5 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+header("X-XSS-Protection: 0");
 $_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE 1')!==false) ? 'legacy_IE' : 'modern';
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 if(!isset($modx->config['manager_menu_height'])) $modx->config['manager_menu_height'] = '70';
@@ -14,11 +15,11 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
     <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
     <style>
         html, body { margin: 0; padding: 0; width: 100%; height: 100% }
-        body { position: relative }
+        body { position: relative; }
         #mainMenu, #tree, #main { position: absolute }
         #mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
         #mainMenu { height: 85px; width: 100%; box-shadow: 0px 0px 8px #030303; z-index:1000;}
-        #tree { width: 250px; top: 85px; left: 0; bottom: 0; }
+        #tree { width: 250px; top: 85px; left: 0; bottom: 0; overflow:hidden;}
         #main { top: 85px; left: 250px; right: 0; bottom: 0; }
         #resizer { position: absolute; top: 85px; bottom: 0; left: 250px; width: 3px; cursor: col-resize; z-index: 999;border-left:1px solid #a4b9cc!important;}
         #resizer #hideMenu {display:block;
@@ -55,7 +56,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
     </div>
 
     <div id="main">
-        <iframe name="main" src="index.php?a=2" scrolling="auto" frameborder="0" onload="if (mainMenu.stopWork()) mainMenu.stopWork();"></iframe>
+        <iframe name="main" id="mainframe" src="index.php?a=2" scrolling="auto" frameborder="0" onload="if (mainMenu.stopWork()) mainMenu.stopWork(); scrollWork();"></iframe>
     </div>
     
     <!--<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js'></script>-->
@@ -119,6 +120,42 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
                 document.onselectstart = null
             }
         }
+
+        //save scrollPosition
+        function getQueryVariable(variable, query) {
+            var vars = query.split('&');
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split('=');
+                if (decodeURIComponent(pair[0]) == variable) {
+                    return decodeURIComponent(pair[1]);
+                }
+            }
+        }
+
+        function scrollWork() {
+            var frm = document.getElementById("mainframe").contentWindow;
+            currentPageY = localStorage.getItem('page_y');
+            pageUrl = localStorage.getItem('page_url');
+            if (currentPageY === undefined) {
+                localStorage.setItem('page_y') = 0;
+            }
+            if (pageUrl === null) {
+                pageUrl = frm.location.search.substring(1);
+            }
+            console.log(pageUrl +' '+ frm.location.search.substring(1));
+            if ( getQueryVariable('a', pageUrl) == getQueryVariable('a', frm.location.search.substring(1)) ) {
+                if ( getQueryVariable('id', pageUrl) == getQueryVariable('id', frm.location.search.substring(1)) ){
+                    frm.scrollTo(0,currentPageY);
+                }
+            }
+
+            frm.onscroll = function(){
+                if (frm.pageYOffset > 0) {
+                    localStorage.setItem('page_y', frm.pageYOffset);
+                    localStorage.setItem('page_url', frm.location.search.substring(1));
+                }
+            }        
+        }
     </script>
     <?php
     $modx->invokeEvent('OnManagerFrameLoader',array('action'=>$action));
@@ -126,3 +163,4 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 </body>
 </html>
 <?php
+//

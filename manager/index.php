@@ -74,8 +74,11 @@ if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
 	exit;
 }
 
-define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
-                                    // the manager instead of seperately.
+// we use this to make sure files are accessed through
+// the manager instead of seperately.
+if (!defined('IN_MANAGER_MODE')) {
+	define("IN_MANAGER_MODE", "true");
+}
 
 // harden it
 require_once('./includes/protect.inc.php');
@@ -607,6 +610,10 @@ switch ($action) {
     case 105:
         // get the duplicate processor
         include_once "processors/duplicate_plugin.processor.php";
+    break;
+    case 119:
+        // get the purge processor
+        include_once "processors/purge_plugin.processor.php";
     break;
 /********************************************************************/
 /* view phpinfo                                                     */
