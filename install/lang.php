@@ -13,7 +13,7 @@
 $_lang = array ();
 
 #default fallback language file - english
-$install_language = "russian-UTF8";
+$install_language = "english";
 
 $_langFiles= array (
  "en" => "english",
