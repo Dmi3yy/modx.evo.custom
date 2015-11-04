@@ -922,9 +922,9 @@ class DocumentParser {
                    $content= str_replace($matches[0][$i], $this->config[$matches[1][$i]], $content);
                }
            }
-       }
-       return $content; 
-    }
+		}
+		return $content;
+	}
 
 	/**
      * Merge chunks
