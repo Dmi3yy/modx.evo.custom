@@ -1852,7 +1852,17 @@ class DocumentParser {
         }
         return $parents;
     }
-
+    
+    function getUltimateParentId($id,$top=0) {
+        $i=0;
+        while ($id &&$i<20) {
+            if($top==$this->aliasListing[$id]['parent']) break;
+            $id = $this->aliasListing[$id]['parent'];
+            $i++;
+        }
+        return $id;
+    }
+    
     /**
      * Returns an array of child IDs belonging to the specified parent.
      *
@@ -2349,6 +2359,22 @@ class DocumentParser {
 		}
 	}
 	
+    function getField($field='content', $docid='') {
+        if(empty($docid) && isset($this->documentIdentifier))
+            $docid = $this->documentIdentifier;
+        elseif(!preg_match('@^[0-9]+$@',$docid))
+            $docid = $this->getIdFromAlias($identifier);
+        
+        if(empty($docid)) return false;
+        
+        $doc = $this->getDocumentObject('id', $docid);
+        if(is_array($doc[$field])) {
+            $tvs= $this->getTemplateVarOutput($field, $docid,null);
+            return $tvs[$field];
+        }
+        return $doc[$field];
+    }
+    
     /**
      * Returns the page information as database row, the type of result is
      * defined with the parameter $rowMode
@@ -3364,16 +3390,16 @@ class DocumentParser {
      *                            Default: false
      * @return string|array
      */
-    function getUserDocGroups($resolveIds= false) {
-        if ($this->isFrontend() && isset ($_SESSION['webDocgroups']) && isset ($_SESSION['webValidated'])) {
-            $dg= $_SESSION['webDocgroups'];
-            $dgn= isset ($_SESSION['webDocgrpNames']) ? $_SESSION['webDocgrpNames'] : false;
+    function getUserDocGroups($resolveIds = false) {
+        if ($this->isFrontend() && isset($_SESSION['webDocgroups']) && isset($_SESSION['webValidated'])) {
+            $dg = $_SESSION['webDocgroups'];
+            $dgn = isset($_SESSION['webDocgrpNames']) ? $_SESSION['webDocgrpNames'] : false;
         } else
-            if ($this->isBackend() && isset ($_SESSION['mgrDocgroups']) && isset ($_SESSION['mgrValidated'])) {
-                $dg= $_SESSION['mgrDocgroups'];
-                $dgn= isset ($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
+            if ($this->isBackend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
+                $dg = $_SESSION['mgrDocgroups'];
+                $dgn = isset($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
             } else {
-                $dg= '';
+                $dg = '';
             }
         if (!$resolveIds)
             return $dg;
@@ -3383,9 +3409,10 @@ class DocumentParser {
             else
                 if (is_array($dg)) {
                     // resolve ids to names
+                    $dgn = array();
                     $ds = $this->db->select('name', $this->getFullTableName("documentgroup_names"), "id IN (".implode(",", $dg).")");
-                    while ($row= $this->db->getRow($ds))
-                        $dgn[count($dgn)]= $row['name'];
+                    while ($row = $this->db->getRow($ds))
+                        $dgn[] = $row['name'];
                     // cache docgroup names to session
                     if ($this->isFrontend())
                         $_SESSION['webDocgrpNames']= $dgn;
