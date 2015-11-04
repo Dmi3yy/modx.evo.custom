@@ -1784,7 +1784,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .dp_cal th,
 .dp_cal td {
 	width: 14.2857%;
-	text-align: center;
+	text-align: center !important;
 	font-size: 1em;
 	padding: 2px 0;
 }
