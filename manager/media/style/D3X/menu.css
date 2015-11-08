@@ -1,0 +1,84 @@
+#topMenu {	 background: url("images/misc/bg_top.jpg") #23393C; }
+#nav * { box-sizing: border-box;}
+#nav {
+	padding: 1em 1em 20px 1em;
+	margin: 0;
+	/*padding: .5em 0 0 0;*/
+	border-top: #666 1px solid;
+	position: relative;
+}
+#nav li { list-style: none}
+#nav li a { color: #ccc; text-decoration: none;
+	margin: 0px;
+	padding: .2em .4em;
+	display: inline-block;
+	font-size: 1.1em;}
+#nav a:hover { color: #fff}
+#nav > li {
+	padding: 0 0 .5em 0;
+	margin: 0 0 .5em 0;
+	border-bottom: #666 1px solid;
+}
+#nav > li > a {
+	line-height: 1.5em;
+	display: inline-block;
+	width: 40%;
+	vertical-align: top;
+	font-size: 1.6em;
+	color: #999; text-align: right;
+	cursor: default;
+	padding: 0 1em 0 0;
+}
+#nav > li > a:hover {
+	color: #999;
+}
+#nav > li > ul {
+	display: inline-block;
+	width: 60%;
+	margin: 0px;
+}
+
+
+@media screen and (min-width: 500px){
+	#nav > li > a { width: 30%}
+	#nav > li > ul { width: 70%}
+}
+@media screen and (min-width: 1024px){
+	#nav { position: absolute;
+		border-top: none;
+		padding-top: 0px;
+		padding-bottom: 0px;
+		bottom: 0px;
+		height: 68px;
+		width: 100%;}
+	#nav > li { display: inline-block; border-bottom: none;
+		padding: 0px;
+		margin: 0px;}
+	#nav li a { padding: .4em;}
+	#nav > li > a { width: auto; padding: .4em .8em; font-size: 1.2em; color: #ccc; cursor: pointer; position: relative; z-index: 10;
+	border-top: transparent 1px solid;}
+	#nav > li.active > a {
+		border-radius: 4px 4px 0 0;
+		background: url("images/misc/topmenu.png") #78808d;
+		border-top: rgba(255,255,255, .2) 1px solid;
+		color: #fff;
+	}
+	#nav > li > a:hover { color: #fff}
+	#nav > li > ul { position: absolute; z-index: 1; display: none; left: 0px;
+		background: url("images/misc/topmenu.png") #78808d;
+		box-shadow: 0 0 10px rgba(0,0,0, .4);
+		border-top: rgba(255,255,255, .2) 1px solid;
+		padding: 0 1.5em;
+	}
+	#nav > li.active > ul {display: block; width: 100%;}
+
+	#nav > li ul li { display: inline-block; margin-bottom: 4px;}
+	#nav > li ul li a {
+	padding: .4em .8em .3em .8em;
+		transition: all ease-in-out .2s;
+	}
+	#nav > li ul li a:hover {
+		background: rgba(0,0,0, .1);
+		border-radius: 4px;
+	}
+}

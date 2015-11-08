@@ -224,7 +224,7 @@ hr {
 #supplementalNav {
 	float: right;
 	background: transparent;
-	padding: 0 0 30px;
+	padding: 0 0 5px;
 	margin: 0;
 	color: #89939E;
 }
@@ -903,152 +903,12 @@ a.hometblink:hover {
 		margin: 3px 28px 3px 1px;
 	}
 
-/* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
-#topMenu {
-	background: url("images/misc/headers.jpg") repeat scroll 0 0 #23393C;
-}
-#Navcontainer {
-	padding: 0 10px;
-	color: #fff;
-}
-#nav {
-	margin: 0;
-	padding: 0;
-	height: 25px;
-	width: 100%;
-	position: absolute;
-	top: 18px;
-	overflow: visible !important;
-}
-	.rtl #nav {
-		right: 10px;
-	}
-#nav ul {
-	display: none;
-	height: 26px;
-	position: relative;
-	z-index: 500;
-	margin: 0 0 0 -10px;
-	padding: 0 0 0 20px;
-}
-	.rtl #nav ul {
-		margin: 0 -10px 0 0;
-	    padding: 0 20px 0 0;
-	}
-#nav li {
-	list-style: none;
-	float: left;
-	width: auto;
-	margin: 0 0 0 5px;
-	padding: 0;
-}
-	.rtl #nav li {
-		float: right;
-		margin: 0 0 0 3px;
-	}
-#nav li a {
-    display: inline-block !important;
-    height: 31px !important;
-    background: scroll transparent url(images/misc/toptaba.png) !important;
-    padding: 0 14px 0 16px !important;
-    font: normal normal 13px/31px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    color:#BDC1C8 !important;
-    text-decoration: none;
-    border-radius: 3px 3px 0 0;
-    border-right: 1px solid #1a1c1f;
-}
-#nav li:hover a{
-    border-right: 1px solid #3c424e;
-    color: #fff !important;
-
-}
-
-#nav li ul li a {
-	padding: 0 18px !important;
-}
-#nav li ul li a {
-	background: #d4d4d4;
-	float: left;
-	width: auto;
-}
-	.rtl #nav li ul li a {
-	    float: right;
-	}
-#nav a:hover {
-	color: #fff;
-}
-#nav a:active {
-	color: #fff;
-}
-
-#nav li.active a {
-    display: inline-block !important;
-    height: 32px !important;
-    background: scroll transparent url(images/misc/toptab.jpg) !important;
-    padding:0 14px 0 16px !important;
-    font: normal normal 13px/31px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    color: #fff !important;
-    text-shadow: 1px 1px 0 rgba(221,223,233,0.29) !important;
-    border-radius: 3px 3px 0 0;
-    text-decoration: none;
-    border-right: 1px solid #767f8c;
-}
-#nav li.active a:hover {
-	cursor: pointer;
-}
-#nav li.active ul.subnav {
-	display: block;
-	position:fixed;
-	bottom:0;
-    padding-bottom: 4px;
-	left: 0;
-	/*border-top: 1px solid #999;*/
-	border-bottom: 1px solid #434b58;
-}
-	#nav li.active ul.subnav {
-	    right: 0;
-	}
-#nav li.active ul.subnav a {
-	/*color: #fff;
-	font-weight: normal;
-	background: #657587;
-	cursor: pointer;
-	border-left: none;*/
-    color: #e3ecef !important;
-    height: 23px !important;
-    margin:0 0 0 10px !important;
-    padding: 0px 10px 3px 10px !important;
-    display:inline-block !important;
-    font: normal normal normal 12px/28px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    background: none !important;
-    text-shadow: 1px 1px 0 #6c737f !important;
-    border-right: 0 solid black;
-}
-
-#nav li.active ul.subnav a:hover {
-	border-radius: 7px !important;
-    color: #fff!important;
-    text-shadow: 0px 0px 0 #6c737f !important;
-    text-decoration: underline;
-}
-
-#nav li.active ul.subnav li {
-	margin: 0;
-}
-
-#nav li.active ul.subnav a:active {
-	color: #ccc;
-}
-
-
-#searchform {z-index: 1000;position: absolute;right:8px;top:17px;}
-@media (max-width: 940px) {
-  #searchform {display:none;}
-}
+ /* =========================================================================== Search form */
+#searchform { margin: 10px 1em 10px 1em;}
 #searchform input[type=text]{
-	margin-top: 35px;
 	height: 29px;
-	width: 55px;
+	width: 100%;
+	text-align: left;
 	box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
 	-moz-box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
 	-webkit-box-shadow: -2px 2px 5px rgba(0,0,0,0.4) inset;
@@ -1061,13 +921,23 @@ a.hometblink:hover {
 	border: none;
 	background: rgba(0,0,0,0.3);
 	color: white;
-	text-align: center;
-}
-#searchform input[type=text]:focus{
-	width: 200px;
-	text-align: left;
 }
 
+@media (min-width: 1024px) {
+	#searchform {
+		z-index: 1000;
+		position: absolute;
+		right: 30px;
+		top: 43px;}
+	#searchform input[type=text]{
+		width: 55px;
+		text-align: center;
+	}
+	#searchform input[type=text]:focus{
+		 width: 200px;
+		 text-align: left;
+	 }
+}
 /* -------------------------[ Contextual Menu used in the Tree Menu ]--- */
 #mx_contextmenu {
 	position: absolute;
@@ -1452,9 +1322,9 @@ fieldset#preview h2.tab {
 	background: url(images/misc/action-bg.gif) repeat scroll 0 0 rgba(230, 230, 230, 0.8);
 	height: 25px;
 	margin: 5px;
-	padding: 5px 1px 9px 5px;
+	padding: 5px 40px 9px 5px;
 	position: fixed;
-	right: 0;
+	right: 5px;
 	text-align: right;
 	top: 0px;
 	z-index: 100;

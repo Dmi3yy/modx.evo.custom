@@ -1,0 +1,94 @@
+html, body { margin: 0; padding: 0; width: 100%; height: 100% }
+body { position: relative; background: #eeeeee url(images/misc/mainbg.png) }
+#mainMenu, #tree, #main { position: absolute }
+#mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
+#mainMenu { height: 0px; width: 100%; box-shadow: 0px 0px 10px #030303; z-index:1000; border-bottom: #555 1px solid;}
+#tree { width: 0px; top: 0px; left: 0; bottom: 0;  z-index: 1;
+	box-shadow: 10px 0px 20px rgba(0,0,0,.1);}
+#main {right: 0; bottom: 0;	left:0px; top: 0px;
+	transition: left ease-in-out .3s,top ease-in-out .3s;
+}
+
+#tree.on {width: 250px;}
+#mask_resizer {
+	z-index: -1;
+}
+.drag #mask_resizer {	z-index: 10000;}
+.drag #tree #resizer {background: #D7F3F3 ;}
+.drag #main, .drag #tree { transition: none;}
+
+#resizer { height 100%; width: 0px; cursor: col-resize; z-index: 999;
+	position: absolute;
+	margin-left: -3px;
+	right: 0px;
+	/*border-left: 1px solid #C8D8E6;*/
+	height: 100%;
+}
+#resizer .panel_toggl {
+	margin-top: 44px;
+	margin-left: -10px;
+	padding-left: 20px;
+}
+.on #resizer .panel_toggl {
+	margin-left: -15px;
+	padding-left: 0px;
+}
+#resizer2 { width: 3px; z-index: 999;
+	position: absolute;
+	height: 10px;
+	bottom: 0px;
+	right: 10px;}
+
+#resizer2 .panel_toggl {
+	margin-top: 0px;
+	margin-left: -35px;
+	padding-top: 20px;
+}
+.on #resizer2 .panel_toggl {
+	margin-top: -23px;
+	padding-top: 0px;
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+	border: rgba(255,255,255, .3) 1px solid;
+}
+.panel_toggl {
+	display: block;
+	cursor:pointer;
+	width: 30px;
+	height: 30px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	background: #555;
+	text-align: center;
+	transition: all ease-in-out .2s;
+	position: absolute;
+	z-index: 100;
+}
+.panel_toggl:before {
+	content:'\2630';
+	color: #fff;
+	line-height: 30px;
+	font-size: 20px;
+}
+.panel {
+	transition: all ease-in-out .3s;
+}
+#mobile_width {width: 1024px; position: absolute;}
+/*!!!  #mobile_width width and next media-query 'min-width' value must be equal to correct panels toggle in 1.php !!! */
+@media screen and (min-width: 1024px){
+	#resizer {width: 4px;}
+	#tree.on ~ #main {left: 250px;}
+	#mainMenu.on { height: 85px;}
+	#mainMenu.on ~ #tree, #mainMenu.on ~ #main {top: 85px;}
+	.panel_toggl {opacity: .7;}
+	.panel_toggl:hover {opacity: 1;}
+{
+	position: absolute;
+	bottom: auto;
+	right: auto;
+	border: none;
+}
+}
+
