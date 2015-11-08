@@ -84,7 +84,9 @@ body { position: relative; background: #eeeeee url(images/misc/mainbg.png) }
 	#mainMenu.on ~ #tree, #mainMenu.on ~ #main {top: 85px;}
 	.panel_toggl {opacity: .7;}
 	.panel_toggl:hover {opacity: 1;}
-{
+	#resizer2 .panel_toggl {
+		margin-left: -50px;}
+.on #resizer2 .panel_toggl {
 	position: absolute;
 	bottom: auto;
 	right: auto;
