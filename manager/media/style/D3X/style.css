@@ -292,7 +292,7 @@ form select
     padding:4px;
     -webkit-font-smoothing: antialiased;
     margin: 0 0 0 0;
-    width:auto!;
+    width:auto;
 
 }
 form select[multiple]{
@@ -1868,4 +1868,19 @@ code {font-size:inherit;font-family: 'Courier New','Courier', monospace;backgrou
 }
 .sectionBody table tr:first-child TD{
 	vertical-align: middle;
+}
+
+/*========================================*/
+@media screen and (max-width: 1024px){
+	/*.tab-page {border: red 10px solid;}*/
+	/*.tab-page td.warning, .tab-page td.warning + td {*/
+		/*display: block;*/
+	/*}*/
+	/*.tab-page td:empty { display: none;}*/
+	td.warning {     width: 20%;
+		white-space: normal;}
+	.tab { display: table-cell; float: none;}
+	h1 { margin-top: 50px;}
+	.actionButtons a {padding: 7px 8px 23px 4px; font-size: 0px;}
+	#actions, .actionButtons img { opacity: 1;}
 }
