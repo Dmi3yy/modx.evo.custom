@@ -17,7 +17,9 @@ body.fixed {
 	-ms-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
 }
+#tree iframe { display: none;}
 #tree.on {width: 250px;}
+#tree.on iframe { display: block;}
 #mainMenu.on {height:100%; overflow-y: scroll; -webkit-overflow-scrolling:touch;}
 #mask_resizer {
 	z-index: -1;
