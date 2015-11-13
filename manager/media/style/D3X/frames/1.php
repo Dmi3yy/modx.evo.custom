@@ -145,7 +145,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
             var mobile_width = $('#mobile_width').width();
 
             function check_toggled(toggl){
-                console.log($('body').width() + ' - ' + mobile_width);
+                //console.log($('body').width() + ' - ' + mobile_width);
                 var panel = $(toggl).closest('.panel');
                 if($('body').width() > mobile_width){
                     panel.addClass('on');
@@ -161,17 +161,31 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
                 check_toggled('#body:not(.mobile) .panel_toggl');
             });
 
+            //----ios fixed 
+            var deviceAgent = navigator.userAgent.toLowerCase();
+            var iOS = navigator.platform.toLowerCase();
+            var agentID = iOS.match(/(iphone|ipod|ipad)/);
+            if(agentID){
+                //$(window).on("touchmove", function(event) {
+                    //var e = event.originalEvent;
+                    //console.log('touch ' + e.touches);
+                $('body').addClass('ios');
+                //});
+            }
+            
             $('.panel_toggl').click(function(){
+                
+                
                 $(this).closest('.panel').toggleClass('on');
                 if($(this).is('#hideMenu')){
                     $('#tree, #main, #resizer').attr('style', '');
-                    $('#tree.on, #tree.on iframe').height($('#body').height());
+                    
                     
                 }else{ // hideTopMenu
                     if($('#body').hasClass('mobile')){
                         var topMenu = $('#mainMenu > iframe').contents().find("#topMenu");
 //                        console.log('Navcontainer=' + topMenu.height() );
-                        $('#mainMenu > iframe').contents().find('#supplementalNav').text(topMenu.height() + '=' + window.innerHeight );
+                        
                         $('#mainMenu.on iframe').css('height',  topMenu.height());
                         $('#mainMenu:not(.on) iframe').attr('style', '');
                         $('#mainMenu.on').css('height', window.innerHeight);
@@ -179,6 +193,13 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
                         
                         $('body').toggleClass('fixed');
                     }
+                }
+            });
+            $('body.mobile.ios #main iframe').load(function(){          
+                var main_H = $(this).contents().find("body").height();
+                //$('#mainMenu > iframe').contents().find('#supplementalNav').text(main_H + ' > ' + window.innerHeight );
+                    $('#tree.on, #tree.on iframe').height(main_H);
+                if(window.innerHeight < main_H){
                 }
             });
             $('body.mobile #mainMenu iframe').load(function(){
@@ -190,22 +211,6 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
                     //console.log('click');
                 });
             });
-
-            //------------- tables data-attr
-            // function v_table(table){
-            //     var test = $(table).attr('bgcolor');
-            //     var td_names_arr = [];
-            //     var td_names = $(table).find('thead > tr > td');
-            //     var tr = $(table).find('tr');
-            //     td_names.each(function(){
-            //         $(this).addClass('zzz');
-            //         td_names_arr.push($(this).text().split(' ')[0]);
-            //     })
-            // }
-            // $('body.mobile #main iframe').load(function(){
-            //     v_table($(this).contents().find('#tabOnline table'));
-            // })
-
             //------------ iphone tap
             $(".panel_toggl").on('touchstart', function (e) {
              $(this).trigger('click');

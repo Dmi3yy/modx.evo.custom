@@ -923,7 +923,7 @@ a.hometblink:hover {
 	color: white;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
 	#searchform {
 		z-index: 1000;
 		position: absolute;
@@ -1869,7 +1869,31 @@ code {font-size:inherit;font-family: 'Courier New','Courier', monospace;backgrou
 	vertical-align: middle;
 }
 
-/*========================================*/
+/*====================QUERIES====================*/
+@media screen and (max-width: 500px){
+	
+	td.warning {     width: 20%;
+		white-space: normal;}
+	.tab { display: table-cell; float: none;}
+	h1 { margin-top: 50px;}
+	#actions .actionButtons a {padding: 7px 8px 23px 4px; font-size: 0px;}
+	#actions, .actionButtons img { opacity: 1;}
+
+	.dynamic-tab-pane-control .tab-row {	background: none; height: auto; margin-bottom: 10px;}
+	.dynamic-tab-pane-control .tab-row .tab { float:none; padding: 4px 10px 0px 10px; margin: 2px; display: inline-block !important; vertical-align: middle; line-height: 18px;  height: 28px; box-sizing: border-box;}
+	.dynamic-tab-pane-control .tab-row .tab.selected {border:#d2dbdd 1px solid; border-radius: 4px; padding: 4px 10px 0px 10px; margin: 2px 2px; position: static; height: 28px; line-height: 19px;}
+	form#mutate select.inputBox, form#mutate input, form#mutate textarea { width: 89%;}
+	.tab-page > table td {
+		display: block;
+		width: 100% !important;
+		height: auto !important;
+	}
+	.tab-page > table td:first-of-type { margin: 5px 0 0 0; border-top: #ddd 1px dotted; padding-bottom: 0px !important;}
+	.tab-page > table td .warning { padding-left: 5px;}
+	
+}
+
+
 @media screen and (max-width: 1024px){
 	/*.tab-page {border: red 10px solid;}*/
 	/*.tab-page td.warning, .tab-page td.warning + td {*/
@@ -1881,16 +1905,6 @@ code {font-size:inherit;font-family: 'Courier New','Courier', monospace;backgrou
 	}
 	.sectionBody, .layerVisible { margin: 5px; padding: 5px; overflow: auto;}
 	#tabBackup { overflow: auto;}
-	td.warning {     width: 20%;
-		white-space: normal;}
-	.tab { display: table-cell; float: none;}
-	h1 { margin-top: 50px;}
-	#actions .actionButtons a {padding: 7px 8px 23px 4px; font-size: 0px;}
-	#actions, .actionButtons img { opacity: 1;}
-
-	.dynamic-tab-pane-control .tab-row {	background: none; height: auto; margin-bottom: 10px;}
-	.dynamic-tab-pane-control .tab-row .tab { float:none; padding: 4px 10px 0px 10px; margin: 2px; display: inline-block !important; vertical-align: middle; line-height: 18px;  height: 28px; box-sizing: border-box;}
-	.dynamic-tab-pane-control .tab-row .tab.selected {border:#d2dbdd 1px solid; border-radius: 4px; padding: 4px 10px 0px 10px; margin: 2px 2px; position: static; height: 28px; line-height: 19px;}
 	
 	#tabhome .sectionBody table tr TD {
 		display: block;
@@ -1901,13 +1915,6 @@ code {font-size:inherit;font-family: 'Courier New','Courier', monospace;backgrou
 		width: 48%;     margin: 10px 0px;
 	}
 	.sectionBody table tr TD >  table { width:100% !important; }
-	.tab-page > table td {
-		display: block;
-		width: 100% !important;
-		height: auto !important;
-	}
-	.tab-page > table td:first-of-type { margin: 5px 0 0 0; border-top: #ddd 1px dotted; padding-bottom: 0px !important;}
-	.tab-page > table td .warning { padding-left: 5px;}
 	form#mutate select.inputBox { width: 90% !important;}
 
 
