@@ -7,17 +7,17 @@ if(!isset($modx->config['manager_menu_height'])) $modx->config['manager_menu_hei
 if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '260';
 $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 ?>
-    <!DOCTYPE html>
-    <html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
-    <head>
-        <title><?php echo $site_name?> - (MODX CMS Manager)</title>
-        <meta name="viewport" content="initial-scale=1, width=device-width"/>
-        <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
-        <link href="media/style/D3X/1.css" rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-        <script type="text/javascript" src="../assets/plugins/managermanager/js/jquery-1.9.1.min.js"></script>
-    </head>
-    <body id="body">
+<!DOCTYPE html>
+<html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
+<head>
+    <title><?php echo $site_name?> - (MODX CMS Manager)</title>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
+    <link href="media/style/D3X/1.css" rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="../assets/plugins/managermanager/js/jquery-1.9.1.min.js"></script>
+</head>
+<body id="body">
 
     <div id="mobile_width"></div>
     <div id="mainMenu" class="panel">
@@ -46,6 +46,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 
         var _mainMenu_H = <?php echo(!isset($modx->config['manager_menu_height']) ? $modx->config['manager_menu_height'] : "70"); ?>;
         var _tree_W = localStorage.getItem('_tree_W');
+//        console.log(' storage= ' + _tree_W);
         if (_tree_W === undefined) {
             _tree_W = <?php echo(!isset($modx->config['manager_tree_width']) ? $modx->config['manager_tree_width'] : "260"); ?>;
         }
@@ -63,7 +64,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
             if (e == null) e = window.event;
             _dragElement = e.target != null ? e.target : e.srcElement;
 
-            if ((e.button == 1 && window.event != null || e.button == 0) && _dragElement.id == 'resizer') {
+                if ((e.button == 1 && window.event != null || e.button == 0) && _dragElement.id == 'resizer') {
 //                document.body.className = "drag";
                 document.getElementById('mobile_width').className = "drag";
                 document.onmousemove = OnMouseMove;
@@ -124,6 +125,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
             if (pageUrl === null) {
                 pageUrl = frm.location.search.substring(1);
             }
+//            console.log(pageUrl +' '+ frm.location.search.substring(1));
             if ( getQueryVariable('a', pageUrl) == getQueryVariable('a', frm.location.search.substring(1)) ) {
                 if ( getQueryVariable('id', pageUrl) == getQueryVariable('id', frm.location.search.substring(1)) ){
                     frm.scrollTo(0,currentPageY);
@@ -135,15 +137,15 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
                     localStorage.setItem('page_y', frm.pageYOffset);
                     localStorage.setItem('page_url', frm.location.search.substring(1));
                 }
-            }
+            }        
         }
-
         //===== jQuery
         $( document ).ready(function() {
 
             var mobile_width = $('#mobile_width').width();
 
             function check_toggled(toggl){
+                console.log($('body').width() + ' - ' + mobile_width);
                 var panel = $(toggl).closest('.panel');
                 if($('body').width() > mobile_width){
                     panel.addClass('on');
@@ -151,6 +153,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
                 }else{
                     panel.removeClass('on').attr('style', '');
                     $('#body').addClass('mobile');
+                    $('#tree, #tree iframe').height($('#body').height());
                 }
             }
             check_toggled('.panel_toggl');
@@ -162,11 +165,18 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
                 $(this).closest('.panel').toggleClass('on');
                 if($(this).is('#hideMenu')){
                     $('#tree, #main, #resizer').attr('style', '');
+                    $('#tree.on, #tree.on iframe').height($('#body').height());
+                    
                 }else{ // hideTopMenu
                     if($('#body').hasClass('mobile')){
                         var topMenu = $('#mainMenu > iframe').contents().find("#topMenu");
+//                        console.log('Navcontainer=' + topMenu.height() );
+                        $('#mainMenu > iframe').contents().find('#supplementalNav').text(topMenu.height() + '=' + window.innerHeight );
                         $('#mainMenu.on iframe').css('height',  topMenu.height());
                         $('#mainMenu:not(.on) iframe').attr('style', '');
+                        $('#mainMenu.on').css('height', window.innerHeight);
+                        $('#mainMenu:not(.on)').attr('style', '');
+                        
                         $('body').toggleClass('fixed');
                     }
                 }
@@ -177,21 +187,37 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
                 $(this).contents().find(' #nav .subnav a').click(function(){
                     $( "#hideTopMenu" ).click();
                     $('body').removeClass('fixed');
-//                    console.log('click');
+                    //console.log('click');
                 });
             });
+
+            //------------- tables data-attr
+            // function v_table(table){
+            //     var test = $(table).attr('bgcolor');
+            //     var td_names_arr = [];
+            //     var td_names = $(table).find('thead > tr > td');
+            //     var tr = $(table).find('tr');
+            //     td_names.each(function(){
+            //         $(this).addClass('zzz');
+            //         td_names_arr.push($(this).text().split(' ')[0]);
+            //     })
+            // }
+            // $('body.mobile #main iframe').load(function(){
+            //     v_table($(this).contents().find('#tabOnline table'));
+            // })
+
             //------------ iphone tap
             $(".panel_toggl").on('touchstart', function (e) {
-                $(this).trigger('click');
-                e.preventDefault();
+             $(this).trigger('click');
+             e.preventDefault();
             });
         });
     </script>
     <?php
     $modx->invokeEvent('OnManagerFrameLoader',array('action'=>$action));
     ?>
-    <div id="mask_resizer"></div>
-    </body>
-    </html>
+<div id="mask_resizer"></div>
+</body>
+</html>
 <?php
 //

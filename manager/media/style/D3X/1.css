@@ -2,14 +2,26 @@ html, body { margin: 0; padding: 0; width: 100%; height: 100% }
 body { position: relative; background: #eeeeee url(images/misc/mainbg.png)  min-width:690px;}
 body.fixed {
 	position:fixed;
-	overflow:hidden;}
+overflow: hidden;}
+#body {overflow:hidden; -webkit-overflow-scrolling:touch;}
 #mainMenu, #tree, #main { position: absolute }
-#mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
+#mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%;
+ -webkit-overflow-scrolling:touch;}
 #mainMenu { height: 0px; width: 100%; box-shadow: 0px 0px 10px #030303; z-index:1000; border-bottom: #555 1px solid;
 	background: url("images/misc/bg_top.jpg") #23393C; }
-#tree { width: 0px; top: 0px; left: 0; bottom: 0;  z-index: 1;
-	box-shadow: 10px 0px 20px rgba(0,0,0,.1);
-	background: #e3efef url(images/misc/submenu-bg.png) }
+#topMenu { padding-bottom: 50px;}
+#tree { width: 0px; top: 0px; left: 0; bottom: 0;  z-index: 1; min-height: 100vh;
+ 	overflow: hidden; padding-right: 25px;
+}
+#tree iframe { z-index:2; opacity:0; padding-right:25px; box-sizing: border-box;
+		height: 1px;
+        min-height: 100%;
+        *height: 100%;}
+#tree:before { content:' '; position:absolute; top: 0px; right: 22px; bottom: -3000px; left: 0px;
+	background: #e3efef url(images/misc/submenu-bg.png);
+	z-index:1;	
+	box-shadow: 5px 0px 20px rgba(0,0,0,.3);
+}
 #main {right: 0; bottom: 0;	left:0px; top: 0px;
 	transition: left ease-in-out .3s,top ease-in-out .3s;
 	-webkit-transform: translate3d(0px, 0px, 0px);
@@ -17,9 +29,8 @@ body.fixed {
 	-ms-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
 }
-#tree iframe { display: none;}
 #tree.on {width: 250px;}
-#tree.on iframe { display: block;}
+#tree.on iframe {opacity:1}
 #mainMenu.on {height:100%; overflow-y: scroll; -webkit-overflow-scrolling:touch;}
 #mask_resizer {
 	z-index: -1;
@@ -37,7 +48,7 @@ body.fixed {
 }
 #resizer .panel_toggl {
 	margin-top: 10px;
-	margin-left: -10px;
+	margin-left: -50px;
 	padding-left: 20px;
 }
 .on #resizer .panel_toggl {
@@ -97,9 +108,11 @@ body.fixed {
 	#resizer {width: 4px;}
 	#hideMenu {background: url('/manager/media/style/D3X/images/icons/application_side_contract.png') 50% no-repeat;}
 	#hideTopMenu  {background: url('/manager/media/style/D3X/images/icons/application_get.png') 50% 80% no-repeat;}
+	#tree iframe {opacity:1}
 	#tree.on ~ #main {left: 250px;}
 	#mainMenu.on { height: 85px; overflow-y: hidden;}
 	#mainMenu.on ~ #tree, #mainMenu.on ~ #main {top: 85px;}
+	#topMenu { padding-bottom: 0px;}
 	.panel_toggl {opacity: .7;
 		transition: top ease-in-out .2s;}
 	.panel_toggl:hover {opacity: 1;}
@@ -113,6 +126,6 @@ body.fixed {
 		right: auto;
 		border: none;
 	}
-	.on #resizer .panel_toggl, #resizer .panel_toggl { margin-left: -13px; padding-left: 5px;}
+	.on #resizer .panel_toggl { margin-left: -40px; padding-left: 5px;}
+	#resizer .panel_toggl { margin-left: -31px; padding-left: 5px;}
 }
-

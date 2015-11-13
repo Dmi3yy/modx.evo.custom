@@ -1165,7 +1165,6 @@ a.hometblink:hover {
     padding:0 0 0 0;
     position:relative;
 	z-index: 1;
-	white-space: nowrap;
 
 }
 .dynamic-tab-pane-control ul {
@@ -1877,10 +1876,49 @@ code {font-size:inherit;font-family: 'Courier New','Courier', monospace;backgrou
 		/*display: block;*/
 	/*}*/
 	/*.tab-page td:empty { display: none;}*/
+	#main iframe body {
+		margin: 0 -10px;
+	}
+	.sectionBody, .layerVisible { margin: 5px; padding: 5px; overflow: auto;}
+	#tabBackup { overflow: auto;}
 	td.warning {     width: 20%;
 		white-space: normal;}
 	.tab { display: table-cell; float: none;}
 	h1 { margin-top: 50px;}
-	.actionButtons a {padding: 7px 8px 23px 4px; font-size: 0px;}
+	#actions .actionButtons a {padding: 7px 8px 23px 4px; font-size: 0px;}
 	#actions, .actionButtons img { opacity: 1;}
+
+	.dynamic-tab-pane-control .tab-row {	background: none; height: auto; margin-bottom: 10px;}
+	.dynamic-tab-pane-control .tab-row .tab { float:none; padding: 4px 10px 0px 10px; margin: 2px; display: inline-block !important; vertical-align: middle; line-height: 18px;  height: 28px; box-sizing: border-box;}
+	.dynamic-tab-pane-control .tab-row .tab.selected {border:#d2dbdd 1px solid; border-radius: 4px; padding: 4px 10px 0px 10px; margin: 2px 2px; position: static; height: 28px; line-height: 19px;}
+	
+	#tabhome .sectionBody table tr TD {
+		display: block;
+		height: auto;
+    	width: 100%;
+	}
+	#tabhome .sectionBody table tr TD .wm_button {		
+		width: 48%;     margin: 10px 0px;
+	}
+	.sectionBody table tr TD >  table { width:100% !important; }
+	.tab-page > table td {
+		display: block;
+		width: 100% !important;
+		height: auto !important;
+	}
+	.tab-page > table td:first-of-type { margin: 5px 0 0 0; border-top: #ddd 1px dotted; padding-bottom: 0px !important;}
+	.tab-page > table td .warning { padding-left: 5px;}
+	form#mutate select.inputBox { width: 90% !important;}
+
+
+	/*---------------tinyMCE---------------*/
+	#ta_tbl .mceFirst {
+		white-space: normal;
+	}
+	table.mceLayout tr.mceFirst td {height: auto;}
+	#ta_toolbar1, #ta_toolbar2, #ta_toolbar1 tr, #ta_toolbar2 tr, #ta_toolbar1 tr td, #ta_toolbar2 tr td, #ta_toolbargroup  { 
+		/*display: inline-block !important; */
+		float: left;
+		white-space: normal; height: auto;}
+	.mceSplitButton td { float: none !important;}
 }
