@@ -3723,7 +3723,7 @@ class DocumentParser {
                     if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
                         $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
                     else {
-                        if($pvTmp[1] == 'list-multi') 
+                        if($pvTmp[1] == 'list-multi' && $pvTmp[3] != "") 
 				$parameter[trim($pTmp[0])]= $pvTmp[3]; // list-multi
 			else{
 				if ($pvTmp[1] != 'list' && $pvTmp[2] != ""){
