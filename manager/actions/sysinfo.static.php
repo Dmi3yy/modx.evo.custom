@@ -29,6 +29,11 @@ if(!$modx->hasPermission('logs')) {
 			<td><b><?php echo $modx->getVersionData('release_date') ?></b></td>
 		  </tr>
 		  <tr>
+			<td>PHP Version:</td>
+			<td>&nbsp;</td>
+			<td><b><?php echo phpversion(); ?></b></td>
+		  </tr>
+		  <tr>
 			<td>phpInfo()</td>
 			<td>&nbsp;</td>
 			<td><b><a href="#" onclick="viewPHPInfo();return false;"><?php echo $_lang['view']; ?></a></b></td>
