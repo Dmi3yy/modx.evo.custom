@@ -98,8 +98,8 @@ overflow: hidden;}
 	display: none;
 }
 #mainMenu ~ #hideTopMenu2 { display: none; z-index: 1000; position: fixed; bottom: 1%; right: 1%; border: rgba(255,255,255, .3) 1px solid;}
-#mainMenu.on ~ #hideTopMenu2 { display: block;}
-.ios .on #resizer2 .panel_toggl { position:absolute; bottom: 50px;}
+.mobile #mainMenu.on ~ #hideTopMenu2 { display: block;}
+.mobile .on #resizer2 .panel_toggl { position:absolute; bottom: 50px;}
 
 .panel_toggl {
 	display: block;
