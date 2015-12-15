@@ -7,21 +7,32 @@ overflow: hidden;}
 #mainMenu, #tree, #main { position: absolute }
 #mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%;
  -webkit-overflow-scrolling:touch;}
-#mainMenu { height: 0px; width: 100%; box-shadow: 0px 0px 10px #030303; z-index:1000; border-bottom: #555 1px solid;
+#mainMenu { 
+	height: 0px; 
+	width: 100%; box-shadow: 0px 0px 10px #030303; z-index:1000; border-bottom: #555 1px solid;
 	background: url("images/misc/bg_top.jpg") #23393C; }
-#topMenu { padding-bottom: 50px;}
+
 #tree { width: 0px; top: 0px; left: 0;  z-index: 1; 
+	bottom: 0px;
  	overflow: hidden; padding-right: 25px;
-	height:100%;
+	/*height:100%;*/
+	position: fixed;
 	/* 
 	min-height: 100vh;
 	bottom: 0; 
 	*/
 }
-#tree iframe { z-index:2; opacity:0; padding-right:25px; box-sizing: border-box;
+#tree.test {
+	opacity: .8;
+}
+#tree iframe { z-index:2; opacity:0; box-sizing: border-box;
 		height: 1px;
         min-height: 100%;
-        *height: 100%;}
+        *height: 100%;
+
+		 padding-right:25px;
+		 padding-bottom: 10px;
+		}
 #tree:before { content:' '; position:absolute; top: 0px; right: 22px; bottom: -3000px; left: 0px;
 	background: #e3efef url(images/misc/submenu-bg.png);
 	z-index:1;	
@@ -36,7 +47,9 @@ overflow: hidden;}
 }
 #tree.on {width: 250px;}
 #tree.on iframe {opacity:1}
-#mainMenu.on {height:100%; overflow-y: scroll; -webkit-overflow-scrolling:touch;}
+#mainMenu.on {height:100%; overflow-y: scroll; -webkit-overflow-scrolling:touch;
+	position: fixed;
+}
 #mask_resizer {
 	z-index: -1;
 }
@@ -47,18 +60,18 @@ overflow: hidden;}
 #resizer { height 100%; width: 0px; cursor: col-resize; z-index: 999;
 	position: absolute;
 	margin-left: -3px;
-	right: 0px;
+	right: 20px;
 	/*border-left: 1px solid #C8D8E6;*/
 	height: 100%;
 }
 #resizer .panel_toggl {
 	margin-top: 10px;
-	margin-left: -50px;
+	margin-left: -30px;
 	padding-left: 20px;
 	position: absolute;
 }
 .on #resizer .panel_toggl {
-	margin-left: -35px;
+	margin-left: -18px;
 	padding-left: 0px;
 }
 #resizer2 { width: 3px; z-index: 999;
@@ -69,21 +82,23 @@ overflow: hidden;}
 }
 
 #resizer2 .panel_toggl {
+	display: block;
 	margin-top: 0px;
 	margin-left: -35px;
 	margin-top: 20px;	
 	transform: translateZ(0);-webkit-transform: translateZ(0);
 }
 .on #resizer2 .panel_toggl {
-	margin-top: -23px;
+	/*margin-top: -23px;
 	padding-top: 0px;
 	z-index:1000;
 	position: fixed;
-	/*bottom: 10px;
-	right: 10px;*/
 	bottom: 10px;
-	border: rgba(255,255,255, .3) 1px solid;
+	border: rgba(255,255,255, .3) 1px solid;*/
+	display: none;
 }
+#mainMenu ~ #hideTopMenu2 { display: none; z-index: 1000; position: fixed; bottom: 1%; right: 1%; border: rgba(255,255,255, .3) 1px solid;}
+#mainMenu.on ~ #hideTopMenu2 { display: block;}
 .ios .on #resizer2 .panel_toggl { position:absolute; bottom: 50px;}
 
 .panel_toggl {
@@ -106,12 +121,13 @@ overflow: hidden;}
 	font-size: 20px;
 }
 .panel {
-	transition: left ease-in-out .3s,top ease-in-out .3s, height ease-in-out .3s, width ease-in-out .3s;
+	transition: left ease-in-out .3s,top ease-in-out .3s,  width ease-in-out .3s;
 	-webkit-transform: translate3d(0px, 0px, 0px);
 	-moz-transform: translate3d(0, 0, 0);
 	-ms-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
 }
+#mainMenu.panel {transition: height ease-in-out .3s;}
 #mobile_width {width: 1024px; position: absolute;}
 /*!!!  #mobile_width width and next media-query 'min-width' value must be equal to correct panels toggle in 1.php !!! */
 @media screen and (min-width: 1025px){
@@ -129,13 +145,14 @@ overflow: hidden;}
 	.panel_toggl:before { content: '';}
 	#resizer2 .panel_toggl {
 		margin-left: -50px;
-		margin-top: 0px;}
+		margin-top: 4px;}
 	.on #resizer2 .panel_toggl {
 		position: absolute;
+		margin-top: -25px;
 		bottom: auto;
 		right: auto;
-		border: none;
+		border: none; display: block;
 	}
-	.on #resizer .panel_toggl { margin-left: -40px; padding-left: 5px;}
-	#resizer .panel_toggl { margin-left: -31px; padding-left: 5px;}
+	.on #resizer .panel_toggl { margin-left: -20px; padding-left: 5px;}
+	#resizer .panel_toggl { margin-left: -11px; padding-left: 5px;}
 }

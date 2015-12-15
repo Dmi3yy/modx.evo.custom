@@ -144,6 +144,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 
             var mobile_width = $('#mobile_width').width();
 
+            $('<a class="panel_toggl" id="hideTopMenu2"></a>').appendTo('#body'); // append button with fixed position for Safari iOs 
             function check_toggled(toggl){
                 //console.log($('body').width() + ' - ' + mobile_width);
                 var panel = $(toggl).closest('.panel');
@@ -153,12 +154,18 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
                 }else{
                     panel.removeClass('on').attr('style', '');
                     $('#body').addClass('mobile');
-                    $('#tree, #tree iframe').height($('#body').height());
+                    // $('#tree, #tree iframe').height($('#body').height());
                 }
             }
             check_toggled('.panel_toggl');
-            $(window).resize(function(){
+
+            $(window).on('resize orientationchange touchstart', function(){
                 check_toggled('#body:not(.mobile) .panel_toggl');
+                
+                setTimeout( function(){ 
+                    var bodyH = $('#body').height();
+                    $('#tree').height(bodyH);
+                }, 250 );
             });
 
             //----ios fixed 
@@ -173,42 +180,48 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
                 //});
             }
             
-            $('.panel_toggl').click(function(){
+            $('.panel_toggl').on('click', function(){
                 
                 
                 $(this).closest('.panel').toggleClass('on');
                 if($(this).is('#hideMenu')){
                     $('#tree, #main, #resizer').attr('style', '');
-                    
-                    
-                }else{ // hideTopMenu
+                }
+
+                if($(this).is('#hideTopMenu')){ // hideTopMenu
                     if($('#body').hasClass('mobile')){
                         var topMenu = $('#mainMenu > iframe').contents().find("#topMenu");
-//                        console.log('Navcontainer=' + topMenu.height() );
                         
                         $('#mainMenu.on iframe').css('height',  topMenu.height());
-                        $('#mainMenu:not(.on) iframe').attr('style', '');
                         $('#mainMenu.on').css('height', window.innerHeight);
-                        $('#mainMenu:not(.on)').attr('style', '');
-                        
-                        $('body').toggleClass('fixed');
                     }
                 }
-            });
-            $('body.mobile.ios #main iframe').load(function(){          
-                var main_H = $(this).contents().find("body").height();
-                //$('#mainMenu > iframe').contents().find('#supplementalNav').text(main_H + ' > ' + window.innerHeight );
-                    $('#tree.on, #tree.on iframe').height(main_H);
-                if(window.innerHeight < main_H){
+
+                if($(this).is('#hideTopMenu2')){// hideTopMenu close (added to fix button position when TopMenu is open)
+                    $('#mainMenu').toggleClass('on');
+
+                    $('#mainMenu iframe').attr('style', '');
+                    $('#mainMenu').attr('style', '');
+                    // $('body').toggleClass('fixed');
                 }
+                $('body').toggleClass('fixed');
+            });
+
+            // $('body.mobile #tree iframe').load(function(){
+            //     console.log('sss');
+            //     $(this).contents().find('#treeRoot .treeNode').click(function(){                   
+            //         console.log($(this).attr('id') + ' ttt');
+            //         $('#hideMenu').trigger('click');
+            //     })
+            // });
+            $('body.mobile #main iframe').load(function(){
+                $('#tree.on #hideMenu').trigger('click');
             });
             $('body.mobile #mainMenu iframe').load(function(){
                 //console.log('iframe ' + $(this).contents().find('#nav').width());
-
                 $(this).contents().find(' #nav .subnav a').click(function(){
                     $( "#hideTopMenu" ).click();
                     $('body').removeClass('fixed');
-                    //console.log('click');
                 });
             });
             //------------ iphone tap

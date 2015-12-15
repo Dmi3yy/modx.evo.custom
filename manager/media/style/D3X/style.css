@@ -13,6 +13,18 @@ html {
 	line-height: 1.5;
 	color: #111;
 }
+
+/*test*/
+
+html { 
+	/*position: fixed; */
+	width: 100%; height: 100%;
+	-webkit-overflow-scrolling:touch; overflow-y: auto;
+ }
+
+/*body {-webkit-overflow-scrolling:touch; overflow-y: auto; border: green 1px dotted;}*/
+/*test end*/
+
 body {
 	font-family:  Ubuntu, Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
 	font-size: 62.5%;

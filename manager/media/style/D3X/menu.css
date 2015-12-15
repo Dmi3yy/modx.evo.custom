@@ -1,5 +1,6 @@
 /*#topMenu {	 background: url("images/misc/bg_top.jpg") #23393C; }*/
-#topMenu { background: transparent}
+#topMenu { background: transparent; padding-bottom: 50px; 
+	height: auto;}
 #nav * { box-sizing: border-box;}
 #nav {
 	padding: 1em 1em 20px 1em;
