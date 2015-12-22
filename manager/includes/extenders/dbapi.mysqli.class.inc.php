@@ -60,6 +60,7 @@ class DBAPI {
 			$this->isConnected = true;
 			$modx->queryTime += $totaltime;
 		}
+		return $this->conn;
 	}
 
 	function disconnect() {
