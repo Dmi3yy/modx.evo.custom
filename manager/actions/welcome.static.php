@@ -203,46 +203,51 @@ if(is_array($evtOut)) {
 }
 
 // load template
-$target = $modx->getConfig('manager_welcome_tpl');
+if(!isset($modx->config['manager_welcome_tpl']) || empty($modx->config['manager_welcome_tpl'])) {
+	$modx->config['manager_welcome_tpl'] = MODX_MANAGER_PATH . 'media/style/common/welcome.tpl'; 
+}
+
+$target = $modx->config['manager_welcome_tpl'];
 $target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
 $target = $modx->mergeSettingsContent($target);
 
-$login_tpl = null;
 if(substr($target,0,1)==='@') {
 	if(substr($target,0,6)==='@CHUNK') {
 		$target = trim(substr($target,7));
-		$login_tpl = $modx->getChunk($target);
+		$welcome_tpl = $modx->getChunk($target);
 	}
 	elseif(substr($target,0,5)==='@FILE') {
 		$target = trim(substr($target,6));
-		$login_tpl = file_get_contents($target);
+		$welcome_tpl = file_get_contents($target);
 	}
 } else {
 	$chunk = $modx->getChunk($target);
 	if($chunk!==false && !empty($chunk)) {
-		$login_tpl = $chunk;
-	} elseif(is_file(MODX_BASE_PATH . $target)) {
+		$welcome_tpl = $chunk;
+	}
+	elseif(is_file(MODX_BASE_PATH . $target)) {
 		$target = MODX_BASE_PATH . $target;
-		$login_tpl = file_get_contents($target);
-	} elseif(is_file($target)) {
-		$login_tpl = file_get_contents($target);
-	} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/welcome.tpl')) {
+		$welcome_tpl = file_get_contents($target);
+	}
+	elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/welcome.tpl')) {
 		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/welcome.tpl';
-		$login_tpl = file_get_contents($target);
-	} elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/welcome.html')) { // ClipperCMS compatible
+		$welcome_tpl = file_get_contents($target);
+	}
+	elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/welcome.html')) { // ClipperCMS compatible
 		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/welcome.html';
-		$login_tpl = file_get_contents($target);
-	} else {
+		$welcome_tpl = file_get_contents($target);
+	}
+	else {
 		$target = MODX_MANAGER_PATH . 'media/style/common/welcome.tpl';
-		$login_tpl = file_get_contents($target);
+		$welcome_tpl = file_get_contents($target);
 	}
 }
 
 // merge placeholders
-$login_tpl = $modx->mergePlaceholderContent($login_tpl);
-$login_tpl = preg_replace('~\[\+(.*?)\+\]~', '', $login_tpl); //cleanup
+$welcome_tpl = $modx->mergePlaceholderContent($welcome_tpl);
+$welcome_tpl = preg_replace('~\[\+(.*?)\+\]~', '', $welcome_tpl); //cleanup
 if ($js= $modx->getRegisteredClientScripts()) {
-	$login_tpl .= $js;
+	$welcome_tpl .= $js;
 }
 
-echo $login_tpl;
+echo $welcome_tpl;
