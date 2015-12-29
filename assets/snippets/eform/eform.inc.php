@@ -986,7 +986,9 @@ function buildTagPlaceholder($tag,$attributes,$name){
 				default: //leave as is - no placeholder
 					return "<input$t value=".$quotedValue." />";
 			}
-		case "file": //no placeholder!
+		case 'file':
+		case 'image':
+    		return "<input$t/>";
 		case "textarea": //placeholder needs to be added in calling code
 			return "<$tag$t>";
 		case "label":
