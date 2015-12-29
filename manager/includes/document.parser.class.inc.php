@@ -914,14 +914,14 @@ class DocumentParser {
         if (strpos($content, '[(') === false)
             return $content;
         $replace= array ();
-        $matches= array ();
-        if (preg_match_all('~\[\(([a-zA-Z0-9\_]*?)\)\]~', $content, $matches)) {
-            $settingsCount= count($matches[1]);
-            for ($i= 0; $i < $settingsCount; $i++) {
-                if (array_key_exists($matches[1][$i], $this->config)){
-                   $content= str_replace($matches[0][$i], $this->config[$matches[1][$i]], $content);
-               }
+		$matches = $this->getTagsFromContent($content, '[(', ')]');
+		if ($matches) {
+			for ($i = 0; $i < count($matches[1]); $i++) {
+				if ($matches[1][$i] && array_key_exists($matches[1][$i], $this->config))
+					$replace[$i] = $this->config[$matches[1][$i]];
            }
+
+			$content = str_replace($matches[0], $replace, $content);
 		}
 		return $content;
 	}
