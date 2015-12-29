@@ -52,7 +52,6 @@ $serverArr = array(
 				  </tr>';
 		}	
 		?>	 
-
 		</table>
    </div>
 </div>
