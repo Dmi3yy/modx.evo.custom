@@ -963,6 +963,9 @@ function buildTagPlaceholder($tag,$attributes,$name){
 			return "<$tag$t value=".$quotedValue." [+$name:$val+]>";
 		case "input":
 			switch($type){
+				case 'file':
+				case 'image':
+    				return "<input$t/>";
 				case 'radio':
 				case 'checkbox':
 					return "<input$t value=".$quotedValue." [+$name:$val+] />";
@@ -986,9 +989,7 @@ function buildTagPlaceholder($tag,$attributes,$name){
 				default: //leave as is - no placeholder
 					return "<input$t value=".$quotedValue." />";
 			}
-		case 'file':
-		case 'image':
-    		return "<input$t/>";
+		case "file": //no placeholder!
 		case "textarea": //placeholder needs to be added in calling code
 			return "<$tag$t>";
 		case "label":
