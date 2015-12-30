@@ -145,7 +145,6 @@ browser.uploadFile = function(form) {
     $('<iframe id="uploadResponse" name="uploadResponse" src="javascript:;"></iframe>').prependTo(document.body);
     $('#loading').html(this.label("Uploading file..."));
     $('#loading').css('display', 'inline');
-    if (window.FormData === undefined ) {
         form.submit();
         $('#uploadResponse').load(function() {
             var response = $(this).contents().find('body').html();
@@ -161,7 +160,7 @@ browser.uploadFile = function(form) {
             if (errors.length)
                 browser.alert(errors.join("\n"));
             if (!selected.length)
-                selected = null;
+            selected = null
             browser.refresh(selected);
             $('#upload').detach();
             setTimeout(function() {
@@ -169,16 +168,6 @@ browser.uploadFile = function(form) {
             }, 1);
             browser.initUploadButton();
         });
-    } else {
-            files = form.elements[0].files;
-            uploader.filesCount = files.length;
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                file.thisTargetDir = browser.dir;
-                uploader.uploadQueue.push(file);
-            }
-            uploader.processUploadQueue();
-        }
     };
 
 browser.maximize = function(button) {
