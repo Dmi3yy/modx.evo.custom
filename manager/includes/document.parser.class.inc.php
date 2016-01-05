@@ -1326,7 +1326,7 @@ class DocumentParser {
      * @param string $documentSource
      * @return string
      */
-	function rewriteUrls($documentSource) {
+    function rewriteUrls($documentSource) {
         // rewrite the urls
         if ($this->config['friendly_urls'] == 1) {
             $aliases= array ();
@@ -1338,6 +1338,7 @@ class DocumentParser {
                 $aliases[$val] = $key;
                 $isfolder[$val] = $this->aliasListing[$val]['isfolder'];
             }
+
             if ($this->config['aliaslistingfolder'] == 1) {
                 preg_match_all('!\[\~([0-9]+)\~\]!ise', $documentSource, $match);
                 $ids = implode(',', array_unique($match['1']));
