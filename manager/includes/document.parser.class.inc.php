@@ -1334,9 +1334,11 @@ class DocumentParser {
                 $aliases[$item['id']]= (strlen($item['path']) > 0 ? $item['path'] . '/' : '') . $item['alias'];
                 $isfolder[$item['id']]= $item['isfolder'];
             } */
-            foreach($this->documentListing as $key=>$val){
-                $aliases[$val] = $key;
-                $isfolder[$val] = $this->aliasListing[$val]['isfolder'];
+            if (is_array($this->documentListing)){
+                foreach($this->documentListing as $key=>$val){
+                    $aliases[$val] = $key;
+                    $isfolder[$val] = $this->aliasListing[$val]['isfolder'];
+                }
             }
 
             if ($this->config['aliaslistingfolder'] == 1) {
