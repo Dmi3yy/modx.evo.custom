@@ -185,7 +185,8 @@ $_dfnMaxlength = 6;
 		# check vericode
 		if($vericode) {
 			//add support for captcha code - thanks to Djamoer
-			$code = $_SESSION['veriword'] ? $_SESSION['veriword'] : $_SESSION['eForm.VeriCode'];
+			//$code = $_SESSION['veriword'] ? $_SESSION['veriword'] : $_SESSION['eForm.VeriCode'];
+			$code = $_SESSION['veriword_'.$formid] ? $_SESSION['veriword_'.$formid] : $_SESSION['eForm.VeriCode'];
 			if($fields['vericode']!=$code) {
 				$vMsg[count($vMsg)]=$_lang['ef_failed_vericode'];
 				$rClass['vericode']=$invalidClass; //added in 1.4.4
@@ -250,6 +251,13 @@ $_dfnMaxlength = 6;
 							if (strlen($value)>0 &&  !preg_match(
 							'/^(?:[a-z0-9+_-]+?\.)*?[a-z0-9_+-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,5}$/i', $value) ){
 								$vMsg[count($vMsg)] = isset($formats[$name][4]) ? $formats[$name][4] : $desc . $_lang["ef_invalid_email"];
+								$rClass[$name]=$invalidClass;
+							}
+							break;
+							case "phone":
+							if (strlen($value)>0 && !preg_match(
+								'/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/', $value) ){
+								$vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_phone"];
 								$rClass[$name]=$invalidClass;
 							}
 							break;
@@ -497,7 +505,8 @@ $_dfnMaxlength = 6;
 
 				# added in 1.4.4.8 - Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.
 				if ($fields['email']) {
-					$firstEmail = array_shift(explode(',', $fields['email']));
+					$firstEmail = explode(',', $fields['email']);
+					$firstEmail = array_shift($firstEmail);
 				} else {
 					$firstEmail = '';
 				}
@@ -955,12 +964,27 @@ function buildTagPlaceholder($tag,$attributes,$name){
 			return "<$tag$t value=".$quotedValue." [+$name:$val+]>";
 		case "input":
 			switch($type){
+				case 'file':
+				case 'image':
+    				return "<input$t/>";
 				case 'radio':
 				case 'checkbox':
 					return "<input$t value=".$quotedValue." [+$name:$val+] />";
 				case 'text':
 					if($name=='vericode') return "<input$t value=\"\" />";
 					//else pass on to next
+				case 'email':
+				case 'tel':
+				case 'url':
+				case 'number':
+				case 'range':
+				case 'date':
+				case 'month':
+				case 'week':
+				case 'time':
+				case 'datetime':
+				case 'datetime-local':
+				case 'color':
 				case 'password':
 					return "<input$t value=\"[+$name+]\" />";
 				default: //leave as is - no placeholder

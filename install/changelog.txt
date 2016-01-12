@@ -1,6 +1,285 @@
 This file shows the changes in recent releases of MODX. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+
+MODX Evolution 1.1RC (Dec 29, 2015)
+===================================
+ @Jako	   Fixing #356 Loosing content in chunk after saving and already exists … …	 41a5bcd
+ @TimGS	   Transalias fixes …	 cc7bb5a
+ @Jako	   Refactor manager api class …	aa2baae
+ @TimGS	   Purge obsolete plugins …	30aa5c7
+ @jasonabird	[#364] Fixed issue for renderFormElements to provide default text eve… …	6d799af
+ @jasonabird	[#364] Fixed to only set value if field_value is empty	fb32017
+ @bossloper	Web login - Retain remember me option …	90b1a91
+ @Jako	    Fixing PHP 5.2 issues with transalias plugin	1e83802
+ @MrSwed	[+] array version of #1 and #2 - in_array() used	d9aacba
+ @MrSwed	[+] Ukrainian characters	3db4296
+ @MrSwed	[*] word boundary do NOT working with utf8 on some servers …	bdf2d37
+ @MrSwed	[+] phpthumb: determination of the original image file extension	0ca31ad
+ @Jako	    Updated Languages from Transifex	47782d1
+ @MrSwed	[+] Ukrainian characters	79f8bc7
+ @MrSwed	[+] phpthumb encode decode cyr filenames	46e8457
+ @MrSwed	[*] &q=96 makes no sense with png and gif (should be 100 there – or b… …	70d0c84
+ @MrSwed	[+] Display TV name during install	dfb0ac4
+ @MrSwed	[+] Install: styles for component names and description	3c0b38d
+ @MrSwed	[+] phpthumb: encode only returned filenames	9b0a873
+ @Eoler	    Fix script error in View manager logs	dcd9656
+ @Eoler	    Increase FileSource filebinding input field maxlength to prevent data… …	3e6895d
+ @fourroses666	Larger image	bc501e0
+ @Jako	    Updated Languages from Transifex	9d3cb59
+ @yama	    Refactor - $modx->getTagsFromContent()	a4ceee9
+ @yama	    Refactor - $modx->evalSnippets()	6f26656
+ @rpre	    Update eform.inc.php …	563934c
+ @Jako	    Adding HTML5 input types	d2adb9d
+ @Haprog	Fix #396 getUserDocGroups(true) always returns only one group name	32f0d65
+ @Haprog	Fix: weblogin doesn't always clear $_SESSION['webDocgrpNames'] on log… …	3cea34d
+ @pmfx	    MODxRE theme fixes small fixes …	4b7b3f0
+ @pmfx	    MODxRE login screen small fixes …	897855b
+ @pmfx	    Fix #394 error in description of CodeMirror …	1b0148e
+ @Haprog	Fix comment typo in ht.access.	4ca6432
+ @Haprog	Fix typo in CodeMirror plugin description.	c4b9a64
+ @Haprog	Fix/update confirmed working MODX version in CodeMirror plugin comment.	6cc4467
+ @kulmjens	Value of properties in GUID on module creation …	1c2e755
+ @yama	    Refactor - $modx->getTagsFromContent() …	1cebc29
+ @MaXL-ru	Prevent PHP warning 'Key cannot be empty' …	da4cf8a
+ @kulmjens	Maybe missing permission check …	8530858
+ @MrSwed	[-] garbage	8c6adc4
+ @MrSwed	non-breaking space. It interferes with the use of the ddmultifield im… …	21e1aad
+ @yama	    Refactor - $modx->getTagsFromContent()	c2ee598
+ @yama	    Fix - $modx->getTagsFromContent() …	18234eb
+ @yama	    Refactor - $modx->evalSnippets()	6c098f5
+ @MrSwed	Merge remote-tracking branch 'remotes/evolution/develop' into develop	7aedfe2
+ @MrSwed	preserve input value	c87d649
+ @yama	    Fix	1adcf8d
+ @yama	    Minor fix - MODxHost template	aca2a22
+ @yama	    Refactor - $modx->mergeDocumentContent()	4e8b8da
+ @MrSwed	Merge remote-tracking branch 'remotes/Evolution/develop' into develop	8030902
+ @MrSwed	small calendar styles fix	30fd127
+ @bossloper	Update setup.sql …	2b56d5d
+ @MrSwed	Choose language translate	7dec05a
+ @dmi3yy	Merge pull request #419 from bossloper/patch-5 …	c8871b1
+ @Jako	    Updated polish language	4fdd700
+ @Jako	    Date format	0dc2c0f
+ @MrSwed	fix transalias	a90447c
+ @MrSwed	Wayfinder. Set id of reference to original document ID if it is inner… …	7be7aca
+ @MrSwed	ability to set indentation	f16f3e2
+ @MrSwed	Starting the installation with the language of the user's browser	63e6414
+ @MrSwed	Merge remote-tracking branch 'remotes/Evolution/develop' into develop	11d2eb9
+ @MrSwed	can not be turned off, fixed	39058c8
+ @MrSwed	for local references - use original document fields separated by comma …	fb2f868
+ @MrSwed	&useWeblinkUrl=`0` now work, no longer need to write &useWeblinkUrl=`… …	e77c169
+ @MrSwed	no "start=0" in links of ditto pagination depending on modx setting s… …	27ebbe6
+ @yama	    Minor fix	a20cd0f
+ @yama	    Fix	dcbf2b6
+ @bossloper	Update ditto.class.inc.php …	ce883ea
+ @yama	    Cross-references …	956c9ae
+ @MrSwed	allow using asterisk for assign TVs to all templates which will be in… …	5ddb8df
+ @yama	    Fix - Slimming Paint rendering issue at Chrome …	75c9c0f
+ @bossloper	Update resources.static.php …	0216a35
+ @bossloper	Update resources.static.php …	69367dd
+ @bossloper	Update english.inc.php	dc83897
+ @bossloper	Update web_access_permissions.dynamic.php	67645ad
+ @bossloper	Update access_permissions.dynamic.php	1424839
+ @dmi3yy	clear code^ fix tabs	89ef20b
+ @dmi3yy	Update file browser	2ed509b
+ @dmi3yy	Update CodeMirror to 1.2b	eae7e74
+ @dmi3yy	the ability to pass arbitrary parameters in the snippet (so you can u… …	b7dc20f
+ @dmi3yy	add [+wf.iterator+]	fcb6343
+ @dmi3yy	start for view custom tv type	d0a0e9d
+ @dmi3yy	add tvs folder	7e7708d
+ @dmi3yy	add some langs string	ddc4b92
+ @dmi3yy	fix dmi3yy/modx.evo.custom#181	6a448b4
+ @dmi3yy	view customTV in Select when choice tv type	907a1f2
+ @dmi3yy	now we can use custom frame files from theme	fa0348f
+ @dmi3yy	fix index.php in manager	13e5c89
+ @dmi3yy	clear code	dcd5131
+ @dmi3yy	Fix error render the default setting in the TV type date	14a94c6
+ @dmi3yy	refactor search.static	a842303
+ @dmi3yy	frameset to iframe	c09c083
+ @dmi3yy	use Mysqli by default	ed5396e
+ @dmi3yy	add some events	1072d79
+ @dmi3yy	refactor MainMenu	1968b47
+ @dmi3yy	add mm_movecategorytotab …	2770263
+ @dmi3yy	add TinyMce theme circuit	d7b1048
+ @dmi3yy	use stable phpmailer	933605c
+ @dmi3yy	delete unused file	88dddef
+ @dmi3yy	fix in node.php	c88f4c0
+ @dmi3yy	add event OnDocFormTemplateRender	9233753
+ @dmi3yy	fix td width	4a2f16c
+ @dmi3yy	add event onBeforeMoveDocument and onAfterMoveDocument …	6a8a692
+ @dmi3yy	refactor cache_sync class, add some code for AliasListingFolder	6211a79
+ @dmi3yy	setting for AliasLiastingFolder	0284b48
+ @dmi3yy	add event OnBeforeLoadExtension	c78515e
+ @dmi3yy	some change in sendErrorPage	32a6d53
+ @dmi3yy	some change in sendUnauthorizedPage	c8672fe
+ @dmi3yy	add function getCacheFolder	07bac53
+ @dmi3yy	add function setConditional	9372391
+ @dmi3yy	fix rewriteUrls for AliasListingFolder	aa24247
+ @dmi3yy	add events OnBeforeLoadDocumentObject OnAfterLoadDocumentObject	bfebbbd
+ @dmi3yy	refactor BackTrace	bdb542d
+ @dmi3yy	refactor getLoginUserName	e612f72
+ @dmi3yy	refactor getLoginUserID	03c5e28
+ @dmi3yy	add function getTpl	09e0ba7
+ @dmi3yy	refactor getChunk	816af9c
+ @dmi3yy	refactor runSnippet	93fa0fc
+ @dmi3yy	refactor makeUrl for AliasListingFolder	26f86d0
+ @dmi3yy	fix sendmail	cbce5e7
+ @dmi3yy	refactor logEvent	7d3e99e
+ @dmi3yy	refactor getChildIds for AliasListingFolder	a7fd270
+ @dmi3yy	refactor getParentIds for AliasListngFolder	6f19c69
+ @dmi3yy	refactor executeParser for AliasListingFolder	fa86662
+ @dmi3yy	fix in postProcess	7c6adaa
+ @dmi3yy	refactor checkPublishStatus()	3c94596
+ @dmi3yy	checkCache fix	175a18e
+ @dmi3yy	Fix - Slimming Paint rendering issue at Chrome by Yama	7131bb1
+ @dmi3yy	ctrl + S, cmd + S now save in Manager	769617e
+ @dmi3yy	fix for cmd + S	618c900
+ @kulmjens	Workaround for deprecated preg_replace() with /e modifier …	295ad92
+ @pmfx	    "Show in menu" moved to new row …	758817d
+ @dmi3yy	copyright to 2016	b893c7e
+ @dmi3yy	#444 (Installer & PHP 5.5+ )	b229ca1
+ @dmi3yy	fix index.html in tvs custom types	b9e1888
+ @dmi3yy	add php version in sysinfo	113ac4c
+ @dmi3yy	autoload_register to spl_autoload_register	de360bd
+ @dmi3yy	fix OnManagerWelcomeHome position	961a256
+ @dmi3yy	fix html validation in eForm	88b4dd5
+ @dmi3yy	wayfinder config need include for multi use with other configs	9e09c4e
+ @dmi3yy	update revriteUrls	52745fb
+
+
+MODX Evolution 1.0.15 (Oct 31, 2014)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [GitHub:#8721e56] Typo
+* [GitHub:#6dc47ed] Wrong indents
+* [GitHub:#c9267a8] Bugfix for "Context menu don't show if node has quotes."
+* [GitHub:#7b8ad03] Wrong indents
+* [GitHub:#6805efa] Not only "listbox-multiple" send array to POST
+* [GitHub:#21bf185] Fix MYSQLI->fieldName()
+* [GitHub:#8926b25] Fixing Bug: Only variables should be passed by reference
+* [GitHub:#ee6e7a0] Don't show set_time_limit warning on host that have changing the time limit disabled
+* [GitHub:#c02f75c] Richtext widget "undefined" output #341
+* [GitHub:#3151a01] changeWebUserPassword doesn't use md5 for a new password #304
+* [GitHub:#b7e665f] Update web_user_management.static.php
+* [GitHub:#5c4bda6] Patch https://github.com/modxcms/evolution/commit/98e68cbab53dd6523bb65243a9a654263cd8423d
+* [GitHub:#56357ce] fix makeURL
+* [GitHub:#1d2bfdb] Fix - Can't work manager except utf8
+* [GitHub:#2da96f6] Wayfinder, move levelClass from li to ul http://c2n.me/iA951g
+* [GitHub:#31f6759] $modx  to   $this
+* [GitHub:#c2775fd] Fixed CodeMirror syntax HTML entity highlighting
+* [GitHub:#13d0d6d] fix makeFriendlyURL for site_start
+* [GitHub:#0f4aba1] eForm - Fix Invalid address error
+* [GitHub:#71492ad] Delete unnecessary evaluate PHP code
+* [GitHub:#d8872e7] Update media.js
+* [GitHub:#022b755] Fix PHP Notices from document.parser
+* [GitHub:#04cdccc] Bugfix - $id could be an integer and not a string.
+* [GitHub:#0448cf7] fix uploader
+* [GitHub:#b49e81e] show only allowed images in their folder
+* [GitHub:#f5629f3] Skip all fields without name attribute in eFormParseTemplate
+* [GitHub:#27d7adf] Bugfix - wrong quotes
+* [GitHub:#7781b65] Small fix - smtp password field in system settings
+* [GitHub:#d2b7cb0] fix http://joxi.ru/Y_SlUxjKTJBBH38Lv8U
+* [GitHub:#9a121bc] Fixing $modx->makeUrl($modx->config['site_start']) should return '/' or $modx->config['site_url'] #2
+* [GitHub:#5266730] Fixes for phpthumb snippet - added temp folder creation – for open_basedir issues - updated phpthumb
+* [GitHub:#dfbd44e] Bugfix for hideMenu parameter
+* [GitHub:#6a23f91] New Security Feed! -> english.inc.php
+* [GitHub:#cb5b0e0] Removed unused variables
+* [GitHub:#be143a1] Removed wrong array keys
+* [GitHub:#987f8b8] Output Content-Type header at messageCount
+* [GitHub:#f7aecc4] Tools/Backup/Restore #275
+* [GitHub:#dfe0020] Webusers Not Showing Private Resources #273
+* [GitHub:#766e662] Fix for CJK multi byte environment
+* [GitHub:#39ee732] Fixing issue with accounts not getting unblocked automatically (#267) and added some language string
+* [GitHub:#a245648] Rename function name
+* [GitHub:#102fe60] Fixing Wayfinder problems after upgrading MODX from 1.0.10 to 1.0.13 #226
+* [GitHub:#744fdcc] Hide META tags content in Resource Overview when META Keywords tab is set to no #283
+* [GitHub:#ea9ccdf] Quickfix for Refused to set unsafe header "Connection" #227 - removed setHeader("Connection", "close
+* [GitHub:#43bcf75] Fixed some style issues
+
+--------------------------------------------
+Refactor:
+--------------------------------------------
+* [GitHub:#0b82d66] Use of $modx->htmlspecialchars instead of htmlspecialchars
+* [GitHub:#ace7999] htmlspecialchars be called with ENT_QUOTES
+* [GitHub:#9c4d6f5] Avoid tampering cache file by escaping all keys and values - changing all $modx->db->escape to $this
+* [GitHub:#3cdcffd] add ,  to errorRequiredSeparator in eForm
+* [GitHub:#d8ec4ce] Typo - When you need to get one field, need use the db->getValue()
+* [GitHub:#b20c22b] Update style.css
+* [GitHub:#db56a5f] insideManager is deprecated
+* [GitHub:#8deface] Uniform style code for int of $_REQUEST['id']
+* [GitHub:#3eceb21] Uniform style code for int of $_REQUEST['id'] in mutate_* Remove unnecessary checks
+* [GitHub:#92b0d75] Updated AjaxSearch - Documentation in markdown format - Changed module/snippet/plugin code from txt 
+* [GitHub:#1ea15af] Set default: Send mail on MODX errors = not notify #289
+* [GitHub:#645503e] Update modxmailer.class.inc.php
+* [GitHub:#c7f6d34] Wayfinder, revert levelClass, add outerLevelClass
+* [GitHub:#5c97732] Update uploader.php
+* [GitHub:#51c473f] Update config.php
+* [GitHub:#d9c3cda] Update mutate_user.dynamic.php
+* [GitHub:#acbaf8b] Refactor - Calling method of deprecated-function
+* [GitHub:#aef110e] Refactor - $modx->makeUrl()
+* [GitHub:#3715940] typo fix
+* [GitHub:#39a62fb] Replace insideManager() to isBackend()
+* [GitHub:#855fc76] Refactor - $modx->isFrontend()
+* [GitHub:#2d86096] Refactor - $modx->isBackend()
+* [GitHub:#1849346] Refactor - File browser settings
+* [GitHub:#6a87f51] Set $modx->config['server_offset_time']
+* [GitHub:#be2f392] + The “OnDocFormPrerender” and “OnDocFormRender” events now have the document template ID parameter.
+* [GitHub:#caf0f98] Add placeholder for PHP version in language files
+* [GitHub:#8752559] Add "level" to the "wrapperLevel" placeholders
+* [GitHub:#1f76491] Refactoring #265 - new parameters: errorTpl, errorRequiredTpl, errorRequiredSeparator
+* [GitHub:#eb3a458] Remove changes added during #90 - Hexadecimal entities not needed anymore for MODX tags
+* [GitHub:#66255dc] Change DOCTYPE declaration(HTML5)
+* [GitHub:#696a8d6] Remove semicoron
+* [GitHub:#9ab2678] Added support for lastRowTpl that will apply to last row of a list
+* [GitHub:#a98fe41] Update KCFinder Dutch language file
+* [GitHub:#576e210] Remove "?>" from end of php file
+* [GitHub:#0fc2ccb] Update tagging.extender.inc.php
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [GitHub:#b74b11b] update mm to 0.6.2
+* [GitHub:#1e22788] Update Wayfinder to 2.0.4
+* [GitHub:#e0c80f3] Update eForm to 1.4.6
+* [GitHub:#55b4471] Updated Languages from Transifex
+* [GitHub:#2aad3e3] Updated languages from Transifex
+* [GitHub:#f1f53d3] Updated languages from Transifex
+* [GitHub:#6166167] Updated Dutch language
+* [GitHub:#3dd0c82] Added Ukrainian Language to Transfix
+* [GitHub:#6a97faa] Updated Languages from Transifex
+* [GitHub:#9a0eb01] add ukranian lang for eFrom and AjaxSearch
+* [GitHub:#d19102d] Update english-british.inc.php
+* [GitHub:#ac38129] MYSQLI Extender
+* [GitHub:#f53d739] New feature: Allow searching of resources by template ID used. Include language strings for English 
+* [GitHub:#0c98bec] update logo
+* [GitHub:#ceee98f] add ssl to smtp mail setting add alias_listing in breadcrumbs plugin add one more type in Ditto filt
+* [GitHub:#c264569] Support for encoding windows-1251 in the emails
+* [GitHub:#98e68cb] Change publishedon, set value from current time to pub_date
+* [GitHub:#a2a3a57] Fix save mutate_content form on press Enter in input field
+* [GitHub:#41048c3] add .tpl, .less, .sass  for View/Edit  in  FileManager
+* [GitHub:#7f05792] Allow load any extension without changing the core code
+* [GitHub:#45f08ec] datepicker localization
+* [GitHub:#0c29ed0] select/deselect all templates for tv
+* [GitHub:#6b468fb] French translation for 1.0.14
+* [GitHub:#f4a559b] Updated polish and brazilian portuguese languages from Transifex Thanks to Raphael Mendonça & Piotr 
+* [GitHub:#ad335ad] Re-Added Breadcrumbs snippet commented documentation #236
+* [GitHub:#6e0fd11] Updated swedish language
+* [GitHub:#03a1e04] Première version complète de la traduction pour la 1.0.14
+* [GitHub:#45cb1ff] Début de traduction pour la 1.0.14
+* [GitHub:#a761a63] mise à jour des messages de gestionnaire de fichiers
+
+--------------------------------------------
+Security:
+--------------------------------------------
+* [GitHub:#a293ec6] Set secure flag to prevent cookies to be leaked via non encrypted requests.
+* [GitHub:#d798a2a] config.inc.php to have setcookie specify httponly
+* [GitHub:#38cbdaa] Sameorigin header
+* [GitHub:#e62d961] Prevent XSS
+* [GitHub:#3e7f9bd] Avoid XSS - $modx->htmlspecialchars or explicit integer casting on $_GET/$_POST values
+* [GitHub:#3373321] Close SQL Injection
+
 MODX Evolution 1.0.14 (Jun 05, 2014)
 ===================================
 --------------------------------------------

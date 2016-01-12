@@ -480,7 +480,7 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td nowrap class="warning" valign="top"><?php echo $_lang["custom_contenttype_title"] ?></td>
-            <td><input name="txt_custom_contenttype" type="text" maxlength="100" style="width: 200px;" value="" /> <input type="button" value="<?php echo $_lang["add"]; ?>" onclick='addContentType()' /><br />
+            <td><input name="txt_custom_contenttype" type="text" maxlength="100" style="width: 200px;height:100px" value="" /> <input type="button" value="<?php echo $_lang["add"]; ?>" onclick='addContentType()' /><br />
             <table border="0" cellspacing="0" cellpadding="0"><tr><td valign="top">
             <select name="lst_custom_contenttype" style="width:200px;" size="5">
             <?php
@@ -705,6 +705,22 @@ function confirmLangChange(el, lkey, elupd){
   <td colspan="2"><div class='split'></div></td>
   </tr>
 
+            <?php if(!isset($aliaslistingfolder)) $aliaslistingfolder = '0';?>
+            <tr id="furlRow56" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+                <th><?php echo $_lang['aliaslistingfolder_title'] ?></th>
+                <td>
+                    <?php echo wrap_label($_lang["yes"],form_radio('aliaslistingfolder','1', $aliaslistingfolder=='1'));?><br />
+                    <?php echo wrap_label($_lang["no"],form_radio('aliaslistingfolder','0', $aliaslistingfolder=='0'));?><br />
+                </td>
+            </tr>
+            <tr id='furlRow57' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+                <td width="200">&nbsp;</td>
+                <td class='comment'><?php echo $_lang["aliaslistingfolder_message"] ?></td>
+            </tr>
+            <tr id='furlRow58' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+                <td colspan="2"><div class='split'></div></td>
+            </tr>
+
 
           <tr id='furlRow7' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><?php echo $_lang["friendly_alias_title"] ?></td>
@@ -862,7 +878,7 @@ function confirmLangChange(el, lkey, elupd){
             <td class='comment'> <?php echo $_lang['a17_error_reporting_msg'];?></td>
     </tr>
 <tr><td colspan="2"><div class='split'></div></td></tr>
-<?php if(!isset($send_errormail)) $send_errormail='3';?>
+<?php if(!isset($send_errormail)) $send_errormail='0';?>
 <tr>
 <th><?php echo $_lang['mutate_settings.dynamic.php6']; ?></th>
 <td>

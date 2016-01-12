@@ -255,8 +255,14 @@ class DBAPI {
       else {
          $table = $this->replaceFullTableName($table);
          if (is_array($fields)) {
-            foreach ($fields as $key => $value)
-               $fields[$key] = "`{$key}` = '{$value}'";
+			 foreach ($fields as $key => $value) {
+				 if(is_null($value) || strtolower($value) === 'null'){
+					 $flds = 'NULL';
+				 }else{
+					 $flds = "'" . $value . "'";
+				 }
+				 $fields[$key] = "`{$key}` = ".$flds;
+			 }
             $fields = implode(",", $fields);
          }
          $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
@@ -300,6 +306,14 @@ class DBAPI {
          return $lid;
       }
    }
+   /**
+    * @name:  isResult
+    *
+    */
+   function isResult($rs) {
+      return is_resource($rs);
+   }
+
    /**
     * @name:  freeResult
     *

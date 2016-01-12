@@ -75,6 +75,9 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
 
         case "date":
             if ($value !='' || $params['default']=='Yes') {
+				if (empty($value)) {
+					$value = 'now';
+				}
                 $timestamp = getUnixtimeFromDateString($value);
                 $p = $params['format'] ? $params['format']:"%A %d, %B %Y";
                 $o = strftime($p,$timestamp);
@@ -366,7 +369,7 @@ function decodeParamValue($s){
 // returns an array if a delimiter is present. returns array is a recordset is present
 function parseInput($src, $delim="||", $type="string", $columns=true) { // type can be: string, array
 	global $modx;
-    if (is_resource($src)) {
+    if ($modx->db->isResult($src)) {
         // must be a recordset
         $rows = array();
         while ($cols = $modx->db->getRow($src,'num')) $rows[] = ($columns)? $cols : implode(" ",$cols);

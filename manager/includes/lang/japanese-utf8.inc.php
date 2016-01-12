@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author eastbind
  * @author MEGU
@@ -867,6 +867,8 @@ $_lang["search_criteria_content"] = '本文で検索';
 $_lang["search_criteria_content_msg"] = 'Find all Resources with the entered text in their content.';
 $_lang["search_criteria_id"] = 'IDで検索';
 $_lang["search_criteria_id_msg"] = 'Enter a Resource\'s ID to quickly locate that Resource.';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'タイトルで検索';
 $_lang["search_criteria_longtitle_msg"] = 'Find all Resources with the entered text in their long title.';
 $_lang["search_criteria_title"] = 'リソース名で検索';
@@ -1203,6 +1205,7 @@ $_lang['email_method_mail'] = 'PHP mail() による機能';
 $_lang['email_method_smtp'] = 'SMTP サーバ';
 $_lang['smtp_auth_title'] = 'SMTP-AUTH';
 $_lang['smtp_host_title'] = 'SMTP ホスト';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP ユーザ名';
 $_lang['smtp_password_title'] = 'SMTP パスワード';
 $_lang['smtp_port_title'] = 'SMTP ポート';
@@ -1277,8 +1280,8 @@ $_lang["login_processor_remote_ip"]          = "You are not allowed to login fro
 $_lang["login_processor_date"]               = "You are not allowed to login at this time. Please try again later.";
 $_lang["login_processor_captcha_config"]     = "Captcha is not configured properly.";
 
-$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
-$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_dayNames"]   = "['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日']";
+$_lang["dp_monthNames"] = "['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']";
 $_lang["dp_startDay"]   = "1";
 
 $_lang["check_all"] = "Select all";

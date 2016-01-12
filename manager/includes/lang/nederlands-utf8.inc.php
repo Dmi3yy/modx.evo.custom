@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author The MODX Project Team
  *
@@ -856,6 +856,8 @@ $_lang["search_criteria_content"] = 'Op inhoud zoeken';
 $_lang["search_criteria_content_msg"] = 'Zoek alle Pagina\'s met de ingevoerde tekst in de inhoud.';
 $_lang["search_criteria_id"] = 'Op ID zoeken';
 $_lang["search_criteria_id_msg"] = 'Voer de ID van de Pagina in om de Pagina snel te vinden.';
+$_lang["search_criteria_template_id"] = 'Op template ID zoeken';
+$_lang["search_criteria_template_id_msg"] = 'Zoek alle pagina\'s die de gekozen template gebruikt.';
 $_lang["search_criteria_longtitle"] = 'Zoek op uitgebreide titel';
 $_lang["search_criteria_longtitle_msg"] = 'Zoek alle Pagina\'s met de ingevoerde tekst in hun uitgebreide titel.';
 $_lang["search_criteria_title"] = 'Op titel zoeken';
@@ -1191,6 +1193,7 @@ $_lang['email_method_mail'] = 'mail() PHP functie';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP-AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Gecodeerde SMTP';
 $_lang['smtp_username_title'] = 'SMTP gebruikersnaam';
 $_lang['smtp_password_title'] = 'SMTP wachtwoord';
 $_lang['smtp_port_title'] = 'SMTP poort';
@@ -1269,6 +1272,6 @@ $_lang["dp_dayNames"]   = "['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderd
 $_lang["dp_monthNames"] = "['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']";
 $_lang["dp_startDay"]   = "1";
 
-$_lang["check_all"] = "Select all";
-$_lang["check_none"] = "Select none";
-$_lang["check_toggle"] = "Toggle selection";
+$_lang["check_all"] = "Selecteer alle";
+$_lang["check_none"] = "Deselecteer alle";
+$_lang["check_toggle"] = "Selectie aan/uit";

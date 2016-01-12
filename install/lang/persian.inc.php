@@ -4,7 +4,7 @@
  *
  * @author Mohsen Zare (MotSmart), MotSmart@Gmail.com, www.modxcms.ir
  * @author AliAqua
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language Persian
@@ -51,6 +51,7 @@ $_lang["checking_registerglobals"] = 'بازخوانی اینکه Register_Globa
 $_lang["checking_registerglobals_note"] = 'این تنظیمات سایت شما رو در مقابل حملات (XSS) نقوذ پذیر کرده. شما بایستی از طریق هاستینگ خود این تنظیمات را غیر فعال کنید,  به طور معمول از سه طریق امکان پذیر است: از طریق اعمال تغییر در فایل php.ini, ویرایش قوانین و دستورات در فایل .htaccess روت و پرونده نصب مادایکس و یا اضافه کردن دستور اضافه در فایل جدید خود تحت نام php.ini که داخل همه ی پرونده های نصب شده مادایکس خود قرار می دهیدو. شما همچنان قادر به نصب مادایکس هستید, به هر حال ما به شما تذکرات لازم را دادیم!';
 $_lang["checking_sessions"] = 'بازخوانی sessions مطابق تنظیمات درست: ';
 $_lang["checking_table_prefix"] = 'مرور پیشوند جدول  `';
+$_lang["choose_language"] = 'انتخاب زبان';
 $_lang["chunks"] = 'چانکها';
 $_lang["config_permissions_note"] = 'برای نصب جدید روی لینوکس/یونیکس, لطفا یک فایل خالی به نام <span class=\"mono\">config.inc.php</span> در دایرکتوری <span class=\"mono\">[+MGR_DIR+]/includes/</span> ایجاد کنید که سطح دسترسی به آن 0666 تنظیم شده باشد.';
 $_lang["connection_screen_collation"] = 'تطبیق(Collation):';
@@ -117,7 +118,7 @@ $_lang["modules"] = 'ماژولها';
 $_lang["modx_footer1"] = '&copy; 2005-2014 کلیه ی حقوق برای پروژه ی سیستم مدیریت محتوای <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">مادایکس</a> محفوظ است. مادایکس تحت لیسانس GNU-GPL است.';
 $_lang["modx_footer2"] = 'مادایکس نرم افزاری رایگان است، ما شما را تشویق به خلاقیت می کنیم، شما می توانید به منظور هماهنگی مادایکس با نیازهای خود، هر تغییری را در آن اعمال کنید. چنانچه قصد ارائه نسخه مادایکس ویژه خود به دیگران را دارید حتما آن را رایگان ارائه کنید!';
 $_lang["modx_install"] = 'MODX &raquo; برنامه نصب';
-$_lang["modx_requires_php"] = ', است, و مادایکس به نسخه ی PHP [+min_version+] و یا بالاتر نیاز دار';
+$_lang["modx_requires_php"] = ', است, و مادایکس به نسخه ی PHP 5.3 و یا بالاتر نیاز دار';
 $_lang["mysql_5051"] = ' نسخه MySQL سرور 5.0.51 می باشد!';
 $_lang["mysql_5051_warning"] = 'مشکلاتی با نسخه MySQL 5.0.51 کشف شده. پیشنهاد می کنیم نسخه MySQL خود را ارتقا دهید.';
 $_lang["mysql_version_is"] = ' نسخه MySQL شما: ';
