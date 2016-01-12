@@ -12,6 +12,8 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
 	<title>nav</title>
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/menu.css" />
+
 	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
 	<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
 	<script type="text/javascript" src="media/script/session.js"></script>
@@ -58,55 +60,55 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	});
 
 
-	function setTreeFrameWidth(pos) {
-		parent.document.getElementById('tree').style.width    = pos + 'px';
-		parent.document.getElementById('resizer').style.left = pos + 'px';
-		parent.document.getElementById('main').style.left    = pos + 'px';
-
-	}
-
-	function toggleTreeFrame() {
-		var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:250;
-		setTreeFrameWidth(pos);
-	}
-
-
-	function hideTreeFrame() {
-		var pos = 0;
-		setTreeFrameWidth(pos);
-	}
-
-	function defaultTreeFrame() {
-		var pos = 250;
-		setTreeFrameWidth(pos);
-	}
-
-
-	//toggle TopMenu Frame
-		function setMenuFrameHeight(pos) {
-		parent.document.getElementById('tree').style.top    = pos + 'px';
-		parent.document.getElementById('resizer').style.top = pos + 'px';
-		parent.document.getElementById('resizer2').style.top = pos + 'px';
-		parent.document.getElementById('main').style.top    = pos + 'px';
-		parent.document.getElementById('mainMenu').style.height    = pos + 'px';
-
-	}
-
-	function toggleMenuFrame() {
-		var pos = parseInt(parent.document.getElementById('mainMenu').style.height) != 5?5:85;
-		setMenuFrameHeight(pos);
-	}
-
-
-	function hideMenuFrame() {
-		var pos = 5;
-		setMenuFrameHeight(pos);
-	}
-
-	function defaultMenuFrame() {
-		var pos = 85;
-		setMenuFrameHeight(pos);
-	}
+//	function setTreeFrameWidth(pos) {
+//		parent.document.getElementById('tree').style.width    = pos + 'px';
+//		parent.document.getElementById('resizer').style.left = pos + 'px';
+//		parent.document.getElementById('main').style.left    = pos + 'px';
+//
+//	}
+//
+//	function toggleTreeFrame() {
+//		var pos = parseInt(parent.document.getElementById('tree').style.width) != 0?0:250;
+//		setTreeFrameWidth(pos);
+//	}
+//
+//
+//	function hideTreeFrame() {
+//		var pos = 0;
+//		setTreeFrameWidth(pos);
+//	}
+//
+//	function defaultTreeFrame() {
+//		var pos = 250;
+//		setTreeFrameWidth(pos);
+//	}
+//
+//
+//	//toggle TopMenu Frame
+//		function setMenuFrameHeight(pos) {
+//		parent.document.getElementById('tree').style.top    = pos + 'px';
+//		parent.document.getElementById('resizer').style.top = pos + 'px';
+//		parent.document.getElementById('resizer2').style.top = pos + 'px';
+//		parent.document.getElementById('main').style.top    = pos + 'px';
+//		parent.document.getElementById('mainMenu').style.height    = pos + 'px';
+//
+//	}
+//
+//	function toggleMenuFrame() {
+//		var pos = parseInt(parent.document.getElementById('mainMenu').style.height) != 5?5:85;
+//		setMenuFrameHeight(pos);
+//	}
+//
+//
+//	function hideMenuFrame() {
+//		var pos = 5;
+//		setMenuFrameHeight(pos);
+//	}
+//
+//	function defaultMenuFrame() {
+//		var pos = 85;
+//		setMenuFrameHeight(pos);
+//	}
 
 
 
