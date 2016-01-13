@@ -856,7 +856,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('use_browser','1'),
 ('rb_base_dir',''),
 ('rb_base_url',''),
-('which_editor','TinyMCE'),
+('which_editor','TinyMCE4'),
 ('fe_editor_lang','{MANAGERLANGUAGE}'),
 ('fck_editor_toolbar','standard'),
 ('fck_editor_autolang','0'),
