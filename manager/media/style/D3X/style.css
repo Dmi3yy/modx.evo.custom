@@ -295,7 +295,8 @@ form select
     width:auto!;
 
 }
-form select[multiple]{
+form select[multiple],
+form select[size]{
 	height: auto;
 	max-height: 100px;
 }
