@@ -1220,8 +1220,6 @@ a.hometblink:hover {
 
 
 .dynamic-tab-pane-control .tab-row .tab.selected {
-	color: #333;
-	z-index: 999;
 	top: 8px;
     color: #000;
     margin: 4px 2px 8px 0;
@@ -1234,7 +1232,6 @@ a.hometblink:hover {
     z-index: 2;
     text-shadow: 0 1px #fff;
     background: #eaf0f2;
-	
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
@@ -1271,7 +1268,6 @@ a.hometblink:hover {
 .dynamic-tab-pane-control .tab-page {
 	clear: both;
 	background: #fff;
-	z-index: 2;
 	position: relative;
 	top: -2px;
 	padding: 10px 0px 5px !important;
