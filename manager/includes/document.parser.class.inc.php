@@ -1129,12 +1129,21 @@ class DocumentParser {
         $matches = $this->getTagsFromContent($content,'[[',']]');
         
         if(!$matches) return $content;
-        $i= 0;
         $replace= array ();
-        foreach($matches['1'] as $value)
+		foreach($matches[1] as $i=>$value)
+		{
+			$find = $i - 1;
+			while( $find >= 0 )
+			{
+				$tag = $matches[0][ $find ];
+				if(isset($replace[$find]) && strpos($value,$tag)!==false)
         {
+					$value = str_replace($tag,$replace[$find],$value);
+					break;
+				}
+				$find--;
+			}
             $replace[$i] = $this->_get_snip_result($value);
-            $i++;
         }
         $content = str_replace($matches['0'], $replace, $content);
         return $content;
