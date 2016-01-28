@@ -2,14 +2,14 @@
 Так же рекоменую скачивать сборку с сайта так как на гитхаб не всегда стабильный релиз!!!
 
 
-1.1RC-d7.1.*  (*.01.2016)
+1.1RC-d7.1.*  (25.01.2016)
 =======================================================
 - rename folders libs to lib 
 - add DocLister 
 - fix error if no folders and turn on AliasListing for Folders
 - fix phpthumb for image with ext jpeg
 - turn on TinyMCE4 after install 
-- scrollWork: console.log deleted
+- scrollWork: console.log deleted and fix bug 
 
 
 1.1RC-d7.1.5  (09.01.2016)
