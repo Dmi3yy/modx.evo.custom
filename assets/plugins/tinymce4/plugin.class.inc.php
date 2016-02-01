@@ -80,8 +80,10 @@ class TinyMCE4
     	$cfg['toolbar2'] = "link unlink anchor image media codesample table | hr removeformat | subscript superscript charmap | nonbreaking | visualchars visualblocks print preview fullscreen code";
 
 
-		if($lang_code!=='en')
+		if($lang_code!=='en') {
 			$cfg['language_url'] = "{$mce_url}tinymce/langs/{$lang_code}.js";
+			$cfg['language'] = $lang_code;
+		}
 		
 		foreach($cfg as $k=>$v)
 		{
