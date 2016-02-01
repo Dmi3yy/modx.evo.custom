@@ -42,9 +42,13 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 * Print the value of the mathematical expression
 * [[if? &is=`[+ditto_iteration+]*2` &math=`on`]]
 *
+ * Sample №9
+ * Output if pagetitle contains "string"
+ * [[if? &is=`[*pagetitle*]:contains:string` &then=`@TPL:chunk-name`]]
+ *
 * Operator:
 * (is,=) , (not,!=) , (gt,>) , (lt,<) , (gte,>=) , (<=,lte) , (isempty,empty) , (notempty,!empty)
-* (null, is_null) , (in_array, inarray, in) , (not_in,!in)
+ * (null, is_null) , (in_array, inarray, in) , (not_in,!in) , (contains)
 *
 * More samples
 * [[if? &is=`eval('global $iteration;$iteration++;echo $iteration;')` &math=`on`]]   // iteration in Ditto,Wayfinder and others
@@ -127,7 +131,10 @@ for ($i=1;$i<count($opers);$i++){
 					$output = in_array($subject,$operand) ? false : true;
 					$i++;
 					break;
-			  
+                case 'contains':
+                    $output = (strpos($subject,$operand) !== false) ? true : false;
+                    $i++;
+                    break;
 				case '==':
 				case '=':
 				case 'eq':

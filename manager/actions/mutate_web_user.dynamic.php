@@ -210,9 +210,10 @@ function showHide(what, onoff){
 			  	<option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
 			</select>
 		</li>
+    <?php if($_GET['a'] == '87') { ?>
+        <li id="Button3" class="disabled"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
+    <?php } else { ?>
 		<li id="Button3"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
-<?php if($_GET['a']!='88') { ?>
-		<script type="text/javascript">document.getElementById("Button3").className='disabled';</script>
 <?php } ?>
 		<li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=99';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
 	</ul>

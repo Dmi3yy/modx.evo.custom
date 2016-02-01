@@ -222,8 +222,7 @@ if (is_array($evtOut))
     			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
     			</select>		
     		  </li>
-    		  <?php
-    			if ($_REQUEST['a'] == '12') { ?>
+          <?php if ($_REQUEST['a'] == '11') { ?>
     		  <li id="Button3" class="disabled"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
     		  <?php } else { ?>
     		  <li id="Button3"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
