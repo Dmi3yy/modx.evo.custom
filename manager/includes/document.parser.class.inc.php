@@ -70,7 +70,7 @@ class DocumentParser {
      *
      * @return DocumentParser
      */
-    function DocumentParser() {
+    function __construct() {
         global $database_server;
         if(substr(PHP_OS,0,3) === 'WIN' && $database_server==='localhost') $database_server = '127.0.0.1';
         $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
@@ -2575,7 +2575,7 @@ class DocumentParser {
 			$args = ltrim($args, '?&');
 			$_ = strpos($f_url_prefix, '?');
 			
-			if($this->config['friendly_urls'] === '1' && $_ === false){
+			if($_ === false){
 				$args = "?{$args}";
 			}else{
 				$args = "&{$args}";
@@ -3364,16 +3364,16 @@ class DocumentParser {
 
         if(!empty($context)){
             if(is_scalar($context) && isset($_SESSION[$context . 'Validated'])){
-                $out = $_SESSION[$context . 'Shortname'];
+                $out = stripslashes($_SESSION[$context . 'Shortname']);
             }
         }else{
             switch(true){
                 case ($this->isFrontend() && isset ($_SESSION['webValidated'])):{
-                    $out = $_SESSION['webShortname'];
+                    $out = stripslashes($_SESSION['webShortname']);
                     break;
                 }
                 case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):{
-                    $out = $_SESSION['mgrShortname'];
+                    $out = stripslashes($_SESSION['mgrShortname']);
                     break;
                 }
             }
