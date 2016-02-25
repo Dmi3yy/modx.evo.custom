@@ -73,15 +73,17 @@ class TinyMCE4
     	$cfg['menubar'] = false;
     	$cfg['toolbar_items_size'] = 'small';
     	$cfg['image_advtab'] = true;
-    	$cfg['plugins'] = "advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen spellchecker insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor codesample colorpicker textpattern imagetools paste modxlink";
-    	$cfg['paste_word_valid_elements'] =  'b,strong,i,em,h1,h2,table';
+    	$cfg['plugins'] = "advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen spellchecker insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor codesample colorpicker textpattern imagetools paste modxlink youtube";
+    	$cfg['paste_word_valid_elements'] = 'a[href|name],p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,th,td[colspan|rowspan],tr,thead,tfoot,tbody,br,hr,sub,sup,u';
     	//template forecolor backcolor           
     	$cfg['toolbar1'] = "undo redo | cut copy paste | searchreplace | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | styleselect";
     	$cfg['toolbar2'] = "link unlink anchor image media codesample table | hr removeformat | subscript superscript charmap | nonbreaking | visualchars visualblocks print preview fullscreen code";
 
 
-		if($lang_code!=='en')
+		if($lang_code!=='en') {
 			$cfg['language_url'] = "{$mce_url}tinymce/langs/{$lang_code}.js";
+			$cfg['language'] = $lang_code;
+		}
 		
 		foreach($cfg as $k=>$v)
 		{

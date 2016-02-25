@@ -718,12 +718,10 @@ class browser extends uploader {
             return $return;
 
         foreach ($files as $file) {
-            $img = new fastImage($file);
-            $type = $img->getType();
-
-            if ($type !== false) {
-                $size = $img->getSize($file);
-
+			$ext = file::getExtension($file);
+			$smallThumb = false;
+			if (in_array(strtolower($ext), array('png', 'jpg', 'gif', 'jpeg' )) ) {
+				$size = @getimagesize($file);
 				if (is_array($size) && count($size)) {
 					$thumb_file = "$thumbDir/" . basename($file);
 					if (!is_file($thumb_file))
@@ -731,18 +729,12 @@ class browser extends uploader {
 					$smallThumb =
 						($size[0] <= $this->config['thumbWidth']) &&
 						($size[1] <= $this->config['thumbHeight']) &&
-                        in_array($type, array("gif", "jpeg", "png"));
-                } else
-                    $smallThumb = false;
-            } else
-                $smallThumb = false;
-
-            $img->close();
-
+						in_array($size[2], array(IMAGETYPE_GIF, IMAGETYPE_PNG, IMAGETYPE_JPEG));
+				}
+			}
             $stat = stat($file);
             if ($stat === false) continue;
             $name = basename($file);
-            $ext = file::getExtension($file);
             $types = $this->config['types'];
             $types = explode(' ',$types['images'].' '.$types['image']);
             if (substr($name,0,1) == '.' && !$this->config['showHiddenFiles']) continue;

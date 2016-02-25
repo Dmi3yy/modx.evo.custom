@@ -137,12 +137,11 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
             currentPageY = localStorage.getItem('page_y');
             pageUrl = localStorage.getItem('page_url');
             if (currentPageY === undefined) {
-                localStorage.setItem('page_y') = 0;
+                localStorage.setItem('page_y', 0);
             }
             if (pageUrl === null) {
                 pageUrl = frm.location.search.substring(1);
             }
-            console.log(pageUrl +' '+ frm.location.search.substring(1));
             if ( getQueryVariable('a', pageUrl) == getQueryVariable('a', frm.location.search.substring(1)) ) {
                 if ( getQueryVariable('id', pageUrl) == getQueryVariable('id', frm.location.search.substring(1)) ){
                     frm.scrollTo(0,currentPageY);
