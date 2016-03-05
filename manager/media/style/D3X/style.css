@@ -1865,7 +1865,6 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 /* Custom */
 /* normalize some td paddings */
 #tabTemplate tbody td,
-.sectionBody td,
 .sectionBody th	{
 	padding: 1px 5px;
     text-align:left;
@@ -1967,22 +1966,11 @@ code {font-size:inherit;font-family: 'Courier New','Courier', monospace;backgrou
     background-image: -ms-linear-gradient(top, #b9c7cd, #aab6b8);
     background-image: -o-linear-gradient(top, #b9c7cd, #aab6b8);
     background-image: linear-gradient(top, #b9c7cd, #aab6b8);
-    border:1px solid;
-    border-color:#d9e0e4 #89979d #919b9d #ebeef0;
+    /*border:1px solid;*/
+    /*border-color:#d9e0e4 #89979d #919b9d #ebeef0;*/
+	color: #000;
     font-weight:bold;
     text-shadow:0 1px rgba(255,255,255,0.7);
     height:21px;
     vertical-align:middle;
-    padding:4px 0 2px 0;
-}
-.sectionBody table tr TD{
-    border: none;
-    color: #000;
-    font-size: 13px;
-    height: 15px;
-    text-align: left;
-    vertical-align: top;
-}
-.sectionBody table tr:first-child TD{
-	vertical-align: middle;
 }
