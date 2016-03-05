@@ -301,8 +301,7 @@ form input[type="text"],
 form input[type="password"],
 form textarea {
     background: #fdfdff;
-    border: 1px solid;
-    border-color: #ccc;
+    border: 1px solid #ccc;
     border-radius: 4px;
     color: #000;
     -webkit-box-shadow: 0 1px 0 0 rgba(255,255,255,0.3), inset 0 2px 2px -1px rgba(180,188,191,0.7);
@@ -336,9 +335,7 @@ select:focus
 {
 	outline: none;
 	background: #fff;
-	border-color: green;
-	border-style: solid;
-	border-width: 1px;
+	border: 1px solid green;
 }
 input[type="button"],
 input[type="submit"] {
@@ -382,7 +379,6 @@ input[type="button"] {
 }
 select {
 	border: 1px solid #c3c3c3 !important;
-	border: 0;
 	background: #fcfcfc;
 	cursor:pointer;cursor:hand;
 }
@@ -514,7 +510,7 @@ input.submit {
 	vertical-align: middle;
 }
 	.tab-page .sectionHeader {
-		margin: 2px 3px 0px;
+		margin: 2px 3px 0;
 	}
 	.rtl .sectionHeader {
 		direction: rtl;
@@ -522,7 +518,6 @@ input.submit {
 	}
 .sectionBody, .layerVisible {
 	position: relative;
-	display: none;
 	margin: 5px 15px 15px;
 	display: block;
 }
@@ -537,7 +532,7 @@ input.submit {
 	padding: 7px;
 	padding-left:15px;
 	background-color:#fff;
-	border: 1px solid #CCCCCC;
+	border: 1px solid #CCC;
 }
 	.rtl .sectionBody, .layerVisible {
 		direction: rtl;
@@ -576,8 +571,7 @@ thead td {
 }
 li {
 	padding: 0;
-	margin: 0;
-    margin-top: 3px;
+	margin: 3px 0 0;
 	list-style: disc outside url(images/misc/li.png);
 }
 ul {
@@ -661,7 +655,7 @@ div.treeframebody {
 	width: auto;
 	padding:5px;
 	top: 25px;
-	left: 0px;
+	left: 0;
 	background: #fff;
 	border: 1px solid #ccc;
 	z-index: 500;
@@ -847,7 +841,7 @@ a.hometblink:hover {
 	background: #fff;
 	margin: 0;
 	padding: 0;
-	border: 1px solid #039;
+	border: 1px solid;
 	border-color: #eaeaea #909090 #707070 #eaeaea;
 	position: absolute;
 	z-index: 10000;
@@ -1000,7 +994,6 @@ a.hometblink:hover {
 	bottom:0;
     padding-bottom: 4px;
 	left: 0;
-	/*border-top: 1px solid #999;*/
 	border-bottom: 1px solid #434b58;
 }
 	#nav li.active ul.subnav {
@@ -1015,7 +1008,7 @@ a.hometblink:hover {
     color: #e3ecef !important;
     height: 23px !important;
     margin:0 0 0 10px !important;
-    padding: 0px 10px 3px 10px !important;
+    padding: 0 10px 3px 10px !important;
     display:inline-block !important;
     font: normal normal normal 12px/28px Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     background: none !important;
@@ -1026,7 +1019,7 @@ a.hometblink:hover {
 #nav li.active ul.subnav a:hover {
 	border-radius: 7px !important;
     color: #fff!important;
-    text-shadow: 0px 0px 0 #6c737f !important;
+    text-shadow: 0 0 0 #6c737f !important;
     text-decoration: underline;
 }
 
@@ -1073,16 +1066,13 @@ a.hometblink:hover {
 	visibility: hidden;
 	z-index: 10000;
 	width: 170px;
-	background-color: #fff;
-	/*box-shadow: inset 0px 5px 10px 0px rgba(70, 70, 70, 0.1);*/
 	margin: 0;
-
     border: solid 1px #b4bfc2;
     border-radius: 4px;
     background-color: #fff;
     -webkit-box-shadow: 0 9px 10px rgba(72, 93, 99, 0.3);
     box-shadow: 0 9px 10px rgba(72, 93, 99, 0.3);
-    padding: 0px 0px 2px;
+    padding: 0 0 2px;
 
 
 
@@ -1123,7 +1113,6 @@ a.hometblink:hover {
 }
 
 #mx_contextmenu #nameHolder {
-	color: #fff;
 	text-align: center;
 	cursor: default;
 	font-weight: bold;
@@ -1207,7 +1196,6 @@ a.hometblink:hover {
     text-shadow: none !important;
     padding: 5px 10px 0;
     vertical-align: top;
-    text-shadow: 0 1px #fff;
     background: rgba(0,0,0,0);
 
 }
@@ -1270,7 +1258,7 @@ a.hometblink:hover {
 	background: #fff;
 	position: relative;
 	top: -2px;
-	padding: 10px 0px 5px !important;
+	padding: 10px 0 5px !important;
 
     border-radius:0 0 4px 4px;
     border:1px solid #ced7d8;
@@ -1449,7 +1437,7 @@ fieldset#preview h2.tab {
 	position: fixed;
 	right: 0;
 	text-align: right;
-	top: 0px;
+	top: 0;
 	z-index: 100;
     border-radius: 5px;
     -moz-border-radius: 5px;
@@ -1492,7 +1480,7 @@ ul.actionButtons {
     font-size: 12px;
 }
 .actionButtons li:last-child{
-	margin-right: 0px;
+	margin-right: 0;
 }
 .actionButtons img {
 	vertical-align: top;
@@ -1515,7 +1503,7 @@ ul.actionButtons {
 	padding: 7px 8px 7px 4px;
 	text-decoration: none;
 	white-space: nowrap;
-	text-shadow: 0px 1px 0px #FFF;
+	text-shadow: 0 1px 0 #FFF;
 	-moz-box-shadow:1px 1px 2px #ccc;
 	-webkit-box-shadow:1px 1px 2px #ccc;
 	box-shadow:1px 1px 2px #ccc;
@@ -1796,7 +1784,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 	width: 177px;
 	top: 24px;
 	left: 0;
-	margin: 0px 0px 3px 0px;
+	margin: 0 0 3px;
 }
 .dp_cal table {
 	width: 100%;
