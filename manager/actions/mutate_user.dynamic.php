@@ -238,7 +238,6 @@ if (is_array($evtOut))
     </div>
 <!-- Tab Start -->
 <div class="sectionBody">
-<link type="text/css" rel="stylesheet" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="userPane">
 	<script type="text/javascript">
