@@ -1,6 +1,6 @@
 # ignore any files beginning with .
 #\.*
-
+/.idea
 # and any files in the cache directory
 /assets/cache/*
 

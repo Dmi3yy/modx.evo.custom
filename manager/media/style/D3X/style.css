@@ -1258,8 +1258,7 @@ a.hometblink:hover {
 	background: #fff;
 	position: relative;
 	top: -2px;
-	padding: 10px 0 5px !important;
-
+	padding: 10px 10px 5px !important;
     border-radius:0 0 4px 4px;
     border:1px solid #ced7d8;
     border-top:none;
