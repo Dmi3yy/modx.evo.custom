@@ -827,51 +827,75 @@ class DocumentParser {
     }
 
     function getTagsFromContent($content,$left='[+',$right='+]') {
-        $hash = explode($left,$content);
-        foreach($hash as $i=>$v) {
-          if(0<$i) $hash[$i] = $left.$v;
+        $_ = $this->_getTagsFromContent($content,$left,$right);
+        if(empty($_)) return array();
+        foreach($_ as $v)
+        {
+            $tags[0][] = "{$left}{$v}{$right}";
+            $tags[1][] = $v;
+        }
+        return $tags;
+    }
+    
+    function _getTagsFromContent($content, $left='[+',$right='+]') {
+        if(strpos($content,$left)===false) return array();
+        if(strpos($content,';}}')!==false)  $content = str_replace(';}}', '',$content);
+        if(strpos($content,'{{}}')!==false) $content = str_replace('{{}}','',$content);
+        
+        $pos['<![CDATA['] = strpos($content,'<![CDATA[');
+        $pos[']]>']       = strpos($content,']]>');
+        
+        if($pos['<![CDATA[']!==false && $pos[']]>']!==false) {
+            $content = substr($content,0,$pos['<![CDATA[']) . substr($content,$pos[']]>']+3);
         }
         
-        $i=0;
-        $count = count($hash);
-        $safecount = 0;
-        $temp_hash = array();
-        while(0<$count) {
-            $open  = 1;
-            $close = 0;
-            $safecount++;
-            if(1000<$safecount) break;
-            while($close < $open && 0 < $count) {
-                $safecount++;
-                if(!isset($temp_hash[$i])) $temp_hash[$i] = '';
-                if(1000<$safecount) break;
-                $remain = array_shift($hash);
-                $remain = explode($right,$remain);
-                foreach($remain as $v)
-            	{
-            		if($close < $open)
-                	{
-                		$close++;
-                		$temp_hash[$i] .= $v . $right;
-            		}
-            		else break;
+        $lp = explode($left,$content);
+        $piece = array();
+        foreach($lp as $lc=>$lv) {
+            if($lc!==0) $piece[] = $left;
+            if(strpos($lv,$right)===false) $piece[] = $lv;
+            else {
+                $rp = explode($right,$lv);
+                foreach($rp as $rc=>$rv) {
+                    if($rc!==0) $piece[] = $right;
+                    $piece[] = $rv;
                 }
-                $count = count($hash);
-                if(0<$i && strpos($temp_hash[$i],$right)===false) $open++;
             }
-            $i++;
-        }
-        $matches=array();
-        $i = 0;
-        foreach($temp_hash as $v) {
-            if(strpos($v,$left)!==false) {
-                $v = substr($v,0,strrpos($v,$right));
-                $matches[0][$i] = $v . $right;
-                $matches[1][$i] = substr($v,strlen($left));
-                $i++;
+            		}
+        $lc=0;
+        $rc=0;
+        $fetch = '';
+        foreach($piece as $v) {
+            if($v===$left) {
+                if(0<$lc) $fetch .= $left;
+                $lc++;
+                }
+            elseif($v===$right) {
+                if($lc===0) continue;
+                $rc++;
+                if($lc===$rc) {
+					if( !isset($tags) || !in_array($fetch, $tags)) {  // Avoid double Matches
+						$tags[] = $fetch; // Fetch
+					};
+                    $fetch = ''; // and reset
+                    $lc=0;
+                    $rc=0;
+                }
+                else $fetch .= $right;
+            } else {
+                if(0<$lc) $fetch .= $v;
+                else continue;
             }
         }
-        return $matches;
+        if(!$tags) return array();
+        
+        foreach($tags as $tag) {
+            if(strpos($tag,$left)!==false) {
+                $innerTags = $this->_getTagsFromContent($tag,$left,$right);
+                $tags = array_merge($innerTags,$tags);
+            }
+        }
+        return $tags;
     }
 
     /**
@@ -3797,37 +3821,45 @@ class DocumentParser {
      * @return array Associative array in the form property name => property value
      */
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
-        $parameter= array ();
-        if (!empty ($propertyString)) {
-            $tmpParams= explode("&", $propertyString);
-            for ($x= 0; $x < count($tmpParams); $x++) {
-                if (strpos($tmpParams[$x], '=', 0)) {
-                    $pTmp= explode("=", $tmpParams[$x]);
-                    $pvTmp= explode(";", trim($pTmp[1]));
-                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
-                        $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
-                    else {
-                        if($pvTmp[1] == 'list-multi' && $pvTmp[3] != "") 
-				$parameter[trim($pTmp[0])]= $pvTmp[3]; // list-multi
-			else{
-				if ($pvTmp[1] != 'list' && $pvTmp[2] != ""){
-					$parameter[trim($pTmp[0])]= $pvTmp[2];
-				}
-			}
-                    }
+        
+        $propertyString = trim($propertyString);
+        $token = substr($propertyString,0,1);
+        
+        if ($token=='&') {
+            $props= explode('&', $propertyString);
+            $property = array();
+            foreach ($props as $prop) {
+                
+                if (strpos($prop, '=')===false) {
+                    $property[trim($prop)]='';
+                    continue;
                 }
+                
+                $_ = explode('=', $prop, 2);
+                $key = trim($_[0]);
+                $p = explode(';', trim($_[1]));
+                if    ($p[1]=='list'       && $p[3]!='') $value = $p[3]; // list default
+                elseif($p[1]=='list-multi' && $p[3]!='') $value = $p[3]; // list-multi
+                elseif($p[1]!='list'       && $p[2]!='') $value = $p[2]; // text, textarea, etc..
+                else                                     $value = '';
+                $property[$key] = $value;
             }
         }
+//      elseif($token=='[' || $token=='{') {
+//          $property = json_decode($propertyString, true);
+//      }
+        else $property = array();
+        
 		if(!empty($elementName) && !empty($elementType)){
 			$out = $this->invokeEvent('OnParseProperties', array(
 				'element' => $elementName,
 				'type' => $elementType,
-				'args' => $parameter
+                'args'    => $property
 			));
 			if(is_array($out)) $out = array_pop($out);
-            if(is_array($out)) $parameter = $out;
+            if(is_array($out)) $property = $out;
 		}
-        return $parameter;
+        return $property;
     }
 
     /***************************************************************************************/
