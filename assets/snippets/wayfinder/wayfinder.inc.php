@@ -214,7 +214,8 @@ class Wayfinder {
         } elseif ($resource['isfolder']
             && $this->_templates['activeParentRowTpl']
             && ($resource['level'] < $this->_config['level'] || $this->_config['level'] == 0)
-            && $this->isHere($resource['id'])) {
+			&& $this->isHere($resource['id'])
+			&& $numChildren) {
             $usedTemplate = 'activeParentRowTpl';
         } elseif ($resource['isfolder']
             && ($resource['template']=="0" || is_numeric(strpos($resource['link_attributes'],'rel="category"')))
@@ -237,7 +238,7 @@ class Wayfinder {
         $useChunk = $this->_templates[$usedTemplate];
 		//Setup the new wrapper name and get the class names
         $useSub = $resource['hasChildren'] ? "[+wf.wrapper.{$resource['id']}+]" : "";
-        $classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['isfolder'],$resource['type']);
+		$classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['hasChildren'],$resource['type']);
         $useClass = ($classNames) ? $useClass = ' class="' . $classNames . '"' : '';
         
         //Setup the row id if a prefix is specified
@@ -330,7 +331,7 @@ class Wayfinder {
                 $hasClass = 1;
             }
             //Set parentFolder class if specified
-            if ($isFolder && !empty($this->_css['parent']) && ($level < $this->_config['level'] || $this->_config['level'] == 0)) {
+			if ($isFolder && !empty($this->_css['parent']) && ($level < $this->_config['level'] || $this->_config['level'] == 0) && ($this->isHere($docId) || !$this->_config['hideSubMenus'])) {
                 $returnClass .= $hasClass ? ' ' . $this->_css['parent'] : $this->_css['parent'];
                 $hasClass = 1;
             }
