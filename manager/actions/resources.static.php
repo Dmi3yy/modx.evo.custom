@@ -9,15 +9,20 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
     
     //$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
 
-    if ($resourceTable == 'site_plugins' || $resourceTable == 'site_tmplvars') {
-        $orderby= '6,2';
-    }else{
+    switch($resourceTable) {
+        case 'site_plugins':
+        case 'site_tmplvars':
+            $orderby= '6,2'; break;
+        case 'site_templates':
+            $orderby= '6,1'; break;
+        default:
         $orderby= '5,1';
     }
 
+    $selectableTemplates = $resourceTable == 'site_templates' ? "{$resourceTable}.selectable, " : "";
     
     $rs = $modx->db->select(
-        "{$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category",
+        "{$pluginsql} {$tvsql} {$resourceTable}.{$nameField} as name, {$resourceTable}.id, {$resourceTable}.description, {$resourceTable}.locked, {$selectableTemplates}IF(isnull(categories.category),'{$_lang['no_category']}',categories.category) as category",
         $modx->getFullTableName($resourceTable)." AS {$resourceTable}
             LEFT JOIN ".$modx->getFullTableName('categories')." AS categories ON {$resourceTable}.category = categories.id",
         "",
@@ -39,6 +44,7 @@ function createResourceList($resourceTable,$action,$nameField = 'name') {
         }
 
         if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
+        if ($resourceTable == 'site_templates') $class = $row['selectable'] ? '' : ' class="disabledPlugin"';
         $output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
         
         if ($resourceTable == 'site_tmplvars') {
