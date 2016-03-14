@@ -24,7 +24,7 @@ $tbl_site_templates = $modx->getFullTableName('site_templates');
 // check to see the template editor isn't locked
 $rs = $modx->db->select('username',$tbl_active_users,"action=16 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
     if ($username = $modx->db->getValue($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template'));
+        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, 'template'));
     }
 // end check for lock
 
@@ -86,7 +86,7 @@ function deletedocument() {
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="plus"> + </span>
+                <span class="plus"> + </span>
                 <select id="stay" name="stay">
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
@@ -96,10 +96,10 @@ function deletedocument() {
           <?php if ($_REQUEST['a'] == '19') { ?>
               <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } else { ?>
+          <?php } else { ?>
               <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } ?>
+          <?php } ?>
               <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
@@ -114,11 +114,12 @@ function deletedocument() {
         <h2 class="tab"><?php echo $_lang["template_edit_tab"] ?></h2>
         <script type="text/javascript">tp.addTabPage( document.getElementById( "tabTemplate" ) );</script>
 
-<?php echo '<div>' . $_lang['template_msg'] . '</div>'; ?>
+<?php echo '<div>' . $_lang['template_msg'] . '<br/><br/></div>'; ?>
     <table>
       <tr>
         <th><?php echo $_lang['template_name']; ?>:</th>
-        <td><input name="templatename" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['templatename']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"><span class="warning" id='savingMessage'></span></td>
+        <td><input name="templatename" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['templatename']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"><span class="warning" id='savingMessage'></span>
+            <?php if($id == $modx->config['default_template']) echo ' <b>'.$_lang['defaulttemplate_title'].'</b>'; ?></td>
       </tr>
     <tr>
     <th><?php echo $_lang['template_desc']; ?>:</th>
@@ -165,7 +166,7 @@ function deletedocument() {
 <?php
 $selectedTvs = array();
 if( !isset($_POST['assignedTv']) ) {
-$rs = $modx->db->select(
+    $rs = $modx->db->select(
         sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
         sprintf("%s tv
                 LEFT JOIN %s tr ON tv.id=tr.tmplvarid
@@ -173,7 +174,7 @@ $rs = $modx->db->select(
             $modx->getFullTableName('site_tmplvars'), $modx->getFullTableName('site_tmplvar_templates'), $modx->getFullTableName('categories')),
         "templateid='{$id}'",
         "tr.rank DESC, tv.rank DESC, tvcaption DESC, tvid DESC"     // workaround for correct sort of none-existing ranks
-	);
+    );
     while ($row = $modx->db->getRow($rs)) {
         $selectedTvs[$row['tvid']] = $row;
     }
@@ -182,7 +183,7 @@ $rs = $modx->db->select(
 
 $unselectedTvs = array();
 $rs = $modx->db->select(
-    sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
+    sprintf("tv.name AS tvname, tv.id AS tvid, tr.templateid AS templateid, tv.description AS tvdescription, tv.caption AS tvcaption, tv.locked AS tvlocked, if(isnull(cat.category),'%s',cat.category) AS category, cat.id as catid", $_lang['no_category']),
     sprintf("%s tv
 	    LEFT JOIN %s tr ON tv.id=tr.tmplvarid
 	    LEFT JOIN %s cat ON tv.category=cat.id",
@@ -241,7 +242,7 @@ while ($row = array_shift($unselectedTvs)) {
     $row['category'] = stripslashes($row['category']); //pixelchutes
     if ($preCat !== $row['category']) {
         $tvList .= $insideUl? '</ul>': '';
-        $tvList .= '<li><strong>'.$row['category'].'</strong><ul>';
+        $tvList .= '<li><strong>'.$row['category']. ($row['catid']!='' ? ' <small>('.$row['catid'].')</small>' : '') .'</strong><ul>';
         $insideUl = 1;
     }
 

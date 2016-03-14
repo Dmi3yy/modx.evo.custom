@@ -258,27 +258,27 @@ function decode(s){
 	<h1><?php echo $_lang['tmplvars_title']; ?></h1>
 
     <div id="actions">
-    	  <ul class="actionButtons">
-    		  <li id="Button1">
-    			<a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
-    			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
+          <ul class="actionButtons">
+              <li id="Button1">
+                <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
+                  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
                 <span class="plus"> + </span>
-    			<select id="stay" name="stay">
-    			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
-    			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
-    			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
-    			</select>		
-    		  </li>
+                <select id="stay" name="stay">
+                  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
+                  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
+                  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
+                </select>        
+              </li>
           <?php if ($_GET['a'] == '300') { ?>
               <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
-    		  <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-    		  <?php } else { ?>
+              <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+          <?php } else { ?>
               <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
-    		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-    		  <?php } ?>	
-    		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
-    	  </ul>
+              <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+          <?php } ?>
+              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+          </ul>
     </div>
 
 <script type="text/javascript" src="media/script/tabpane.js"></script>
@@ -419,9 +419,9 @@ function decode(s){
 		label {display:block;}
 	</style>
 <table>
-	<?php
+<?php
         $rs = $modx->db->select(
-            sprintf("tpl.id AS id, templatename, tpl.description AS tpldescription, tpl.locked AS tpllocked, tpl.selectable AS selectable, tmplvarid, if(isnull(cat.category),'%s',cat.category) AS category", $_lang['no_category']),
+            sprintf("tpl.id AS id, templatename, tpl.description AS tpldescription, tpl.locked AS tpllocked, tpl.selectable AS selectable, tmplvarid, if(isnull(cat.category),'%s',cat.category) AS category, cat.id AS catid", $_lang['no_category']),
             sprintf("%s as tpl
                     LEFT JOIN %s as stt ON stt.templateid=tpl.id AND stt.tmplvarid='%s'
                     LEFT JOIN %s as cat ON tpl.category=cat.id",
@@ -441,42 +441,47 @@ while ($row = $modx->db->getRow($rs)) {
     $row['category'] = stripslashes($row['category']); //pixelchutes
     if ($preCat !== $row['category']) {
         $tplList .= $insideUl? '</ul>': '';
-        $tplList .= '<li><strong>'.$row['category'].'</strong><ul>';
+        $tplList .= '<li><strong>'.$row['category']. ($row['catid']!='' ? ' <small>('.$row['catid'].')</small>' : '') .'</strong><ul>';
         $insideUl = 1;
     }
 
-	    	if($_REQUEST['a']=='300' && $modx->config['default_template']==$row['id'])
-	    	{
-	    		$checked = true;
-	    	}
-	    	elseif(isset($_GET['tpl']) && $_GET['tpl'] == $row['id'])
-	    	{
-	    		$checked = true;
-	    	}
-	    	elseif($id == 0 && is_array($_POST['template']))
-	    	{
-	    		$checked = in_array($row['id'], $_POST['template']);
-	    	}
-	    	else
-	    	{
-	    		$checked = $row['tmplvarid'];
-	    	}
+    if($_REQUEST['a']=='300' && $modx->config['default_template']==$row['id'])
+    {
+        $checked = true;
+    }
+    elseif(isset($_GET['tpl']) && $_GET['tpl'] == $row['id'])
+    {
+        $checked = true;
+    }
+    elseif($id == 0 && is_array($_POST['template']))
+    {
+        $checked = in_array($row['id'], $_POST['template']);
+    }
+    else
+    {
+        $checked = $row['tmplvarid'];
+    }
     $selectable = !$row['selectable'] ? ' class="disabled"':'';
-	    	$checked = $checked ? ' checked="checked"':'';
+    $checked = $checked ? ' checked="checked"':'';
     $tplId = '&nbsp;<small>(' . $row['id'] . ')</small>';
     $desc = !empty($row['tpldescription']) ? ' - '.$row['tpldescription'] : '';
-    $locked = $row['tpllocked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
+
+    $tplInfo = array();
+    if($row['tpllocked']) $tplInfo[] = $_lang['locked'];
+    if($row['id'] == $modx->config['default_template']) $tplInfo[] = $_lang['defaulttemplate_title'];
+    $tplInfo = !empty($tplInfo) ? ' <em>('.join(', ', $tplInfo).')</em>' : '';
+
     $tplList .= sprintf('<li><label%s><input name="template[]" value="%s" type="checkbox" %s onchange="documentDirty=true;">%s%s%s%s</label></li>',
-                        $selectable, $row['id'], $checked, $row['templatename'], $tplId, $desc, $locked );
+                        $selectable, $row['id'], $checked, $row['templatename'], $tplId, $desc, $tplInfo );
     $tplList .= '</li>';
 
     $preCat = $row['category'];
-	    }
+}
 $tplList .= $insideUl? '</ul>': '';
 $tplList .= '</ul>';
 echo $tplList;
 
-	?>
+?>
     </td>
   </tr>
 </table>

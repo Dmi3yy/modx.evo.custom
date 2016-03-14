@@ -57,6 +57,7 @@ class DocumentParser {
     var $dumpPlugins;
     var $pluginsCode;
     var $pluginsTime=array();
+    var $pluginCache=array();
     var $aliasListing;
     private $version=array();
 	public $extensions = array();
@@ -915,7 +916,23 @@ class DocumentParser {
         
         foreach($matches[1] as $i=>$key) {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
-            if(strpos($key,'@')!==false) {
+            
+            if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
+            elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
+            else                                   $value = '';
+            
+            if (is_array($value)) {
+                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
+                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
+                $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
+            }
+            $content= str_replace($matches[0][$i], $value, $content);
+        }
+        
+        return $content;
+    }
+
+    function _contextValue($key) {
                 list($key,$str) = explode('@',$key,2);
                 $context = strtolower($str);
                 if(substr($str,0,5)==='alias' && strpos($str,'(')!==false)
@@ -953,19 +970,7 @@ class DocumentParser {
                 if(preg_match('@^[1-9][0-9]*$@',$docid))
                     $value = $this->getField($key,$docid);
                 else $value = '';
-				}
-            elseif(!isset($this->documentObject[$key])) $value = '';
-            else $value= $this->documentObject[$key];
-            
-            if (is_array($value)) {
-                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
-                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
-                $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
-			}
-            $content= str_replace($matches['0'][$i], $value, $content);
-		}
-        
-		return $content;
+        return $value;
 	}
 
 	/**
@@ -1171,7 +1176,7 @@ class DocumentParser {
 			}
             $replace[$i] = $this->_get_snip_result($value);
         }
-        $content = str_replace($matches['0'], $replace, $content);
+        $content = str_replace($matches[0], $replace, $content);
         return $content;
     }
     
@@ -3772,22 +3777,12 @@ class DocumentParser {
                 $e->activePlugin= $pluginName;
 
                 // get plugin code
-                if (isset ($this->pluginCache[$pluginName])) {
-                    $pluginCode= $this->pluginCache[$pluginName];
-                    $pluginProperties= isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
-                } else {
-                    $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
-                    if ($row= $this->db->getRow($result)) {
-                        $pluginCode= $this->pluginCache[$row['name']]= $row['plugincode'];
-                        $pluginProperties= $this->pluginCache[$row['name'] . "Props"]= $row['properties'];
-                    } else {
-                        $pluginCode= $this->pluginCache[$pluginName]= "return false;";
-                        $pluginProperties= '';
-                    }
-                }
+                $plugin = $this->getPluginCode($pluginName);
+                $pluginCode= $plugin['code'];
+                $pluginProperties= $plugin['props'];
 
                 // load default params/properties
-                $parameter= $this->parseProperties($pluginProperties);
+                $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
                 if(!is_array($parameter)){
                     $parameter = array();
                 }
@@ -3813,6 +3808,35 @@ class DocumentParser {
     }
 
     /**
+     * Returns plugin-code and properties
+     *
+     * @param string $pluginName
+     * @return array Associative array consisting of 'code' and 'props'
+     */
+    public function getPluginCode($pluginName)
+    {
+        $plugin = array();
+        if (isset ($this->pluginCache[$pluginName])) {
+            $pluginCode = $this->pluginCache[$pluginName];
+            $pluginProperties = isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
+        } else {
+            $pluginName = $this->db->escape($pluginName);
+            $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
+            if ($row = $this->db->getRow($result)) {
+                $pluginCode = $this->pluginCache[$row['name']]= $row['plugincode'];
+                $pluginProperties = $this->pluginCache[$row['name'] . "Props"]= $row['properties'];
+            } else {
+                $pluginCode = $this->pluginCache[$pluginName]= "return false;";
+                $pluginProperties = '';
+            }
+        }
+        $plugin['code'] = $pluginCode;
+        $plugin['props'] = $pluginProperties;
+
+        return $plugin;
+    }
+
+    /**
      * Parses a resource property string and returns the result as an array
      *
      * @param string $propertyString
@@ -3823,11 +3847,12 @@ class DocumentParser {
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
         
         $propertyString = trim($propertyString);
-        $token = substr($propertyString,0,1);
+        $jsonFormat = $this->isJson($propertyString, true);
+        $property = array();
         
-        if ($token=='&') {
+        // old format
+        if ( !$jsonFormat ) {
             $props= explode('&', $propertyString);
-            $property = array();
             foreach ($props as $prop) {
                 
                 if (strpos($prop, '=')===false) {
@@ -3844,11 +3869,27 @@ class DocumentParser {
                 else                                     $value = '';
                 $property[$key] = $value;
             }
+        // new json-format
+        } else if(!empty($jsonFormat)){
+            foreach( $jsonFormat as $key=>$row ) {
+                if(is_array($row)) {
+                    switch ($key) {
+                        case 'pluginConfig':
+                            if (isset($row[0]['legacy_names'])) $property['pluginName'] = $row[0]['legacy_names'];
+                            if (isset($row[0]['description'])) $property['pluginDesc'] = $row[0]['description'];
+                            if (isset($row[0]['modx_category'])) $property['pluginCategory'] = $row[0]['modx_category'];
+                            if (isset($row[0]['events'])) $property['pluginEvents'] = explode(',', $row[0]['events']);
+                            if (isset($row[0]['filePath'])) $property['pluginFilePath'] = $row[0]['filePath'];
+                            if (isset($row[0]['installset'])) $property['pluginInstallSet'] = $row[0]['installset'];
+                            break;
+                        default:
+                            $property[$key] = $row[0]['value'];
+                    }
+                } else {
+                    $property[$key] = $row;
+                }
+            }
         }
-//      elseif($token=='[' || $token=='{') {
-//          $property = json_decode($propertyString, true);
-//      }
-        else $property = array();
         
 		if(!empty($elementName) && !empty($elementType)){
 			$out = $this->invokeEvent('OnParseProperties', array(
@@ -4239,6 +4280,11 @@ class DocumentParser {
 		$this->loadExtension('PHPCOMPAT');
 		return $this->phpcompat->htmlspecialchars($str, $flags);
 	}
+
+        function isJson($string, $returnData=false) {
+            $data = json_decode($string, true);
+            return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
+        }
     // End of class.
 
 }
