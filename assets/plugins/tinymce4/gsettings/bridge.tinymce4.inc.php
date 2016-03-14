@@ -1,6 +1,6 @@
 <?php
 /* TinyMCE4 for Modx Evolution
-   Base: v4.3.4
+   Base: v4.3.7
 */
 
 // @todo: check all needed themes
@@ -9,7 +9,7 @@
 // @todo: youtube-plugin is commercial? -> http://www.cfcms.nl/tinymce-youtube/index.html
 
 // Editor-Settings
-$editorLabel    = 'TinyMCE 4';          // Name displayed in Modx-Dropdowns - No HTML!
+$editorLabel    = 'TinyMCE4';          // Name displayed in Modx-Dropdowns - No HTML!
 $skinsDirectory = 'tinymce/skins';      // Relative to plugin-dir
 $editorVersion  = '4.3.7';              // Version of TinyMCE4-Library
 $editorLogo     = 'tinymce/logo.png';   // Optional Image displayed in Modx-settings
