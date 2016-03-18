@@ -276,7 +276,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     function updateTree() {
         rpcNode = $('treeRoot');
-        treeParams = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + document.sortFrm.dt.value + '&tree_sortby=' + document.sortFrm.sortby.value + '&tree_sortdir=' + document.sortFrm.sortdir.value;
+        treeParams = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + document.sortFrm.dt.value + '&tree_sortby=' + document.sortFrm.sortby.value + '&tree_sortdir=' + document.sortFrm.sortdir.value + '&tree_nodename=' + document.sortFrm.nodename.value;
         new Ajax('index.php?'+treeParams, {method: 'get',onComplete:rpcLoadData}).request();
     }
 
@@ -417,8 +417,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             <?php if ($modx->hasPermission('empty_trash')) { ?>
                 <td><a href="#" id="Button10" class="treeButtonDisabled" title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             <?php } ?>
-			 <td><a href="#" title="Управление элементами" onclick="window.open('index.php?a=76','gener','width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')"><img src="media/style/D3X/images/icons/comment.gif" style="margin:3px 0 0 5px"></a></td>
-            </tr>
+            <?php if ($modx->hasPermission('new_chunk')) { ?>
+		<td><a href="#" title="<?php echo $_lang['element_management']; ?>" onclick="window.open('index.php?a=76','gener','width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')"><img src="media/style/D3X/images/icons/comment.gif" style="margin:3px 0 0 5px"></a></td>
+	    <?php } ?>
+	    </tr>
         </table>
     </td>
   </tr>
@@ -426,15 +428,12 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 <div id="floater">
 <?php
-if(isset($_REQUEST['tree_sortby'])) {
-    $_SESSION['tree_sortby'] = $_REQUEST['tree_sortby'];
-}
-
-if(isset($_REQUEST['tree_sortdir'])) {
-    $_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
-}
+if(isset($_REQUEST['tree_sortby']))   { $_SESSION['tree_sortby']   = $_REQUEST['tree_sortby']; }
+if(isset($_REQUEST['tree_sortdir']))  { $_SESSION['tree_sortdir']  = $_REQUEST['tree_sortdir']; }
+if(isset($_REQUEST['tree_nodename'])) { $_SESSION['tree_nodename'] = $_REQUEST['tree_nodename']; }
 ?>
 <form name="sortFrm" id="sortFrm" action="menu.php">
+<input type="hidden" name="dt" value="<?php echo htmlspecialchars($_REQUEST['dt']); ?>" />
 <table width="100%"  border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td style="padding-left: 10px;padding-top: 1px;" colspan="2">
@@ -445,6 +444,7 @@ if(isset($_REQUEST['tree_sortdir'])) {
             <option value="menuindex" <?php echo $_SESSION['tree_sortby']=='menuindex' ? "selected='selected'" : "" ?>><?php echo $_lang['resource_opt_menu_index'] ?></option>
             <option value="createdon" <?php echo $_SESSION['tree_sortby']=='createdon' ? "selected='selected'" : "" ?>><?php echo $_lang['createdon']; ?></option>
             <option value="editedon" <?php echo $_SESSION['tree_sortby']=='editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
+            <option value="publishedon" <?php echo $_SESSION['tree_sortby']=='publishedon' ? "selected='selected'" : "" ?>><?php echo $_lang['page_data_publishdate']; ?></option>
         </select>
     </td>
   </tr>
@@ -454,9 +454,23 @@ if(isset($_REQUEST['tree_sortdir'])) {
             <option value="DESC" <?php echo $_SESSION['tree_sortdir']=='DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
             <option value="ASC" <?php echo $_SESSION['tree_sortdir']=='ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
         </select>
-        <input type='hidden' name='dt' value='<?php echo htmlspecialchars($_REQUEST['dt']); ?>' />
     </td>
     <td width="1%"><a href="#" class="treeButton" id="button7" style="text-align:right" onClick="updateTree();showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a></td>
+  </tr>
+  <tr>
+    <td width="99%" style="padding-left: 10px;padding-top: 1px;" colspan="2">
+        <br/>
+        <?php echo $_lang["setting_resource_tree_node_name"] ?>
+        <select name="nodename" style="margin-top:5px;">
+            <option value="default" <?php echo $_SESSION['tree_nodename']=='default' ? "selected='selected'" : "" ?>><?php echo trim($_lang['default'], ':'); ?></option>
+            <option value="pagetitle" <?php echo $_SESSION['tree_nodename']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
+            <option value="menutitle" <?php echo $_SESSION['tree_nodename']=='menutitle' ? "selected='selected'" : "" ?>><?php echo $_lang['resource_opt_menu_title']; ?></option>
+            <option value="alias" <?php echo $_SESSION['tree_nodename']=='alias' ? "selected='selected'" : "" ?>><?php echo $_lang['alias']; ?></option>
+            <option value="createdon" <?php echo $_SESSION['tree_nodename']=='createdon' ? "selected='selected'" : "" ?>><?php echo $_lang['createdon']; ?></option>
+            <option value="editedon" <?php echo $_SESSION['tree_nodename']=='editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
+            <option value="publishedon" <?php echo $_SESSION['tree_nodename']=='publishedon' ? "selected='selected'" : "" ?>><?php echo $_lang['page_data_publishdate']; ?></option>
+        </select>
+    </td>
   </tr>
 </table>
 </form>

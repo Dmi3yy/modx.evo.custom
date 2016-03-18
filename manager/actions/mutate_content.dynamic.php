@@ -531,9 +531,9 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
             </a>
             <span class="plus"> + </span>
             <select id="stay" name="stay">
-              <?php if ($modx->hasPermission('new_document')) { ?>
+      <?php if ($modx->hasPermission('new_document')) { ?>
               <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
-              <?php } ?>
+      <?php } ?>
               <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
               <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
             </select>
@@ -541,10 +541,10 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
       <?php if ($_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') { ?>
           <li id="Button6" class="disabled"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
           <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
-          <?php } else { ?>
+      <?php } else { ?>
           <li id="Button6"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" alt="icons_resource_duplicate" /> <?php echo $_lang['duplicate']?></a></li>
           <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" alt="icons_delete_document" /> <?php echo $_lang['delete']?></a></li>
-          <?php } ?>
+      <?php } ?>
           <li id="Button4"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id".htmlspecialchars($add_path)."';"?>"><img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           <li id="Button5"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><img alt="icons_preview_resource" src="<?php echo $_style["icons_preview_resource"] ?>" /> <?php echo $_lang['preview']?></a></li>
       </ul>
@@ -605,7 +605,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                     <option value="0">(blank)</option>
 <?php
                 $rs = $modx->db->select(
-					"t.templatename, t.id, c.category",
+					"t.templatename, t.selectable, t.id, c.category",
 					"{$tbl_site_templates} AS t
 						LEFT JOIN {$tbl_categories} AS c ON t.category = c.id",
 					'',
@@ -613,6 +613,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 					);
                 $currentCategory = '';
                 while ($row = $modx->db->getRow($rs)) {
+                    if($row['selectable'] != 1 && $row['id'] != $content['template']) { continue; }; // Skip if not selectable but show if selected!
                     $thisCategory = $row['category'];
                     if($thisCategory == null) {
                         $thisCategory = $_lang["no_category"];
@@ -701,7 +702,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                 $htmlContent = $content['content'];
 ?>
                 <div style="width:100%">
-                    <textarea id="ta" name="ta" cols="" rows="" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($htmlContent)?></textarea>
+                    <textarea id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($htmlContent)?></textarea>
                     <span class="warning"><?php echo $_lang['which_editor_title']?></span>
 
                     <select id="which_editor" name="which_editor" onchange="changeRTE();">
@@ -719,9 +720,11 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                         </select>
                 </div>
 <?php
-                $replace_richtexteditor = array(
-                    'ta',
-                );
+                // Richtext-[*content*]
+                $richtexteditorIds = array();
+                $richtexteditorOptions = array();
+                $richtexteditorIds[$which_editor][] = 'ta';
+                $richtexteditorOptions[$which_editor]['ta'] = '';
             } else {
                 echo "\t".'<div style="width:100%"><textarea class="phptextarea" id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;">',$modx->htmlspecialchars($content['content']),'</textarea></div>'."\n";
             }
@@ -760,16 +763,15 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
                     while ($row = $modx->db->getRow($rs)) {
                         // Go through and display all Template Variables
                         if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
+                            // determine TV-options
+                            $tvOptions = $modx->parseProperties($row['elements']);
+                            if(!empty($tvOptions)) {
+                                // Allow different Editor with TV-option {"editor":"CKEditor4"} or &editor=Editor;text;CKEditor4
+                                $editor = isset($tvOptions['editor']) ? $tvOptions['editor']: $which_editor;
+                            };
                             // Add richtext editor to the list
-                            if (is_array($replace_richtexteditor)) {
-                                $replace_richtexteditor = array_merge($replace_richtexteditor, array(
-                                    "tv" . $row['id'],
-                                ));
-                            } else {
-                                $replace_richtexteditor = array(
-                                    "tv" . $row['id'],
-                                );
-                            }
+                            $richtexteditorIds[$editor][] = "tv".$row['id'];
+                            $richtexteditorOptions[$editor]["tv".$row['id']] = $tvOptions;
                         }
                         // splitter
                         if ($i++ > 0)
@@ -1190,14 +1192,17 @@ if (is_array($evtOut)) echo implode('', $evtOut);
 </script>
 <?php
     if (($content['richtext'] == 1 || $_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') && $use_editor == 1) {
-        if (is_array($replace_richtexteditor)) {
-            // invoke OnRichTextEditorInit event
-            $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
-                'editor' => $which_editor,
-                'elements' => $replace_richtexteditor
-            ));
-            if (is_array($evtOut))
-                echo implode('', $evtOut);
+        if (is_array($richtexteditorIds)) {
+            foreach($richtexteditorIds as $editor=>$elements) {
+                // invoke OnRichTextEditorInit event
+                $evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
+                    'editor' => $editor,
+                    'elements' => $elements,
+                    'options' => $richtexteditorOptions[$editor]
+                ));
+                if (is_array($evtOut))
+                    echo implode('', $evtOut);
+            }
         }
     }
 

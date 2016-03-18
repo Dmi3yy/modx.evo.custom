@@ -16,6 +16,7 @@ $.ddMM = {
 		datepicker_offset: 0
 	},
 	urls: {
+		manager: 'manager/',
 		mm: 'assets/plugins/managermanager/'
 	},
 	/**
@@ -147,7 +148,7 @@ $(function(){
 	
 	//Initialization of the corresponding jQuery element for each document field
 	for (var field in $.ddMM.fields){
-		$.ddMM.fields[field].$elem = $($.ddMM.fields[field].fieldtype + '[name="' + $.ddMM.fields[field].fieldname + '"]');
+		$.ddMM.fields[field].$elem = $('[name="' + $.ddMM.fields[field].fieldname + '"]');
 	}
 });
 })(jQuery);

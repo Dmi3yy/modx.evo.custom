@@ -57,6 +57,7 @@ class DocumentParser {
     var $dumpPlugins;
     var $pluginsCode;
     var $pluginsTime=array();
+    var $pluginCache=array();
     var $aliasListing;
     private $version=array();
 	public $extensions = array();
@@ -827,51 +828,75 @@ class DocumentParser {
     }
 
     function getTagsFromContent($content,$left='[+',$right='+]') {
-        $hash = explode($left,$content);
-        foreach($hash as $i=>$v) {
-          if(0<$i) $hash[$i] = $left.$v;
+        $_ = $this->_getTagsFromContent($content,$left,$right);
+        if(empty($_)) return array();
+        foreach($_ as $v)
+        {
+            $tags[0][] = "{$left}{$v}{$right}";
+            $tags[1][] = $v;
+        }
+        return $tags;
+    }
+    
+    function _getTagsFromContent($content, $left='[+',$right='+]') {
+        if(strpos($content,$left)===false) return array();
+        if(strpos($content,';}}')!==false)  $content = str_replace(';}}', '',$content);
+        if(strpos($content,'{{}}')!==false) $content = str_replace('{{}}','',$content);
+        
+        $pos['<![CDATA['] = strpos($content,'<![CDATA[');
+        $pos[']]>']       = strpos($content,']]>');
+        
+        if($pos['<![CDATA[']!==false && $pos[']]>']!==false) {
+            $content = substr($content,0,$pos['<![CDATA[']) . substr($content,$pos[']]>']+3);
         }
         
-        $i=0;
-        $count = count($hash);
-        $safecount = 0;
-        $temp_hash = array();
-        while(0<$count) {
-            $open  = 1;
-            $close = 0;
-            $safecount++;
-            if(1000<$safecount) break;
-            while($close < $open && 0 < $count) {
-                $safecount++;
-                if(!isset($temp_hash[$i])) $temp_hash[$i] = '';
-                if(1000<$safecount) break;
-                $remain = array_shift($hash);
-                $remain = explode($right,$remain);
-                foreach($remain as $v)
-            	{
-            		if($close < $open)
-                	{
-                		$close++;
-                		$temp_hash[$i] .= $v . $right;
-            		}
-            		else break;
+        $lp = explode($left,$content);
+        $piece = array();
+        foreach($lp as $lc=>$lv) {
+            if($lc!==0) $piece[] = $left;
+            if(strpos($lv,$right)===false) $piece[] = $lv;
+            else {
+                $rp = explode($right,$lv);
+                foreach($rp as $rc=>$rv) {
+                    if($rc!==0) $piece[] = $right;
+                    $piece[] = $rv;
                 }
-                $count = count($hash);
-                if(0<$i && strpos($temp_hash[$i],$right)===false) $open++;
             }
-            $i++;
-        }
-        $matches=array();
-        $i = 0;
-        foreach($temp_hash as $v) {
-            if(strpos($v,$left)!==false) {
-                $v = substr($v,0,strrpos($v,$right));
-                $matches[0][$i] = $v . $right;
-                $matches[1][$i] = substr($v,strlen($left));
-                $i++;
+            		}
+        $lc=0;
+        $rc=0;
+        $fetch = '';
+        foreach($piece as $v) {
+            if($v===$left) {
+                if(0<$lc) $fetch .= $left;
+                $lc++;
+                }
+            elseif($v===$right) {
+                if($lc===0) continue;
+                $rc++;
+                if($lc===$rc) {
+					if( !isset($tags) || !in_array($fetch, $tags)) {  // Avoid double Matches
+						$tags[] = $fetch; // Fetch
+					};
+                    $fetch = ''; // and reset
+                    $lc=0;
+                    $rc=0;
+                }
+                else $fetch .= $right;
+            } else {
+                if(0<$lc) $fetch .= $v;
+                else continue;
             }
         }
-        return $matches;
+        if(!$tags) return array();
+        
+        foreach($tags as $tag) {
+            if(strpos($tag,$left)!==false) {
+                $innerTags = $this->_getTagsFromContent($tag,$left,$right);
+                $tags = array_merge($innerTags,$tags);
+            }
+        }
+        return $tags;
     }
 
     /**
@@ -891,7 +916,23 @@ class DocumentParser {
         
         foreach($matches[1] as $i=>$key) {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
-            if(strpos($key,'@')!==false) {
+            
+            if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
+            elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
+            else                                   $value = '';
+            
+            if (is_array($value)) {
+                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
+                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
+                $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
+            }
+            $content= str_replace($matches[0][$i], $value, $content);
+        }
+        
+        return $content;
+    }
+
+    function _contextValue($key) {
                 list($key,$str) = explode('@',$key,2);
                 $context = strtolower($str);
                 if(substr($str,0,5)==='alias' && strpos($str,'(')!==false)
@@ -929,19 +970,7 @@ class DocumentParser {
                 if(preg_match('@^[1-9][0-9]*$@',$docid))
                     $value = $this->getField($key,$docid);
                 else $value = '';
-				}
-            elseif(!isset($this->documentObject[$key])) $value = '';
-            else $value= $this->documentObject[$key];
-            
-            if (is_array($value)) {
-                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
-                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
-                $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
-			}
-            $content= str_replace($matches['0'][$i], $value, $content);
-		}
-        
-		return $content;
+        return $value;
 	}
 
 	/**
@@ -1147,7 +1176,7 @@ class DocumentParser {
 			}
             $replace[$i] = $this->_get_snip_result($value);
         }
-        $content = str_replace($matches['0'], $replace, $content);
+        $content = str_replace($matches[0], $replace, $content);
         return $content;
     }
     
@@ -3748,22 +3777,12 @@ class DocumentParser {
                 $e->activePlugin= $pluginName;
 
                 // get plugin code
-                if (isset ($this->pluginCache[$pluginName])) {
-                    $pluginCode= $this->pluginCache[$pluginName];
-                    $pluginProperties= isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
-                } else {
-                    $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
-                    if ($row= $this->db->getRow($result)) {
-                        $pluginCode= $this->pluginCache[$row['name']]= $row['plugincode'];
-                        $pluginProperties= $this->pluginCache[$row['name'] . "Props"]= $row['properties'];
-                    } else {
-                        $pluginCode= $this->pluginCache[$pluginName]= "return false;";
-                        $pluginProperties= '';
-                    }
-                }
+                $plugin = $this->getPluginCode($pluginName);
+                $pluginCode= $plugin['code'];
+                $pluginProperties= $plugin['props'];
 
                 // load default params/properties
-                $parameter= $this->parseProperties($pluginProperties);
+                $parameter= $this->parseProperties($pluginProperties, $pluginName, 'plugin');
                 if(!is_array($parameter)){
                     $parameter = array();
                 }
@@ -3789,6 +3808,35 @@ class DocumentParser {
     }
 
     /**
+     * Returns plugin-code and properties
+     *
+     * @param string $pluginName
+     * @return array Associative array consisting of 'code' and 'props'
+     */
+    public function getPluginCode($pluginName)
+    {
+        $plugin = array();
+        if (isset ($this->pluginCache[$pluginName])) {
+            $pluginCode = $this->pluginCache[$pluginName];
+            $pluginProperties = isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
+        } else {
+            $pluginName = $this->db->escape($pluginName);
+            $result = $this->db->select('name, plugincode, properties', $this->getFullTableName("site_plugins"), "name='{$pluginName}' AND disabled=0");
+            if ($row = $this->db->getRow($result)) {
+                $pluginCode = $this->pluginCache[$row['name']]= $row['plugincode'];
+                $pluginProperties = $this->pluginCache[$row['name'] . "Props"]= $row['properties'];
+            } else {
+                $pluginCode = $this->pluginCache[$pluginName]= "return false;";
+                $pluginProperties = '';
+            }
+        }
+        $plugin['code'] = $pluginCode;
+        $plugin['props'] = $pluginProperties;
+
+        return $plugin;
+    }
+
+    /**
      * Parses a resource property string and returns the result as an array
      *
      * @param string $propertyString
@@ -3797,37 +3845,62 @@ class DocumentParser {
      * @return array Associative array in the form property name => property value
      */
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
-        $parameter= array ();
-        if (!empty ($propertyString)) {
-            $tmpParams= explode("&", $propertyString);
-            for ($x= 0; $x < count($tmpParams); $x++) {
-                if (strpos($tmpParams[$x], '=', 0)) {
-                    $pTmp= explode("=", $tmpParams[$x]);
-                    $pvTmp= explode(";", trim($pTmp[1]));
-                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
-                        $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
-                    else {
-                        if($pvTmp[1] == 'list-multi' && $pvTmp[3] != "") 
-				$parameter[trim($pTmp[0])]= $pvTmp[3]; // list-multi
-			else{
-				if ($pvTmp[1] != 'list' && $pvTmp[2] != ""){
-					$parameter[trim($pTmp[0])]= $pvTmp[2];
-				}
-			}
+        
+        $propertyString = trim($propertyString);
+        $jsonFormat = $this->isJson($propertyString, true);
+        $property = array();
+        
+        // old format
+        if ( !$jsonFormat ) {
+            $props= explode('&', $propertyString);
+            foreach ($props as $prop) {
+                
+                if (strpos($prop, '=')===false) {
+                    $property[trim($prop)]='';
+                    continue;
+                }
+                
+                $_ = explode('=', $prop, 2);
+                $key = trim($_[0]);
+                $p = explode(';', trim($_[1]));
+                if    ($p[1]=='list'       && $p[3]!='') $value = $p[3]; // list default
+                elseif($p[1]=='list-multi' && $p[3]!='') $value = $p[3]; // list-multi
+                elseif($p[1]!='list'       && $p[2]!='') $value = $p[2]; // text, textarea, etc..
+                else                                     $value = '';
+                $property[$key] = $value;
+            }
+        // new json-format
+        } else if(!empty($jsonFormat)){
+            foreach( $jsonFormat as $key=>$row ) {
+                if(is_array($row)) {
+                    switch ($key) {
+                        case 'pluginConfig':
+                            if (isset($row[0]['legacy_names'])) $property['pluginName'] = $row[0]['legacy_names'];
+                            if (isset($row[0]['description'])) $property['pluginDesc'] = $row[0]['description'];
+                            if (isset($row[0]['modx_category'])) $property['pluginCategory'] = $row[0]['modx_category'];
+                            if (isset($row[0]['events'])) $property['pluginEvents'] = explode(',', $row[0]['events']);
+                            if (isset($row[0]['filePath'])) $property['pluginFilePath'] = $row[0]['filePath'];
+                            if (isset($row[0]['installset'])) $property['pluginInstallSet'] = $row[0]['installset'];
+                            break;
+                        default:
+                            $property[$key] = $row[0]['value'];
                     }
+                } else {
+                    $property[$key] = $row;
                 }
             }
         }
+        
 		if(!empty($elementName) && !empty($elementType)){
 			$out = $this->invokeEvent('OnParseProperties', array(
 				'element' => $elementName,
 				'type' => $elementType,
-				'args' => $parameter
+                'args'    => $property
 			));
 			if(is_array($out)) $out = array_pop($out);
-            if(is_array($out)) $parameter = $out;
+            if(is_array($out)) $property = $out;
 		}
-        return $parameter;
+        return $property;
     }
 
     /***************************************************************************************/
@@ -4207,6 +4280,11 @@ class DocumentParser {
 		$this->loadExtension('PHPCOMPAT');
 		return $this->phpcompat->htmlspecialchars($str, $flags);
 	}
+
+        function isJson($string, $returnData=false) {
+            $data = json_decode($string, true);
+            return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
+        }
     // End of class.
 
 }

@@ -163,6 +163,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
   `name` varchar(50) NOT NULL default '',
   `description` varchar(255) NOT NULL default 'Chunk',
   `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none',
   `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
   `cache_type`	tinyint(1) NOT NULL default '0' COMMENT 'Cache option',
   `snippet` mediumtext,
@@ -271,6 +272,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
   `template_type` integer NOT NULL DEFAULT '0' COMMENT '0-page,1-content',
   `content` mediumtext,
   `locked` tinyint(4) NOT NULL default '0',
+  `selectable` tinyint(4) NOT NULL default '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM COMMENT='Contains the site templates.';
 
@@ -763,6 +765,14 @@ ALTER TABLE `{PREFIX}web_user_attributes`
  ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
 
 ALTER TABLE `{PREFIX}site_content` ADD COLUMN `alias_visible` INT(2) NOT NULL DEFAULT '1' COMMENT 'Hide document from alias path';
+
+#1.1
+
+ALTER TABLE `{PREFIX}site_templates`
+ ADD COLUMN `selectable` TINYINT(4) NOT NULL DEFAULT '1' AFTER `locked`;
+
+ALTER TABLE `{PREFIX}site_htmlsnippets`
+ ADD COLUMN `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none' AFTER `editor_type`;
 
 # ]]upgrade-able
 
