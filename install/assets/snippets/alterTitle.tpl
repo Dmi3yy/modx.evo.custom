@@ -21,6 +21,6 @@ if ($id) {
 	$arr['pagetitle'] = $modx->documentObject['pagetitle'];
 	$arr['longtitle'] = $modx->documentObject['longtitle'];
 }
-$title = strlen($arr['longtitle']) ? $arr['longtitle'] : $arr['pagetitle']; 
+$title = strip_tags(strlen($arr['longtitle']) ? $arr['longtitle'] : $arr['pagetitle']); 
 return $title;
 ?>
