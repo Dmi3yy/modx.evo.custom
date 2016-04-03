@@ -238,7 +238,6 @@ if (is_array($evtOut))
     </div>
 <!-- Tab Start -->
 <div class="sectionBody">
-<link type="text/css" rel="stylesheet" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="userPane">
 	<script type="text/javascript">
@@ -489,7 +488,7 @@ $dir->close();
           </tr>  
           <tr>
             <td class="warning"><b><?php echo $_lang["mgr_login_start"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 100px;" name="manager_login_startup" value="<?php echo isset($_POST['manager_login_startup']) ? $_POST['manager_login_startup'] : $usersettings['manager_login_startup']; ?>"></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 100px;" name="manager_login_startup" value="<?php echo isset($_POST['manager_login_startup']) ? $_POST['manager_login_startup'] : $usersettings['manager_login_startup']; ?>"></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -500,7 +499,7 @@ $dir->close();
           </tr>
 
           <tr>
-            <td class="warning"valign="top"><b><?php echo $_lang["allow_mgr_access"] ?></b></td>
+            <td class="warning" valign="top"><b><?php echo $_lang["allow_mgr_access"] ?></b></td>
             <td>
             	<input onchange="documentDirty=true;" type="radio" name="allow_manager_access" value="1" <?php echo !isset($usersettings['allow_manager_access'])||$usersettings['allow_manager_access']==1 ? 'checked="checked"':'' ; ?> /> <?php echo $_lang['yes']; ?> <br />
             	<input onchange="documentDirty=true;" type="radio" name="allow_manager_access" value="0" <?php echo isset($usersettings['allow_manager_access']) && $usersettings['allow_manager_access']==0 ? 'checked="checked"':'' ; ?> /> <?php echo $_lang['no']; ?>
@@ -515,7 +514,7 @@ $dir->close();
           </tr>
 
           <tr>
-            <td nowrap class="warning"valign="top"><b><?php echo $_lang["login_allowed_ip"] ?></b></td>
+            <td nowrap class="warning" valign="top"><b><?php echo $_lang["login_allowed_ip"] ?></b></td>
             <td ><input onchange="documentDirty=true;"  type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo $usersettings['allowed_ip']; ?>" /></td>
           </tr>
           <tr>
@@ -526,7 +525,7 @@ $dir->close();
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning"valign="top"><b><?php echo $_lang["login_allowed_days"] ?></b></td>
+            <td nowrap class="warning" valign="top"><b><?php echo $_lang["login_allowed_days"] ?></b></td>
             <td>
             	<input onchange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="1" <?php echo strpos($usersettings['allowed_days'],'1')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['sunday']; ?><br />
             	<input onchange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="2" <?php echo strpos($usersettings['allowed_days'],'2')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['monday']; ?><br />
@@ -689,7 +688,7 @@ if (is_array($evtOut))
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["editor_css_path_message"]?></td>
           </tr>
-		  <tr id='editorRow16' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+		  <tr id='editorRow16' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr id='rbRow1' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
