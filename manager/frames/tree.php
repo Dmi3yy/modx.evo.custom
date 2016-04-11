@@ -417,6 +417,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             <?php if ($modx->hasPermission('empty_trash')) { ?>
                 <td><a href="#" id="Button10" class="treeButtonDisabled" title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             <?php } ?>
+            <?php if ($modx->hasPermission('edit_document')) { ?>
+                <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=54&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><img src="<?php echo $_style['icons_set_parent'] ; ?>" style="" /></a></td>
+            <?php } ?>    
             <?php if ($modx->hasPermission('new_chunk')) { ?>
 		<td><a href="#" title="<?php echo $_lang['element_management']; ?>" onclick="window.open('index.php?a=76','gener','width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')"><img src="media/style/D3X/images/icons/comment.gif" style="margin:3px 0 0 5px"></a></td>
 	    <?php } ?>
@@ -556,6 +559,9 @@ function menuHandler(action) {
                 alert('Document is linked to site_start variable and cannot be unpublished!');
             }
             break;
+        case 11 : // sort menu index
+            top.main.document.location.href="index.php?a=54&id=" + itemToChange;
+            break;
         case 12 : // preview	
             window.open(selectedObjectUrl,'previeWin'); //re-use 'new' window
             break;
@@ -575,6 +581,7 @@ function menuHandler(action) {
     constructLink(2, $_style["icons_save"], $_lang["edit_resource"], $modx->hasPermission('edit_document')); // edit
     constructLink(5, $_style["icons_move_document"] , $_lang["move_resource"], $modx->hasPermission('save_document')); // move
     constructLink(7, $_style["icons_resource_duplicate"], $_lang["resource_duplicate"], $modx->hasPermission('new_document')); // duplicate
+    constructLink(11,$_style["icons_set_parent"], $_lang["sort_menuindex"], $modx->hasPermission('edit_document')); // sort menu index
     ?>
     <div class="seperator"></div>
     <?php

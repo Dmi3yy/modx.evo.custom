@@ -358,6 +358,7 @@ font-size:1.3em;
 	min-height: 100px;
 	text-align: center;
 	margin-right:15px;
+  margin-bottom: 15px;
 }
 #rtl .installImg {
 	float: right;

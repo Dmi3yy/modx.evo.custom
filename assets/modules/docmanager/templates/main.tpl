@@ -93,12 +93,6 @@
 	           [+view.documentgroups+]
 	        </div>
 	      
-	        <div class="tab-page" id="tabSortMenu">  
-	            <h2 class="tab">[+lang.DM_sort_menu+] </h2>  
-	            <script type="text/javascript">tpResources.addTabPage(document.getElementById("tabSortMenu"));</script> 
-	           [+view.sort+]
-	        </div>
-	
 	        <div class="tab-page" id="tabOther">  
 	           <h2 class="tab">[+lang.DM_other+]</h2>  
 	           <script type="text/javascript">tpResources.addTabPage(document.getElementById("tabOther"));</script>

@@ -1998,3 +1998,35 @@ code {font-size:inherit;font-family: 'Courier New','Courier', monospace;backgrou
 .sectionBody table tr:first-child TD{
 	vertical-align: middle;
 }
+
+/* breadcrumbs */
+ul.breadcrumbs {
+	margin: 0 0 10px 15px;
+	padding: 0;
+	line-height: normal;
+	font-size: 0;
+}
+
+li.breadcrumbs__li {
+	list-style: none;
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+}
+
+a.breadcrumbs__a {
+	font-size: 12px;
+	text-decoration: none;
+}
+
+.breadcrumbs__sep {
+	font-size: 13px;
+	margin: 0 6px;
+    color: #777;
+}
+
+li.breadcrumbs__li_current {
+	font-size: 12px;
+	font-weight: bold;
+}
+/* end breadcrumbs */
