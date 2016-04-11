@@ -1,7 +1,7 @@
 Сборка обзавеласть собственным сайтом: http://modx.com.ua
 Так же рекоменую скачивать сборку с сайта так как на гитхаб не всегда стабильный релиз!!!
 
-1.1-d8  (14.03.2016)
+1.1-d8.0  (11.04.2016)
 =======================================================
 - update from modx evo all feachres
 - Wayfinder hideSubMenus still applies parentClass to empty menus #345
@@ -11,6 +11,7 @@
 - Fix sort by category
 - update tinyMCE
 - update Doclister from github
+- https://github.com/modxcms/evolution/pull/583
 
 
 1.1RC-d7.1.6  (25.02.2016)
