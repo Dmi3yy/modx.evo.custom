@@ -1,18 +1,21 @@
 <?php
-if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 /**
- * @name FileSource
- * @version 0.1
- * 
- * @description Позволяет хранить сниппеты в виде файлов
- * 
- * @author Maxim Mukharev
- * @install
- * Привязываем к следующим событиям:
- * - OnSnipFormRender
- * - OnBeforeSnipFormSave
- * - OnSnipFormPrerender
+ * FileSource
+ *
+ * Save snippets and plugins to static files
+ *
+ * @category    plugin
+ * @version     0.1
+ * @internal    @properties
+ * @internal    @events OnSnipFormRender,OnBeforeSnipFormSave,OnSnipFormPrerender,OnPluginFormPrerender,OnPluginFormRender,OnBeforePluginFormSave
+ * @internal    @modx_category Manager and Admin
+ * @internal    @installset base
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Maxim Mukharev
+ * @author      By Carw, and Bumkaka
+ * @lastupdate  09/02/2016
  */
+if(!defined('MODX_BASE_PATH')) die('What are you doing? Get out of here!');
 
 $output = '';
 
@@ -47,8 +50,8 @@ if($modx->event->name==='OnBeforePluginFormSave' || $modx->event->name==='OnBefo
             $elm_path = "assets/{$elm_name}/{$filebinding}";
             $pInfo = pathinfo(MODX_BASE_PATH.$elm_path);
             if(is_dir($pInfo['dirname'])) {
-            $has_filebinding = '1';
-            $insert_code = $modx->db->escape("{$include} MODX_BASE_PATH.'{$elm_path}';");
+                $has_filebinding = '1';
+                $insert_code = $modx->db->escape("{$include} MODX_BASE_PATH.'{$elm_path}';");
             };
         }
         else $has_filebinding = '0';
