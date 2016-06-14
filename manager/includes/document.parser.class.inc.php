@@ -1259,7 +1259,7 @@ class DocumentParser {
                     if(strpos($value,'[[')!==false) $value = $this->evalSnippets($value);
                     if(strpos($value,'[+')!==false) $value = $this->mergePlaceholderContent($value);
                 }
-                $params[$key]=$value;
+                if (!empty($key)) $params[$key]=$value;
                 
                 $key   = '';
                 $value = null;
@@ -3852,7 +3852,7 @@ class DocumentParser {
         $property = array();
         
         // old format
-        if ( !$jsonFormat ) {
+        if ( $jsonFormat === false ) {
             $props= explode('&', $propertyString);
             foreach ($props as $prop) {
                 
@@ -3870,7 +3870,7 @@ class DocumentParser {
                 elseif($p[1]=='radio'      && $p[3]!='') $value = $p[3]; // radio
                 elseif($p[1]!='list'       && $p[2]!='') $value = $p[2]; // text, textarea, etc..
                 else                                     $value = '';
-                $property[$key] = $value;
+                if (!empty($key)) $property[$key] = $value;
             }
             
         // new json-format
