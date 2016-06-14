@@ -220,8 +220,10 @@ if(!class_exists('synccache')) {
 			$tmpPHP .= '$s=&$this->snippetCache;';
 			while ($tmp1 = $modx->db->getRow($rs)) {
 				$tmpPHP .= '$s[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . "='" . $this->escapeSingleQuotes(trim($tmp1['snippet'])) . "';";
-				if ($tmp1['properties'] != '' || $tmp1['sharedproperties'] != '') {
-					$tmpPHP .= '$s[\'' . $this->escapeSingleQuotes($tmp1['name']) . 'Props\']' . "='" . $this->escapeSingleQuotes($tmp1['properties'] . " " . $tmp1['sharedproperties']) . "';";
+				if ( ($tmp1['properties'] != '' && $tmp1['properties'] != '{}') || ($tmp1['sharedproperties'] != '' && $tmp1['sharedproperties'] != '{}') ) { 
+					$tmpProp = array_merge($modx->parseProperties($tmp1['sharedproperties']),$modx->parseProperties($tmp1['properties'])); 
+					if(!empty($tmpProp)) $tmpProp = $this->escapeSingleQuotes(json_encode($tmpProp)); 
+					$tmpPHP .= '$p[\'' . $this->escapeSingleQuotes($tmp1['name']) . 'Props\']' . "='" . $tmpProp . "';"; 
 				}
 			}
 
@@ -234,8 +236,10 @@ if(!class_exists('synccache')) {
 			$tmpPHP .= '$p=&$this->pluginCache;';
 			while ($tmp1 = $modx->db->getRow($rs)) {
 				$tmpPHP .= '$p[\'' . $this->escapeSingleQuotes($tmp1['name']) . '\']' . "='" . $this->escapeSingleQuotes(trim($tmp1['plugincode'])) . "';";
-				if ($tmp1['properties'] != '' || $tmp1['sharedproperties'] != '') {
-					$tmpPHP .= '$p[\'' . $this->escapeSingleQuotes($tmp1['name']) . 'Props\']' . "='" . $this->escapeSingleQuotes($tmp1['properties'] . ' ' . $tmp1['sharedproperties']) . "';";
+				if ( ($tmp1['properties'] != '' && $tmp1['properties'] != '{}') || ($tmp1['sharedproperties'] != '' && $tmp1['sharedproperties'] != '{}') ) { 
+					$tmpProp = array_merge($modx->parseProperties($tmp1['sharedproperties']),$modx->parseProperties($tmp1['properties'])); 
+					if(!empty($tmpProp)) $tmpProp = $this->escapeSingleQuotes(json_encode($tmpProp)); 
+					$tmpPHP .= '$p[\'' . $this->escapeSingleQuotes($tmp1['name']) . 'Props\']' . "='" . $tmpProp . "';"; 
 				}
 			}
 
