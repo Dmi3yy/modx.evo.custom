@@ -418,10 +418,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 <td><a href="#" id="Button10" class="treeButtonDisabled" title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             <?php } ?>
             <?php if ($modx->hasPermission('edit_document')) { ?>
-                <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><img src="<?php echo $_style['icons_sort_menuindex'] ; ?>" style="" /></a></td>
-            <?php } ?>    
-            <?php if ($modx->hasPermission('new_chunk')) { ?>
-		<td><a href="#" title="<?php echo $_lang['element_management']; ?>" onclick="window.open('index.php?a=76','gener','width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')"><img src="media/style/D3X/images/icons/comment.gif" style="margin:3px 0 0 5px"></a></td>
+                <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><?php echo $_style['sort_menuindex'] ; ?></a></td>
 	    <?php } ?>
 	    </tr>
         </table>
