@@ -301,7 +301,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
 	`id` int(11) NOT NULL auto_increment,
 	`tmplvarid` int(10) NOT NULL default '0' COMMENT 'Template Variable id',
 	`contentid` int(10) NOT NULL default '0' COMMENT 'Site Content Id',
-	`value` text,
+	`value` mediumtext,
 	PRIMARY KEY  (id),
 	KEY idx_tmplvarid (tmplvarid),
 	KEY idx_id (contentid),
@@ -448,7 +448,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `import_static` int(1) NOT NULL default '0',
   `export_static` int(1) NOT NULL default '0',
   `remove_locks` int(1) NOT NULL default '0',
-  `change_ressourcetype` int(1) NOT NULL default '0',
+  `change_resourcetype` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM COMMENT='Contains information describing the user roles.';
 
@@ -623,8 +623,7 @@ ALTER TABLE `{PREFIX}site_tmplvars`
  MODIFY COLUMN `default_text` text;
 
 ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
- MODIFY COLUMN `tmplvarid` int(10) NOT NULL DEFAULT '0' COMMENT 'Template Variable id',
- MODIFY COLUMN `value` text;
+ MODIFY COLUMN `tmplvarid` int(10) NOT NULL DEFAULT '0' COMMENT 'Template Variable id';
 
 ALTER TABLE `{PREFIX}site_tmplvar_templates` MODIFY COLUMN `tmplvarid` int(10) NOT NULL DEFAULT '0' COMMENT 'Template Variable id';
 
@@ -767,13 +766,21 @@ ALTER TABLE `{PREFIX}web_user_attributes`
 
 ALTER TABLE `{PREFIX}site_content` ADD COLUMN `alias_visible` INT(2) NOT NULL DEFAULT '1' COMMENT 'Hide document from alias path';
 
-#1.1
+#1.0.11-1.1
 
 ALTER TABLE `{PREFIX}site_templates`
  ADD COLUMN `selectable` TINYINT(4) NOT NULL DEFAULT '1' AFTER `locked`;
 
 ALTER TABLE `{PREFIX}site_htmlsnippets`
  ADD COLUMN `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none' AFTER `editor_type`;
+
+#1.1-1.1.1-beta
+
+ALTER TABLE  `{PREFIX}user_roles` 
+  ADD COLUMN `change_resourcetype` INT( 1 ) NOT NULL DEFAULT  '0';
+
+ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
+ MODIFY COLUMN `value` mediumtext;
 
 # ]]upgrade-able
 
@@ -789,7 +796,7 @@ ALTER TABLE `{PREFIX}site_htmlsnippets`
 
 
 REPLACE INTO `{PREFIX}site_templates` 
-(id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Home','','0','0','','0','{{header}}\r\n[*content*]\r\n\{{footer}}','0');
+(id, templatename, description, editor_type, category, icon, template_type, content, locked, selectable) VALUES ('3','Home','','0','0','','0','{{header}}\r\n[*content*]\r\n\{{footer}}','0','1');
 
 
 # Default Site Documents
