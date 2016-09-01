@@ -148,5 +148,3 @@ $footer = isset($footer) ? $footer : $rss_footer;
 
 // set emptytext
 $noResults = "      ";
-
-?>

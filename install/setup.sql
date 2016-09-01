@@ -417,6 +417,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `error_dialog` int(1) NOT NULL default '0',
   `about` int(1) NOT NULL default '0',
   `file_manager` int(1) NOT NULL default '0',
+  `assets_files` int(1) NOT NULL default '0',
+  `assets_images` int(1) NOT NULL default '0',
   `save_user` int(1) NOT NULL default '0',
   `delete_user` int(1) NOT NULL default '0',
   `save_password` int(11) NOT NULL default '0',
@@ -710,8 +712,6 @@ UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Bottom Butt
 
 UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Inherit Parent Template');
 
-UPDATE `{PREFIX}system_settings` SET `setting_value` = '' WHERE `setting_name` = 'settings_version';
-
 UPDATE `{PREFIX}system_settings` SET `setting_value` = '0' WHERE `setting_name` = 'validate_referer' AND `setting_value` = '00';
 
 # start related to #MODX-1321
@@ -778,6 +778,12 @@ ALTER TABLE `{PREFIX}site_htmlsnippets`
 
 ALTER TABLE  `{PREFIX}user_roles` 
   ADD COLUMN `change_resourcetype` INT( 1 ) NOT NULL DEFAULT  '0';
+
+ALTER TABLE  `{PREFIX}user_roles` 
+  ADD COLUMN `assets_images` INT( 1 ) NOT NULL DEFAULT  '1' AFTER `file_manager`;
+
+ALTER TABLE  `{PREFIX}user_roles` 
+  ADD COLUMN `assets_files` INT( 1 ) NOT NULL DEFAULT  '1' AFTER `file_manager`;
 
 ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
  MODIFY COLUMN `value` mediumtext;
@@ -872,6 +878,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('number_of_results','20'),
 ('use_editor','1'),
 ('use_browser','1'),
+('which_browser','mcpuk'),
 ('rb_base_dir',''),
 ('rb_base_url',''),
 ('which_editor','TinyMCE4'),
@@ -1105,7 +1112,10 @@ UPDATE `{PREFIX}user_roles` SET
 	import_static = 1,
 	export_static = 1,
 	empty_trash = 1,
-	remove_locks = 1
+	remove_locks = 1,
+  assets_images = 1,
+  assets_files = 1,
+  change_resourcetype = 1
 	WHERE `id`=1;
 
 

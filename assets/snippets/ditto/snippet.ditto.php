@@ -1099,4 +1099,3 @@ if (isset($outerTpl) && $resource) {
 }
 
 return ($save != 3) ? $output : "";
-?>

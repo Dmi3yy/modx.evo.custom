@@ -9,37 +9,41 @@
  * MODX version:   1.0.3
 */
 $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
+$modx->config['mgr_date_picker_path'] = sprintf('media/style/%s/moo-datepicker/datepicker.inc.php',$modx->config['manager_theme']);
 
 // Tree Menu Toolbar
-$_style['add_doc_tree']             = '<img src="'.$style_path.'icons/folder_page_add.png" style="width:16px;height:16px" />';
-$_style['add_weblink_tree']         = '<img src="'.$style_path.'icons/link_add.png" style="width:16px;height:16px" />';
-$_style['collapse_tree']            = '<img src="'.$style_path.'icons/arrow_up.png" style="width:16px;height:16px" />';
-$_style['empty_recycle_bin']        = '<img src="'.$style_path.'icons/trash_full.png" style="width:16px;height:16px" />';
-$_style['empty_recycle_bin_empty']  = '<img src="'.$style_path.'icons/trash.png" style="width:16px;height:16px" />';
-$_style['expand_tree']              = '<img src="'.$style_path.'icons/arrow_down.png" style="width:16px;height:16px" />';
-$_style['hide_tree']                = '<img src="'.$style_path.'icons/application_side_contract.png" style="width:16px;height:16px" />';
-$_style['refresh_tree']             = '<img src="'.$style_path.'icons/refresh.png" style="width:16px;height:16px" />';
+$_style['add_doc_tree']             = '<img src="'.$style_path.'icons/folder_page_add.png" style="width:16px; height:16px" />';
+$_style['add_weblink_tree']         = '<img src="'.$style_path.'icons/link_add.png" style="width:16px; height:16px" />';
+$_style['collapse_tree']            = '<img src="'.$style_path.'icons/arrow_up.png" style="width:16px; height:16px" />';
+$_style['empty_recycle_bin']        = '<img src="'.$style_path.'icons/trash_full.png" style="width:16px; height:16px" />';
+$_style['empty_recycle_bin_empty']  = '<img src="'.$style_path.'icons/trash.png" style="width:16px; height:16px" />';
+$_style['expand_tree']              = '<img src="'.$style_path.'icons/arrow_down.png" style="width:16px; height:16px" />';
+$_style['hide_tree']                = '<img src="'.$style_path.'icons/application_side_contract.png" style="width:16px; height:16px" />';
+$_style['refresh_tree']             = '<img src="'.$style_path.'icons/refresh.png" style="width:16px; height:16px" />';
 $_style['show_tree']                = $style_path.'icons/application_side_expand.png';
-$_style['sort_tree']                = '<img src="'.$style_path.'icons/sort.png" style="width:16px;height:16px" />';
-$_style['sort_menuindex']           = '<img src="'.$style_path.'icons/table_refresh.png" style="width:16px;height:16px" />';
+$_style['sort_tree']                = '<img src="'.$style_path.'icons/sort.png" style="width:16px; height:16px" />';
+$_style['sort_menuindex']           = '<img src="'.$style_path.'icons/table_refresh.png" style="width:16px; height:16px" />';
+$_style['element_management']       = '<img src="'.$style_path.'icons/brick.png" style="width:16px; height:16px" />';
+$_style['images_management']        = '<img src="'.$style_path.'icons/camera.png" style="width:16px; height:16px" />';
+$_style['files_management']         = '<img src="'.$style_path.'icons/files.png" style="width:16px; height:16px" />';
 
 // Tree Icons
 $_style['tree_deletedpage']         = $style_path.'tree/deletedpage.gif';
-$_style['tree_folder']              = $style_path.'tree/application_double.png'; /* folder.png */
-$_style['tree_folderopen']          = $style_path.'tree/application_double.png'; /* folder-open.png */
-$_style['tree_folder_secure']       = $style_path.'tree/application_double_key.png';
-$_style['tree_folderopen_secure']   = $style_path.'tree/application_double_key.png';
+$_style['tree_folder']              = $style_path.'tree/folder.gif'; /* old - application_double.png */
+$_style['tree_folderopen']          = $style_path.'tree/folderopen.gif'; /*old - application_double.png */
+$_style['tree_folder_secure']       = $style_path.'tree/folder_secure.png';
+$_style['tree_folderopen_secure']   = $style_path.'tree/folderopen_secure.png';
 $_style['tree_globe']               = $style_path.'tree/globe.gif';
 $_style['tree_linkgo']              = $style_path.'tree/link_go.png';
 $_style['tree_minusnode']           = $style_path.'tree/minusnode.gif';
-$_style['tree_page']                = $style_path.'tree/application.png';
+$_style['tree_page']                = $style_path.'tree/application.png'; /* old - application.png */
 $_style['tree_page_home']           = $style_path.'tree/application_home.gif';
 $_style['tree_page_404']            = $style_path.'tree/application_404.gif';
 $_style['tree_page_hourglass']      = $style_path.'tree/application_hourglass.gif';
 $_style['tree_page_info']           = $style_path.'tree/application_info.gif';
 $_style['tree_page_blank']          = $style_path.'tree/application.png';
 $_style['tree_page_css']            = $style_path.'tree/application_css.png';
-$_style['tree_page_html']           = $style_path.'tree/application_html.png';
+$_style['tree_page_html']           = $style_path.'tree/page_html.gif'; /* old - application_html.png */
 $_style['tree_page_xml']            = $style_path.'tree/application_xml.png';
 $_style['tree_page_js']             = $style_path.'tree/application_js.png';
 $_style['tree_page_rss']            = $style_path.'tree/application_rss.png';
@@ -53,7 +57,7 @@ $_style['tree_weblink']             = $style_path.'tree/link_go.png';
 $_style['tree_page_secure']         = $style_path.'tree/application_key.png';
 $_style['tree_page_blank_secure']   = $style_path.'tree/application_html_secure.png';
 $_style['tree_page_css_secure']     = $style_path.'tree/application_css_secure.png';
-$_style['tree_page_html_secure']    = $style_path.'tree/application_html_secure.png';
+$_style['tree_page_html_secure']    = $style_path.'tree/page_html_secure.png'; /* old - application_html_secure.png */
 $_style['tree_page_xml_secure']     = $style_path.'tree/application_xml_secure.png';
 $_style['tree_page_js_secure']      = $style_path.'tree/application_js_secure.png';
 $_style['tree_page_rss_secure']     = $style_path.'tree/application_rss_secure.png';
@@ -117,6 +121,7 @@ $_style['icons_modules_large']      = $style_path.'icons/modules.gif';
 $_style['icons_resources_large']    = $style_path.'icons/resources.gif';
 $_style['icons_security_large']     = $style_path.'icons/security.gif';
 $_style['icons_webusers_large']     = $style_path.'icons/web_users.gif';
+$_style['icons_help_large']         = $style_path.'icons/help.png';
 
 // Miscellaneous
 $_style['ajax_loader']              = '<p>'.$_lang['loading_page'].'</p><p><img src="'.$style_path.'misc/ajax-loader.gif" alt="Please wait" /></p>';

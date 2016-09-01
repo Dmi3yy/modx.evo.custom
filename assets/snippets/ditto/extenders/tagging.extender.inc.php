@@ -180,7 +180,7 @@ if(!class_exists("tagging")) {
 	class tagging {
 		var $delimiter,$source,$landing,$mode,$format,$givenTags,$caseSensitive, $displayDelimiter, $sort, $displayMode, $tpl, $callback;
 
-		function tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive, $displayDelimiter, $callback, $sort, $displayMode, $tpl) {
+		function __construct($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive, $displayDelimiter, $callback, $sort, $displayMode, $tpl) {
 			$this->delimiter = $delimiter;
 			$this->source = $this->parseTagData($source);
 			$this->mode = $mode;
@@ -390,4 +390,3 @@ $modx->setPlaceholder($dittoID."tags",implode($delimiter,$tags->givenTags));
 */
 // set tagging placeholder			
 $placeholders['tagLinks'] = array(array($source,"*"),array($tags,"makeLinks"));
-?>

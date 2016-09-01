@@ -10,7 +10,7 @@
 class ditto {
 	var $template,$resource,$format,$debug,$advSort,$sqlOrderBy,$customReset,$fields,$constantFields,$prefetch,$sortOrder,$customPlaceholdersMap;
 
-	function ditto($dittoID,$format,$language,$debug) {
+	function __construct($dittoID,$format,$language,$debug) {
 		$this->format = $format;
 		$GLOBALS["ditto_lang"] = $language;
 		$this->prefetch = false;
@@ -689,7 +689,6 @@ class ditto {
 							$keep[$iKey][$key] = $v;
 						}
 					}
-					
 				}
 			}
 			
@@ -1171,4 +1170,3 @@ class ditto {
 		return preg_replace('#(href|src)="([^:"]*)(?:")#','$1="'.$base.'$2"',$text);
 	}
 }
-?>
