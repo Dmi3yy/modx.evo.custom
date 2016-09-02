@@ -191,7 +191,9 @@ class modResource extends MODxAPI
                 case 'publishedon':
                     $value = $this->getTime($value);
                     if($value){
-                        $this->field['publishedon'] = $value;
+                        $this->field['published'] = 1;
+                    }else{
+                        $this->field['published'] = 0;
                     }
                     break;
                 case 'pub_date':
@@ -316,7 +318,7 @@ class modResource extends MODxAPI
                 $this->id = null;
             } else {
                 $this->id = $this->field['id'];
-                $this->set('editedon', null)->touch();
+                $this->set('editedby', null)->touch();
             }
             unset($this->field['id']);
         }
@@ -335,8 +337,7 @@ class modResource extends MODxAPI
 
         $this->invokeEvent('OnBeforeDocFormSave', array(
             "mode" => $this->newDoc ? "new" : "upd",
-            "id" => $this->id ? $this->id : '',
-            "doc" => $this->toArray()
+            "id" => $this->id ? $this->id : ''
         ), $fire_events);
 
         $fld = $this->toArray(null, null, null, false);
@@ -418,8 +419,7 @@ class modResource extends MODxAPI
 
         $this->invokeEvent('OnDocFormSave', array(
             "mode" => $this->newDoc ? "new" : "upd",
-            "id" => $this->id,
-            "doc" => $this->toArray()
+            "id" => $this->id
         ), $fire_events);
 
         if ($clearCache) {

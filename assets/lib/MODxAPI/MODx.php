@@ -103,8 +103,9 @@ abstract class MODxAPI extends MODxAPIhelpers
     {
         $flag = (isset($flag) && $flag != '') ? (bool)$flag : false;
         if ($flag) {
-            return $this->modx->invokeEvent($name, $data);
+            $this->modx->invokeEvent($name, $data);
         }
+        return $this;
     }
 
     final public function clearLog()
