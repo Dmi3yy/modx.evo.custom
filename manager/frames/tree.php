@@ -1,5 +1,6 @@
 ﻿<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+$modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 
     $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
     function constructLink($action, $img, $text, $allowed) {
@@ -19,6 +20,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <title>Document Tree</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
+	<?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['mgr_jquery_path']); ?>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -414,23 +416,77 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             <?php } ?>
             <td><a href="#" class="treeButton" id="Button4" onClick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
             <td><a href="#" class="treeButton" id="Button5" onClick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
+            <?php if ($modx->hasPermission('edit_document')) { ?>
+                <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><?php echo $_style['sort_menuindex'] ; ?></a></td>
+            <?php } ?>
+			<?php if ($use_browser && $modx->hasPermission('assets_images')) { ?>
+                <td><a href="#" id="Button13" class="treeButton" title="<?php echo $_lang["images_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['images_management'] ; ?></a></td>
+			<?php } ?>
+			<?php if ($use_browser && $modx->hasPermission('assets_files')) { ?>
+                <td><a href="#" id="Button14" class="treeButton" title="<?php echo $_lang["files_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['files_management'] ; ?></a></td>
+			<?php } ?>
+			<?php if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
+                <td><a href="#" id="Button12" class="treeButton" title="<?php echo $_lang["element_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['element_management'] ; ?></a></td>
+            <?php } ?>
             <?php if ($modx->hasPermission('empty_trash')) { ?>
                 <td><a href="#" id="Button10" class="treeButtonDisabled" title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             <?php } ?>
-            <?php if ($modx->hasPermission('edit_document')) { ?>
-                <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><?php echo $_style['sort_menuindex'] ; ?></a></td>
-	    <?php } ?>
 	    </tr>
         </table>
     </td>
   </tr>
 </table>
 
+<?php if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
+<script>
+  jQuery('#Button12').click(function(e) {
+      e.preventDefault();
+      var randomNum = 'gener';
+      if (e.shiftKey) {
+          randomNum = Math.floor((Math.random()*999999)+1);
+      }
+      window.open('index.php?a=76',randomNum,'width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+  });
+</script>
+<?php } ?>
+
+<?php if ($use_browser && $modx->hasPermission('assets_images')) { ?>
+<script>
+  jQuery('#Button13').click(function(e) {
+      e.preventDefault();
+      var randomNum = 'gener';
+      if (e.shiftKey) {
+          randomNum = Math.floor((Math.random()*999999)+1);
+      }
+    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=images',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+  });
+</script>
+<?php } ?>
+
+<?php if ($use_browser && $modx->hasPermission('assets_files')) { ?>
+<script>
+  jQuery('#Button14').click(function(e) {
+      e.preventDefault();
+      var randomNum = 'gener';
+      if (e.shiftKey) {
+          randomNum = Math.floor((Math.random()*999999)+1);
+      }
+    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=files',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+  });
+</script>
+<?php } ?>
+
 <div id="floater">
 <?php
-if(isset($_REQUEST['tree_sortby']))   { $_SESSION['tree_sortby']   = $_REQUEST['tree_sortby']; }
-if(isset($_REQUEST['tree_sortdir']))  { $_SESSION['tree_sortdir']  = $_REQUEST['tree_sortdir']; }
-if(isset($_REQUEST['tree_nodename'])) { $_SESSION['tree_nodename'] = $_REQUEST['tree_nodename']; }
+$sortParams = array('tree_sortby','tree_sortdir','tree_nodename');
+foreach($sortParams as $param) {
+    if(isset($_REQUEST[$param])) {
+        $modx->manager->saveLastUserSetting($param, $_REQUEST[$param]);
+        $_SESSION[$param] = $_REQUEST[$param];
+    } else if(!isset($_SESSION[$param])) {
+        $_SESSION[$param] = $modx->manager->getLastUserSetting($param);
+    }    
+}    
 ?>
 <form name="sortFrm" id="sortFrm" action="menu.php">
 <input type="hidden" name="dt" value="<?php echo htmlspecialchars($_REQUEST['dt']); ?>" />

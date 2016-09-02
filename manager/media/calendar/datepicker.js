@@ -21,11 +21,11 @@ var DatePicker = new Class({
 
         // Options defaults
         this.dayChars = 1; // number of characters in day names abbreviation
-        this.dayNames = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+        this.dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         this.daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         this.format = 'dd-mm-yyyy hh:mm:00';
-        this.monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-        this.startDay = 1; // 1 = week starts on Monday, 7 = week starts on Sunday
+        this.monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        this.startDay = 7; // 1 = week starts on Monday, 7 = week starts on Sunday
         this.yearOrder = 'asc';
         this.yearRange = 10;
         this.yearStart = (new Date().getFullYear());
@@ -49,7 +49,7 @@ var DatePicker = new Class({
             yearOrder: options.yearOrder || this.yearOrder,
             yearOffset: options.yearOffset || this.yearOffset
         };
-        
+
         // Finds the entered date, or uses the current date
         dp = this.getValue(dp);
 
@@ -71,15 +71,15 @@ var DatePicker = new Class({
 
     getValue: function(dp) {
         if(dp.value != '') {
-        	// handle dd-mm-YYYY date format as that is invalid for Date()
-        	if (dp.options.format == 'dd-mm-YYYY hh:mm:00' || dp.options.format == 'dd-mm-YYYY') {
-        		var dateVals = dp.value.split(' ');
-        		var dateParts = dateVals[0].split('-');
-        		dp.thenvalue = dateParts[1] + '/' + dateParts[0] + '/' + dateParts[2];
-        		if (dateVals[1]) dp.thenvalue = dp.thenvalue + ' ' + dateVals[1];
-        	} else {
-        		dp.thenvalue = dp.value;
-        	}
+            // handle dd-mm-YYYY date format as that is invalid for Date()
+            if (dp.options.format == 'dd-mm-YYYY hh:mm:00' || dp.options.format == 'dd-mm-YYYY') {
+                var dateVals = dp.value.split(' ');
+                var dateParts = dateVals[0].split('-');
+                dp.thenvalue = dateParts[1] + '/' + dateParts[0] + '/' + dateParts[2];
+                if (dateVals[1]) dp.thenvalue = dp.thenvalue + ' ' + dateVals[1];
+            } else {
+                dp.thenvalue = dp.value;
+            }
             dp.then = new Date(dp.thenvalue);
             dp.today = new Date();
         } else {
@@ -88,7 +88,7 @@ var DatePicker = new Class({
         }
         return dp;
     },
-        
+
     updateValue: function(dp) {
         el = $(document.body).getElement('td.dp_selected');
         if(el) {
@@ -117,11 +117,7 @@ var DatePicker = new Class({
 
         this.dp = dp;
         if (dp.calendar) return false;
-        // Hide select boxes while calendar is up
-        if(window.ie6){
-            $$('select').addClass('dp_hide');
-        }
-        
+
         this.dp.dirty = false;
 
         /* create the outer container */
@@ -156,7 +152,7 @@ var DatePicker = new Class({
         
         /* set the day to first of the month */
         var firstDay = (1-(7+date.getDay()-dp.options.startDay)%7);
-        
+
         /* create the month select box */
         monthSel = new Element('select', {'id':dp.id + '_monthSelect'});
         for (var m = 0; m < dp.options.monthNames.length; m++){
@@ -181,7 +177,7 @@ var DatePicker = new Class({
                 i++;
             }
         }
-        
+
         /* create time textbox */
         if (!dp.time) {
             var d = new Date(dp.thenvalue);
@@ -306,16 +302,16 @@ var DatePicker = new Class({
         }.bind(this);
         
         /* set the onchange event for the timeTextBox */
-        timeTextBox.onfocus = function(){ dp.active = true; };        
+        timeTextBox.onfocus = function(){ dp.active = true; };
         timeTextBox.onblur = function() {
             this.updateValue(this.dp);
         }.bind(this);
         timeTextBox.onkeypress = function(e) {
           this.dp.dirty = true;
           e = new Event(e);
-          if (e.code == 13) {          
+          if (e.code == 13) {
               this.updateValue(this.dp);
-	            return false;
+	          return false;
             }
         }.bind(this);
     },
@@ -346,7 +342,7 @@ var DatePicker = new Class({
         dp.month = dp.oldMonth = '' + (month - 1) + '';
         dp.year = dp.oldYear = year;
         dp.oldDay = day;
-        
+
         this.dp.thenvalue = month+'/'+day+'/'+year+' '+time[0]+':'+time[1]+':00';
 
         /* return the date string value */

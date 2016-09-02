@@ -415,7 +415,7 @@ class DocumentParser {
      * @return boolean
      */
     function checkSession() {
-        if (isset ($_SESSION['mgrValidated'])) {
+        if (isset ($_SESSION['mgrValidated']) && !empty($_SESSION['mgrValidated'])) {
             return true;
         } else {
             return false;
@@ -469,10 +469,7 @@ class DocumentParser {
         (!empty($qOrig)) or $qOrig = $this->config['site_start'];
         $q= $qOrig;
         /* First remove any / before or after */
-        if ($q[strlen($q) - 1] == '/')
-            $q= substr($q, 0, -1);
-        if ($q[0] == '/')
-            $q= substr($q, 1);
+        $q = trim($q,'/');
         /* Save path if any */
         /* FS#476 and FS#308: only return virtualDir if friendly paths are enabled */
         if ($this->config['use_alias_path'] == 1) {
@@ -921,10 +918,11 @@ class DocumentParser {
         foreach($matches[1] as $i=>$key) {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
-            if(strpos($key,':')!==false)
+            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
                 list($key,$modifiers) = explode(':', $key, 2);
             else $modifiers = false;
             
+            $key = trim($key);
             if(isset($this->documentObject[$key])) $value = $this->documentObject[$key];
             elseif(strpos($key,'@')!==false)       $value = $this->_contextValue($key);
             else                                   $value = '';
@@ -1002,10 +1000,11 @@ class DocumentParser {
         
         $replace= array ();
         foreach($matches[1] as $i=>$key) {
-            if(strpos($key,':')!==false)
+            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
                 list($key,$modifiers) = explode(':', $key, 2);
             else $modifiers = false;
             
+            $key = trim($key);
             if(isset($this->config[$key])) {
                 $value = $this->config[$key];
                 if($modifiers!==false) {
@@ -1062,10 +1061,11 @@ class DocumentParser {
 		$matches = $this->getTagsFromContent($content, '[+', '+]');
         if(!$matches) return $content;
         foreach($matches[1] as $i=>$key) {
-            if(strpos($key,':')!==false)
+            if($this->config['enable_filter']==1 && strpos($key,':')!==false)
                 list($key,$modifiers) = explode(':', $key, 2);
             else $modifiers = false;
             
+            $key = trim($key);
             if (isset($this->placeholders[$key])) $value = $this->placeholders[$key];
             elseif($key==='phx') $value = '';
             else continue;
@@ -1085,13 +1085,11 @@ class DocumentParser {
     {
         if ($this->debug) $fstart = $this->getMicroTime();
         
-        if(strpos($content,'<!--@IF ')!==false)      $content = str_replace('<!--@IF ','<!--@IF:',$content);
-        if(strpos($content,'<!--@IF:')===false)      return $content;
-        if(strpos($content,'<!--@ELSEIF')!==false)   $content = str_replace('<!--@ELSEIF',  '<@ELSEIF',  $content);
-        if(strpos($content,'<!--@ELSE-->')!==false)  $content = str_replace('<!--@ELSE-->', '<@ELSE>',   $content);
-        if(strpos($content,'<!--@ENDIF-->')!==false) $content = str_replace('<!--@ENDIF-->','<@ENDIF-->',$content);
+        if(strpos($content,'<!--@IF:')!==false)       $content = str_replace('<!--@IF:',    '<@IF:',$content);
+        if(strpos($content,'<@IF:')===false)         return $content;
+        if(strpos($content,'<@ENDIF-->')!==false)    $content = str_replace('<@ENDIF-->',   '<@ENDIF>',$content);
         
-        $s = array('<!--@IF:',        '<@ELSE',            '<@ENDIF-->');
+        $s = array('<@IF:',           '<@ELSE',            '<@ENDIF>');
         $r = array('<!--@CONDTAG@IF:','<!--@CONDTAG@ELSE', '<!--@CONDTAG@ENDIF-->');
         $content = str_replace($s, $r, $content);
         $splits = explode('<!--@CONDTAG@', $content);
@@ -1144,6 +1142,24 @@ class DocumentParser {
 	}
 
 	/**
+     * Remove Comment-Tags from output like <!--@- Comment -@-->
+     */
+    function ignoreCommentedTagsContent($content, $left='<!--@-', $right='-@-->') {
+        if(strpos($content,$left)===false) return $content;
+
+        $matches = $this->getTagsFromContent($content,$left,$right);
+        if(!empty($matches)) {
+            foreach($matches[0] as $i=>$v) {
+                $addBreakMatches[$i] = $v."\n";
+            }
+            $content = str_replace($addBreakMatches,'',$content);
+            if(strpos($content,$left)!==false)
+                $content = str_replace($matches[0],'',$content);
+        }
+        return $content;
+    }
+    
+    /**
 	 * Detect PHP error according to MODX error level
 	 *
 	 * @param integer $error PHP error level
@@ -1268,10 +1284,11 @@ class DocumentParser {
     
     function _getSGVar($value) { // Get super globals
         $key = $value;
-        if(strpos($key,':')!==false)
+        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
             list($key,$modifiers) = explode(':', $key, 2);
         else $modifiers = false;
         $key = str_replace(array('(',')'),array("['","']"),$key);
+        $key = trim($key);
         if(strpos($key,'$_SESSION')!==false)
         {
             $_ = $_SESSION;
@@ -1295,16 +1312,17 @@ class DocumentParser {
     private function _get_snip_result($piece)
     {
         $snip_call = $this->_split_snip_call($piece);
-        $snip_name = $snip_call['name'];
+        $key = $snip_call['name'];
         
-        if(strpos($snip_name,':')!==false)
+        if($this->config['enable_filter']==1 && strpos($key,':')!==false)
         {
-            list($snip_name,$modifiers) = explode(':', $snip_name, 2);
-            $snip_call['name'] = $snip_name;
+            list($key,$modifiers) = explode(':', $key, 2);
+            $key = trim($key);
+            $snip_call['name'] = $key;
         }
         else $modifiers = false;
         
-        $snippetObject = $this->_getSnippetObject($snip_call['name']);
+        $snippetObject = $this->_getSnippetObject($key);
         $this->currentSnippet = $snippetObject['name'];
         
         // current params
@@ -1320,7 +1338,7 @@ class DocumentParser {
         if($modifiers!==false)
         {
             $this->loadExtension('MODIFIERS');
-            $value = $this->filter->phxFilter($snip_name,$value,$modifiers);
+            $value = $this->filter->phxFilter($key,$value,$modifiers);
         }
         
         if($this->dumpSnippets == 1)
@@ -1337,6 +1355,7 @@ class DocumentParser {
         $_tmp = $string;
         $_tmp = ltrim($_tmp, '?&');
         $temp_params = array();
+        $key = '';
         while($_tmp!==''):
             $bt = $_tmp;
             $char = substr($_tmp,0,1);
@@ -1345,10 +1364,10 @@ class DocumentParser {
             if($char==='=')
             {
                 $_tmp = trim($_tmp);
-                $nextchar = substr($_tmp,0,1);
-                if(in_array($nextchar, array('"', "'", '`')))
+                $delim = substr($_tmp,0,1);
+                if(in_array($delim, array('"', "'", '`')))
                 {
-                    list($null, $value, $_tmp) = explode($nextchar, $_tmp, 3);
+                    list($null, $value, $_tmp) = explode($delim, $_tmp, 3);
                 }
                 elseif(strpos($_tmp,'&')!==false)
                 {
@@ -1363,11 +1382,15 @@ class DocumentParser {
             }
             elseif($char==='&')
             {
-                if(trim($key)!=='') $value = '';
+                if(trim($key)!=='') $value = '1';
                 else continue;
             }
-            else
-                if($key!==''||trim($char)!=='') $key .= $char;
+            elseif($_tmp==='')
+            {
+                $key .= $char;
+                $value = '1';
+            }
+            elseif($key!==''||trim($char)!=='') $key .= $char;
             
             if(!is_null($value))
             {
@@ -1803,6 +1826,8 @@ class DocumentParser {
             $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
             $source= $this->documentOutput;
             
+            $source= $this->ignoreCommentedTagsContent($source);
+
             $source= $this->mergeConditionalTagsContent($source);
             
             $source = $this->mergeSettingsContent($source);
@@ -1860,6 +1885,8 @@ class DocumentParser {
             $this->getSettings();
         }
 
+        $_REQUEST['q'] = $_GET['q'] = $this->setRequestQ($_SERVER['REQUEST_URI']);
+        
         // IIS friendly url fix
         if ($this->config['friendly_urls'] == 1 && strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false) {
             $url= $_SERVER['QUERY_STRING'];
@@ -1969,6 +1996,18 @@ class DocumentParser {
         $this->prepareResponse();
     }
 
+    function setRequestQ($request_uri) {
+        if(isset($_REQUEST['id'])) $q = null;
+        else {
+            $q = substr($request_uri,strlen($this->config['base_url']));
+            if(strpos($q,'?')!==false) $q = substr($q,0,strpos($q,'?'));
+            if($q=='index.php')        $q = '';
+        }
+        
+        $_REQUEST['q'] = $_GET['q'] = $q;
+        return $q;
+    }
+    
     /**
      * The next step called at the end of executeParser()
      *
@@ -2040,7 +2079,6 @@ class DocumentParser {
                         $this->sendErrorPage();
                     }
                 }
-        exit;
             }
 
     function _sendRedirectForRefPage($url) {
@@ -2995,9 +3033,12 @@ class DocumentParser {
             $bt = md5($content);
             $replace= array ();
             foreach($matches[1] as $i=>$key) {
-                if(strpos($key,':')!==false) list($key,$modifiers) = explode(':', $key, 2);
-                else                         $modifiers = false;
+                if($this->config['enable_filter']==1 && strpos($key,':')!==false)
+                    list($key,$modifiers) = explode(':', $key, 2);
+                else
+                    $modifiers = false;
                 
+                $key = trim($key);
                 if($cleanup=='hasModifier' && !isset($ph[$key])) $ph[$key] = '';
 		
                 if(isset($ph[$key])) {
@@ -3953,6 +3994,7 @@ class DocumentParser {
             return false;
         if (!isset ($this->pluginEvent[$evtName]))
             return false;
+        
         $el= $this->pluginEvent[$evtName];
         $results= array ();
         $numEvents= count($el);
@@ -3982,6 +4024,9 @@ class DocumentParser {
 
                 // eval plugin
                 $this->evalPlugin($pluginCode, $parameter);
+
+                if(class_exists('PHxParser')) $this->config['enable_filter'] = 0;
+
                 if ($this->dumpPlugins == 1) {
                     $eventtime = $this->getMicroTime() - $eventtime;
                     $this->pluginsCode .= '<fieldset><legend><b>' . $evtName . ' / ' . $pluginName . '</b> ('.sprintf('%2.2f ms', $eventtime*1000).')</legend>';
@@ -4069,11 +4114,11 @@ class DocumentParser {
             foreach( $jsonFormat as $key=>$row ) {
                 if (!empty($key)) {
                     if (is_array($row)) {
-                        $value = empty($row[0]['value'])? '' : $row[0]['value'];
+                        if (isset($row[0]['value'])) $value = $row[0]['value'];
                     } else {
                         $value = $row;
                     }
-                    if (!empty($value)) $property[$key] = $value;
+                    if (isset($value)) $property[$key] = $value;
                 }
             }
         }
@@ -4355,7 +4400,7 @@ class DocumentParser {
 
 	function messageQuit($msg= 'unspecified error', $query= '', $is_error= true, $nr= '', $file= '', $source= '', $text= '', $line= '', $output='') {
 
-		include_once('extenders/maketable.class.php');
+                if (!class_exists('makeTable')) include_once('extenders/maketable.class.php');
 		$MakeTable = new MakeTable();
 		$MakeTable->setTableClass('grid');
 		$MakeTable->setRowRegularClass('gridItem');
@@ -4535,7 +4580,7 @@ class DocumentParser {
 	}
 
 	function get_backtrace($backtrace) {
-		include_once('extenders/maketable.class.php');
+                if (!class_exists('makeTable')) include_once('extenders/maketable.class.php');
 		$MakeTable = new MakeTable();
 		$MakeTable->setTableClass('grid');
 		$MakeTable->setRowRegularClass('gridItem');

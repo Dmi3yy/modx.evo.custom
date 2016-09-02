@@ -31,7 +31,7 @@ $rs = $modx->db->select('username', $tbl_active_users, "action=22 AND id='{$id}'
     }
 // end check for lock
 
-
+$content = array();
 if(isset($_GET['id'])) {
     $rs = $modx->db->select('*', $tbl_site_snippets, "id='{$id}'");
     $content = $modx->db->getRow($rs);
@@ -50,6 +50,8 @@ if(isset($_GET['id'])) {
 if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
+
+$content = array_merge($content, $_POST);
 ?>
 <script type="text/javascript">
 
@@ -366,7 +368,7 @@ function contains(a, obj) {
     
     <div id="actions">
           <ul class="actionButtons">
-              <li id="Button1">
+              <li id="Button1" class="transition">
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
@@ -384,7 +386,7 @@ function contains(a, obj) {
               <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"]?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
+              <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
 
@@ -443,7 +445,7 @@ function contains(a, obj) {
                 <?php echo $_lang['snippet_code']?>
             </div>
             <div class="sectionBody">
-            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim($modx->htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
+            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php"."\n". trim($modx->htmlspecialchars($content['snippet'])) ."\n"."?>" ?></textarea>
             </div>
         </div>    
         <!-- PHP text editor end -->
