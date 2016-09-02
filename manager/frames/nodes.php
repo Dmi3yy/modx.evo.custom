@@ -8,57 +8,30 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     // save folderstate
     if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
-    if (isset($_GET['savestateonly'])) {
-        echo 'send some data'; //??
-        exit;
-    }
+    if (isset($_GET['savestateonly'])) exit('send some data'); //??
 
     $indent    = intval($_GET['indent']);
     $parent    = intval($_GET['parent']);
     $expandAll = intval($_GET['expandAll']);
     $output    = "";
-    $theme = $manager_theme ? "$manager_theme/":"";
+    $theme = "{$manager_theme}/";
 
     // setup sorting
     $sortParams = array('tree_sortby','tree_sortdir','tree_nodename');
-    foreach($sortParams as $param)
-        if(isset($_REQUEST[$param])) { $_SESSION[$param] = $_REQUEST[$param]; $modx->manager->saveLastUserSetting($param, $_REQUEST[$param]); }
+    foreach($sortParams as $param) {
+        if(isset($_REQUEST[$param])) {
+            $_SESSION[$param] = $_REQUEST[$param];
+            $modx->manager->saveLastUserSetting($param, $_REQUEST[$param]);
+        }
+    }
 
     // icons by content type
-    $icons = array(
-        'application/rss+xml' => $_style["tree_page_rss"],
-        'application/pdf' => $_style["tree_page_pdf"],
-        'application/vnd.ms-word' => $_style["tree_page_word"],
-        'application/vnd.ms-excel' => $_style["tree_page_excel"],
-        'text/css' => $_style["tree_page_css"],
-        'text/html' => $_style["tree_page_html"],
-        'text/plain' => $_style["tree_page"],
-        'text/xml' => $_style["tree_page_xml"],
-        'text/javascript' => $_style["tree_page_js"],
-        'image/gif' => isset($_style["tree_page_gif"]) ? $_style["tree_page_gif"] : $_style["tree_page"],
-        'image/jpg' => isset($_style["tree_page_jpg"]) ? $_style["tree_page_jpg"] :  $_style["tree_page"],
-        'image/png' => isset($_style["tree_page_png"]) ? $_style["tree_page_png"] : $_style["tree_page"]
-    );
-    $iconsPrivate = array(
-        'application/rss+xml' => $_style["tree_page_rss_secure"],
-        'application/pdf' => $_style["tree_page_pdf_secure"],
-        'application/vnd.ms-word' => $_style["tree_page_word_secure"],
-        'application/vnd.ms-excel' => $_style["tree_page_excel_secure"],
-        'text/css' => $_style["tree_page_css_secure"],
-        'text/html' => $_style["tree_page_html_secure"],
-        'text/plain' => $_style["tree_page_secure"],
-        'text/xml' => $_style["tree_page_xml_secure"],
-        'text/javascript' => $_style["tree_page_js_secure"],
-        'image/gif' => isset($_style["tree_page_gif_secure"]) ? $_style["tree_page_gif_secure"] : $_style["tree_page_secure"],
-        'image/jpg' => isset($_style["tree_page_jpg_secure"]) ? $_style["tree_page_jpg_secure"] : $_style["tree_page_secure"],
-        'image/png' => isset($_style["tree_page_png_secure"]) ? $_style["tree_page_png_secure"] : $_style["tree_page_secure"]
-    );
+    $icons        = getIconInfo($_style);
+    $iconsPrivate = getPrivateIconInfo($_style);
 
-    if (isset($_SESSION['openedArray'])) {
-            $opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
-    } else {
-            $opened = array();
-    }
+    if (isset($_SESSION['openedArray'])) $opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
+    else                                 $opened = array();
+
     $opened2 = array();
     $closed2 = array();
 
@@ -215,53 +188,53 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $evtOut = $modx->invokeEvent('OnManagerNodePrerender',$data);
             if (is_array($evtOut)) $evtOut = implode("\n", $evtOut);
             
-            $node = $evtOut;
+            $node = '';
             
             if ($replace =='') {
-            	if ($donthit) {
-                	$icon = ($privateweb||$privatemgr) ? $_style["tree_folder_secure"] : $_style["tree_folder"];
-                	$output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.$icon.'" onclick="showPopup('.$id.',\''.addslashes($nodetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\'" />&nbsp;';
-                	$output .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.addslashes($nodetitle).'\',0); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($nodetitle).'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div>';
-                	continue;
-            	}
                 if (!$isfolder) {
                     $icon = ($privateweb||$privatemgr) ? $_style["tree_page_secure"] : $_style["tree_page"];
                     
                     if ($privateweb||$privatemgr) {
-                        if (isset($iconsPrivate[$contenttype])) {
-                            $icon = $iconsPrivate[$contenttype];
+                        if (isset($iconsPrivate[$contenttype])) $icon = $iconsPrivate[$contenttype];
                         }
-                    } else {
-                        if (isset($icons[$contenttype])) {
-                            $icon = $icons[$contenttype];
-                        }
+                    else {
+                        if (isset($icons[$contenttype]))        $icon = $icons[$contenttype];
                     }
                     if($id == $modx->config['site_start'])                $icon = $_style["tree_page_home"];
                     elseif($id == $modx->config['error_page'])            $icon = $_style["tree_page_404"];
                     elseif($id == $modx->config['site_unavailable_page']) $icon = $_style["tree_page_hourglass"];
                     elseif($id == $modx->config['unauthorized_page'])     $icon = $_style["tree_page_info"];
-                    $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.$icon.'" onclick="showPopup('.$id.',\''.$nodetitle_esc.'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\'" />&nbsp;';
-                    $node .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.$nodetitle_esc.'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.$alt.'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div>';
+                    $param = array($parent,$id,"'{$nodetitle_esc}'",$id,"'{$nodetitle_esc}'",$deleted,"'{$url}'","'p{$id}'",$alt,$nodetitleDisplay,$weblinkDisplay);
+                    $node = vsprintf('<span p="%s" onclick="treeAction(%s,%s); setSelected(this);" onmouseover="setHoverClass(this,1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange=%s; selectedObjectName=%s; selectedObjectDeleted=%s; selectedObjectUrl=%s;" oncontextmenu="document.getElementById(%s).onclick(event);return false;" title="%s">%s%s</span> ', $param);
+                    $param = array($id,$parent,$spacer,$pad,$id,$_lang['click_to_context'],$icon,$id,"'{$nodetitle_esc}'",$id,"'{$nodetitle_esc}'",$deleted,"'{$url}'",$node,$pageIdDisplay);
+                    $node = vsprintf('<div id="node%s" p="%s" style="white-space: nowrap;">%s%s<img id="p%s" align="absmiddle" title="%s" style="cursor: pointer" src="%s" onclick="showPopup(%s,%s,event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange=%s; selectedObjectName=%s; selectedObjectDeleted=%s; selectedObjectUrl=%s" />&nbsp;%s%s</div>',$param);
                 }
                 else {
                     // expandAll: two type for partial expansion
                     if ($expandAll ==1 || ($expandAll == 2 && in_array($id, $opened)))
                     {
-                        if ($expandAll == 1) {
-                           array_push($opened2, $id);
-                        }
-                      $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="margin-left:-3px;cursor: pointer" src="'.$_style["tree_minusnode"].'" onclick="toggleNode(this,'.($indent+1).','.$id.','.$expandAll.','. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer;margin-top:-2px;margin-left:-3px;" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folderopen_secure"] : $_style["tree_folderopen"]).'" onclick="showPopup('.$id.',\''.$nodetitle_esc.'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" />&nbsp;';
-                        $node .= '<span onclick="treeAction('.$id.', \''.$nodetitle_esc.'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.$alt.'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'<div style="display:block">';
+                        if ($expandAll == 1) $opened2[] = $id;
+                        $param = array($id,"'{$nodetitle_esc}'",$id,"'{$nodetitle_esc}'",$deleted,"'{$url}'","'f{$id}'",$alt,$nodetitleDisplay,$weblinkDisplay);
+                        $node = vsprintf('<span onclick="treeAction(%s,%s); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange=%s; selectedObjectName=%s; selectedObjectDeleted=%s; selectedObjectUrl=%s;" oncontextmenu="document.getElementById(%s).onclick(event);return false;" title="%s">%s%s</span> ',$param);
+                        $pmode = ($privateweb==1||$privatemgr==1) ? '1' : '0';
+                        $src = ($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folderopen_secure"] : $_style["tree_folderopen"];
+                        $param = array($id,$parent,$spacer,$id,$_style["tree_minusnode"],$indent+1,$id,$expandAll,$pmode,$id,$_lang['click_to_context'],$src,$id,"'{$nodetitle_esc}'",$id,"'{$nodetitle_esc}'",$deleted,"'{$url}'",$node,$pageIdDisplay);
+                        $node = vsprintf('<div id="node%s" p="%s" style="white-space: nowrap;">%s<img id="s%s" align="absmiddle" style="margin-left:-3px;cursor: pointer" src="%s" onclick="toggleNode(this,%s,%s,%s,%s); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f%s" align="absmiddle" title="%s" style="cursor: pointer;margin-top:-2px;margin-left:-3px;" src="%s" onclick="showPopup(%s,%s,event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange=%s; selectedObjectName=%s; selectedObjectDeleted=%s; selectedObjectUrl=%s;" />&nbsp;%s%s<div style="display:block">',$param);
                         $output .= $node;
                         makeHTML($indent+1,$id,$expandAll,$theme);
                         $node = '</div></div>';
                     }
                     else {
-                        $node .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="margin-left:-3px;cursor: pointer" src="'.$_style["tree_plusnode"].'" onclick="toggleNode(this,'.($indent+1).','.$id.','.$expandAll.','. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" title="'.$_lang['click_to_context'].'" align="absmiddle" style="cursor: pointer;margin-top:-2px;margin-left:-3px;" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folder_secure"] : $_style["tree_folder"]).'" onclick="showPopup('.$id.',\''.$nodetitle_esc.'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" />&nbsp;';
-                        $node .= '<span onclick="treeAction('.$id.', \''.$nodetitle_esc.'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.$nodetitle_esc.'\'; selectedObjectDeleted='.$deleted.'; selectedObjectUrl=\''.$url.'\';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.$alt.'">'.$nodetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'<div style="display:none"></div></div>';
-                        array_push($closed2, $id);
+                        $param = array($id,"'{$nodetitle_esc}'",$id,"'{$nodetitle_esc}'",$deleted,"'{$url}'","'f{$id}'",$alt,$nodetitleDisplay,$weblinkDisplay);
+                        $node = vsprintf('<span onclick="treeAction(%s, %s); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange=%s; selectedObjectName=%s; selectedObjectDeleted=%s; selectedObjectUrl=%s;" oncontextmenu="document.getElementById(%s).onclick(event);return false;" title="%s">%s%s</span> ',$param);
+                        $pmode = ($privateweb==1||$privatemgr==1) ? '1' : '0';
+                        $src = ($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folder_secure"] : $_style["tree_folder"];
+                        $param = array($id,$parent,$spacer,$id,$_style["tree_plusnode"],$indent+1,$id,$expandAll,$pmode,$id,$_lang['click_to_context'],$src,$id,"'{$nodetitle_esc}'",$id,"'{$nodetitle_esc}'",$deleted,"'{$url}'",$node,$pageIdDisplay);
+                        $node = vsprintf('<div id="node%s" p="%s" style="white-space: nowrap;">%s<img id="s%s" align="absmiddle" style="margin-left:-3px;cursor: pointer" src="%s" onclick="toggleNode(this,%s,%s,%s,%s); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f%s" title="%s" align="absmiddle" style="cursor: pointer;margin-top:-2px;margin-left:-3px;" src="%s" onclick="showPopup(%s,%s,event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange=%s; selectedObjectName=%s; selectedObjectDeleted=%s; selectedObjectUrl=%s;" />&nbsp;%s%s<div style="display:none"></div></div>',$param);
+                        $closed2[] = $id;
                     }
                 }
+                $node = $evtOut.$node;
             } else {
                 $node = $evtOut;
             }
@@ -288,4 +261,46 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 echo '</script> ';
             }
         }
+    }
+    
+    function getIconInfo($_style) {
+        if(!isset($_style['tree_page_gif'])) $_style['tree_page_gif'] = $_style['tree_page'];
+        if(!isset($_style['tree_page_jpg'])) $_style['tree_page_jpg'] = $_style['tree_page'];
+        if(!isset($_style['tree_page_png'])) $_style['tree_page_png'] = $_style['tree_page'];
+        $icons = array(
+            'text/html'                => $_style['tree_page_html'],
+            'text/plain'               => $_style['tree_page'],
+            'text/xml'                 => $_style['tree_page_xml'],
+            'text/css'                 => $_style['tree_page_css'],
+            'text/javascript'          => $_style['tree_page_js'],
+            'application/rss+xml'      => $_style['tree_page_rss'],
+            'application/pdf'          => $_style['tree_page_pdf'],
+            'application/vnd.ms-word'  => $_style['tree_page_word'],
+            'application/vnd.ms-excel' => $_style['tree_page_excel'],
+            'image/gif'                => $_style['tree_page_gif'],
+            'image/jpg'                => $_style['tree_page_jpg'],
+            'image/png'                => $_style['tree_page_png']
+        );
+        return $icons;
+    }
+    
+    function getPrivateIconInfo($_style) {
+        if(!isset($_style['tree_page_gif_secure'])) $_style['tree_page_gif_secure'] = $_style['tree_page_secure'];
+        if(!isset($_style['tree_page_jpg_secure'])) $_style['tree_page_jpg_secure'] = $_style['tree_page_secure'];
+        if(!isset($_style['tree_page_png_secure'])) $_style['tree_page_png_secure'] = $_style['tree_page_secure'];
+        $iconsPrivate = array(
+            'text/html'                => $_style['tree_page_html_secure'],
+            'text/plain'               => $_style['tree_page_secure'],
+            'text/xml'                 => $_style['tree_page_xml_secure'],
+            'text/css'                 => $_style['tree_page_css_secure'],
+            'text/javascript'          => $_style['tree_page_js_secure'],
+            'application/rss+xml'      => $_style['tree_page_rss_secure'],
+            'application/pdf'          => $_style['tree_page_pdf_secure'],
+            'application/vnd.ms-word'  => $_style['tree_page_word_secure'],
+            'application/vnd.ms-excel' => $_style['tree_page_excel_secure'],
+            'image/gif'                => $_style['tree_page_gif_secure'],
+            'image/jpg'                => $_style['tree_page_jpg_secure'],
+            'image/png'                => $_style['tree_page_png_secure']
+        );
+        return $iconsPrivate;
     }
