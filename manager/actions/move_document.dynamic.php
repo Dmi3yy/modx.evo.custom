@@ -1,31 +1,30 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_document')) {
-    $e->setError(3);
-    $e->dumpError();
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 if(isset($_REQUEST['id'])) {
     $id = intval($_REQUEST['id']);
 } else {
-    $e->setError(2);
-    $e->dumpError();
+    $modx->webAlertAndQuit($_lang["error_no_id"]);
 }
 
 // check permissions on the document
-include_once "./processors/user_documents_permissions.class.php";
+include_once MODX_MANAGER_PATH . "processors/user_documents_permissions.class.php";
 $udperms = new udperms();
 $udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
-    ?><br /><br /><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
-    <p><?php echo $_lang['access_permission_denied']; ?></p>
-    <?php
-    include("footer.inc.php");
-    exit;
+    $modx->webAlertAndQuit($_lang["access_permission_denied"]);
 }
+
+// Set the item name for logger
+$pagetitle = $modx->db->getValue($modx->db->select('pagetitle', $modx->getFullTableName('site_content'), "id='{$id}'"));
+$_SESSION['itemname'] = $pagetitle;
+
 ?>
 
 <script language="javascript">
@@ -69,12 +68,12 @@ function checkParentChildRelation(pId, pName) {
 
 <div id="actions">
 	<ul class="actionButtons">
-	    <li><a href="#" onclick="document.newdocumentparent.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save'] ?></a></li>
-	  <li><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+		<li id="Button1" class="transition"><a href="#" onclick="document.newdocumentparent.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save'] ?></a></li>
+		<li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
 	</ul>
 </div>
 
-
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['move_resource_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['move_resource_message']; ?><p />
 <form method="post" action="index.php" name='newdocumentparent'>
@@ -86,4 +85,5 @@ function checkParentChildRelation(pId, pName) {
 <br />
 <input type='save' value="Move" style="display:none">
 </form>
+</div>
 </div>

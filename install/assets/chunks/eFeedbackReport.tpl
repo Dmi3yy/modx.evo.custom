@@ -7,6 +7,8 @@
  * @version 	1.0
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal @modx_category Forms
+ * @internal    @installset base
+ * @internal    @overwrite false
  */
  
 <p>Прислано человеком, с именем: [+name+] . Подробности ниже:</p>

@@ -14,7 +14,7 @@ if (!class_exists("dateFilter")) {
 	class dateFilter {
 		var $month,$year,$day,$dateSource;
 	
-		function dateFilter($month,$year,$day,$dateSource) {
+		function __construct($month,$year,$day,$dateSource) {
 			$this->month = $month;
 			$this->year = $year;
 			$this->day = $day;
@@ -73,7 +73,7 @@ $dateSource = isset($dateSource) ? $dateSource : "createdon";
 	Source of the [+date+] placeholder
 
 	Options:
-	# - Any UNIX timestamp from MODx fields or TVs such as createdon, pub_date, or editedon
+	# - Any UNIX timestamp from MODX fields or TVs such as createdon, pub_date, or editedon
 	
 	Default:
 	"createdon"
@@ -81,7 +81,7 @@ $dateSource = isset($dateSource) ? $dateSource : "createdon";
 	Related:
 	- <dateFormat>
 */
-$default = isset($dateFilterDefault) ? $dateFilterDefault : 0;
+if(!isset($dateFilterDefault)) $dateFilterDefault = 0;
 /*
 	Param: dateFilterDefault
 

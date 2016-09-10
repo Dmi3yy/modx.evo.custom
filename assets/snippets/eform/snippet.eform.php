@@ -1,15 +1,27 @@
 <?php
+/**
+ * eForm
+ *
+ * Robust form parser/processor with validation, multiple sending options, chunk/page support for forms and reports, and file uploads
+ *
+ * @category   snippet
+ * @version    1.4.7
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal   @properties
+ * @internal   @modx_category Forms
+ * @internal   @installset base, sample
+ * @documentation MODX Docs https://rtfm.modx.com/extras/evo/eform
+ * @documentation History, usage and examples [+site_url+]assets/snippets/eform/docs/eform.htm
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Original created by Raymond Irving 15-Dec-2004.
+ * @author      v1.3+ extended by Jelle Jager (TobyL) September 2006
+ * @author      Captcha image support - thanks to Djamoer
+ * @author      Multi checkbox, radio, select support - thanks to Djamoer
+ * @author      Form Parser and extended validation - by Jelle Jager
+ * @author      and many others
+ * @lastupdate  11/04/2016
+ */
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
-# eForm 1.4.4.7 - Electronic Form Snippet
-# Original created by Raymond Irving 15-Dec-2004.
-# Version 1.3+ extended by Jelle Jager (TobyL) September 2006
-# -----------------------------------------------------
-# Captcha image support - thanks to Djamoer
-# Multi checkbox, radio, select support - thanks to Djamoer
-# Form Parser and extened validation - by Jelle Jager
-#
-# see eform/docs/eform.htm for history, usage and examples
-#
 
 # Set Snippet Paths
 $snipFolder = isset($snipFolder)?$snipFolder:'eform';
@@ -32,7 +44,7 @@ if(isset($eformOnBeforeFormParse)) $eFormOnBeforeFormParse = $eformOnBeforeFormP
 if(isset($eFormCSS)) $cssStyle = $eFormCSS;
 
 # Snippet customize settings
-$params = array (
+$_params = array (
    // Snippet Path
    'snipPath' => $snipPath, //includes $snipFolder
 	 'snipFolder' => $snipFolder,
@@ -85,17 +97,22 @@ $params = array (
    'invalidClass' => isset($invalidClass)?$invalidClass:"invalid",
    'runSnippet' => ( isset($runSnippet) && !is_numeric($runSnippet) )?$runSnippet:'',
    'autoSenderName' => isset($autoSenderName)?$autoSenderName:'',
-   'version' => '1.4.4'
+   'attachmentField' => isset($attachmentField)?$attachmentField:'',
+   'attachmentPath' => isset($attachmentPath)?$attachmentPath:'',
+   'errorTpl' => isset($errorTpl)?$errorTpl:'<div class="errors"><strong>[+ef_message_text+]</strong><br />[+ef_wrapper+]</div>',
+   'errorRequiredTpl' => isset($errorRequiredTpl)?$errorRequiredTpl:'<span class="requiredlist"><span>[+ef_required_list+]</span>.</span>',
+   'errorRequiredSeparator' => isset($errorRequiredSeparator)?$errorRequiredSeparator:'</span>, <span>',
+   'version' => '1.4.6'
 );
 
 // pixelchutes PHx workaround
-foreach( $params as $key=>$val ) $params[ $key ] = str_replace( array('((','))'), array('[+','+]'), $val );
+foreach( $_params as $key=>$val ) $params[ $key ] = str_replace( array('((','))'), array('[+','+]'), $val );
 
 # Start processing
 
 include_once ($snipPath."eform.inc.php");
 
-$output = eForm($modx,$params);
+$output = eForm($modx,array_merge($_params,$params));
 
 # Return
 return $output;

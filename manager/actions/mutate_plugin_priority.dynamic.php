@@ -1,24 +1,16 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_plugin')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-if($manager_theme) {
-    $useTheme = $manager_theme . '/';
-} else {
-    $useTheme = '';
-}
-
-$basePath = $modx->config['base_path'];
 $siteURL = $modx->config['site_url'];
 
 $updateMsg = '';
 
 if(isset($_POST['listSubmitted'])) {
     $updateMsg .= "<span class=\"warning\" id=\"updated\">Updated!<br /><br /> </span>";
-	$tbl = $dbase.'.`'.$table_prefix.'site_plugin_events`';
+	$tbl = $modx->getFullTableName('site_plugin_events');
 
 	foreach ($_POST as $listName=>$listValue) {
         if ($listName == 'listSubmitted') continue;
@@ -28,58 +20,46 @@ if(isset($_POST['listSubmitted'])) {
 	    	foreach($orderArray as $key => $item) {
 	    		if ($item == '') continue;
 	    		$pluginId = ltrim($item, 'item_');
-	    		$sql = "UPDATE $tbl set priority=".$key." WHERE pluginid=".$pluginId." and evtid=".$listName;
-	    		$modx->db->query($sql);
+	    		$modx->db->update(array('priority'=>$key), $tbl, "pluginid='{$pluginId}' AND evtid='{$listName}'");
 	    	}
     	}
     }
     // empty cache
-	include_once (MODX_MANAGER_PATH.'/processors/cache_sync.class.processor.php');
-	$sync = new synccache();
-	$sync->setCachepath($basePath.'/assets/cache/');
-	$sync->setReport(false);
-	$sync->emptyCache(); // first empty the cache
+    $modx->clearCache('full');
 }
 
-$sql = "
-	SELECT sysevt.name as 'evtname', sysevt.id as 'evtid', pe.pluginid, plugs.name, pe.priority
-	FROM $dbase.`".$table_prefix."system_eventnames` sysevt
-	INNER JOIN $dbase.`".$table_prefix."site_plugin_events` pe ON pe.evtid = sysevt.id
-	INNER JOIN $dbase.`".$table_prefix."site_plugins` plugs ON plugs.id = pe.pluginid
-	WHERE plugs.disabled=0
-	ORDER BY sysevt.name,pe.priority
-";
-
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->select(
+	"sysevt.name as evtname, sysevt.id as evtid, pe.pluginid, plugs.name, pe.priority, plugs.disabled",
+	$modx->getFullTableName('system_eventnames')." sysevt
+		INNER JOIN ".$modx->getFullTableName('site_plugin_events')." pe ON pe.evtid = sysevt.id
+		INNER JOIN ".$modx->getFullTableName('site_plugins')." plugs ON plugs.id = pe.pluginid",
+	'',
+	'sysevt.name,pe.priority'
+	);
 
 $insideUl = 0;
 $preEvt = '';
 $evtLists = '';
 $sortables = array();
-if($limit>1) {
-    for ($i=0;$i<$limit;$i++) {
-        $plugins = mysql_fetch_assoc($rs);
+    while ($plugins = $modx->db->getRow($rs)) {
         if ($preEvt !== $plugins['evtid']) {
             $sortables[] = $plugins['evtid'];
             $evtLists .= $insideUl? '</ul><br />': '';
             $evtLists .= '<strong>'.$plugins['evtname'].'</strong><br /><ul id="'.$plugins['evtid'].'" class="sortableList">';
             $insideUl = 1;
         }
-        $evtLists .= '<li id="item_'.$plugins['pluginid'].'">'.$plugins['name'].'</li>';
+        $evtLists .= '<li id="item_'.$plugins['pluginid'].'"'.($plugins['disabled']?' style="color:#AAA"':'').'>'.$plugins['name'].($plugins['disabled']?' (hide)':'').'</li>';
         $preEvt = $plugins['evtid'];
     }
-}
+    if ($insideUl) $evtLists .= '</ul>';
 
-$evtLists .= '</ul>';
 
-$header = '
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+$header = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>MODx</title>
+	<title>MODX</title>
 	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
-	<link rel="stylesheet" type="text/css" href="media/style/'.$useTheme.'style.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/'.$modx->config['manager_theme'].'/style.css" />
 	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
 
 	<style type="text/css">
@@ -111,7 +91,7 @@ $header = '
             padding: 3px 5px;
             margin: 4px 0px;
             border: 1px solid #CCCCCC;
-			background-image: url("media/style/'.$useTheme.'images/misc/fade.gif");
+			background-image: url("'.$_style['fade'].'");
 			background-repeat: repeat-x;
 		}
 
@@ -155,11 +135,12 @@ foreach ($sortables as $list) {
 
 <div id="actions"
    <ul class="actionButtons">
-       	<li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
-		<li><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'" /> '.$_lang['cancel'].'</a></li>
+       	<li class="transition"><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
+		<li class="transition"><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'" /> '.$_lang['cancel'].'</a></li>
 	</ul>
 </div>
 
+<div class="section">
 <div class="sectionHeader">'.$_lang['plugin_priority'].'</div>
 <div class="sectionBody">
 <p>'.$_lang['plugin_priority_instructions'].'</p>
@@ -180,5 +161,6 @@ foreach ($sortables as $list) {
             
 echo '	</form>
 	</div>
+</div>
 ';
 ?>

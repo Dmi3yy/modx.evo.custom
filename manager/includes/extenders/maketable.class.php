@@ -6,7 +6,7 @@
  * providing classes for styling the table, rows, and cells (including alternate
  * row styling), as well as adding form controls to each row.
  * 
- * @author Jason Coward <jason@opengeek.com> (MODx)
+ * @author Jason Coward <jason@opengeek.com> (MODX)
  */
 class MakeTable {
 	var $actionField;
@@ -31,7 +31,7 @@ class MakeTable {
 	var $columnWidths;
 	var $selectedValues;
 	
-	function MakeTable() {
+	function __construct() {
 		$this->fieldHeaders= array();
 		$this->excludeFields= array();
 		$this->actionField= '';

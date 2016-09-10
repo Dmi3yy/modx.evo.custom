@@ -37,7 +37,7 @@ class Paging {
   
   // ------------------------------------------------------------------------ Constructor
   //
-  function Paging( $int_nbr_row, $int_cur_position, $int_num_result, $str_ext_argv = "" ){
+  function __construct( $int_nbr_row, $int_cur_position, $int_num_result, $str_ext_argv = "" ){
     $this->int_nbr_row = $int_nbr_row;
     $this->int_num_result = $int_num_result;
     $this->int_cur_position = $int_cur_position;
@@ -96,7 +96,7 @@ class Paging {
   // This function returns an array of string (href link with the page number)
   function getPagingRowArray(){
     global $PHP_SELF;
-
+        $array_all_page = array();
     for( $i=0; $i<$this->getNumberOfPage(); $i++ ){
       // if current page, do not make a link
       if( $i == $this->getCurrentPage() ){

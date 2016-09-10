@@ -2,14 +2,14 @@
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 if(!class_exists('ForgotManagerPassword')) {
     class ForgotManagerPassword{
-        function ForgotManagerPassword(){
+        function __construct(){
             $this->errors = array();
             $this->checkLang();
         }
 
         function getLink() {
             global $_lang;
-  
+
             $link = <<<EOD
 <a id="ForgotManagerPassword-show_form" href="index.php?action=show_form">{$_lang['forgot_your_password']}</a>
 EOD;
@@ -23,7 +23,7 @@ EOD;
             $form = <<<EOD
 <label id="FMP-email_label" for="FMP_email">{$_lang['account_email']}:</label>
 <input id="FMP-email" type="text" />
-<button id="FMP-email_button" type="button" onclick="window.location = 'index.php?action=send_email&email='+document.getElementById('FMP-email').value;">{$_lang['send']}</button>
+<button id="FMP-email_button" type="button" onclick="window.location = 'index.php?action=send_email&email='+encodeURIComponent(document.getElementById('FMP-email').value);">{$_lang['send']}</button>
 EOD;
 
             return $form;
@@ -37,32 +37,32 @@ EOD;
             $username = $modx->db->escape($username);
             $email = $modx->db->escape($email);
             $hash = $modx->db->escape($hash);
+            $tbl_manager_users   = $modx->getFullTableName('manager_users');
+            $tbl_user_attributes = $modx->getFullTableName('user_attributes');
+            $tbl_active_users    = $modx->getFullTableName('active_users');
 
-            $pre = $modx->db->config['table_prefix'];
             $site_id = $modx->config['site_id'];
             $today = date('Yz'); // Year and day of the year
             $wheres = array();
             $where = '';
             $user = null;
-  
-            if($user_id !== false) { $wheres[] = "usr.id = '{$user_id}'"; }
-            if($username!='') { $wheres[] = "usr.username = '{$username}'"; }
-            if($email!='') { $wheres[] = "attr.email = '{$email}'"; }
-            if($hash!='') { $wheres[] = "MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) = '{$hash}'"; } 
+
+            if($user_id !== false) { $wheres[] = "usr.id='{$user_id}'"; }
+            if(!empty($username))  { $wheres[] = "usr.username='{$username}'"; }
+            if(!empty($email))     { $wheres[] = "attr.email='{$email}'"; }
+            if(!empty($hash))      { $wheres[] = "MD5(CONCAT(auser.lasthit,usr.password))='{$hash}'"; }
 
             if($wheres) {
-                $where = ' WHERE '.implode(' AND ',$wheres);
-                $sql = "SELECT usr.id, usr.username, attr.email, MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) AS hash
-                    FROM `{$pre}manager_users` usr
-                    INNER JOIN `{$pre}user_attributes` attr ON usr.id = attr.internalKey
-                    {$where}      
-                    LIMIT 1;"; 
-
-                if($result = $modx->db->query($sql)){
-                    if($modx->db->getRecordCount($result)==1) {
+                $result = $modx->db->select(
+                    "usr.id, usr.username, attr.email, MD5(CONCAT(auser.lasthit,usr.password)) AS hash",
+                    "{$tbl_manager_users} usr
+                        INNER JOIN {$tbl_user_attributes} attr  ON usr.id=attr.internalKey
+                        INNER JOIN {$tbl_active_users}    auser ON usr.username=auser.username",
+                    implode(' AND ',$wheres),
+                    "",
+                    1
+                    );
                         $user = $modx->db->getRow($result);
-                    }
-                }
             }
 
             if($user == null) { $this->errors[] = $_lang['could_not_find_user']; }
@@ -76,34 +76,33 @@ EOD;
         function sendEmail($to) {
             global $modx, $_lang;
 
-            $subject = $_lang['password_change_request'];
-            $headers  = "MIME-Version: 1.0\r\n".
-                "Content-type: text/html; charset=\"{$modx->config['modx_charset']}\"\r\n".
-        "From: MODx <{$modx->config['emailsender']}>\r\n".
-                "Reply-To: no-reply@{$_SERVER['HTTP_HOST']}\r\n".
-                "X-Mailer: PHP/".phpversion();
-
             $user = $this->getUser(0, '', $to);
-  
+            if($modx->config['use_captcha']==='1') $captcha = '&captcha_code=ignore';
+
             if($user['username']) {
                 $body = <<<EOD
-<p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_manager_url']}/processors/login.processor.php?username={$user['username']}&hash={$user['hash']}">{$_lang['forgot_password_email_link']}</a></p>
+<p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_manager_url']}processors/login.processor.php?username={$user['username']}&hash={$user['hash']}{$captcha}">{$_lang['forgot_password_email_link']}</a></p>
 <p>{$_lang['forgot_password_email_instructions']}</p>
 <p><small>{$_lang['forgot_password_email_fine_print']}</small></p>
 EOD;
 
-                $mail = mail($to, $subject, $body, $headers);
-                if(!$mail) { $this->errors[] = $_lang['error_sending_email']; }
-   
-                return $mail;  
+                $param = array();
+                $param['from']    = "{$modx->config['site_name']}<{$modx->config['emailsender']}>";
+                $param['to']      = "{$user['username']}<{$to}>";
+                $param['subject'] = $_lang['password_change_request'];
+                $param['body']    = $body;
+                $rs = $modx->sendmail($param); //ignore mail errors in this case
+
+                if(!$rs) $modx->errors[] = $_lang['error_sending_email'];
+
+                return $rs;
             }
         }
 
         function unblockUser($user_id) {
             global $modx, $_lang;
 
-            $pre = $modx->db->config['table_prefix'];
-            $modx->db->update(array('blocked' => 0, 'blockeduntil' => 0, 'failedlogincount' => 0), "`{$pre}user_attributes`", "internalKey = '{$user_id}'");
+            $modx->db->update(array('blocked' => 0, 'blockeduntil' => 0, 'failedlogincount' => 0), $modx->getFullTableName('user_attributes'), "internalKey = '{$user_id}'");
 
             if(!$modx->db->getAffectedRows()) { $this->errors[] = $_lang['user_doesnt_exist']; return; }
 
@@ -129,7 +128,7 @@ EOD;
 
             foreach($eng as $key=>$value) {
                 if(empty($_lang[$key])) { $_lang[$key] = $value; }
-            }  
+            }
         }
 
         function getErrorOutput() {
@@ -138,7 +137,7 @@ EOD;
             if($this->errors) {
                 $output = '<span class="error">'.implode('</span><span class="errors">', $this->errors).'</span>';
             }
-  
+
             return $output;
         }
     }
@@ -148,10 +147,10 @@ global $_lang;
 
 $output = '';
 $event_name = $modx->Event->name;
-$action = ((isset($_GET['action']) && !is_array($_GET['action']) && $_GET['action']!='') ? $_GET['action'] : '');
-$username = ((isset($_GET['username']) && !is_array($_GET['username']) && $_GET['username']!='') ? $_GET['username'] : '');
-$to = ((isset($_GET['email']) &&  !is_array($_GET['email']) && $_GET['email']!='') ?  $_GET['email'] : '');
-$hash = ((isset($_GET['hash']) && !is_array($_GET['hash']) && $_GET['hash']!='') ? $_GET['hash'] : '');
+$action = (empty($_GET['action']) ? '' : (is_string($_GET['action']) ? $_GET['action'] : ''));
+$username = (empty($_GET['username']) ? false : (is_string($_GET['username']) ? $_GET['username'] : ''));
+$to = (empty($_GET['email']) ? '' : (is_string($_GET['email']) ? $_GET['email'] : ''));
+$hash = (empty($_GET['hash']) ? false : (is_string($_GET['hash']) ? $_GET['hash'] : ''));
 $forgot = new ForgotManagerPassword();
 
 if($event_name == 'OnManagerLoginFormRender') {
@@ -170,17 +169,21 @@ if($event_name == 'OnManagerLoginFormRender') {
     if($forgot->errors) { $output = $forgot->getErrorOutput() . $forgot->getLink(); }
 }
 
-if($event_name == 'OnBeforeManagerLogin' && $hash!='' && $username!='') {
+if($event_name == 'OnBeforeManagerLogin' && $hash && $username) {
     $user = $forgot->getUser(false, $username, '', $hash);
     if($user && is_array($user) && !$forgot->errors) {
         $forgot->unblockUser($user['id']);
     }
 }
 
-if($event_name == 'OnManagerAuthentication' && $hash!='' && $username!='') {
+if($event_name == 'OnManagerAuthentication' && $hash && $username) {
     $user = $forgot->getUser(false, $username, '', $hash);
-    $output = ($user !== null && count($forgot->errors) == 0) ? true : false;
+	if($user !== null && count($forgot->errors) == 0) {
+		if(isset($_REQUEST['captcha_code']) && !empty($_REQUEST['captcha_code']))
+			$_SESSION['veriword'] = $_REQUEST['captcha_code'];
+		$output = true;
+	}
+	else $output = false;
 }
 
 $modx->Event->output($output);
-?>

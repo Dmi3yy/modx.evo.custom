@@ -4,9 +4,9 @@
   *
   *      @desc Base configuration file
   *   @package KCFinder
-  *   @version 2.51
-  *    @author Pavel Tzonkov <pavelc@users.sourceforge.net>
-  * @copyright 2010, 2011 KCFinder Project
+  *   @version 2.54
+  *    @author Pavel Tzonkov <sunhater@sunhater.com>
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
@@ -16,20 +16,25 @@
 // you are using session configuration.
 // See http://kcfinder.sunhater.com/install for setting descriptions
 
+global $modx;
 $_CONFIG = array(
 
     'disabled' => false,
-    'denyZipDownload' => false,
-    'denyUpdateCheck' => false,
-    'denyExtensionRename' => false,
-
+    'denyZipDownload' => $modx->config['denyZipDownload'],
+    'denyExtensionRename' => $modx->config['denyExtensionRename'],
+    'showHiddenFiles' => $modx->config['showHiddenFiles'],
+	
     'theme' => "oxygen",
 
-    'uploadURL' => MODX_BASE_URL  . 'assets',
-    'uploadDir' => MODX_BASE_PATH . 'assets',
+    'uploadURL' => rtrim($modx->config['rb_base_url'],'/'),
+    'uploadDir' => rtrim($modx->config['rb_base_dir'],'/'),
+    'siteURL' => $modx->config['site_url'],
+    'assetsURL' => rtrim($modx->config['rb_base_url'],'/'),
+    'dirPerms' => intval($modx->config['new_folder_permissions'],8),
+    'filePerms' => intval($modx->config['new_file_permissions'],8),
+    'maxfilesize' => $settings['upload_maxsize'],
+    'denyUpdateCheck' => true,
 
-    'dirPerms' => 0755,
-    'filePerms' => 0644,
 
     'access' => array(
 
@@ -53,35 +58,30 @@ $_CONFIG = array(
     'types' => array(
 
         // CKEditor & FCKEditor types
-        'files'   =>  "",
-        'flash'   =>  "swf",
-        'images'  =>  "*img",
+        'files'   =>  str_replace(',',' ',$modx->config['upload_files']),
+        'flash'   =>  str_replace(',',' ',$modx->config['upload_flash']),
+        'images'  =>  str_replace(',',' ',$modx->config['upload_images']),
 
         // TinyMCE types
-        'file'    =>  "",
-        'media'   =>  "swf flv avi mpg mpeg qt mov wmv asf rm",
-        'image'   =>  "*img",
+        'file'    =>  str_replace(',',' ',$modx->config['upload_files']),
+        'media'   =>  str_replace(',',' ',$modx->config['upload_media']),
+        'image'   =>  str_replace(',',' ',$modx->config['upload_images']),
     ),
-
-    'filenameChangeChars' => array("а"=>"a","б"=>"b","в"=>"v","г"=>"g","д"=>"d","е"=>"e","ё"=>"yo","ж"=>"zh","з"=>"z","и"=>"i","й"=>"j","к"=>"k","л"=>"l","м"=>"m","н"=>"n","о"=>"o","п"=>"p","р"=>"r","с"=>"s","т"=>"t","у"=>"u","ф"=>"f","х"=>"h","ц"=>"c","ч"=>"ch","ш"=>"sh","щ"=>"shh","ы"=>"i","э"=>"e","ю"=>"yu","я"=>"ya",
-		"А"=>"A","Б"=>"B","В"=>"V","Г"=>"G","Д"=>"D","Е"=>"E","Ё"=>"Yo","Ж"=>"Zh", "З"=>"Z","И"=>"I","Й"=>"J","К"=>"K","Л"=>"L","М"=>"M","Н"=>"N","О"=>"O","П"=>"P","Р"=>"R","С"=>"S","Т"=>"T","У"=>"U","Ф"=>"F","Х"=>"H","Ц"=>"C","Ч"=>"Ch","Ш"=>"Sh","Щ"=>"Shh","Ы"=>"I","Э"=>"E","Ю"=>"Yu","Я"=>"Ya",
-		"ь"=>"","Ь"=>"","ъ"=>"","Ъ"=>""," "=>"-","№"=>"N","+"=>"-",":"=>"-",";"=>"-","!"=>"-","?"=>"-","&"=>"and","\'" =>"", "=" =>"-"),
-
-    'dirnameChangeChars' => array("а"=>"a","б"=>"b","в"=>"v","г"=>"g","д"=>"d","е"=>"e","ё"=>"yo","ж"=>"zh","з"=>"z","и"=>"i","й"=>"j","к"=>"k","л"=>"l","м"=>"m","н"=>"n","о"=>"o","п"=>"p","р"=>"r","с"=>"s","т"=>"t","у"=>"u","ф"=>"f","х"=>"h","ц"=>"c","ч"=>"ch","ш"=>"sh","щ"=>"shh","ы"=>"i","э"=>"e","ю"=>"yu","я"=>"ya",
-		"А"=>"A","Б"=>"B","В"=>"V","Г"=>"G","Д"=>"D","Е"=>"E","Ё"=>"Yo","Ж"=>"Zh", "З"=>"Z","И"=>"I","Й"=>"J","К"=>"K","Л"=>"L","М"=>"M","Н"=>"N","О"=>"O","П"=>"P","Р"=>"R","С"=>"S","Т"=>"T","У"=>"U","Ф"=>"F","Х"=>"H","Ц"=>"C","Ч"=>"Ch","Ш"=>"Sh","Щ"=>"Shh","Ы"=>"I","Э"=>"E","Ю"=>"Yu","Я"=>"Ya",
-		"ь"=>"","Ь"=>"","ъ"=>"","Ъ"=>""," "=>"-","№"=>"N","+"=>"-",":"=>"-",";"=>"-","!"=>"-","?"=>"-","&"=>"and","\'" =>"", "=" =>"-"),
-
+    'dirnameChangeChars' => array(
+        ' ' => "_",
+        ':' => "."
+     ), 
     'mime_magic' => "",
 
-    'maxImageWidth' => 1600,
-    'maxImageHeight' => 1050,
+    'maxImageWidth' => $modx->config['maxImageWidth'],
+    'maxImageHeight' => $modx->config['maxImageHeight'],
 
-    'thumbWidth' => 100,
-    'thumbHeight' => 100,
+    'thumbWidth' => $modx->config['thumbWidth'],
+    'thumbHeight' => $modx->config['thumbHeight'],
 
-    'thumbsDir' => ".thumbs",
+    'thumbsDir' => $modx->config['thumbsDir'],
 
-    'jpegQuality' => 90,
+    'jpegQuality' => $modx->config['jpegQuality'],
 
     'cookieDomain' => "",
     'cookiePath' => "",
@@ -89,7 +89,7 @@ $_CONFIG = array(
 
     // THE FOLLOWING SETTINGS CANNOT BE OVERRIDED WITH SESSION CONFIGURATION
     '_check4htaccess' => false,
-    '_tinyMCEPath' => MODX_BASE_URL . "assets/plugins/tinymce/jscripts/tiny_mce",
+    '_tinyMCEPath' => MODX_BASE_URL . "assets/plugins/tinymce/tiny_mce",
 
     '_sessionVar' => &$_SESSION['KCFINDER'],
     //'_sessionLifetime' => 30,

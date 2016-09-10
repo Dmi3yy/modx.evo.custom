@@ -1,10 +1,14 @@
 <?php
-//:: MODx Installer Setup file 
+//:: MODX Installer Setup file
 //:::::::::::::::::::::::::::::::::::::::::
-include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+}else{
+define('MGR_DIR', 'manager');
+}
 require_once('../'.MGR_DIR.'/includes/version.inc.php');
 
-$moduleName = "MODx";
+$moduleName = "MODX";
 $moduleVersion = $modx_branch.' '.$modx_version;
 $moduleRelease = $modx_release_date;
 $moduleSQLBaseFile = "setup.sql";
@@ -62,7 +66,7 @@ if(is_dir($tvPath) && is_readable($tvPath)) {
                 $params['output_widget'],
                 $params['output_widget_params'],
                 "$templatePath/{$params['filename']}", /* not currently used */
-                $params['template_assignments'], /* comma-separated list of template names */
+                $params['template_assignments']!="*"?$params['template_assignments']:implode(",",array_map(create_function('$v','return $v[0];'),$mt)), /* comma-separated list of template names */
                 $params['modx_category'],
                 $params['lock_tv'],  /* value should be 1 or 0 */
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
@@ -139,7 +143,8 @@ if(is_dir($pluginPath) && is_readable($pluginPath)) {
                 $params['guid'],
                 $params['modx_category'],
                 $params['legacy_names'],
-                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false,
+                intval($params['disabled'])
             );
         }
     }
@@ -148,6 +153,7 @@ if(is_dir($pluginPath) && is_readable($pluginPath)) {
 
 // setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams
 $mm = &$moduleModules;
+$mdp = &$moduleDependencies;
 if(is_dir($modulePath) && is_readable($modulePath)) {
     $d = dir($modulePath);
     while (false !== ($tplfile = $d->read())) {
@@ -168,6 +174,70 @@ if(is_dir($modulePath) && is_readable($modulePath)) {
                 array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
             );
         }
+		if (intval($params['shareparams']) || !empty($params['dependencies'])) {
+			$dependencies = explode(',', $dependencies);
+			foreach ($dependencies as $dependency) {
+				$dependency = explode(':', $dependency);
+				switch (trim($dependency[0])) {
+					case 'template':
+						$mdp[] = array(
+							'module' => $params['name'],
+							'table' => 'templates',
+							'column' => 'templatename',
+							'type' => 50,
+							'name' => trim($dependency[1])
+						);
+						break;
+					case 'tv':
+					case 'tmplvar':
+						$mdp[] = array(
+							'module' => $params['name'],
+							'table' => 'tmplvars',
+							'column' => 'name',
+							'type' => 60,
+							'name' => trim($dependency[1])
+						);
+						break;
+					case 'chunk':
+					case 'htmlsnippet':
+						$mdp[] = array(
+							'module' => $params['name'],
+							'table' => 'htmlsnippets',
+							'column' => 'name',
+							'type' => 10,
+							'name' => trim($dependency[1])
+						);
+						break;
+					case 'snippet':
+						$mdp[] = array(
+							'module' => $params['name'],
+							'table' => 'snippets',
+							'column' => 'name',
+							'type' => 40,
+							'name' => trim($dependency[1])
+						);
+						break;
+					case 'plugin':
+						$mdp[] = array(
+							'module' => $params['name'],
+							'table' => 'plugins',
+							'column' => 'name',
+							'type' => 30,
+							'name' => trim($dependency[1])
+						);
+						break;
+					case 'resource':
+						$mdp[] = array(
+							'module' => $params['name'],
+							'table' => 'content',
+							'column' => 'pagetitle',
+							'type' => 20,
+							'name' => trim($dependency[1])
+						);
+						break;
+				}
+			}
+		}
     }
     $d->close();
 }
@@ -179,76 +249,47 @@ function clean_up($sqlParser) {
     $ids = array();
     $mysqlVerOk = -1;
 
-    if(function_exists("mysql_get_server_info")) {
-        $mysqlVerOk = (version_compare(mysql_get_server_info(),"4.0.2")>=0);
+    if(function_exists("mysqli_get_server_info")) {
+        $mysqlVerOk = (version_compare(mysqli_get_server_info($sqlParser->conn),"4.0.2")>=0);
     }
 
     // secure web documents - privateweb
-    mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 0 WHERE privateweb = 1",$sqlParser->conn);
+    mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 0 WHERE privateweb = 1");
     $sql =  "SELECT DISTINCT sc.id
              FROM `".$sqlParser->prefix."site_content` sc
              LEFT JOIN `".$sqlParser->prefix."document_groups` dg ON dg.document = sc.id
              LEFT JOIN `".$sqlParser->prefix."webgroup_access` wga ON wga.documentgroup = dg.document_group
              WHERE wga.id>0";
-    $ds = mysql_query($sql,$sqlParser->conn);
+    $ds = mysqli_query($sqlParser->conn,$sql);
     if(!$ds) {
-        echo "An error occurred while executing a query: ".mysql_error();
+        echo "An error occurred while executing a query: ".mysqli_error($sqlParser->conn);
     }
     else {
-        while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
+        while($r = mysqli_fetch_assoc($ds)) $ids[]=$r["id"];
         if(count($ids)>0) {
-            mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");
+            mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");
             unset($ids);
         }
     }
 
     // secure manager documents privatemgr
-    mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 0 WHERE privatemgr = 1");
+    mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 0 WHERE privatemgr = 1");
     $sql =  "SELECT DISTINCT sc.id
              FROM `".$sqlParser->prefix."site_content` sc
              LEFT JOIN `".$sqlParser->prefix."document_groups` dg ON dg.document = sc.id
              LEFT JOIN `".$sqlParser->prefix."membergroup_access` mga ON mga.documentgroup = dg.document_group
              WHERE mga.id>0";
-    $ds = mysql_query($sql);
+    $ds = mysqli_query($sqlParser->conn,$sql);
     if(!$ds) {
-        echo "An error occurred while executing a query: ".mysql_error();
+        echo "An error occurred while executing a query: ".mysqli_error($sqlParser->conn);
     }
     else {
-        while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
+        while($r = mysqli_fetch_assoc($ds)) $ids[]=$r["id"];
         if(count($ids)>0) {
-            mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");
+            mysqli_query($sqlParser->conn,"UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");
             unset($ids);
         }
     }
-
-    /**** Add Quick Plugin to Module
-    // get quick edit module id
-    $ds = mysql_query("SELECT id FROM `".$sqlParser->prefix."site_modules` WHERE name='QuickEdit'");
-    if(!$ds) {
-        echo "An error occurred while executing a query: ".mysql_error();
-    }
-    else {
-        $row = mysql_fetch_assoc($ds);
-        $moduleid=$row["id"];
-    }
-    // get plugin id
-    $ds = mysql_query("SELECT id FROM `".$sqlParser->prefix."site_plugins` WHERE name='QuickEdit'");
-    if(!$ds) {
-        echo "An error occurred while executing a query: ".mysql_error();
-    }
-    else {
-        $row = mysql_fetch_assoc($ds);
-        $pluginid=$row["id"];
-    }
-    // setup plugin as module dependency
-    $ds = mysql_query("SELECT module FROM `".$sqlParser->prefix."site_module_depobj` WHERE module='$moduleid' AND resource='$pluginid' AND type='30' LIMIT 1");
-    if(!$ds) {
-        echo "An error occurred while executing a query: ".mysql_error();
-    }
-    elseif (mysql_num_rows($ds)==0){
-        mysql_query("INSERT INTO `".$sqlParser->prefix."site_module_depobj` (module, resource, type) VALUES('$moduleid','$pluginid',30)");
-    }
-    ***/
 }
 
 function parse_docblock($element_dir, $filename) {

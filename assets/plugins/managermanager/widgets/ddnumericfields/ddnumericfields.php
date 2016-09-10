@@ -1,88 +1,49 @@
 <?php
-/** 
+/**
  * mm_ddNumericFields
- * @version 1.0 (2012-05-05)
+ * @version 1.1.1 (2013-12-11)
  * 
- * Позволяет сделать возможным ввод в tv только цифр.
- *
- * @param $tvs {comma separated string} - Имена TV, для которых необходимо применить виджет.
- * @param $roles {comma separated string} - Роли, для которых необходимо применить виждет, пустое значение — все роли. По умолчанию: ''.
- * @param $templates {comma separated string} - Id шаблонов, для которых необходимо применить виджет, пустое значение — все шаблоны. По умолчанию: ''.
- * @param $allowFloat {0; 1} - Можно ли вводить числа с плавающей запятой? По умолчанию: 1.
- * @param $decimals {integer} - Количество цифр после запятой (0 — любое). По умолчанию: 0.
+ * A widget for ManagerManager plugin denying using any chars in TV fields but numeric.
  * 
- * @link http://code.divandesign.biz/modx/mm_ddnumericfields/1.0
+ * @uses ManagerManager plugin 0.6.
  * 
- * @copyright 2012, DivanDesign
- * http://www.DivanDesign.ru
+ * @param $tvs {comma separated string} - TV names to which the widget is applied. @required
+ * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
+ * @param $templates {comma separated string} - Id of the templates to which this widget is applied. Default: ''.
+ * @param $allowFloat {0; 1} - Float number availability status (1 — float numbers may be used, 0 — float numbers using is not available). Default: 1.
+ * @param $decimals {integer} - Number of chars standing after comma (0 — any). Default: 0.
+ * 
+ * @link http://code.divandesign.biz/modx/mm_ddnumericfields/1.1.1
+ * 
+ * @copyright 2013, DivanDesign
+ * http://www.DivanDesign.biz
  */
 
-function mm_ddNumericFields($tvs='', $roles='', $templates='', $allowFloat = 1, $decimals = 0){
-
-	global $modx, $content;
+function mm_ddNumericFields($tvs = '', $roles = '', $templates = '', $allowFloat = 1, $decimals = 0){
+	global $modx, $mm_current_page;
 	$e = &$modx->Event;
 	
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
+		$tvs = tplUseTvs($mm_current_page['template'], $tvs);
+		if ($tvs == false){return;}
+		
 		$output = '';
 		
-		// Which template is this page using?
-		if (isset($content['template'])) {
-			$page_template = $content['template'];
-		} else {
-			// If no content is set, it's likely we're adding a new page at top level. 
-			// So use the site default template. This may need some work as it might interfere with a default template set by MM?
-			$page_template = $modx->config['default_template']; 
-		}
-
-		$tvs = tplUseTvs($page_template, $tvs);
-		if ($tvs == false){
-			return;
-		}
+		$output .= "//---------- mm_ddNumericFields :: Begin -----\n";
 		
-		if ($decimals == 0) $decimals = 'false';
-		
-		$widgetDir = $modx->config['site_url'].'assets/plugins/managermanager/widgets/ddnumericfields/';
-		
-		$output .= "// ---------------- mm_ddNumericFields :: Begin ------------- \n";
-		//General functions
-		$output .= '
-//Если $.ddTools ещё не подключён, подключим
-if (!$j.ddTools){'.includeJs($widgetDir.'jquery.ddTools-1.7.4.min.js').'}
-//Запрещённые символы
-var ddNumericFieldsChars = "!@#$%^&*()+=[]\\\';/{}|\":<>?~` abcdefghijklmnopqrstuvwxyzабвгдеёжзийклмнопрстуфхцчшщьъыэюяABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЪЫЭЮЯ";
-//Если числа с плавающей запятой нельзя вводить, убиваем эти символы
-if (!'.$allowFloat.') ddNumericFieldsChars += ".,";
-		';
-
 		foreach ($tvs as $tv){
-			$output .= '
-//При изменении tv убиваем жёстко
-$j("#tv'.$tv['id'].'").on("change.ddEvents", function(){
-	var $this = $j(this);
-	
-	//Если разрешён ввод числ с плавающей запятой
-	if ('.$allowFloat.'){
-		$this.val($j.ddTools.parseFloat($this.val(), '.$decimals.'));
-	}else{
-		$this.val($j.ddTools.parseInt($this.val()));
-	}
-//При вводе в tv
-}).on("keypress.ddEvents", function(event){
-	var key;
-	
-	if (!event.charCode) key = String.fromCharCode(event.which);
-	else key = String.fromCharCode(event.charCode);
-	
-	if (ddNumericFieldsChars.indexOf(key) != -1) event.preventDefault();
-	//Отсекаем ctrl+v
-	if (event.ctrlKey && key == "v") event.preventDefault();
+			$output .=
+'
+$j("#tv'.$tv['id'].'").ddNumeric({
+	allowFloat: '.intval($allowFloat).',
+	decimals: '.intval($decimals).'
 });
-			';
+';
 		}
-
-		$output .= "\n// ---------------- mm_ddNumericFields :: End -------------";
-
-		$e->output($output . "\n");
+		
+		$output .= "//---------- mm_ddNumericFields :: End -----\n";
+		
+		$e->output($output);
 	}
 }
 ?>

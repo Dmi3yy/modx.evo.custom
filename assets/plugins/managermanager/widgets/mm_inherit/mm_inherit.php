@@ -1,15 +1,15 @@
 <?php
 /**
  * mm_inherit
- * @version 1.1 (2012-11-13)
+ * @version 1.2 (2013-05-16)
  * 
  * Inherit values from a parent.
  * 
  * @uses ManagerManager plugin 0.4.
  * 
- * @link http://code.divandesign.biz/modx/mm_inherit/1.1
+ * @link http://code.divandesign.biz/modx/mm_inherit/1.2
  * 
- * @copyright 2012
+ * @copyright 2013
  */
 
 function mm_inherit($fields, $roles = '', $templates = ''){
@@ -28,7 +28,7 @@ function mm_inherit($fields, $roles = '', $templates = ''){
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
 		// Get the parent info
 		if (isset($_REQUEST['pid'])){
-			$parentID = $modx->getPageInfo($_REQUEST['pid'],0,'id');
+			$parentID = $modx->getPageInfo($_REQUEST['pid'], 0, 'id');
 			$parentID = $parentID['id'];
 		}else{
 			$parentID = 0;
@@ -41,11 +41,21 @@ function mm_inherit($fields, $roles = '', $templates = ''){
 			if (isset($mm_fields[$field]['dbname'])){
 				$fieldtype = $mm_fields[$field]['fieldtype'];
 				$fieldname = $mm_fields[$field]['fieldname'];
-				$dbname = $mm_fields[$field]['dbname'];
+				
+				if(!empty($mm_fields[$field]['tv'])){
+					$dbname = $field;
+				}else{
+					$dbname = $mm_fields[$field]['dbname'];
+				}
 				
 				// Get this field data from the parent
-				$newArray = $modx->getDocument($parentID, $dbname);
-				$newvalue = $newArray[$dbname];
+				if (!empty($parentID)){
+					$newArray = $modx->getTemplateVarOutput($dbname, $parentID);
+					$newvalue = $newArray[$dbname];
+				}else{
+					$newArray = false;
+					$newvalue = '';
+				}
 			}else{
 				break;	 // If it's not something stored in the database, don't get the value
 			}
@@ -80,11 +90,13 @@ function mm_inherit($fields, $roles = '', $templates = ''){
 				default:
 					switch ($fieldtype){
 						case 'textarea':
-							$output .=  '$j("textarea[name='.$fieldname.']").html("' . jsSafe($newvalue) . '"); ';
+							$output .=  '$j("textarea[name='.$fieldname.']").html("'.jsSafe($newvalue).'"); ';
 						break;
 						
 						default:
-							$output .=  '$j("'.$fieldtype.'[name='.$fieldname.']").val("' . jsSafe($newvalue) . '"); ';
+							if (!empty($newvalue)){
+								$output .=  '$j("'.$fieldtype.'[name='.$fieldname.']").val("'.jsSafe($newvalue).'"); ';
+							}
 						break;
 					}
 				break;

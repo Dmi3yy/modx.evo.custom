@@ -3,8 +3,8 @@
  * mutate_settings.ajax.php
  * 
  */
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
  
- if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 require_once(dirname(__FILE__) . '/protect.inc.php');
 
 $action = preg_replace('/[^A-Za-z0-9_\-\.\/]/', '', $_POST['action']);
@@ -20,53 +20,38 @@ $value = $modx->db->escape($value);
 $str = '';
 $emptyCache = false;
 
-if($action == 'get') {
-    $langfile = dirname(__FILE__) . '/lang/'.$lang.'.inc.php';
-    if(file_exists($langfile)) {
-        $str = getLangStringFromFile($langfile, $key);
+switch(true){
+    case ($action == 'get' && preg_match('/^[A-z0-9_-]+$/',$lang) && file_exists(dirname(__FILE__) . '/lang/'.$lang.'.inc.php')):{
+        include(dirname(__FILE__) . '/lang/'.$lang.'.inc.php');
+        $str = isset($key,$_lang,$_lang[$key]) ? $_lang[$key] : "" ;
+        break;
     }
-} elseif($action == 'setsetting') {
-    if(!empty($key) && !empty($value)) {
+    case ($action == 'setsetting' && !empty($key) && !empty($value)):{
         $sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value) VALUES('{$key}', '{$value}');";
         $str = "true";
-        if(!@$rs = $modx->db->query($sql)) {
-            $str = "false";
-        } else {
-            $emptyCache = true;
-        }
+        $modx->db->query($sql);
+        $emptyCache = true;
+        break;
     }
-} elseif($action == 'updateplugin') {
-
-    if($key == '_delete_' && !empty($lang)) {
-        $sql = "DELETE FROM " . $modx->getFullTableName("site_plugins") . " WHERE name='{$lang}'";
+    case ($action == 'updateplugin' && ($key == '_delete_' && !empty($lang))):{
+        $modx->db->delete($modx->getFullTableName("site_plugins"), "name='{$lang}'");
         $str = "true";
-        if(!@$rs = $modx->db->query($sql)) {
-            $str = "false";
-        } else {
-            $emptyCache = true;
-        }
-    } elseif(!empty($key) && !empty($lang) && !empty($value)) {
-        $sql = "UPDATE ".$modx->getFullTableName("site_plugins")." SET {$key}='{$value}' WHERE name = '{$lang}';";
+        $emptyCache = true;
+        break;
+    }
+    case ($action == 'updateplugin' && (!empty($key) && !empty($lang) && !empty($value))):{
+        $modx->db->update(array($key=>$value), $modx->getFullTableName("site_plugins"), "name = '{$lang}'");
         $str = "true";
-        if(!@$rs = $modx->db->query($sql)) {
-            $str = "false";
-        } else {
-            $emptyCache = true;
-        }
+        $emptyCache = true;
+        break;
+    }
+    default: {
+    break;
     }
 }
 
 if($emptyCache) {
-    include_once dirname(dirname(__FILE__)) . "/processors/cache_sync.class.processor.php";
-    $sync = new synccache();
-    $sync->setCachepath("../assets/cache/");
-    $sync->setReport(false);
-    $sync->emptyCache();
+	$modx->clearCache('full');
 }
 
 echo $str;
-
-function getLangStringFromFile($file, $key) {
-    include($file);
-    return $_lang[$key];
-}

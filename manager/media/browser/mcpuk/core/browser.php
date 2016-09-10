@@ -4,9 +4,9 @@
   *
   *      @desc Browser actions class
   *   @package KCFinder
-  *   @version 2.51
-  *    @author Pavel Tzonkov <pavelc@users.sourceforge.net>
-  * @copyright 2010, 2011 KCFinder Project
+  *   @version 2.54
+  *    @author Pavel Tzonkov <sunhater@sunhater.com>
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
@@ -17,8 +17,8 @@ class browser extends uploader {
     protected $thumbsDir;
     protected $thumbsTypeDir;
 
-    public function __construct() {
-        parent::__construct();
+    public function __construct($modx) {
+        parent::__construct($modx);
 
         if (isset($this->post['dir'])) {
             $dir = $this->checkInputDir($this->post['dir'], true, false);
@@ -72,6 +72,7 @@ class browser extends uploader {
 
     public function action() {
         $act = isset($this->get['act']) ? $this->get['act'] : "browser";
+        if(!preg_match('@^[0-9a-zA-Z_]+$@', $act)) $this->errorMsg("Unknown error.");
         if (!method_exists($this, "act_$act"))
             $act = "browser";
         $this->action = $act;
@@ -151,19 +152,19 @@ class browser extends uploader {
             $file = "{$this->config['uploadDir']}/{$this->type}/{$this->get['dir']}/" . basename($file);
             if (!is_file($file) || !is_readable($file))
                 $this->sendDefaultThumb($file);
-            $image = new gd($file);
-            if ($image->init_error)
+            $image = image::factory($this->imageDriver, $file);
+            if ($image->initError)
                 $this->sendDefaultThumb($file);
-            $browsable = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG);
-            if (in_array($image->type, $browsable) &&
-                ($image->get_width() <= $this->config['thumbWidth']) &&
-                ($image->get_height() <= $this->config['thumbHeight'])
+            list($tmp, $tmp, $type) = getimagesize($file);
+            if (in_array($type, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)) &&
+                ($image->width <= $this->config['thumbWidth']) &&
+                ($image->height <= $this->config['thumbHeight'])
             ) {
-                $type =
-                    ($image->type == IMAGETYPE_GIF) ? "gif" : (
-                    ($image->type == IMAGETYPE_PNG) ? "png" : "jpeg");
-                $type = "image/$type";
-                httpCache::file($file, $type);
+                $mime =
+                    ($type == IMAGETYPE_GIF) ? "gif" : (
+                    ($type == IMAGETYPE_PNG) ? "png" : "jpeg");
+                $mime = "image/$mime";
+                httpCache::file($file, $mime);
             } else
                 $this->sendDefaultThumb($file);
         }
@@ -278,6 +279,7 @@ class browser extends uploader {
         $dir = $this->postDir();
         if (!isset($this->post['dir']) ||
             !isset($this->post['file']) ||
+            strpos($this->post['file'],'../')!==false ||
             (false === ($file = "$dir/{$this->post['file']}")) ||
             !file_exists($file) || !is_readable($file)
         )
@@ -300,6 +302,7 @@ class browser extends uploader {
         if (!$this->config['access']['files']['rename'] ||
             !isset($this->post['dir']) ||
             !isset($this->post['file']) ||
+            strpos($this->post['file'],'../')!==false ||
             !isset($this->post['newName']) ||
             (false === ($file = "$dir/{$this->post['file']}")) ||
             !file_exists($file) || !is_readable($file) || !file::isWritable($file)
@@ -343,6 +346,7 @@ class browser extends uploader {
         if (!$this->config['access']['files']['delete'] ||
             !isset($this->post['dir']) ||
             !isset($this->post['file']) ||
+            strpos($this->post['file'],'../')!==false ||
             (false === ($file = "$dir/{$this->post['file']}")) ||
             !file_exists($file) || !is_readable($file) || !file::isWritable($file) ||
             !@unlink($file)
@@ -682,8 +686,14 @@ class browser extends uploader {
             return "{$file['name']}: " . $this->label("Cannot move uploaded file to target folder.");
         } elseif (function_exists('chmod'))
             chmod($target, $this->config['filePerms']);
-
+        
+        $this->modx->invokeEvent('OnFileBrowserUpload',array(
+            'filepath'=>realpath($dir),
+            'filename'=>str_replace("/","",str_replace($dir,"",realpath($target)))
+        ));
+        
         $this->makeThumb($target);
+        
         return "/" . basename($target);
     }
 
@@ -708,22 +718,27 @@ class browser extends uploader {
             return $return;
 
         foreach ($files as $file) {
-            $size = @getimagesize($file);
-            if (is_array($size) && count($size)) {
-                $thumb_file = "$thumbDir/" . basename($file);
-                if (!is_file($thumb_file))
-                    $this->makeThumb($file, false);
-                $smallThumb =
-                    ($size[0] <= $this->config['thumbWidth']) &&
-                    ($size[1] <= $this->config['thumbHeight']) &&
-                    in_array($size[2], array(IMAGETYPE_GIF, IMAGETYPE_PNG, IMAGETYPE_JPEG));
-            } else
-                $smallThumb = false;
-
+			$ext = file::getExtension($file);
+			$smallThumb = false;
+			if (in_array(strtolower($ext), array('png', 'jpg', 'gif', 'jpeg' )) ) {
+				$size = @getimagesize($file);
+				if (is_array($size) && count($size)) {
+					$thumb_file = "$thumbDir/" . basename($file);
+					if (!is_file($thumb_file) || filemtime($file) > filemtime($thumb_file))
+						$this->makeThumb($file);
+					$smallThumb =
+						($size[0] <= $this->config['thumbWidth']) &&
+						($size[1] <= $this->config['thumbHeight']) &&
+						in_array($size[2], array(IMAGETYPE_GIF, IMAGETYPE_PNG, IMAGETYPE_JPEG));
+				}
+			}
             $stat = stat($file);
             if ($stat === false) continue;
             $name = basename($file);
-            $ext = file::getExtension($file);
+            $types = $this->config['types'];
+            $types = explode(' ',$types['images'].' '.$types['image']);
+            if (substr($name,0,1) == '.' && !$this->config['showHiddenFiles']) continue;
+            if ($this->type == 'images' && !in_array(strtolower($ext),$types)) continue;
             $bigIcon = file_exists("themes/{$this->config['theme']}/img/files/big/$ext.png");
             $smallIcon = file_exists("themes/{$this->config['theme']}/img/files/small/$ext.png");
             $thumb = file_exists("$thumbDir/$name");

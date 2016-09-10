@@ -1,7 +1,8 @@
-﻿<?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+﻿<?php
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+$modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 
-    $theme = $manager_theme ? "$manager_theme/":"";
-
+    $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
     function constructLink($action, $img, $text, $allowed) {
         if($allowed==1) { ?>
             <div class="menuLink" onclick="menuHandler(<?php echo $action ; ?>); hideMenu();">
@@ -13,13 +14,13 @@
         <?php
     }
     $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
     <title>Document Tree</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
-    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
+    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
+	<?php echo sprintf('<script src="%s" type="text/javascript"></script>'."\n", $modx->config['mgr_jquery_path']); ?>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -33,15 +34,15 @@
     var i = new Image(18,18);
     i.src="<?php echo $_style["tree_page"]?>";
     i = new Image(18,18);
-    i.src="<?php echo $_style["tree_globe"]?>";
+    i.src="<?php echo isset($_style["tree_globe"]) ? $_style["tree_globe"] : $_style["tree_page"]; ?>";
     i = new Image(18,18);
     i.src="<?php echo $_style["tree_minusnode"]?>";
     i = new Image(18,18);
     i.src="<?php echo $_style["tree_plusnode"]?>";
     i = new Image(18,18);
-    i.src="<?php echo $_style["tree_folderopen"]?>";
+    i.src="<?php echo isset($_style["tree_folderopen"]) ? $_style["tree_folderopen"] : $_style["tree_page"]; ?>";
     i = new Image(18,18);
-    i.src="<?php echo $_style["tree_folder"]?>";
+    i.src="<?php echo isset($_style["tree_folder"]) ? $_style["tree_folder"] : $_style["tree_page"]; ?>";
 
 
     var rpcNode = null;
@@ -54,7 +55,7 @@
 <?php
     echo  "var openedArray = new Array();\n";
     if (isset($_SESSION['openedArray'])) {
-            $opened = explode("|", $_SESSION['openedArray']);
+            $opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));
 
             foreach ($opened as $item) {
                  printf("openedArray[%d] = 1;\n", $item);
@@ -115,7 +116,7 @@
     }
 
     function showPopup(id,title,e){
-        var x,y
+        var x, y;
         var mnu = $('mx_contextmenu');
         var bodyHeight = parseInt(document.body.offsetHeight);
         x = e.clientX>0 ? e.clientX:e.pageX;
@@ -130,7 +131,7 @@
         dopopup(x+5,y);
         e.cancelBubble=true;
         return false;
-    };
+    }
 
     function dopopup(x,y) {
         if(selectedObjectName.length>20) {
@@ -153,7 +154,7 @@
     }
 
     function toggleNode(node,indent,parent,expandAll,privatenode) {
-        privatenode = (!privatenode || privatenode == '0') ? privatenode = '0' : privatenode = '1';
+        privatenode = (!privatenode || privatenode == '0') ?  '0' : '1';
         rpcNode = $(node.parentNode.lastChild);
 
         var rpcNodeText;
@@ -164,7 +165,7 @@
 
         if (rpcNode.style.display != 'block') {
             // expand
-            if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/plusnode.gif')>-1) {
+            if(signImg && signImg.src.indexOf('<?php echo $_style['tree_plusnode']?>')>-1) {
                 signImg.src = '<?php echo $_style["tree_minusnode"]; ?>';
                 folderImg.src = (privatenode == '0') ? '<?php echo $_style["tree_folderopen"]; ?>' :'<?php echo $_style["tree_folderopen_secure"]; ?>';
             }
@@ -189,7 +190,7 @@
         }
         else {
             // collapse
-            if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/minusnode.gif')>-1) {
+            if(signImg && signImg.src.indexOf('<?php echo $_style["tree_minusnode"]; ?>')>-1) {
                 signImg.src = '<?php echo $_style["tree_plusnode"]; ?>';
                 folderImg.src = (privatenode == '0') ? '<?php echo $_style["tree_folder"]; ?>' : '<?php echo $_style["tree_folder_secure"]; ?>';
             }
@@ -247,14 +248,14 @@
         var l = all.length;
 
         for ( var i = 0; i < l; i++ ) {
-            el = all[i]
+            el = all[i];
             cn = el.className;
             if (cn=="treeNodeSelected") {
                 el.className="treeNode";
             }
         }
         elSel.className="treeNodeSelected";
-    };
+    }
 
     function setHoverClass(el, dir) {
         if(el.className!="treeNodeSelected") {
@@ -264,7 +265,7 @@
                 el.className="treeNode";
             }
         }
-    };
+    }
 
     // set Context Node State
     function setCNS(n, b) {
@@ -273,11 +274,11 @@
         } else {
             n.style.backgroundColor="";
         }
-    };
+    }
 
     function updateTree() {
         rpcNode = $('treeRoot');
-        treeParams = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + document.sortFrm.dt.value + '&tree_sortby=' + document.sortFrm.sortby.value + '&tree_sortdir=' + document.sortFrm.sortdir.value;
+        treeParams = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + document.sortFrm.dt.value + '&tree_sortby=' + document.sortFrm.sortby.value + '&tree_sortdir=' + document.sortFrm.sortdir.value + '&tree_nodename=' + document.sortFrm.nodename.value;
         new Ajax('index.php?'+treeParams, {method: 'get',onComplete:rpcLoadData}).request();
     }
 
@@ -381,16 +382,16 @@
 
 </script>
 
-<!--[if lt IE 7]>
-    <style type="text/css">
-      body { behavior: url(media/script/forIE/htcmime.php?file=csshover.htc) }
-      img { behavior: url(media/script/forIE/htcmime.php?file=pngbehavior.htc); }
-    </style>
-<![endif]-->
-
-
 </head>
 <body onClick="hideMenu(1);" class="<?php echo $modx_textdir ? ' rtl':''?>">
+
+<?php
+    // invoke OnTreePrerender event
+    $evtOut = $modx->invokeEvent('OnManagerTreeInit',$_REQUEST);
+    if (is_array($evtOut))
+        echo implode("\n", $evtOut);
+?>
+
 <div class="treeframebody">
 <div id="treeSplitter"></div>
 
@@ -407,44 +408,92 @@
             <?php } ?>
             <td><a href="#" class="treeButton" id="Button4" onClick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
             <td><a href="#" class="treeButton" id="Button5" onClick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
+            <?php if ($modx->hasPermission('edit_document')) { ?>
+                <td><a href="#" id="Button11" class="treeButton" onClick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex'] ; ?>"><?php echo $_style['sort_menuindex'] ; ?></a></td>
+            <?php } ?>
+			<?php if ($use_browser && $modx->hasPermission('assets_images')) { ?>
+                <td><a href="#" id="Button13" class="treeButton" title="<?php echo $_lang["images_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['images_management'] ; ?></a></td>
+			<?php } ?>
+			<?php if ($use_browser && $modx->hasPermission('assets_files')) { ?>
+                <td><a href="#" id="Button14" class="treeButton" title="<?php echo $_lang["files_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['files_management'] ; ?></a></td>
+			<?php } ?>
+			<?php if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
+                <td><a href="#" id="Button12" class="treeButton" title="<?php echo $_lang["element_management"]."\n".$_lang['em_button_shift'] ?>"><?php echo $_style['element_management'] ; ?></a></td>
+            <?php } ?>
             <?php if ($modx->hasPermission('empty_trash')) { ?>
                 <td><a href="#" id="Button10" class="treeButtonDisabled" title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             <?php } ?>
-			 <td><a href="#" title="Управление элементами" onclick="window.open('index.php?a=76','gener','width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')"><img src="media/style/MODxCarbon/images/icons/comment.gif" style="margin:3px 0 0 5px"></a></td>
-            </tr>
-        </table>
-    </td>
-    <td align="right">
-        <table cellpadding="0" cellspacing="0" border="0">
-            <tr>
-            <td><a href="#" class="treeButton" id="Button6" onClick="top.mainMenu.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><?php echo $_style['hide_tree']; ?></a></td>
-            </tr>
+	    </tr>
         </table>
     </td>
   </tr>
 </table>
 
+<?php if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
+<script>
+  jQuery('#Button12').click(function(e) {
+      e.preventDefault();
+      var randomNum = 'gener';
+      if (e.shiftKey) {
+          randomNum = Math.floor((Math.random()*999999)+1);
+      }
+      window.open('index.php?a=76',randomNum,'width=800,height=600,top='+((screen.height-600)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+  });
+</script>
+<?php } ?>
+
+<?php if ($use_browser && $modx->hasPermission('assets_images')) { ?>
+<script>
+  jQuery('#Button13').click(function(e) {
+      e.preventDefault();
+      var randomNum = 'gener';
+      if (e.shiftKey) {
+          randomNum = Math.floor((Math.random()*999999)+1);
+      }
+    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=images',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+  });
+</script>
+<?php } ?>
+
+<?php if ($use_browser && $modx->hasPermission('assets_files')) { ?>
+<script>
+  jQuery('#Button14').click(function(e) {
+      e.preventDefault();
+      var randomNum = 'gener';
+      if (e.shiftKey) {
+          randomNum = Math.floor((Math.random()*999999)+1);
+      }
+    window.open('media/browser/<?php echo $which_browser; ?>/browse.php?&type=files',randomNum,'width=800,height=700,top='+((screen.height-700)/2)+',left='+((screen.width-800)/2)+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no')
+  });
+</script>
+<?php } ?>
+
 <div id="floater">
 <?php
-if(isset($_REQUEST['tree_sortby'])) {
-    $_SESSION['tree_sortby'] = $_REQUEST['tree_sortby'];
-}
-
-if(isset($_REQUEST['tree_sortdir'])) {
-    $_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
-}
+$sortParams = array('tree_sortby','tree_sortdir','tree_nodename');
+foreach($sortParams as $param) {
+    if(isset($_REQUEST[$param])) {
+        $modx->manager->saveLastUserSetting($param, $_REQUEST[$param]);
+        $_SESSION[$param] = $_REQUEST[$param];
+    } else if(!isset($_SESSION[$param])) {
+        $_SESSION[$param] = $modx->manager->getLastUserSetting($param);
+    }    
+}    
 ?>
 <form name="sortFrm" id="sortFrm" action="menu.php">
+<input type="hidden" name="dt" value="<?php echo htmlspecialchars($_REQUEST['dt']); ?>" />
 <table width="100%"  border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td style="padding-left: 10px;padding-top: 1px;" colspan="2">
         <select name="sortby">
             <option value="isfolder" <?php echo $_SESSION['tree_sortby']=='isfolder' ? "selected='selected'" : "" ?>><?php echo $_lang['folder']; ?></option>
             <option value="pagetitle" <?php echo $_SESSION['tree_sortby']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
+            <option value="longtitle" <?php echo $_SESSION['tree_sortby']=='longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
             <option value="id" <?php echo $_SESSION['tree_sortby']=='id' ? "selected='selected'" : "" ?>><?php echo $_lang['id']; ?></option>
             <option value="menuindex" <?php echo $_SESSION['tree_sortby']=='menuindex' ? "selected='selected'" : "" ?>><?php echo $_lang['resource_opt_menu_index'] ?></option>
             <option value="createdon" <?php echo $_SESSION['tree_sortby']=='createdon' ? "selected='selected'" : "" ?>><?php echo $_lang['createdon']; ?></option>
             <option value="editedon" <?php echo $_SESSION['tree_sortby']=='editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
+            <option value="publishedon" <?php echo $_SESSION['tree_sortby']=='publishedon' ? "selected='selected'" : "" ?>><?php echo $_lang['page_data_publishdate']; ?></option>
         </select>
     </td>
   </tr>
@@ -454,16 +503,43 @@ if(isset($_REQUEST['tree_sortdir'])) {
             <option value="DESC" <?php echo $_SESSION['tree_sortdir']=='DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
             <option value="ASC" <?php echo $_SESSION['tree_sortdir']=='ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
         </select>
-        <input type='hidden' name='dt' value='<?php echo $_REQUEST['dt']; ?>' />
     </td>
     <td width="1%"><a href="#" class="treeButton" id="button7" style="text-align:right" onClick="updateTree();showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a></td>
+  </tr>
+  <tr>
+    <td width="99%" style="padding-left: 10px;padding-top: 1px;" colspan="2">
+        <br/>
+        <?php echo $_lang["setting_resource_tree_node_name"] ?>
+        <select name="nodename" style="margin-top:5px;">
+            <option value="default" <?php echo $_SESSION['tree_nodename']=='default' ? "selected='selected'" : "" ?>><?php echo trim($_lang['default'], ':'); ?></option>
+            <option value="pagetitle" <?php echo $_SESSION['tree_nodename']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
+            <option value="longtitle" <?php echo $_SESSION['tree_nodename']=='longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
+            <option value="menutitle" <?php echo $_SESSION['tree_nodename']=='menutitle' ? "selected='selected'" : "" ?>><?php echo $_lang['resource_opt_menu_title']; ?></option>
+            <option value="alias" <?php echo $_SESSION['tree_nodename']=='alias' ? "selected='selected'" : "" ?>><?php echo $_lang['alias']; ?></option>
+            <option value="createdon" <?php echo $_SESSION['tree_nodename']=='createdon' ? "selected='selected'" : "" ?>><?php echo $_lang['createdon']; ?></option>
+            <option value="editedon" <?php echo $_SESSION['tree_nodename']=='editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
+            <option value="publishedon" <?php echo $_SESSION['tree_nodename']=='publishedon' ? "selected='selected'" : "" ?>><?php echo $_lang['page_data_publishdate']; ?></option>
+        </select>
+    </td>
   </tr>
 </table>
 </form>
 </div>
 
 <div id="treeHolder">
-    <div><?php echo $_style['tree_showtree']; ?>&nbsp;<span class="rootNode" onClick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
+<?php
+    // invoke OnTreeRender event
+    $evtOut = $modx->invokeEvent('OnManagerTreePrerender', $modx->db->escape($_REQUEST));
+    if (is_array($evtOut))
+        echo implode("\n", $evtOut);
+?>
+    <div><?php echo $_style['tree_showtree']; ?>&nbsp;<span class="rootNode" onClick="treeAction(0, '<?php $site_name = htmlspecialchars($site_name,ENT_QUOTES,$modx->config['modx_charset']); echo $site_name; ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
+<?php
+    // invoke OnTreeRender event
+    $evtOut = $modx->invokeEvent('OnManagerTreeRender', $modx->db->escape($_REQUEST));
+    if (is_array($evtOut))
+        echo implode("\n", $evtOut);
+?>
 </div>
 
 <script type="text/javascript">
@@ -479,14 +555,14 @@ function menuHandler(action) {
         case 1 : // view
             setActiveFromContextMenu( itemToChange );
             top.main.document.location.href="index.php?a=3&id=" + itemToChange;
-            break
+            break;
         case 2 : // edit
             setActiveFromContextMenu( itemToChange );
             top.main.document.location.href="index.php?a=27&id=" + itemToChange;
-            break
+            break;
         case 3 : // new Resource
             top.main.document.location.href="index.php?a=4&pid=" + itemToChange;
-            break
+            break;
         case 4 : // delete
             if(selectedObjectDeleted==0) {
                 if(confirm("'" + selectedObjectName + "'\n\n<?php echo $_lang['confirm_delete_resource']; ?>")==true) {
@@ -495,18 +571,18 @@ function menuHandler(action) {
             } else {
                 alert("'" + selectedObjectName + "' <?php echo $_lang['already_deleted']; ?>");
             }
-            break
+            break;
         case 5 : // move
             top.main.document.location.href="index.php?a=51&id=" + itemToChange;
-            break
+            break;
         case 6 : // new Weblink
             top.main.document.location.href="index.php?a=72&pid=" + itemToChange;
-            break
+            break;
         case 7 : // duplicate
             if(confirm("<?php echo $_lang['confirm_resource_duplicate'] ?>")==true) {
                    top.main.document.location.href="index.php?a=94&id=" + itemToChange;
                }
-            break
+            break;
         case 8 : // undelete
             if(selectedObjectDeleted==0) {
                 alert("'" + selectedObjectName + "' <?php echo $_lang['not_deleted']; ?>");
@@ -515,12 +591,12 @@ function menuHandler(action) {
                     top.main.document.location.href="index.php?a=63&id=" + itemToChange;
                 }
             }
-            break
+            break;
         case 9 : // publish
             if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_publish']; ?>")==true) {
                 top.main.document.location.href="index.php?a=61&id=" + itemToChange;
             }
-            break
+            break;
         case 10 : // unpublish
             if (itemToChange != <?php echo $modx->config['site_start']?>) {
                 if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_unpublish']; ?>")==true) {
@@ -529,10 +605,13 @@ function menuHandler(action) {
             } else {
                 alert('Document is linked to site_start variable and cannot be unpublished!');
             }
-            break
+            break;
+        case 11 : // sort menu index
+            top.main.document.location.href="index.php?a=56&id=" + itemToChange;
+            break;
         case 12 : // preview	
             window.open(selectedObjectUrl,'previeWin'); //re-use 'new' window
-            break
+            break;
 
         default :
             alert('Unknown operation command.');
@@ -549,6 +628,7 @@ function menuHandler(action) {
     constructLink(2, $_style["icons_save"], $_lang["edit_resource"], $modx->hasPermission('edit_document')); // edit
     constructLink(5, $_style["icons_move_document"] , $_lang["move_resource"], $modx->hasPermission('save_document')); // move
     constructLink(7, $_style["icons_resource_duplicate"], $_lang["resource_duplicate"], $modx->hasPermission('new_document')); // duplicate
+    constructLink(11,$_style["icons_sort_menuindex"], $_lang["sort_menuindex"], $modx->hasPermission('edit_document')); // sort menu index
     ?>
     <div class="seperator"></div>
     <?php
@@ -567,7 +647,7 @@ function menuHandler(action) {
     constructLink(12, $_style["icons_preview_resource"], $_lang["preview_resource"], 1); // preview
     ?>
 </div>
-
 </div>
+
 </body>
 </html>

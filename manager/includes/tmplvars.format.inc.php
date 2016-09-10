@@ -13,7 +13,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
     $docid= intval($docid) ? intval($docid) : $modx->documentIdentifier;
     $value = ProcessTVCommand($value, $name, $docid);
 
-    $param = array();
+    $params = array();
     if($paramstring){
         $cp = explode("&",$paramstring);
         foreach($cp as $p => $v){
@@ -41,7 +41,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                         'class' => $params['class'],
                         'src' => $src,
                         'id' => ($params['id'] ? $params['id'] : ''),
-                        'alt' => htmlspecialchars($params['alttext']),
+                        'alt' => $modx->htmlspecialchars($params['alttext']),
                         'style' => $params['style']
                     );
                     if(isset($params['align']) && $params['align'] != 'none') {
@@ -58,7 +58,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
 
         case "delim":	// display as delimitted list
             $value = parseInput($value,"||");
-            $p = $params['format'] ? $params['format']:",";
+            $p = $params['format'] ? $params['format']:" ";
             if ($p=="\\n") $p = "\n";
             $o = str_replace("||",$p,$value);
             break;
@@ -75,82 +75,15 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
 
         case "date":
             if ($value !='' || $params['default']=='Yes') {
+				if (empty($value)) {
+					$value = 'now';
+				}
                 $timestamp = getUnixtimeFromDateString($value);
                 $p = $params['format'] ? $params['format']:"%A %d, %B %Y";
                 $o = strftime($p,$timestamp);
             } else {
                 $value='';
             }
-            break;
-
-        case "floater":
-            $value = parseInput($value," ");
-            $modx->regClientStartupScript(MODX_MANAGER_URL."/media/script/mootools/mootools.js", array('name'=>'mootools', 'version'=>'1.1.1', 'plaintext'=>false));
-            $modx->regClientStartupScript(MODX_MANAGER_URL."/media/script/mootools/moodx.js", array('name'=>'moodx', 'version'=>'0', 'plaintext'=>false));
-            $class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
-            $style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
-            $o .= "\n<div id=\"".$id."\"".$class.$style.">".$value."</div>\n";
-            $o .= "<script type=\"text/javascript\">\n";
-            $o .= "	window.addEvent('domready', function(){\n";
-            $o .= "		var modxFloat = new MooFloater(\$(\"".$id."\"),{\n";
-            $o .= "			width: '".$params['width']."',\n";
-            $o .= "			height: '".$params['height']."',\n";
-            $o .= "			position: '".$params['pos']."',\n";
-            $o .= "			glidespeed: ".$params['gs'].",\n";
-            $o .= "			offsetx: ".intval($params['x']).",\n";
-            $o .= "			offsety: ".intval($params['y'])."\n";
-            $o .= "		});\n";
-            $o .= "	});\n";
-            $o .= "</script>\n";
-            break;
-
-        case "marquee":
-            $value = parseInput($value," ");
-            $modx->regClientStartupScript(MODX_MANAGER_URL."/media/script/mootools/mootools.js", array('name'=>'mootools', 'version'=>'1.1.1', 'plaintext'=>false));
-            $modx->regClientStartupScript(MODX_MANAGER_URL."/media/script/mootools/moodx.js", array('name'=>'moodx', 'version'=>'0', 'plaintext'=>false));
-            $class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
-            $style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
-            $o .= "\n<div id=\"".$id."\"".$class.$style."><div id=\"marqueeContent\">".$value."</div></div>\n";
-            $o .= "<script type=\"text/javascript\">\n";
-            $o .= "	window.addEvent('domready', function(){\n";
-            $o .= "		var modxMarquee = new MooMarquee(\$(\"".$id."\"),{\n";
-            $o .= "			width: '".$params['width']."',\n";
-            $o .= "			height: '".$params['height']."',\n";
-            $o .= "			speed: ".$params['speed'].",\n";
-            $o .= "			modifier: ".$params['modifier'].",\n";
-            $o .= "			mousepause: '".$params['pause']."',\n";
-            $o .= "			direction: '".$params['tfx']."'\n";
-            $o .= "		});\n";
-            $o .= "	});\n";
-            $o .= "</script>\n";
-            break;
-
-        case "ticker":
-            $modx->regClientStartupScript(MODX_MANAGER_URL."/media/script/mootools/mootools.js", array('name'=>'mootools', 'version'=>'1.1.1', 'plaintext'=>false));
-            $modx->regClientStartupScript(MODX_MANAGER_URL."/media/script/mootools/moostick.js?init=false", array('name'=>'moostick', 'version'=>'0', 'plaintext'=>false));
-            $class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
-            $style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
-            $o .= "\n<div id=\"".$id."\"".$class.$style.">\n";
-            if(!empty($value)){
-                $delim = ($params['delim'])? $params['delim']:"||";
-                if ($delim=="\\n") $delim = "\n";
-                $val = parseInput($value,$delim,"array",false);
-                if(count($val)>0){
-                    $o.= "    <ul id=\"".$id."Ticker\">\n";
-                    for($i=0;$i<count($val);$i++){
-                        $o.= "        <li id=\"tickerItem{$i}\">".$val[$i]."</li>\n";
-                    }
-                    $o.= "    </ul>\n";
-                }
-            }
-            $o .= "</div>\n";
-            $o .= "<script type=\"text/javascript\">\n";
-            $o .= "	window.addEvent('domready', function(){\n";
-            $o .= "		var modxTicker = new Moostick(\$(\"".$id."Ticker\"), true, ".(!empty($params['delay'])?$params['delay']:"true").")\n";
-            $o .= "		$(\"".$id."Ticker\").setStyle('width','".$params['width']."');\n";
-            $o .= "		$(\"".$id."Ticker\").setStyle('height','".$params['height']."');\n";
-            $o .= "	});\n";
-            $o .= "</script>\n";
             break;
 
         case "hyperlink":
@@ -164,7 +97,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                     // setup the link attributes
                     $attr = array(
                         'href' => $url,
-                        'title' => $params['title'] ? htmlspecialchars($params['title']) : $name,
+                        'title' => $params['title'] ? $modx->htmlspecialchars($params['title']) : $name,
                         'class' => $params['class'],
                         'style' => $params['style'],
                         'target' => $params['target'],
@@ -173,7 +106,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                     $attributes .= ' '.$params['attrib']; // add extra
 
                     // Output the link
-                    $o .= '<a'.rtrim($attributes).'>'. ($params['text'] ? htmlspecialchars($params['text']) : $name) .'</a>';
+                    $o .= '<a'.rtrim($attributes).'>'. ($params['text'] ? $modx->htmlspecialchars($params['text']) : $name) .'</a>';
                 }
             }
             break;
@@ -207,7 +140,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
             $h = $params['h']? $params['h']:'400px';
             $richtexteditor = $params['edt']? $params['edt']: "";
             $o = '<div class="MODX_RichTextWidget"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
-            $o.= htmlspecialchars($value);
+            $o.= $modx->htmlspecialchars($value);
             $o.= '</textarea></div>';
             $replace_richtext = array($id);
             // setup editors
@@ -233,12 +166,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
             $value = parseInput($value);
             $id = '_'.time();
             if(!$params['vpid']) $params['vpid'] = $id;
-            if($_SESSION['browser']=='ns' && $_SESSION['browser_version']<'5.0') {
-                $sTag = "<ilayer"; $eTag = "</ilayer>";
-            }
-            else {
-                $sTag = "<iframe"; $eTag = "</iframe>";
-            }
+            $sTag = "<iframe"; $eTag = "</iframe>";
             $autoMode = "0";
             $w = $params['width'];
             $h = $params['height'];
@@ -256,7 +184,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                 $autoMode = "2";	//height only
             }
 
-            $modx->regClientStartupScript(MODX_MANAGER_URL."/media/script/bin/viewport.js", array('name'=>'viewport', 'version'=>'0', 'plaintext'=>false));
+            $modx->regClientStartupScript(MODX_MANAGER_URL."media/script/bin/viewport.js", array('name'=>'viewport', 'version'=>'0', 'plaintext'=>false));
             $o =  $sTag." id='".$params['vpid']."' name='".$params['vpid']."' ";
             if ($params['class']) $o.= " class='".$params['class']."' ";
             if ($params['style']) $o.= " style='".$params['style']."' ";
@@ -269,7 +197,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
             break;
 
         case "datagrid":
-            include_once MODX_MANAGER_PATH . "/includes/controls/datagrid.class.php";
+            include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
             $grd = new DataGrid('',$value);
 
             $grd->noRecordMsg		=$params['egmsg'];
@@ -370,11 +298,11 @@ function decodeParamValue($s){
 
 // returns an array if a delimiter is present. returns array is a recordset is present
 function parseInput($src, $delim="||", $type="string", $columns=true) { // type can be: string, array
-    if (is_resource($src)) {
+	global $modx;
+    if ($modx->db->isResult($src)) {
         // must be a recordset
         $rows = array();
-        $nc = mysql_num_fields($src);
-        while ($cols = mysql_fetch_row($src)) $rows[] = ($columns)? $cols : implode(" ",$cols);
+        while ($cols = $modx->db->getRow($src,'num')) $rows[] = ($columns)? $cols : implode(" ",$cols);
         return ($type=="array")? $rows : implode($delim,$rows);
     }
     else {

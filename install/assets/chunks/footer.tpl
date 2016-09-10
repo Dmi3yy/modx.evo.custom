@@ -7,6 +7,8 @@
  * @version 	1.0
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal @modx_category Templates
+ * @internal    @installset base
+ * @internal    @overwrite false
  */
  
 <!--  Mem : [^m^], MySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document from [^s^]. -->

@@ -1,16 +1,14 @@
-<?php
-
 /** This file is part of KCFinder project
   *
   *      @desc File related functionality
   *   @package KCFinder
-  *   @version 2.51
-  *    @author Pavel Tzonkov <pavelc@users.sourceforge.net>
-  * @copyright 2010, 2011 KCFinder Project
+  *   @version 2.54
+  *    @author Pavel Tzonkov <sunhater@sunhater.com>
+  * @copyright 2010-2014 KCFinder Project
   *   @license http://www.opensource.org/licenses/gpl-2.0.php GPLv2
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
-  */?>
+  */
 
 browser.initFiles = function() {
     $(document).unbind('keydown');
@@ -33,6 +31,10 @@ browser.initFiles = function() {
     $('.file').dblclick(function() {
         _.unselect();
         browser.returnFile($(this));
+    });
+    $('.selectThis').click(function() {
+        _.unselect();
+        browser.returnFile($(this).parent('.file'));
     });
     $('.file').mouseup(function() {
         _.unselect();
@@ -76,7 +78,7 @@ browser.showFiles = function(callBack, selected) {
                 if (file.thumb)
                     var icon = browser.baseGetData('thumb') + '&file=' + encodeURIComponent(file.name) + '&dir=' + encodeURIComponent(browser.dir) + '&stamp=' + stamp;
                 else if (file.smallThumb) {
-                    var icon = browser.uploadURL + '/' + browser.dir + '/' + file.name;
+                    var icon = browser.siteURL + browser.assetsURL + '/' + browser.dir + '/' + file.name;
                     icon = _.escapeDirs(icon).replace(/\'/g, "%27");
                 } else {
                     var icon = file.bigIcon ? _.getFileExtension(file.name) : '.';
@@ -88,6 +90,7 @@ browser.showFiles = function(callBack, selected) {
                     '<div class="name">' + _.htmlData(file.name) + '</div>' +
                     '<div class="time">' + file.date + '</div>' +
                     '<div class="size">' + browser.humanSize(file.size) + '</div>' +
+                    '<div class="selectThis">' + "+" + '</div>' +
                 '</div>';
             }
         });
@@ -154,19 +157,23 @@ browser.selectAll = function(e) {
 };
 
 browser.returnFile = function(file) {
-
     var fileURL = file.substr
-        ? file : browser.uploadURL + '/' + browser.dir + '/' + file.data('name');
+        ? file : browser.assetsURL + '/' + browser.dir + '/' + file.data('name');
     fileURL = _.escapeDirs(fileURL);
 
-    if (this.opener.CKEditor) {
+    if (this.opener.TinyMCE4) {
+        var win = window.opener ? window.opener : window.parent;
+        $(win.document).find('#' + this.opener.TinyMCE4).val(fileURL);
+        win.tinyMCE.activeEditor.windowManager.close();
+
+    } else if (this.opener.CKEditor) {
         this.opener.CKEditor.object.tools.callFunction(this.opener.CKEditor.funcNum, fileURL, '');
         window.close();
 
     } else if (this.opener.FCKeditor) {
         window.opener.SetUrl(fileURL) ;
         window.close() ;
-
+        
     } else if (this.opener.TinyMCE) {
         var win = tinyMCEPopup.getWindowArg('window');
         win.document.getElementById(tinyMCEPopup.getWindowArg('input')).value = fileURL;
@@ -213,7 +220,7 @@ browser.returnFiles = function(files) {
     if (this.opener.callBackMultiple && files.length) {
         var rfiles = [];
         $.each(files, function(i, file) {
-            rfiles[i] = browser.uploadURL + '/' + browser.dir + '/' + $(file).data('name');
+            rfiles[i] = browser.assetsURL + '/' + browser.dir + '/' + $(file).data('name');
             rfiles[i] = _.escapeDirs(rfiles[i]);
         });
         this.opener.callBackMultiple(rfiles);
@@ -508,7 +515,7 @@ browser.menuFile = function(file, e) {
         browser.hideDialog();
         var ts = new Date().getTime();
         var showImage = function(data) {
-            url = _.escapeDirs(browser.uploadURL + '/' + browser.dir + '/' + data.name) + '?ts=' + ts,
+            url = (browser.siteURL + browser.assetsURL + '/' + browser.dir + '/' + data.name) + '?ts=' + ts,
             $('#loading').html(browser.label("Loading image..."));
             $('#loading').css('display', 'inline');
             var img = new Image();

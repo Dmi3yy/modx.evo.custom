@@ -9,10 +9,18 @@
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties 
  * @internal	@modx_category add
+ * @internal    @installset base, sample
  */
 
+<?php
 //[[alterTitle? &id = `[+id+]`]] к примеру для вывода в Ditto
-$id = isset($id) ? $id : $modx->documentIdentifier;  
-$arr = $modx->getPageInfo($id,1,'pagetitle,longtitle');
-$title = (strlen($arr["longtitle"])>0) ? $arr["longtitle"] : $arr["pagetitle"]; 
+$id = isset($id) ? (int) $id : 0;
+if ($id) {
+	$arr = $modx->getPageInfo($id,1,'pagetitle,longtitle');
+} else {
+	$arr['pagetitle'] = $modx->documentObject['pagetitle'];
+	$arr['longtitle'] = $modx->documentObject['longtitle'];
+}
+$title = strip_tags(strlen($arr['longtitle']) ? $arr['longtitle'] : $arr['pagetitle']); 
 return $title;
+?>

@@ -227,6 +227,7 @@ tr.selected:hover > td {
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
+    position:relative;
 }
 
 #toolbar a {
@@ -563,4 +564,15 @@ span.close:hover {
 
 span.clicked:hover {
     background: url(img/icons/close-clicked.png);
+}
+.selectThis {
+        padding: 6px 0;
+        border-radius: 2px;
+        background: #EEE;
+        color: #4EA94E;
+        cursor: pointer;
+        text-transform: uppercase;
+}
+.selectThis:hover {
+        background-color: #fff;
 }

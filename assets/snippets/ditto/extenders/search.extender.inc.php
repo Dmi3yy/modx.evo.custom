@@ -12,7 +12,7 @@
  * www:         https://github.com/Sammyboy/MODx-Ditto-Extenders
  *
  * Installation:
- *      Copy this file into "assets/snippets/ditto/extenders/" of your MODx
+ *      Copy this file into "assets/snippets/ditto/extenders/" of your MODX
  *      installation folder
  *
  * Usage:
@@ -122,7 +122,7 @@ if (!class_exists("searchFilter")) {
         var $searchFunction;
         private $sourceFields, $searchOptions, $searchString, $snippet, $options, $function_code, $source, $separators;
 
-        function searchFilter($searchString = "", $sourceFields = "content", $searchOptions = "", $separators = null) {
+        function __construct($searchString = "", $sourceFields = "content", $searchOptions = "", $separators = null) {
             global $modx;
 
             $functions = array('snippet', 'regex', 'case_sensitive');
@@ -243,7 +243,7 @@ if (!class_exists("searchFilter")) {
             $result = 0;
 
             foreach ($this->sourceFields as $field) {
-                if (stripos($resource[$field], $this->searchString) !== false)
+                 if (mb_stripos($resource[$field], $this->searchString,0,"UTF-8") !== false)
                     $result = 1;
             }
 

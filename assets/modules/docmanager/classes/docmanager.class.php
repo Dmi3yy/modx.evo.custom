@@ -7,7 +7,7 @@ class DocManager {
 	var $theme = '';
 	var $fileRegister = array();
 	
-    function DocManager(&$modx) {
+    function __construct(&$modx) {
     	$this->modx = $modx;
     }
     
@@ -18,18 +18,16 @@ class DocManager {
 
 		$userId = $this->modx->getLoginUserID();
 		if (!empty($userId)) {
-			$lang = $this->modx->db->select('setting_name, setting_value', $this->modx->getFullTableName('user_settings'), 'setting_name=\'manager_language\' AND user='.$userId);
-	
-			if ($this->modx->db->getRecordCount($lang) > 0) {
-	   			$row = $this->modx->db->getRow($lang);
-	   	 		$managerLanguage = $row['setting_value'];
+			$lang = $this->modx->db->select('setting_value', $this->modx->getFullTableName('user_settings'), "setting_name='manager_language' AND user='{$userId}'");
+			if ($lang = $this->modx->db->getValue($lang)) {
+	   	 		$managerLanguage = $lang;
 			}
 		}
 		
-		include MODX_MANAGER_PATH.'/includes/lang/english.inc.php';
+		include MODX_MANAGER_PATH.'includes/lang/english.inc.php';
 		if($managerLanguage != 'english') {
-			if (file_exists(MODX_MANAGER_PATH.'/includes/lang/'.$managerLanguage.'.inc.php')) {
-     			include MODX_MANAGER_PATH.'/includes/lang/'.$managerLanguage.'.inc.php';
+			if (file_exists(MODX_MANAGER_PATH.'includes/lang/'.$managerLanguage.'.inc.php')) {
+     			include MODX_MANAGER_PATH.'includes/lang/'.$managerLanguage.'.inc.php';
 			}
 		}
 		
@@ -47,10 +45,9 @@ class DocManager {
     }
     
     function getTheme() {
-    	$theme = $this->modx->db->select('setting_value', $this->modx->getFullTableName('system_settings'), 'setting_name=\'manager_theme\'', '');
-		if ($this->modx->db->getRecordCount($theme)) {
-			$theme = $this->modx->db->getRow($theme);
-			$this->theme = ($theme['setting_value'] <> '') ? '/' . $theme['setting_value'] : '';
+    	$theme = $this->modx->db->select('setting_value', $this->modx->getFullTableName('system_settings'), "setting_name='manager_theme'");
+		if ($theme = $this->modx->db->getValue($theme)) {
+			$this->theme = ($theme <> '') ? '/' . $theme : '';
 			return $this->theme;
 		} else {
 			return '';
@@ -79,6 +76,13 @@ class DocManager {
     function parseTemplate($tpl, $values = array()) {
     	$tpl = array_key_exists($tpl, $this->fileRegister) ? $this->fileRegister[$tpl] : $this->getFileContents($tpl);
     	if($tpl) {
+    		if(strpos($tpl,'</body>')!==false) {
+    			if(!isset($this->modx->config['mgr_date_picker_path']))   $this->modx->config['mgr_date_picker_path']   = 'media/script/air-datepicker/datepicker.inc.php';
+    			$dp = $this->modx->manager->loadDatePicker($this->modx->config['mgr_date_picker_path']);
+    			$tpl = str_replace('</body>',$dp.'</body>',$tpl);
+    		}
+    		if(!isset($this->modx->config['mgr_jquery_path']))  $this->modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
+    		$tpl = $this->modx->mergeSettingsContent($tpl);
     		foreach ($values as $key => $value) {
     			$tpl = str_replace('[+'.$key.'+]', $value, $tpl); 
     		}

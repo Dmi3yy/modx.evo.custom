@@ -1,24 +1,23 @@
 <?php
 
-include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+}else{
+    define('MGR_DIR', 'manager');
+}
 
 $installMode = intval($_POST['installmode']);
 echo "<h2>" . $_lang['preinstall_validation'] . "</h2>";
 echo "<h3>" . $_lang['summary_setup_check'] . "</h3>";
 $errors = 0;
+
 // check PHP version
 echo "<p>" . $_lang['checking_php_version'];
-$php_ver_comp = version_compare(phpversion(), "4.2.0");
-$php_ver_comp2 = version_compare(phpversion(), "4.3.8");
+$phpMinVersion = "5.3.0";
 // -1 if left is less, 0 if equal, +1 if left is higher
-if ($php_ver_comp < 0) {
-    echo "<span class=\"notok\">" . $_lang['failed'] . "</span>".$_lang['you_running_php'] . phpversion() . $_lang["modx_requires_php"]."</p>";
+if (version_compare(phpversion(), $phpMinVersion) < 0) {
+    echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['you_running_php'] . phpversion() . str_replace('[+min_version+]', $phpMinVersion, $_lang["modx_requires_php"]) . "</p>";
     $errors += 1;
-} else {
-    echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
-    if ($php_ver_comp2 < 0) {
-        echo "<fieldset>" . $_lang['php_security_notice'] . "</fieldset>";
-    }
 }
 // check php register globals off
 echo "<p>" . $_lang['checking_registerglobals'];
@@ -56,6 +55,12 @@ if (!is_writable("../assets/cache") || !file_exists("../assets/media")) {
 }
 // cache files writable?
 echo "<p>" . $_lang['checking_if_cache_file_writable'];
+if (!file_exists("../assets/cache/siteCache.idx.php")) {
+    // make an attempt to create the file
+    @ $hnd = fopen("../assets/cache/siteCache.idx.php", 'w');
+    @ fwrite($hnd, "<?php //MODX site cache file ?>");
+    @ fclose($hnd);
+}
 if (!is_writable("../assets/cache/siteCache.idx.php")) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
     $errors += 1;
@@ -71,7 +76,7 @@ if (!is_writable("../assets/cache/sitePublishing.idx.php")) {
 }
 // File Browser directories exists?
 echo "<p>".$_lang['checking_if_images_exist'];
-if (!file_exists("../assets/images") || !file_exists("../assets/files") || !file_exists("../assets/flash") || !file_exists("../assets/media")) {
+if (!file_exists("../assets/images") || !file_exists("../assets/files") || !file_exists("../assets/flash") || !file_exists("../assets/media") || !file_exists("../assets/backup") || !file_exists("../assets/.thumbs")) {
     echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
     $errors += 1;
 } else {
@@ -79,7 +84,7 @@ if (!file_exists("../assets/images") || !file_exists("../assets/files") || !file
 }
 // File Browser directories writable?
 echo "<p>".$_lang['checking_if_images_writable'];
-if (!is_writable("../assets/images") || !is_writable("../assets/files") || !is_writable("../assets/flash") || !is_writable("../assets/media")) {
+if (!is_writable("../assets/images") || !is_writable("../assets/files") || !is_writable("../assets/flash") || !is_writable("../assets/media") || !is_writable("../assets/backup") || !is_writable("../assets/.thumbs")) {
     echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
     $errors += 1;
 } else {
@@ -103,12 +108,13 @@ if (!is_writable("../assets/export")) {
 }
 // config.inc.php writable?
 echo "<p>".$_lang['checking_if_config_exist_and_writable'];
-if (!file_exists("../".MGR_DIR."/includes/config.inc.php")) {
+if (!is_file("../".MGR_DIR."/includes/config.inc.php")) {
     // make an attempt to create the file
     @ $hnd = fopen("../".MGR_DIR."/includes/config.inc.php", 'w');
-    @ fwrite($hnd, "<?php //MODx configuration file ?>");
+    @ fwrite($hnd, "<?php //MODX configuration file ?>");
     @ fclose($hnd);
 }
+else @chmod("../".MGR_DIR."/includes/config.inc.php", 0666);
 $isWriteable = is_writable("../".MGR_DIR."/includes/config.inc.php");
 if (!$isWriteable) {
     echo "<span class=\"notok\">".$_lang['failed']."</span></p><p><strong>".$_lang['config_permissions_note']."</strong></p>";
@@ -128,28 +134,28 @@ if ($installMode == 1) {
     $database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
     $database_connection_charset = $_POST['database_connection_charset'];
     $database_connection_method = $_POST['database_connection_method'];
-    $dbase = $_POST['database_name'];
+    $dbase = '`' . $_POST['database_name'] . '`';
     $table_prefix = $_POST['tableprefix'];
 }
 echo "<p>".$_lang['creating_database_connection'];
-if (!@ $conn = mysql_connect($database_server, $database_user, $database_password)) {
+if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
     $errors += 1;
     echo "<span class=\"notok\">".$_lang['database_connection_failed']."</span><p />".$_lang['database_connection_failed_note']."</p>";
 } else {
     echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 // make sure we can use the database
-if ($installMode > 0 && !@ mysql_query("USE {$dbase}")) {
+if ($installMode > 0 && !mysqli_query($conn, "USE {$dbase}")) {
     $errors += 1;
     echo "<span class=\"notok\">".$_lang['database_use_failed']."</span><p />".$_lang["database_use_failed_note"]."</p>";
 }
 
 // check the database collation if not specified in the configuration
 if (!isset ($database_connection_charset) || empty ($database_connection_charset)) {
-    if (!$rs = @ mysql_query("show session variables like 'collation_database'")) {
-        $rs = @ mysql_query("show session variables like 'collation_server'");
+    if (!$rs = mysqli_query($conn, "show session variables like 'collation_database'")) {
+        $rs = mysqli_query($conn, "show session variables like 'collation_server'");
     }
-    if ($rs && $collation = mysql_fetch_row($rs)) {
+    if ($rs && $collation = mysqli_fetch_row($rs)) {
         $database_collation = $collation[1];
     }
     if (empty ($database_collation)) {
@@ -167,7 +173,7 @@ if (!isset($database_connection_method) || empty($database_connection_method)) {
 // check table prefix
 if ($conn && $installMode == 0) {
     echo "<p>" . $_lang['checking_table_prefix'] . $table_prefix . "`: ";
-    if ($rs= @ mysql_query("SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
+    if ($rs= mysqli_query($conn, "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
         echo "<span class=\"notok\">" . $_lang['failed'] . "</span></b>" . $_lang['table_prefix_already_inuse'] . "</p>";
         $errors += 1;
         echo "<p>" . $_lang['table_prefix_already_inuse_note'] . "</p>";
@@ -176,7 +182,7 @@ if ($conn && $installMode == 0) {
     }
 } elseif ($conn && $installMode == 2) {
     echo "<p>" . $_lang['checking_table_prefix'] . $table_prefix . "`: ";
-    if (!$rs = @ mysql_query("SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
+    if (!$rs = mysqli_query($conn, "SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
         echo "<span class=\"notok\">" . $_lang['failed'] . "</span></b>" . $_lang['table_prefix_not_exist'] . "</p>";
         $errors += 1;
         echo "<p>" . $_lang['table_prefix_not_exist_note'] . "</p>";
@@ -188,20 +194,20 @@ if ($conn && $installMode == 0) {
 // check mysql version
 if ($conn) {
     echo "<p>" . $_lang['checking_mysql_version'];
-    if ( version_compare(mysql_get_server_info(), '5.0.51', '=') ) {
+    if ( version_compare(mysqli_get_server_info($conn), '5.0.51', '=') ) {
         echo "<span class=\"notok\">"  . $_lang['warning'] . "</span></b>&nbsp;&nbsp;<strong>". $_lang['mysql_5051'] . "</strong></p>";
         echo "<p><span class=\"notok\">" . $_lang['mysql_5051_warning'] . "</span></p>";
     } else {
-        echo "<span class=\"ok\">" . $_lang['ok'] . "</span>&nbsp;&nbsp;<strong>" . $_lang['mysql_version_is'] . mysql_get_server_info() . "</strong></p>";
+        echo "<span class=\"ok\">" . $_lang['ok'] . "</span>&nbsp;&nbsp;<strong>" . $_lang['mysql_version_is'] . mysqli_get_server_info($conn) . "</strong></p>";
     }
 }
 
 // check for strict mode
 if ($conn) {
     echo "<p>". $_lang['checking_mysql_strict_mode'];
-    $mysqlmode = @ mysql_query("SELECT @@global.sql_mode");
-    if (@mysql_num_rows($mysqlmode) > 0){
-        $modes = mysql_fetch_array($mysqlmode, MYSQL_NUM);
+    $mysqlmode = mysqli_query($conn, "SELECT @@global.sql_mode");
+    if (mysqli_num_rows($mysqlmode) > 0){
+        $modes = mysqli_fetch_array($mysqlmode, MYSQLI_NUM);
         //$modes = array("STRICT_TRANS_TABLES"); // for testing
         // print_r($modes);
         foreach ($modes as $mode) {
@@ -240,7 +246,7 @@ if ($errors > 0) {
 ?>
       <p>
       <?php
-      echo $_lang['setup_cannot_continue'];
+      echo $_lang['setup_cannot_continue'] . ' ';
       echo $errors > 1 ? $errors." " : "";
       if ($errors > 1) echo $_lang['errors'];
       else echo $_lang['error'];
@@ -264,7 +270,7 @@ $agreeToggle= $errors > 0 ? '' : ' onclick="if(document.getElementById(\'chkagre
 <form name="install" id="install_form" action="index.php?action=<?php echo $nextAction ?>" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
-	<input type="hidden" value="<?php echo $manager_language?>" name="managerlanguage" />
+    <input type="hidden" value="<?php echo $manager_language?>" name="managerlanguage" />
     <input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
     <input type="hidden" value="<?php echo trim($_POST['database_name'], '`'); ?>" name="database_name" />
     <input type="hidden" value="<?php echo $_POST['tableprefix'] ?>" name="tableprefix" />

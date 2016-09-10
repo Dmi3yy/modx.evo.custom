@@ -20,9 +20,9 @@ browser.type = "<?php echo text::jsValue($this->type) ?>";
 browser.theme = "<?php echo text::jsValue($this->config['theme']) ?>";
 browser.access = <?php echo json_encode($this->config['access']) ?>;
 browser.dir = "<?php echo text::jsValue($this->session['dir']) ?>";
-//browser.uploadURL = "<?php echo text::jsValue($this->config['uploadURL']) ?>";
-browser.uploadURL = "assets";
-browser.thumbsURL = browser.uploadURL + "/<?php echo text::jsValue($this->config['thumbsDir']) ?>";
+browser.siteURL = "<?php echo text::jsValue($this->config['siteURL']) ?>";
+browser.assetsURL = "<?php echo text::jsValue($this->config['assetsURL']) ?>";
+browser.thumbsURL = browser.assetsURL + "/<?php echo text::jsValue($this->config['thumbsDir']) ?>";
 <?php IF (isset($this->get['opener']) && strlen($this->get['opener'])): ?>
 browser.opener.name = "<?php echo text::jsValue($this->get['opener']) ?>";
 <?php ENDIF ?>
@@ -32,6 +32,9 @@ browser.opener.CKEditor.funcNum = <?php echo $this->opener['CKEditor']['funcNum'
 <?php ENDIF ?>
 <?php IF (isset($this->opener['TinyMCE']) && $this->opener['TinyMCE']): ?>
 browser.opener.TinyMCE = true;
+<?php ENDIF ?>
+<?php IF (isset($this->get['opener']) && ($this->get['opener'] == "tinymce4") && isset($this->get['field'])): ?>
+browser.opener.TinyMCE4 = "<?= text::jsValue($this->get['field']) ?>";
 <?php ENDIF ?>
 browser.cms = "<?php echo text::jsValue($this->cms) ?>";
 _.kuki.domain = "<?php echo text::jsValue($this->config['cookieDomain']) ?>";

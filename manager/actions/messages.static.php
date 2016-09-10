@@ -1,22 +1,20 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('messages')) {
-    $e->setError(3);
-    $e->dumpError();
+    $modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 ?>
 <h1><?php echo $_lang['messages_title']; ?></h1>
 
 <?php if(isset($_REQUEST['id']) && $_REQUEST['m']=='r') { ?>
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['messages_read_message']; ?></div><div class="sectionBody" id="lyr3">
 <?php
-$sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$table_prefix."user_messages`.id=".$_REQUEST['id'];
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
-if($limit!=1) {
+$rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "id='".(int)$_REQUEST['id']."'");
+$message=$modx->db->getRow($rs);
+if(!$message) {
     echo "Wrong number of messages returned!";
 } else {
-    $message=mysql_fetch_assoc($rs);
     if($message['recipient']!=$modx->getLoginUserID()) {
         echo $_lang['messages_not_allowed_to_read'];
     } else {
@@ -26,21 +24,19 @@ if($limit!=1) {
         if($sender==0) {
             $sendername = $_lang['messages_system_user'];
         } else {
-            $sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id=$sender";
-            $rs2 = mysql_query($sql);
-            $row2 = mysql_fetch_assoc($rs2);
-            $sendername = $row2['username'];
+            $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
+            $sendername = $modx->db->getValue($rs2);
         }
 ?>
 <table width="600" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td colspan="2">
     <ul class="actionButtons">
-        <li id="btn_reply"><a href="index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_reply"] ?>" /> <?php echo $_lang['messages_reply']; ?></a></li>
-        <li><a href="index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_forward"] ?>" /> <?php echo $_lang['messages_forward']; ?></a></li>
-        <li><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
+        <li id="Button1"><a href="index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_reply"] ?>" /> <?php echo $_lang['messages_reply']; ?></a></li>
+        <li id="Button2"><a href="index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_forward"] ?>" /> <?php echo $_lang['messages_forward']; ?></a></li>
+        <li id="Button3"><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
 		<?php if($message['sender']==0) { ?>
-			<script type="text/javascript">document.getElementById("btn_reply").className='disabled';</script>
+	<script type="text/javascript">document.getElementById("Button1").className='disabled';</script>
 		<?php } ?>
     </ul>
     </td>
@@ -82,22 +78,20 @@ if($limit!=1) {
 </table>
 <?php
         // mark the message as read
-        $sql = "UPDATE $dbase.`".$table_prefix."user_messages` SET $dbase.`".$table_prefix."user_messages`.messageread=1 WHERE $dbase.`".$table_prefix."user_messages`.id=".$_REQUEST['id'];
-        $rs = mysql_query($sql);
+        $modx->db->update(array('messageread'=>1), $modx->getFullTableName('user_messages'), "id='{$_REQUEST['id']}'");
     }
 }
 ?>
     </div>
+</div>
 <?php } ?>
 
-
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['messages_inbox']; ?></div><div class="sectionBody">
 <?php
 // Get  number of rows
-$sql = "SELECT count(id) FROM $dbase.`".$table_prefix."user_messages` WHERE recipient=".$modx->getLoginUserID()."";
-$rs=mysql_query($sql);
-$countrows = mysql_fetch_assoc($rs);
-$num_rows = $countrows['count(id)'];
+$rs = $modx->db->select('count(id)', $modx->getFullTableName('user_messages'), "recipient=".$modx->getLoginUserID()."");
+$num_rows = $modx->db->getValue($rs);
 
 // ==============================================================
 // Exemple Usage
@@ -109,7 +103,7 @@ $num_rows = $countrows['count(id)'];
 if( !isset( $_REQUEST['int_cur_position'] ) || $_REQUEST['int_cur_position'] == 0 ){
   $int_cur_position = 0;
 } else {
-    $int_cur_position = $_REQUEST['int_cur_position'];
+    $int_cur_position = (int)$_REQUEST['int_cur_position'];
 }
 
 // Number of result to display on the page, will be in the LIMIT of the sql query also
@@ -141,9 +135,8 @@ $pager .=  $array_paging['next_link'] ."&gt;&gt;". (isset($array_paging['next_li
 // Of course you can now play with array_row_paging in order to print
 // only the results you would like...
 
-$sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$table_prefix."user_messages`.recipient=".$modx->getLoginUserID()." ORDER BY postdate DESC LIMIT ".$int_cur_position.", ".$int_num_result;
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "recipient=".$modx->getLoginUserID()."", 'postdate DESC', "{$int_cur_position}, {$int_num_result}");
+$limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
     echo $_lang['messages_no_messages'];
 } else {
@@ -163,21 +156,18 @@ $dotablestuff = 1;
     </thead>
     <tbody>
 <?php
-        for ($i = 0; $i < $limit; $i++) {
-            $message = mysql_fetch_assoc($rs);
+        while ($message = $modx->db->getRow($rs)) {
             $sender = $message['sender'];
             if($sender==0) {
                 $sendername = "[System]";
             } else {
-                $sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id=$sender";
-                $rs2 = mysql_query($sql);
-                $row2 = mysql_fetch_assoc($rs2);
-                $sendername = $row2['username'];
+                $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
+                $sendername = $modx->db->getValue($rs2);
             }
             $messagestyle = $message['messageread']==0 ? "messageUnread" : "messageRead";
 ?>
     <tr>
-      <td ><?php echo $message['messageread']==0 ? "<img src='media/style/" . ($manager_theme ? "$manager_theme/":"") ."images/icons/new1-09.gif'>" : ""; ?></td>
+      <td ><?php echo $message['messageread']==0 ? "<img src='".$_style["icons_message_unread"]."'>" : ""; ?></td>
       <td class="<?php echo $messagestyle; ?>" style="cursor: pointer; text-decoration: underline;" onClick="document.location.href='index.php?a=10&id=<?php echo $message['id']; ?>&m=r';"><?php echo $message['subject']; ?></td>
       <td ><?php echo $sendername; ?></td>
       <td ><?php echo $message['private']==0 ? $_lang['no'] : $_lang['yes'] ; ?></td>
@@ -191,18 +181,16 @@ if($dotablestuff==1) { ?>
 </tbody>
 </table>
 <?php } ?>
-    </div>
-
+    </div></div>
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['messages_compose']; ?></div><div class="sectionBody">
 <?php
 if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
-    $sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$table_prefix."user_messages`.id=".$_REQUEST['id'];
-    $rs = mysql_query($sql);
-    $limit = mysql_num_rows($rs);
-    if($limit!=1) {
+    $rs = $modx->db->select('*', $modx->getFullTableName('user_messages'), "id='".$_REQUEST['id']."'");
+    $message=$modx->db->getRow($rs);
+    if(!$message) {
         echo "Wrong number of messages returned!";
     } else {
-        $message=mysql_fetch_assoc($rs);
         if($message['recipient']!=$modx->getLoginUserID()) {
             echo $_lang['messages_not_allowed_to_read'];
         } else {
@@ -212,10 +200,8 @@ if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
             if($sender==0) {
                 $sendername = "[System]";
             } else {
-                $sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id=$sender";
-                $rs2 = mysql_query($sql);
-                $row2 = mysql_fetch_assoc($rs2);
-                $sendername = $row2['username'];
+                $rs2 = $modx->db->select('username', $modx->getFullTableName('manager_users'), "id='{$sender}'");
+                $sendername = $modx->db->getValue($rs2);
             }
             $subjecttext = $_REQUEST['m']=='rp' ? "Re: " : "Fwd: ";
             $subjecttext .= $message['subject'];
@@ -259,12 +245,11 @@ function hideSpans(showSpan) {
 <span id='userspan' style="display:block;"> <?php echo $_lang['messages_select_user']; ?>:&nbsp;
     <?php
     // get all usernames
-    $sql = "SELECT username, id FROM $dbase.`".$table_prefix."manager_users`";
-    $rs = mysql_query($sql);
+    $rs = $modx->db->select('username, id', $modx->getFullTableName('manager_users'));
     ?>
     <select name="user" class="inputBox" style="width:150px">
     <?php
-        while ($row = mysql_fetch_assoc($rs)) {
+        while ($row = $modx->db->getRow($rs)) {
             ?>
             <option value="<?php echo $row['id']; ?>" ><?php echo $row['username']; ?></option>
             <?php
@@ -275,12 +260,11 @@ function hideSpans(showSpan) {
 <span id='groupspan' style="display:none;"> <?php echo $_lang['messages_select_group']; ?>:&nbsp;
     <?php
     // get all usernames
-    $sql = "SELECT name, id FROM $dbase.`".$table_prefix."user_roles`";
-    $rs = mysql_query($sql);
+    $rs = $modx->db->select('name, id', $modx->getFullTableName('user_roles'));
     ?>
     <select name="group" class="inputBox" style="width:150px">
     <?php
-    while ($row = mysql_fetch_assoc($rs)) {
+    while ($row = $modx->db->getRow($rs)) {
         ?>
         <option value="<?php echo $row['id']; ?>" ><?php echo $row['name']; ?></option>
         <?php
@@ -315,24 +299,20 @@ function hideSpans(showSpan) {
 </table>
 
 <ul class="actionButtons">
-        <li><a href="#" onclick="documentDirty=false; document.messagefrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['messages_send']; ?></a></li>
-        <li><a href="index.php?a=10&t=c"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
+        <li id="Button1"><a href="#" onclick="documentDirty=false; document.messagefrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['messages_send']; ?></a></li>
+        <li id="Button5"><a href="index.php?a=10&t=c"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
 </ul>
 
 </fieldset>
 </form>
-</div>
+</div></div>
 
 <?php
 // count messages again, as any action on the messages page may have altered the message count
-$sql="SELECT count(*) FROM $dbase.`".$table_prefix."user_messages` where recipient=".$modx->getLoginUserID()." and messageread=0;";
-$rs = mysql_query($sql);
-$row = mysql_fetch_assoc($rs);
-$_SESSION['nrnewmessages'] = $row['count(*)'];
-$sql="SELECT count(*) FROM $dbase.`".$table_prefix."user_messages` where recipient=".$modx->getLoginUserID()."";
-$rs = mysql_query($sql);
-$row = mysql_fetch_assoc($rs);
-$_SESSION['nrtotalmessages'] = $row['count(*)'];
+$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_messages'), "recipient=".$modx->getLoginUserID()." and messageread=0");
+$_SESSION['nrnewmessages'] = $modx->db->getValue($rs);
+$rs = $modx->db->select('COUNT(*)', $modx->getFullTableName('user_messages'), "recipient=".$modx->getLoginUserID()."");
+$_SESSION['nrtotalmessages'] = $modx->db->getValue($rs);
 $messagesallowed = $modx->hasPermission('messages');
 ?>
 <script type="text/javascript">

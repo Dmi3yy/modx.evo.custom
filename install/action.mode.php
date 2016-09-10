@@ -1,6 +1,10 @@
 <?php
 
-include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+}else{
+    define('MGR_DIR', 'manager');
+}
 
 // Determine upgradeability
 $upgradeable = 0;
@@ -9,10 +13,11 @@ if (file_exists("../".MGR_DIR."/includes/config.inc.php")) {
     include "../".MGR_DIR."/includes/config.inc.php";
     // We need to have all connection settings - tho prefix may be empty so we have to ignore it
     if ($dbase) {
-        if (!@ $conn = mysql_connect($database_server, $database_user, $database_password)) {
-            $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
+        if (!$conn = mysqli_connect($database_server, $database_user, $database_password)) {
+            $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;	
+            echo '2';
         }
-        elseif (!@ mysql_select_db(trim($dbase, '`'), $conn)) {
+        elseif (!mysqli_select_db($conn, trim($dbase, '`'))) {
             $upgradeable = isset ($_POST['installmode']) && $_POST['installmode'] == 'new' ? 0 : 2;
         } else {
             $upgradeable = 1;
@@ -42,6 +47,7 @@ if (file_exists("../".MGR_DIR."/includes/config.inc.php")) {
 			<p><strong><?php echo $_lang['installation_install_new_note']?></strong></p>
 		</div>
 	</div>
+	<div style="margin:0;padding:0;<?php if ($upgradeable !== 1 && $upgradeable !== 2) echo 'display:none;'; ?>">
 	<hr />
 	<div>
 		<div class="installImg"><img src="img/install_upg.png" alt="upgrade existing install" /></div>
@@ -53,12 +59,13 @@ if (file_exists("../".MGR_DIR."/includes/config.inc.php")) {
 	</div>
 	<hr />
   	<div>
-		<div class="installImg"><img src="img/install_adv.png" alt="advanced MODx upgrade" /></div>
+		<div class="installImg"><img src="img/install_adv.png" alt="advanced MODX upgrade" /></div>
 		<div class="installDetails">
 			<h3><input type="radio" name="installmode" id="installmode3" value="2" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo ($_POST['installmode']=='2' || $upgradeable === 2) ? 'checked="checked"':'' ?> />
 			<label for="installmode3" class="nofloat"><?php echo $_lang['installation_upgrade_advanced']?></label></h3>
 			<p><?php echo $_lang['installation_upgrade_advanced_note']?></p>
 		</div>
+	</div>
 	</div>
 
     <p class="buttonlinks">

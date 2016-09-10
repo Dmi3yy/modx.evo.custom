@@ -1,9 +1,0 @@
-<?php
-
-$_lang['lang'] = "ru";
-$_lang['filesize_b'] = "á";
-$_lang['filesize_Kb'] = "Êá";
-$_lang['filesize_Mb'] = "Ìá";
-$_lang['filesize_Tb'] = "Òá";
-
-?>

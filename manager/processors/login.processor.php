@@ -1,14 +1,8 @@
 <?php
-
 include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
 require_once(strtr(realpath(dirname(__FILE__)), '\\', '/').'/../includes/protect.inc.php');
 
-// set the include_once path
-if(version_compare(phpversion(), "4.3.0")>=0) {
     set_include_path(get_include_path() . PATH_SEPARATOR . "../includes/");
-} else {
-    ini_set("include_path", "../includes/"); // include path the old way
-}
 
 define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
                                     // the manager instead of seperately.
@@ -18,19 +12,31 @@ include_once "config.inc.php";
 // start session
 startCMSSession();
 
-// connect to the database
-if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
-    die("Failed to create the database connection!");
-} else {
-    mysql_select_db($dbase);
-    @mysql_query("{$database_connection_method} {$database_connection_charset}");
-}
+
+include_once "document.parser.class.inc.php";
+$modx = new DocumentParser;
+$modx->loadExtension("ManagerAPI");
+$modx->getSettings();
+$etomite = &$modx;
 
 // get the settings from the database
 include_once "settings.inc.php";
 
-// include version info
-include_once "version.inc.php";
+/*
+ * include_once "version.inc.php"; //include version info. Use $modx->getVersionData()
+ */
+
+// include_once the language file
+if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
+    $manager_language = "english"; // if not set, get the english language file.
+}
+$_lang = array();
+include_once "lang/english.inc.php";
+$length_eng_lang = count($_lang);
+
+if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
+    include_once "lang/".$manager_language.".inc.php";
+}
 
 // include the logger
 include_once "log.class.inc.php";
@@ -42,19 +48,15 @@ include_once "crypt.class.inc.php";
 if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 
-// include_once the error handler
-include_once "error.class.inc.php";
-$e = new errorHandler;
-
 // initiate the content manager class
-include_once "document.parser.class.inc.php";
-$modx = new DocumentParser;
-$modx->loadExtension("ManagerAPI");
-$modx->getSettings();
-$etomite = &$modx; // for backward compatibility
+ // for backward compatibility
 
-$username = $modx->db->escape($_REQUEST['username']);
-$givenPassword = $modx->db->escape($_REQUEST['password']);
+$tbl_user_settings   = $modx->getFullTableName('user_settings');
+$tbl_manager_users   = $modx->getFullTableName('manager_users');
+$tbl_user_attributes = $modx->getFullTableName('user_attributes');
+
+$username = $modx->db->escape(htmlspecialchars($_REQUEST['username'], ENT_NOQUOTES, $modx->config['modx_charset']));
+$givenPassword = htmlspecialchars($_REQUEST['password'], ENT_NOQUOTES, $modx->config['modx_charset']);
 $captcha_code = $_REQUEST['captcha_code'];
 $rememberme= $_REQUEST['rememberme'];
 $failed_allowed = $modx->config["failed_login_attempts"];
@@ -66,17 +68,18 @@ $modx->invokeEvent("OnBeforeManagerLogin",
                             "userpassword"  => $givenPassword,
                             "rememberme"    => $rememberme
                         ));
-
-$sql = "SELECT $dbase.`".$table_prefix."manager_users`.*, $dbase.`".$table_prefix."user_attributes`.* FROM $dbase.`".$table_prefix."manager_users`, $dbase.`".$table_prefix."user_attributes` WHERE BINARY $dbase.`".$table_prefix."manager_users`.username = '".$username."' and $dbase.`".$table_prefix."user_attributes`.internalKey=$dbase.`".$table_prefix."manager_users`.id;";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$fields = 'mu.*, ua.*';
+$from   = "{$tbl_manager_users} AS mu, {$tbl_user_attributes} AS ua";
+$where  = "BINARY mu.username='{$username}' and ua.internalKey=mu.id";
+$rs = $modx->db->select($fields, $from,$where);
+$limit = $modx->db->getRecordCount($rs);
 
 if($limit==0 || $limit>1) {
-    jsAlert($e->errors[900]);
+    jsAlert($_lang["login_processor_unknown_user"]);
     return;
 }
 
-$row = mysql_fetch_assoc($rs);
+$row = $modx->db->getRow($rs);
 
 $internalKey            = $row['internalKey'];
 $dbasePassword          = $row['password'];
@@ -92,30 +95,31 @@ $fullname               = $row['fullname'];
 $email                  = $row['email'];
 
 // get the user settings from the database
-$sql = "SELECT setting_name, setting_value FROM $dbase.`".$table_prefix."user_settings` WHERE user='".$internalKey."' AND setting_value!=''";
-$rs = mysql_query($sql);
-while ($row = mysql_fetch_assoc($rs)) {
+$rs = $modx->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$internalKey}' AND setting_value!=''");
+while ($row = $modx->db->getRow($rs)) {
     ${$row['setting_name']} = $row['setting_value'];
 }
 // blocked due to number of login errors.
 if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
-        @session_destroy();
-        session_unset();
-        jsAlert($e->errors[902]);
-        return;
+    @session_destroy();
+    session_unset();
+    jsAlert($_lang["login_processor_many_failed_logins"]);
+    return;
 }
 
 // blocked due to number of login errors, but get to try again
-if($failedlogins>=$failed_allowed && $blockeduntildate<time()) { 
-    $sql = "UPDATE $dbase.`".$table_prefix."user_attributes` SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
-    $rs = mysql_query($sql);
+if($failedlogins>=$failed_allowed && $blockeduntildate<time()) {
+	$fields = array();
+	$fields['failedlogincount'] = '0';
+	$fields['blockeduntil']     = time()-1;
+    $modx->db->update($fields,$tbl_user_attributes,"internalKey='{$internalKey}'");
 }
 
 // this user has been blocked by an admin, so no way he's loggin in!
 if($blocked=="1") { 
     @session_destroy();
     session_unset();
-    jsAlert($e->errors[903]);
+    jsAlert($_lang["login_processor_blocked1"]);
     return;
 }
 
@@ -123,7 +127,7 @@ if($blocked=="1") {
 if($blockeduntildate>time()) {
     @session_destroy();
     session_unset();
-    jsAlert("You are blocked and cannot log in! Please try again later.");
+    jsAlert($_lang["login_processor_blocked2"]);
     return;
 }
 
@@ -131,7 +135,7 @@ if($blockeduntildate>time()) {
 if($blockedafterdate>0 && $blockedafterdate<time()) {
     @session_destroy();
     session_unset();
-    jsAlert("You are blocked and cannot log in! Please try again later.");
+    jsAlert($_lang["login_processor_blocked3"]);
     return;
 }
 
@@ -139,12 +143,12 @@ if($blockedafterdate>0 && $blockedafterdate<time()) {
 if ($allowed_ip) {
         if(($hostname = gethostbyaddr($_SERVER['REMOTE_ADDR'])) && ($hostname != $_SERVER['REMOTE_ADDR'])) {
           if(gethostbyname($hostname) != $_SERVER['REMOTE_ADDR']) {
-            jsAlert("Your hostname doesn't point back to your IP!");
+            jsAlert($_lang["login_processor_remotehost_ip"]);
             return;
           }
         }
-        if(!in_array($_SERVER['REMOTE_ADDR'], explode(',',str_replace(' ','',$allowed_ip)))) {
-          jsAlert("You are not allowed to login from this location.");
+        if(!in_array($_SERVER['REMOTE_ADDR'], array_filter(array_map('trim', explode(',', $allowed_ip))))) {
+          jsAlert($_lang["login_processor_remote_ip"]);
           return;
         }
 }
@@ -154,7 +158,7 @@ if ($allowed_days) {
     $date = getdate();
     $day = $date['wday']+1;
     if (strpos($allowed_days,"$day")===false) {
-        jsAlert("You are not allowed to login at this time. Please try again later.");
+        jsAlert($_lang["login_processor_date"]);
         return;
     }
 }
@@ -170,21 +174,58 @@ $rt = $modx->invokeEvent("OnManagerAuthentication",
                         ));
 
 // check if plugin authenticated the user
-if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
-    // check user password - local authentication
-    if($dbasePassword != md5($givenPassword)) {
-            jsAlert($e->errors[901]);
-            $newloginerror = 1;
-    }
+
+if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
+{
+	// check user password - local authentication
+	$tbl_manager_users = $modx->getFullTableName('manager_users');
+	if(strpos($dbasePassword,'>')!==false)
+	{
+		if(!isset($modx->config['pwd_hash_algo']) || empty($modx->config['pwd_hash_algo'])) $modx->config['pwd_hash_algo'] = 'UNCRYPT';
+		$user_algo = $modx->manager->getUserHashAlgorithm($internalKey);
+		
+		if($user_algo !== $modx->config['pwd_hash_algo'])
+		{
+			$bk_pwd_hash_algo = $modx->config['pwd_hash_algo'];
+			$modx->config['pwd_hash_algo'] = $user_algo;
+		}
+		
+		if($dbasePassword != $modx->manager->genHash($givenPassword, $internalKey))
+		{
+			jsAlert($_lang["login_processor_wrong_password"]);
+			$newloginerror = 1;
+		}
+		elseif(isset($bk_pwd_hash_algo))
+		{
+			$modx->config['pwd_hash_algo'] = $bk_pwd_hash_algo;
+			$field = array();
+			$field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
+			$modx->db->update($field, $tbl_manager_users, "username='{$username}'");
+		}
+	}
+	else
+	{
+		if($dbasePassword != md5($givenPassword))
+		{
+			jsAlert($_lang["login_processor_wrong_password"]);
+			$newloginerror = 1;
+		}
+		else
+		{
+			$field = array();
+			$field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
+			$modx->db->update($field, $tbl_manager_users, "username='{$username}'");
+		}
+	}
 }
 
 if($use_captcha==1) {
 	if (!isset ($_SESSION['veriword'])) {
-		jsAlert('Captcha is not configured properly.');
+        jsAlert($_lang["login_processor_captcha_config"]);
 		return;
 	}
 	elseif ($_SESSION['veriword'] != $captcha_code) {
-        jsAlert($e->errors[905]);
+        jsAlert($_lang["login_processor_bad_code"]);
         $newloginerror = 1;
     }
 }
@@ -192,13 +233,14 @@ if($use_captcha==1) {
 if($newloginerror) {
 	//increment the failed login counter
     $failedlogins += 1;
-    $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
-    $rs = mysql_query($sql);
-    if($failedlogins>=$failed_allowed) { 
-		//block user for too many fail attempts
-        $sql = "update $dbase.`".$table_prefix."user_attributes` SET blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
-        $rs = mysql_query($sql);
-    } else {
+
+    $fields = array('failedlogincount' => $failedlogins);
+    if($failedlogins>=$failed_allowed) //block user for too many fail attempts
+        $fields['blockeduntil'] = time()+($blocked_minutes*60);
+
+    $modx->db->update($fields, $tbl_user_attributes, "internalKey='{$internalKey}'");
+
+    if($failedlogins<$failed_allowed) { 
 		//sleep to help prevent brute force attacks
         $sleep = (int)$failedlogins/2;
         if($sleep>5) $sleep = 5;
@@ -223,28 +265,29 @@ $_SESSION['mgrFailedlogins']=$failedlogins;
 $_SESSION['mgrLastlogin']=$lastlogin;
 $_SESSION['mgrLogincount']=$nrlogins; // login count
 $_SESSION['mgrRole']=$role;
-$sql="SELECT * FROM $dbase.`".$table_prefix."user_roles` WHERE id=".$role.";";
-$rs = mysql_query($sql);
-$row = mysql_fetch_assoc($rs);
-$_SESSION['mgrPermissions'] = $row;
+$rs = $modx->db->select('*', $modx->getFullTableName('user_roles'), "id='{$role}'");
+$_SESSION['mgrPermissions'] = $modx->db->getRow($rs);
 
 // successful login so reset fail count and update key values
-if(isset($_SESSION['mgrValidated'])) {
-    $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
-    $rs = mysql_query($sql);
+if (isset($_SESSION['mgrValidated'])) {
+	$modx->db->update(
+			'failedlogincount=0, '
+			. 'logincount=logincount+1, '
+			. 'lastlogin=thislogin, '
+			. 'thislogin=' . time() . ', '
+			. "sessionid='{$currentsessionid}'", $tbl_user_attributes, "internalKey='{$internalKey}'"
+	);
 }
 
 // get user's document groups
-$dg='';$i=0;
-$tblug = $dbase.".`".$table_prefix."member_groups`";
-$tbluga = $dbase.".`".$table_prefix."membergroup_access`";
-$sql = "SELECT uga.documentgroup
-        FROM $tblug ug
-        INNER JOIN $tbluga uga ON uga.membergroup=ug.user_group
-        WHERE ug.member =".$internalKey;
-$rs = mysql_query($sql);
-while ($row = mysql_fetch_row($rs)) $dg[$i++]=$row[0];
-$_SESSION['mgrDocgroups'] = $dg;
+$i=0;
+$rs = $modx->db->select(
+	'uga.documentgroup',
+	$modx->getFullTableName('member_groups')." ug
+		INNER JOIN ".$modx->getFullTableName('membergroup_access')." uga ON uga.membergroup=ug.user_group",
+	"ug.member='{$internalKey}'"
+	);
+$_SESSION['mgrDocgroups'] = $modx->db->getColumn('documentgroup', $rs);
 
 if($rememberme == '1') {
     $_SESSION['modx.mgr.session.cookie.lifetime']= intval($modx->config['session.cookie.lifetime']);
@@ -267,7 +310,7 @@ if($rememberme == '1') {
 }
 
 $log = new logHandler;
-$log->initAndWriteLog("Logged in", $modx->getLoginUserID(), $_SESSION['mgrShortname'], "58", "-", "MODx");
+$log->initAndWriteLog("Logged in", $modx->getLoginUserID(), $_SESSION['mgrShortname'], "58", "-", "MODX");
 
 // invoke OnManagerLogin event
 $modx->invokeEvent("OnManagerLogin",
@@ -279,9 +322,8 @@ $modx->invokeEvent("OnManagerLogin",
                         ));
 
 // check if we should redirect user to a web page
-$tbl = $modx->getFullTableName("user_settings");
-$id = $modx->db->getValue("SELECT setting_value FROM $tbl WHERE user='$internalKey' AND setting_name='manager_login_startup'");
-if(isset($id) && $id>0) {
+$id = intval($modx->db->getValue($modx->db->select('setting_value', $tbl_user_settings, "user='{$internalKey}' AND setting_name='manager_login_startup'")));
+if($id>0) {
     $header = 'Location: '.$modx->makeUrl($id,'','','full');
     if($_POST['ajax']==1) echo $header;
     else header($header);
@@ -300,4 +342,3 @@ function jsAlert($msg){
         echo "<script>window.setTimeout(\"alert('".addslashes($modx->db->escape($msg))."')\",10);history.go(-1)</script>";
     }
 }
-?>

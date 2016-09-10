@@ -4,11 +4,11 @@
  * 
  * Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more
  *
- * @category 	snippet
- * @version 	2.1.0
- * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal	@properties 
- * @internal	@modx_category Content
+ * @category    snippet
+ * @version 	2.1.2
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal    @properties 
+ * @internal    @modx_category Content
  * @internal    @installset base, sample
  */
 

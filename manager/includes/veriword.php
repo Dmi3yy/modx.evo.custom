@@ -1,5 +1,11 @@
 <?php
-include_once("config.inc.php");
+include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
+require_once('protect.inc.php');
+include_once('config.inc.php');
+include_once('document.parser.class.inc.php');
+$modx = new DocumentParser;
+$modx->db->connect();
+$modx->getSettings();
 
 $vword = new VeriWord(148,60);
 $vword->output_image();
@@ -47,7 +53,7 @@ class VeriWord {
     var $im_width   = 0;
     var $im_height  = 0;
 
-    function VeriWord($w=200, $h=80) {
+    function __construct($w=200, $h=80) {
         /* create session to set word for verification */
         startCMSSession();
         $this->set_veriword();
@@ -71,24 +77,11 @@ class VeriWord {
     }
 
     function pick_word() {
-        global $database_server, $database_user, $database_password, $dbase, $table_prefix, $database_connection_charset, $database_connection_method;
+        global $modx;
         // set default words
-        $words="MODx,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
-
-        // connect to the database
-        if(@$dbConn = mysql_connect($database_server, $database_user, $database_password)) {
-            mysql_select_db($dbase);
-            @mysql_query("{$database_connection_method} {$database_connection_charset}");
-            $sql = "SELECT * FROM $dbase.`".$table_prefix."system_settings` WHERE setting_name='captcha_words'";
-            $rs = mysql_query($sql);
-            $limit = mysql_num_rows($rs);
-            if($limit==1) {
-                $row = mysql_fetch_assoc($rs);
-                $words = $row['setting_value'];
-            }
-        }
-
-        $arr_words = explode(",", $words);
+        $words="MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
+        $words = $modx->config['captcha_words'] ? $modx->config['captcha_words'] : $words;
+        $arr_words = array_filter(array_map('trim', explode(',', $words)));
 
         /* pick one randomly for text verification */
         return (string) $arr_words[array_rand($arr_words)].rand(10,999);

@@ -1,17 +1,28 @@
 <?php
 if(!defined('MODX_BASE_PATH')) {die('What are you doing? Get out of here!');}
-
-/* Description:
- *      Aggregates documents to create blogs, article/news
- *      collections, and more,with full support for templating.
+/**
+ * Ditto
+ *
+ * Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more
  * 
- * Author: 
- *      Mark Kaplan for MODx CMF
+ * @category    snippet
+ * @version 	2.1.2
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal    @properties
+ * @internal    @modx_category Content
+ * @internal    @installset base, sample
+ * @documentation MODX Docs https://rtfm.modx.com/extras/evo/ditto
+ * @documentation MODX Wiki http://wiki.modxcms.com/index.php/Ditto
+ * @documentation Pogwatch http://www.pogwatch.com/ditto.html
+ * @reportissues https://github.com/modxcms/evolution
+ * @author      Mark Kaplan
+ * @author      and many others since 2006
+ * @lastupdate  30/03/2016
 */
 
 //---Core Settings---------------------------------------------------- //
 
-$ditto_version = "2.1.0";
+$ditto_version = "2.1.2";
     // Ditto version being executed
 
 $ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $modx->config['base_path']."assets/snippets/ditto/";
@@ -86,7 +97,7 @@ $config = (isset($config)) ? $config : "default";
 
     Options:
     "default" - default blank config file
-    CONFIG_NAME - Other configs installed in the configs folder or in any folder within the MODx base path via @FILE
+    CONFIG_NAME - Other configs installed in the configs folder or in any folder within the MODX base path via @FILE
 
     Default:
     "default"
@@ -133,7 +144,7 @@ $extenders = isset($extenders) ? explode(",",$extenders) : array();
     Load an extender which adds functionality to Ditto
 
     Options:
-    Any extender in the extenders folder or in any folder within the MODx base path via @FILE
+    Any extender in the extenders folder or in any folder within the MODX base path via @FILE
 
     Default:
     [NULL]
@@ -206,8 +217,9 @@ foreach ($files as $filename => $filevalue) {
 
 //---Initiate Class-------------------------------------------------- //
 if (class_exists('ditto')) {
-    $ditto = new ditto($dittoID,$format,$_lang,$dbg_templates);
-        // create a new Ditto instance in the specified format and language with the requested debug level
+	$dbg_templates = (isset($dbg_templates)) ? $dbg_templates : NULL;
+	$ditto = new ditto($dittoID, $format, $_lang, $dbg_templates);
+	// create a new Ditto instance in the specified format and language with the requested debug level
 } else {
     $modx->logEvent(1,3,$_lang['invalid_class'],"Ditto ".$ditto_version);
     return $_lang['invalid_class'];
@@ -259,10 +271,10 @@ $parents = isset($parents) ? $ditto->cleanIDs($parents) : $modx->documentIdentif
     IDs of containers for Ditto to retrieve their children to &depth depth
 
     Options:
-    Any valid MODx document marked as a container
+    Any valid MODX document marked as a container
 
     Default:
-    Current MODx Document
+    Current MODX Document
 
     Related:
     - <documents>
@@ -276,7 +288,7 @@ $documents = isset($documents) ? $ditto->cleanIDs($documents) : false;
     IDs of documents for Ditto to retrieve
 
     Options:
-    Any valid MODx document marked as a container
+    Any valid MODX document marked as a container
 
     Default:
     None
@@ -334,7 +346,7 @@ $dateSource = isset($dateSource) ? $dateSource : "createdon";
     Source of the [+date+] placeholder
 
     Options:
-    # - Any UNIX timestamp from MODx fields or TVs such as createdon, pub_date, or editedon
+    # - Any UNIX timestamp from MODX fields or TVs such as createdon, pub_date, or editedon
     
     Default:
     "createdon"
@@ -559,7 +571,7 @@ $hiddenFields = isset($hiddenFields) ? explode(",",$hiddenFields) : false;
     Allow Ditto to retrieve fields its template parser cannot handle such as nested placeholders and [*fields*]
 
     Options:
-    Any valid MODx fieldnames or TVs comma separated
+    Any valid MODX fieldnames or TVs comma separated
 
     Default:
     [NULL]
@@ -641,7 +653,7 @@ $filter = (isset($filter) || ($filters["custom"] != false) || ($filters["parsed"
     11 - checks leading character of the field
     
     @EVAL:
-        @EVAL in filters works the same as it does in MODx exect it can only be used 
+        @EVAL in filters works the same as it does in MODX exect it can only be used
         with basic filtering, not custom filtering (tagging, etc). Make sure that
         you return the value you wish Ditto to filter by and that the code is valid PHP.
 
@@ -679,7 +691,7 @@ $randomize = (isset($randomize))? $randomize : 0;
     Options:
     0 - off
     1 - on
-    Any MODx field or TV for weighted random
+    Any MODX field or TV for weighted random
     
     Default:
     0 - off
@@ -702,12 +714,12 @@ $save = (isset($save))? $save : 0;
         0 - off; returns output
 */
 $templates = array(
-    "default" => "@CODE ".$_lang['default_template'],
-    "base" => $tpl,
-    "alt" => $tplAlt,
-    "first" => $tplFirst,
-    "last" => $tplLast,
-    "current" => $tplCurrentDocument
+	"default" => "@CODE" . $_lang['default_template'],
+	"base" => (isset($tpl)) ? $tpl : NULL,
+	"alt" => (isset($tplAlt)) ? $tplAlt : NULL,
+	"first" => (isset($tplFirst)) ? $tplFirst : NULL,
+	"last" => (isset($tplLast)) ? $tplLast : NULL,
+	"current" => (isset($tplCurrentDocument)) ? $tplCurrentDocument : NULL
 );
 /*
     Param: tpl
@@ -822,6 +834,8 @@ if ($count > 0) {
         // set initial stop count
 
     if($paginate == 1) {
+        $max_paginate = isset($max_paginate)? $max_paginate : 50;
+        $max_previous = isset($max_previous)? $max_previous : 25;
         $paginateAlwaysShowLinks = isset($paginateAlwaysShowLinks)? $paginateAlwaysShowLinks : 0;
         /*
             Param: paginateAlwaysShowLinks
@@ -975,7 +989,7 @@ if ($count > 0) {
             - <paginateSplitterCharacter>
         */
         
-        $ditto->paginate($start, $stop, $total, $display, $tplPaginateNext, $tplPaginatePrevious, $tplPaginateNextOff, $tplPaginatePreviousOff, $tplPaginatePage, $tplPaginateCurrentPage, $paginateAlwaysShowLinks, $paginateSplitterCharacter);
+        $ditto->paginate($start, $stop, $total, $display, $tplPaginateNext, $tplPaginatePrevious, $tplPaginateNextOff, $tplPaginatePreviousOff, $tplPaginatePage, $tplPaginateCurrentPage, $paginateAlwaysShowLinks, $paginateSplitterCharacter, $max_paginate, $max_previous);
             // generate the pagination placeholders
     }
 
@@ -1026,7 +1040,7 @@ if ($count > 0) {
         for ($x=$start;$x<$stop;$x++) {
             $template = $ditto->template->determine($templates,$x,0,$stop,$resource[$x]["id"]);
                 // choose the template to use and set the code of that template to the template variable
-            $renderedOutput = $ditto->render($resource[$x], $template, $removeChunk, $dateSource, $dateFormat, $placeholders,$phx,abs($start-$x));
+            $renderedOutput = $ditto->render($resource[$x], $template, $removeChunk, $dateSource, $dateFormat, $placeholders,$phx,abs($start-$x),$stop);
                 // render the output using the correct template, in the correct format and language
             $modx->setPlaceholder($dittoID."item[".abs($start-$x)."]",$renderedOutput);
             /*
@@ -1061,7 +1075,7 @@ if ($count > 0) {
 // ---------------------------------------------------
 
 if ($debug == 1) {
-    $ditto_params =& $modx->event_params;
+    $ditto_params =& $modx->event->params;
     if (!isset($_GET["ditto_".$dittoID."debug"])) {
     $_SESSION["ditto_debug_$dittoID"] = $ditto->debug->render_popup($ditto, $ditto_base, $ditto_version, $ditto_params, $documentIDs, array("db"=>$dbFields,"tv"=>$TVs), $display, $templates, $orderBy, $start, $stop, $total,$filter,$resource);
     }
@@ -1078,6 +1092,10 @@ if ($debug == 1) {
         $output = $ditto->debug->render_link($dittoID,$ditto_base).$output;
     }
 }
+// outerTpl by Dmi3yy & Jako
+if (isset($outerTpl) && $resource) {
+	$outerTpl = $ditto->template->fetch($outerTpl);
+	$output = str_replace(array('[+ditto+]', '[+wrapper+]'), $output, $outerTpl);
+}
 
 return ($save != 3) ? $output : "";
-?>

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Title: MODx Debug Console
+ * Title: MODX Debug Console
  * Purpose:
  *  	A class designed to help developers impliment a debug console
  * 		like to the one in Ditto 2
@@ -10,7 +10,7 @@
 class modxDebugConsole{
 	var $templates;
 	
-	function modxDebugConsole($templates) {
+	function __construct($templates) {
 		$this->templates = $templates;
 			// set templates array
 	}
@@ -27,7 +27,7 @@ class modxDebugConsole{
 		}
 		$placeholders = array(
 			"[+ditto_base_url+]" => $base_path,
-			"[+base_url+]" => MODX_MANAGER_URL,
+			"[+base_url+]" => $modx->config["site_url"].MGR_DIR . '/',
 			"[+theme+]" => $modx->config["manager_theme"],
 			"[+title+]" => $title,
 			"[+content+]" => $content,
@@ -76,7 +76,13 @@ class modxDebugConsole{
 			$query = array();
 			foreach ($_GET as $param=>$value) {
 				if ($param != 'id' && $param != 'q') {
-					$query[htmlspecialchars($param, ENT_QUOTES)] = htmlspecialchars($value, ENT_QUOTES);					
+					if (!is_array($value)) {
+						$query[htmlspecialchars($param, ENT_QUOTES)] = htmlspecialchars($value, ENT_QUOTES);
+					} else {
+						foreach ($value as $k => $v) {
+							$value[$k] = htmlspecialchars($v, ENT_QUOTES);
+						}
+					}
 				}
 			}
 			if (!is_array($args)) {
@@ -113,10 +119,11 @@ class modxDebugConsole{
 
 	// ---------------------------------------------------
 	// Function: makeMODxSafe
-	// Make all MODx tags safe for the output
+	// Make all MODX tags safe for the output
 	// ---------------------------------------------------
 	function makeMODxSafe($value) {
-		$value = (strpos($value,"<") !== FALSE) ? "<pre>".htmlentities($value)."</pre>" : $value;
+		global $modx;
+		$value = (strpos($value,"<") !== FALSE) ? "<pre>".htmlentities($value,ENT_NOQUOTES,$modx->config["modx_charset"])."</pre>" : $value;
 		$value = str_replace("[","&#091;",$value);
 		$value = str_replace("]","&#093;",$value);
 		$value = str_replace("{","&#123;",$value);

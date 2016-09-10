@@ -1,6 +1,10 @@
 <?php
 
-include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+}else{
+    define('MGR_DIR', 'manager');
+}
 
 $installMode = intval($_POST['installmode']);
 if ($installMode == 0 || $installMode == 2) {
@@ -15,12 +19,12 @@ if ($installMode == 0 || $installMode == 2) {
 elseif ($installMode == 1) {
     include "../".MGR_DIR."/includes/config.inc.php";
 
-    if (@ $conn = mysql_connect($database_server, $database_user, $database_password)) {
-        if (@ mysql_query("USE {$dbase}")) {
-            if (!$rs = @ mysql_query("show session variables like 'collation_database'")) {
-                $rs = @ mysql_query("show session variables like 'collation_server'");
+    if (@ $conn = mysqli_connect($database_server, $database_user, $database_password)) {
+        if (@ mysqli_query($conn, "USE {$dbase}")) {
+            if (!$rs = mysqli_query($conn, "show session variables like 'collation_database'")) {
+                $rs = mysqli_query($conn, "show session variables like 'collation_server'");
             }
-            if ($rs && $collation = mysql_fetch_row($rs)) {
+            if ($rs && $collation = mysqli_fetch_row($rs)) {
                 $database_collation = trim($collation[1]);
             }
         }
@@ -35,6 +39,7 @@ elseif ($installMode == 1) {
 
     if (!isset ($database_connection_method) || empty ($database_connection_method)) {
         $database_connection_method = 'SET CHARACTER SET';
+        if (function_exists('mysqli_set_charset')) mysqli_set_charset($conn, $database_connection_charset);
     }
     if ($database_connection_method != 'SET NAMES' && $database_connection_charset != $database_charset) {
         $database_connection_method = 'SET NAMES';
@@ -98,7 +103,7 @@ if ($limit > 0) {
     for ($i = 0; $i < $limit; $i++) {
         $class = !in_array('sample', $moduleTemplates[$i][6]) ? 'toggle' : 'toggle demo';
         $chk = in_array($i, $templates) || (!$options_selected) ? 'checked="checked"' : "";
-        $tplOutput .= "<input type=\"checkbox\" name=\"template[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTemplates[$i][0] . "</span> - " . $moduleTemplates[$i][1] . "<hr />\n";
+        $tplOutput .= "<label><input type=\"checkbox\" name=\"template[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTemplates[$i][0] . "</span> - " . $moduleTemplates[$i][1] . "</label><hr />\n";
     }
     if($tplOutput !== '') {
         echo "<h3>" . $_lang['templates'] . "</h3><br />";
@@ -114,7 +119,7 @@ if ($limit > 0) {
     for ($i = 0; $i < $limit; $i++) {
         $class = !in_array('sample', $moduleTVs[$i][12]) ? "toggle" : "toggle demo";
         $chk = in_array($i, $tvs) || (!$options_selected) ? 'checked="checked"' : "";
-        $tvOutput .= "<input type=\"checkbox\" name=\"tv[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTVs[$i][0] . "</span> - " . $moduleTVs[$i][2] . "<hr />\n";
+        $tvOutput .= "<label><input type=\"checkbox\" name=\"tv[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTVs[$i][0] . "</span> - {$moduleTVs[$i][1]} <span class=\"description\">({$moduleTVs[$i][2]})</span></label><hr />\n";
     }
     if($tvOutput != '') {
         echo "<h3>" . $_lang['tvs'] . "</h3><br />\n";
@@ -130,7 +135,7 @@ if ($limit > 0) {
     for ($i = 0; $i < $limit; $i++) {
         $class = !in_array('sample', $moduleChunks[$i][5]) ? "toggle" : "toggle demo";
         $chk = in_array($i, $chunks) || (!$options_selected) ? 'checked="checked"' : "";
-        $chunkOutput .= "<input type=\"checkbox\" name=\"chunk[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleChunks[$i][0] . "</span> - " . $moduleChunks[$i][1] . "<hr />";
+        $chunkOutput .= "<label><input type=\"checkbox\" name=\"chunk[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleChunks[$i][0] . "</span> - " . $moduleChunks[$i][1] . "</label><hr />";
     }
     if($chunkOutput != '') {
         echo "<h3>" . $_lang['chunks'] . "</h3>";
@@ -146,7 +151,7 @@ if ($limit > 0) {
     for ($i = 0; $i < $limit; $i++) {
         $class = !in_array('sample', $moduleModules[$i][7]) ? "toggle" : "toggle demo";
         $chk = in_array($i, $modules) || (!$options_selected) ? 'checked="checked"' : "";
-        $moduleOutput .= "<input type=\"checkbox\" name=\"module[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleModules[$i][0] . "</span> - " . $moduleModules[$i][1] . "<hr />";
+        $moduleOutput .= "<label><input type=\"checkbox\" name=\"module[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleModules[$i][0] . "</span> - " . $moduleModules[$i][1] . "</label><hr />";
     }
     if($moduleOutput != '') {
         echo "<h3>" . $_lang['modules'] . "</h3>";
@@ -160,9 +165,9 @@ $limit = count($modulePlugins);
 if ($limit > 0) {
     $pluginOutput = '';
     for ($i = 0; $i < $limit; $i++) {
-        $class = !in_array('sample', $modulePlugins[$i][8]) ? "toggle" : "toggle demo";
+        $class = !in_array('sample', (array) $modulePlugins[$i][8]) ? "toggle" : "toggle demo";
         $chk = in_array($i, $plugins) || (!$options_selected) ? 'checked="checked"' : "";
-        $pluginOutput .= "<input type=\"checkbox\" name=\"plugin[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $modulePlugins[$i][0] . "</span> - " . $modulePlugins[$i][1] . "<hr />";
+        $pluginOutput .= "<label><input type=\"checkbox\" name=\"plugin[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $modulePlugins[$i][0] . "</span> - " . $modulePlugins[$i][1] . "</label><hr />";
     }
     if($pluginOutput != '') {
         echo "<h3>" . $_lang['plugins'] . "</h3>";
@@ -176,9 +181,9 @@ $limit = count($moduleSnippets);
 if ($limit > 0) {
     $snippetOutput = '';
     for ($i = 0; $i < $limit; $i++) {
-        $class = !in_array('sample', $moduleSnippets[$i][5]) ? "toggle" : "toggle demo";
+        $class = !in_array('sample', (array) $moduleSnippets[$i][5]) ? "toggle" : "toggle demo";
         $chk = in_array($i, $snippets) || (!$options_selected) ? 'checked="checked"' : "";
-        $snippetOutput .= "<input type=\"checkbox\" name=\"snippet[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleSnippets[$i][0] . "</span> - " . $moduleSnippets[$i][1] . "<hr />";
+        $snippetOutput .= "<label><input type=\"checkbox\" name=\"snippet[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleSnippets[$i][0] . "</span> - " . $moduleSnippets[$i][1] . "</label><hr />";
     }
     if($snippetOutput != '') {
         echo "<h3>" . $_lang['snippets'] . "</h3>";
@@ -189,13 +194,13 @@ if ($limit > 0) {
     </div>
     <p class="buttonlinks">
         <a href="javascript:document.getElementById('install_form').action='index.php?action=<?php echo (($installMode == 1) ? 'mode' : 'connection'); ?>';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
-        <a href="javascript:document.getElementById('install_form').submit();" title="<?php echo $_lang['install']?>"><span><?php echo $_lang['install']?></span></a>
+        <a href="javascript:document.getElementById('install_form').submit();" title="<?php echo $_lang['btnnext_value']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
     </p>
 
 </form>
-<script type="text/javascript" src="../assets/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="../assets/js/jquery.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
+    jQuery(function(){
 
         jQuery('#toggle_check_all').click(function(evt){
             evt.preventDefault();

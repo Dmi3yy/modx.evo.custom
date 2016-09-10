@@ -1,8 +1,7 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('manage_metatags')) {
-	$e->setError(3);
-	$e->dumpError();
+	$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
 // initialize page view state - the $_PAGE object
@@ -18,11 +17,8 @@ $modx->manager->initPageViewState();
 		var requireConfirm=false;
 		var deleteList="";
 	<?php 
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` ORDER BY keyword ASC";
-		$rs = mysql_query($sql);
-		$limit = mysql_num_rows($rs); 
-		for($i=0;$i<$limit;$i++) {
-		$row=mysql_fetch_assoc($rs);
+		$rs = $modx->db->select('*', $modx->getFullTableName('site_keywords'), '', 'keyword ASC');
+		while ($row=$modx->db->getRow($rs)) {
 		?>
 
 		if(document.getElementById('delete<?php echo $row['id']; ?>').checked==true) {
@@ -102,6 +98,7 @@ $modx->manager->initPageViewState();
 <input type="hidden" name="id" value="" />
 <br />
 <!-- META tags -->
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['metatags'] ;?></div><div class="sectionBody">
 	<?php echo $_lang['metatag_intro'] ;?><br /><br />
 	<div class="searchbara">
@@ -163,11 +160,8 @@ $modx->manager->initPageViewState();
 	<div>
 	<?php
 
-		$sql = "SELECT * " .
-				"FROM ".$modx->getFullTableName("site_metatags")." st ".
-				"ORDER BY name";
-		$ds = mysql_query($sql);
-		include_once MODX_MANAGER_PATH."/includes/controls/datagrid.class.php";
+		$ds = $modx->db->select('*', $modx->getFullTableName("site_metatags"), '', 'name');
+		include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 		$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 		$grd->noRecordMsg = $_lang["no_records_found"];
 		$grd->cssClass="grid";
@@ -178,7 +172,7 @@ $modx->manager->initPageViewState();
 		$grd->columns=$_lang["delete"]." ,".$_lang["name"]." ,".$_lang["tag"]." ,".$_lang["value"];
 		$grd->colWidths="40";
 		$grd->colAligns="center";
-		$grd->colTypes="template:<input name='tag[]' type='checkbox' value='[+id+]'/><img src='media/style/".$manager_theme."/images/icons/comment.gif' width='16' height='16' align='absmiddle' /></a>||".
+		$grd->colTypes="template:<input name='tag[]' type='checkbox' value='[+id+]'/>||".
 					   "template:<a href='#' title='".$_lang["click_to_edit_title"]."' onclick='editTag([+id+])'>[+value+]</a><span style='display:none;'><script type=\"text/javascript\"> tagRows['[+id+]']=[\"[+name+]\",\"[+tag+]\",\"[+tagvalue+]\",\"[+http_equiv+]\"];</script>";
 		echo $grd->render();
 	?>
@@ -192,13 +186,14 @@ $modx->manager->initPageViewState();
 		</tr>
 	</table>
 </div>
+</div>
 
 <!-- keywords -->
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['keywords'] ;?></div><div class="sectionBody">
 <?php echo $_lang['keywords_intro'] ;?><br /><br />
 <?php
-	$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` ORDER BY keyword ASC";
-	$ds = mysql_query($sql);
+	$ds = $modx->db->select('*', $modx->getFullTableName('site_keywords'), '', 'keyword ASC');
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_keywords_found"];
 	$grd->cssClass="grid";
@@ -226,6 +221,7 @@ $modx->manager->initPageViewState();
 			</td>
 		</tr>
 	</table>
+</div>
 </div>
 </form>
 
