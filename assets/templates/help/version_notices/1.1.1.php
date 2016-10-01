@@ -50,6 +50,19 @@ Sub page
 		<strong>Call:</strong>
 		<pre>{{chunkName? &title='First post' &body='Hello World!'}}</pre>
 	</li>
+
+	<li><strong>File-binded Templates via @INCLUDE</strong>
+		<p>Templates can be included via @INCLUDE using external PHP- & HTML-files. More infos at <a href="https://github.com/modxcms/evolution/issues/627" target="_blank">#627</a>. Example:</p>
+		<p>MODX-Template:</p>
+		<pre>@INCLUDE:assets/templates/mydesign/template.inc.php</pre>
+		<p>template.inc.php :</p>
+		<pre>switch($modx->documentIdentifier) {
+    case $modx->config['site_start']:
+        return file_get_contents('assets/templates/mydesign/top.html');
+    default:
+        return file_get_contents('assets/templates/mydesign/page.html');
+}</pre>
+	</li>
 </ul>
 
 <h1>New Manager Roles</h1>
@@ -68,4 +81,9 @@ Sub page
 		<p>[*tv_name*] will be replaced by its value taken from actual resource. Beware of SQL-Errors in case no or wrong value is given (set a reasonable default-value to avoid errors). More infos at <a href="https://github.com/modxcms/evolution/issues/699" target="_blank">#699</a>. Example:</p>
 		<pre>@SELECT name,value FROM xxx WHERE yyy = [*tv_name*]</pre>
 	</li>
+</ul>
+
+<h1>Important Details for Developers</h1>
+<ul>
+	<li>jQuery updated to v3.1 and loaded into manager by default.<br/><u>Known issues:</u> MultiTV 2.0.8 has problems with row-reordering and requires an update.</li>
 </ul>

@@ -607,13 +607,13 @@ $_lang["not_set"] = 'нет данных';
 $_lang["offline"] = 'Оффлайн';
 $_lang["online"] = 'Онлайн';
 $_lang["onlineusers_action"] = 'Действие';
-$_lang["onlineusers_actionid"] = 'ID действия';
-$_lang["onlineusers_ipaddress"] = 'IP-адрес посетителя сайта';
-$_lang["onlineusers_lasthit"] = 'Момент последнего действия';
-$_lang["onlineusers_message"] = 'Этот список показывает всех пользователей, активных за последние 20 минут (текущее время - ';
+$_lang["onlineusers_actionid"] = 'ID';
+$_lang["onlineusers_ipaddress"] = 'IP-адрес';
+$_lang["onlineusers_lasthit"] = 'Последнее действие';
+$_lang["onlineusers_message"] = 'Список показывает всех пользователей, активных за последние 20 минут (текущее время - ';
 $_lang["onlineusers_title"] = 'Пользователи онлайн';
 $_lang["onlineusers_user"] = 'Пользователь';
-$_lang["onlineusers_userid"] = 'ID пользователя';
+$_lang["onlineusers_userid"] = 'ID';
 $_lang["optimize_table"] = 'Нажмите для оптимизации таблицы';
 $_lang["page_data_cacheable"] = 'Кэшируемый';
 $_lang["page_data_cacheable_help"] = 'Отметьте для того, чтобы разрешить кэширование ресурса. Будьте внимательны в том случае, если ресурс содержит вызовы сниппетов - возможно, лучше отменить кэширование.';
@@ -1171,6 +1171,7 @@ $_lang["enable_bindings_title"] = 'Разрешить @-привязки';
 $_lang["enable_bindings_message"] = 'Предотвращает исполнение PHP-кода через использование @-привязок в TV-параметрах. Требуется, если у вас есть пользователи, которые не должны иметь возможность создавать PHP-код, но но могут создавать или редактировать TV-параметры. Вывод любого TV-параметра @-привязкой будет "@-привязки запрещены".';
 $_lang["enable_filter_title"] = 'Включить фильтры';
 $_lang["enable_filter_message"] = 'Фильтры позволяют управлять выходными данными, преобразовывая их прямо в теге внутри шаблона. Аналог PHx. <a href="https://github.com/modxcms/evolution/issues/623" target="ext_help">Больше информации</a>'; // todo: Поменять ссылку на документацию 
+$_lang["enable_filter_phx_warning"] = 'Когда плагин PHx включен, встроенные фильтры отключены по умолчанию';
 $_lang["bkmgr_alert_mkdir"] = 'Файл не может быть создан. Проверьте права на папку assets/backup';
 $_lang["bkmgr_restore_msg"] = '<p>Сайт может быть восстановлен с помощью файла SQL. </p>';
 $_lang["bkmgr_restore_title"] = 'Восстановить';
@@ -1295,3 +1296,17 @@ $_lang["dp_startDay"]   = "1";
 $_lang["check_all"] = "Включить все";
 $_lang["check_none"] = "Выключить все";
 $_lang["check_toggle"] = "Переключить";
+
+$_lang["version_notices"] = "Версия уведомления";
+
+$_lang["em_button_shift"] = " (Shift-Клик мышкой, чтобы открыть несколько окон)";
+
+$_lang["reset_sysfiles_checksum_button"] = "Пересчитать контрольную сумму";
+$_lang["reset_sysfiles_checksum_alert"] = "Вы уверенны что хотите сбросить контрольную сумму системных файлов?";
+
+$_lang["File_browser_disabled_msg"] = "Файл браузер не включен.";
+$_lang["Which_browser_default_title"] = "Файл браузер по умолчанию";
+$_lang["Which_browser_default_msg"] = "Выберите Файл браузер по умолчанию в пользовательских настройках, так же вы можете выбрать файл браузер для каждого пользователя, или оставить его по умолчанию;.";
+$_lang["Which_browser_title"] = "Файл браузер";
+$_lang["Which_browser_msg"] = "Вы можете выбрать браузер пользовательских файлов для этого пользователя. Или использовать указанный в общих настройках";
+$_lang["Option_default"] = "По умолчанию";

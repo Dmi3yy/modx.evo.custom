@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content_metatags` (
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
   `id` int(10) NOT NULL auto_increment,
-  `name` varchar(50) NOT NULL default '',
+  `name` varchar(100) NOT NULL default '',
   `description` varchar(255) NOT NULL default 'Chunk',
   `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
   `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none',
@@ -264,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_snippets` (
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
   `id` int(10) NOT NULL auto_increment,
-  `templatename` varchar(50) NOT NULL default '',
+  `templatename` varchar(100) NOT NULL default '',
   `description` varchar(255) NOT NULL default 'Template',
   `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
   `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
@@ -318,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
 	`id` INT(11) NOT NULL auto_increment,
 	`type` varchar(50) NOT NULL default '',
-	`name` varchar(50) NOT NULL default '',
+	`name` varchar(100) NOT NULL default '',
 	`caption` varchar(80) NOT NULL default '',
 	`description` varchar(255) NOT NULL default '',
 	`editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
@@ -936,8 +936,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('clean_uploaded_filename', '1');
 
 REPLACE INTO `{PREFIX}user_roles` 
-(id,name,description,frames,home,view_document,new_document,save_document,publish_document,delete_document,empty_trash,action_ok,logout,help,messages,new_user,edit_user,logs,edit_parser,save_parser,edit_template,settings,credits,new_template,save_template,delete_template,edit_snippet,new_snippet,save_snippet,delete_snippet,edit_chunk,new_chunk,save_chunk,delete_chunk,empty_cache,edit_document,change_password,error_dialog,about,file_manager,save_user,delete_user,save_password,edit_role,save_role,delete_role,new_role,access_permissions,bk_manager,new_plugin,edit_plugin,save_plugin,delete_plugin,new_module,edit_module,save_module,exec_module,delete_module,view_eventlog,delete_eventlog,manage_metatags,edit_doc_metatags,new_web_user,edit_web_user,save_web_user,delete_web_user,web_access_permissions,view_unpublished,import_static,export_static,remove_locks) VALUES 
-(1, 'Administrator', 'Site administrators have full access to all functions',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+(id,name,description,frames,home,view_document,new_document,save_document,publish_document,delete_document,empty_trash,action_ok,logout,help,messages,new_user,edit_user,logs,edit_parser,save_parser,edit_template,settings,credits,new_template,save_template,delete_template,edit_snippet,new_snippet,save_snippet,delete_snippet,edit_chunk,new_chunk,save_chunk,delete_chunk,empty_cache,edit_document,change_password,error_dialog,about,file_manager,save_user,delete_user,save_password,edit_role,save_role,delete_role,new_role,access_permissions,bk_manager,new_plugin,edit_plugin,save_plugin,delete_plugin,new_module,edit_module,save_module,exec_module,delete_module,view_eventlog,delete_eventlog,manage_metatags,edit_doc_metatags,new_web_user,edit_web_user,save_web_user,delete_web_user,web_access_permissions,view_unpublished,import_static,export_static,remove_locks,assets_images,assets_files,change_resourcetype) VALUES 
+(1, 'Administrator', 'Site administrators have full access to all functions',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 
 # 1 - "Parser Service Events", 2 -  "Manager Access Events", 3 - "Web Access Service Events", 4 - "Cache Service Events", 5 - "Template Service Events", 6 - Custom Events
