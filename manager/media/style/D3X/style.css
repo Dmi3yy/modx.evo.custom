@@ -815,6 +815,7 @@ a.hometblink, a.hometblink:active, a.hometblink:visited, a.hometblink:link, .hom
 	text-decoration: underline;
 	color: #333;
 	font-weight: bold;
+	font-size:12px;
 }
 a.hometblink:hover {
 	text-decoration: underline;
@@ -1334,8 +1335,11 @@ a.hometblink, a.hometblink img {
 }
 .wm_button {
 	float: left;
-	margin: 0 5px 2px 20px;
+	margin: 0 5px 10px 5px;
 	text-align: center;
+	width: 70px;
+	height:60px;
+	line-height: 1.2;
 }
 	.rtl .wm_button {
 	    float: right;
@@ -2030,3 +2034,14 @@ li.breadcrumbs__li_current {
 	font-weight: bold;
 }
 /* end breadcrumbs */
+
+
+
+/*missing img*/
+#treeMenu #Button12 {width: 16px; height: 16px; background: url(images/icons/comment.gif) no-repeat center center;}
+#treeMenu #Button13 {width: 16px; height: 16px; background: url(images/icons/logging.gif) no-repeat center center;}
+#treeMenu #Button14 {width: 16px; height: 16px; background: url(images/icons/table.gif) no-repeat center center;}
+
+
+
+
