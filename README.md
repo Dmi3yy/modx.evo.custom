@@ -1,11 +1,14 @@
 Сборка обзавеласть собственным сайтом: http://modx.com.ua
 Так же рекоменую скачивать сборку с сайта так как на гитхаб не всегда стабильный релиз!!!
 
-1.1-d8.1.3  (01.10.2016)
+1.1-d8.1.3  (04.10.2016)
 =======================================================
-- update WeclomePage
-- fix for normal work with Angular in modx
-- update sampe site
+- new WeclomePage
+- fix OnWebPagePrerender for normal work with Angular in modx
+- update sample site
+- fix setting for Plugins, Modules
+- add class for image in tinyMCE4 
+
 
 
 1.1-d8.0  (11.04.2016)
