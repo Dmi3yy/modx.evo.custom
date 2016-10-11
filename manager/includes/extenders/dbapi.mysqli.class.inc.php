@@ -102,7 +102,7 @@ class DBAPI {
 			$modx->queryTime = $modx->queryTime + $totaltime;
 			if ($modx->dumpSQL) {
 				$debug = debug_backtrace();
-				array_shift($debug);	
+				array_shift($debug);
 				$debug_path = array();
 				foreach ($debug as $line) $debug_path[] = $line['function'];
 				$debug_path = implode(' > ', array_reverse($debug_path));
@@ -193,7 +193,7 @@ class DBAPI {
 			return $lid;
 		}
 	}
-	
+
 	function isResult($rs) {
 		return is_object($rs);
 	}
@@ -426,7 +426,7 @@ class DBAPI {
 	}
 
 	function dataSeek($result, $row_number) {
-		return mysqli_data_seek($result, $row_number);
+		return $result->data_seek($row_number);
 	}
 }
 ?>
