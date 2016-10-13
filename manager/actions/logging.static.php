@@ -36,10 +36,18 @@ $rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemnam
 $logs = $modx->db->makeArray($rs);
 
 ?>
-<h1><?php echo $_lang["mgrlog_view"]?></h1>
+<h1 class="pagetitle">
+  <span class="pagetitle-icon">
+    <i class="fa fa-user-secret"></i>
+  </span>
+  <span class="pagetitle-text">
+    <?php echo $_lang['mgrlog_view']; ?>
+  </span>
+</h1>
+
 <div class="section">
 <div class="sectionHeader"><?php echo $_lang["mgrlog_query"]?></div><div class="sectionBody" id="lyr1">
-<p><?php echo $_lang["mgrlog_query_msg"]?></p>
+<p class="element-edit-message"><?php echo $_lang["mgrlog_query_msg"]?></p>
 <form action="index.php?a=13" name="logging" method="POST">
 <table border="0" cellpadding="2" cellspacing="0">
  <thead>

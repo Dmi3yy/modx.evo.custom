@@ -723,8 +723,7 @@ input.submit {
 
 .section .sectionBody {
   margin: 0 15px 15px;
-  padding: 7px;
-  padding-left: 15px;
+  padding: 15px;
   background-color: #fff;
   border: 1px solid #CCCCCC;
 }
@@ -2900,9 +2899,12 @@ div.treeframebody {
   background: #fff;
   filter: none;
   color: #555;
-  border-color: transparent;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #E4E4E4;
   border-radius: 3px !important;
-  box-shadow: 0 0 0 1px #E4E4E4;
+  /*box-shadow: 0 0 0 1px #E4E4E4;*/
+  box-shadow: none;
   transition: none;
 }
 .actionButtons a:hover {
@@ -2939,6 +2941,25 @@ div.treeframebody {
 }
 #treePane .actionButtons img {
   display: inline;
+}
+
+.actionButtons--tableheader .fa {
+  font-size: 14px;
+}
+
+.sectionBody .actionButtons {
+  padding-top: 0;
+  min-height: 48px;
+}
+
+.sectionBody .actionButtons li {
+  margin-right: 10px;
+}
+
+.sectionBody .actionButtons a {
+  display: inline-block;
+  padding: 9px 10px;
+  line-height: 1;
 }
 
 .treeButton, 
@@ -3198,8 +3219,37 @@ table.actionButtons .searchtext {
   margin-top: 5px;
 }
 
+.actionButtons .filterElements-form {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .filterElements-form .form-control {
   display: block;
   width: 100%;
   max-width: 500px;
+  font-size: 13px;
+}
+
+.actionButtons .filterElements-form .form-control {
+  width: 200px;
+  height: 33px;
+  padding-left: 8px;
+  box-sizing: border-box;
+}
+
+/* pagetitle-icon */
+
+.pagetitle-icon {
+  margin-right: 2px;
+  color: #3697CD;
+}
+
+/* element-edit-message */
+
+.element-edit-message {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ededed;
+  margin-bottom: 15px;
+  color: #777;
 }
