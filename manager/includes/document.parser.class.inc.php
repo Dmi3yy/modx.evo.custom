@@ -4084,7 +4084,8 @@ class DocumentParser {
      * @return array Associative array in the form property name => property value
      */
     function parseProperties($propertyString, $elementName = null, $elementType = null) {
-	$propertyString = trim($propertyString);
+	    $propertyString = trim($propertyString);
+        $propertyString = str_replace('} {', ',', $propertyString );
         $jsonFormat = $this->isJson($propertyString, true);
         $property = array();
         // old format
