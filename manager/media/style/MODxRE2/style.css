@@ -6,14 +6,6 @@
 }
 
 
-/* for IE6 */
-
-*+html {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-
 /* for IE7 */
 
 html,
@@ -36,13 +28,17 @@ html {
 }
 
 body {
-  font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
+  font-family: Arial, HelveticaNeue, "Helvetica Neue", Helvetica, sans-serif;
   font-size: 62.5%;
   font-size: 68.75%;
   font-size: 75%;
   height: 100%;
   color: #333333;
   background: #eeeeee url(images/body.jpg);
+}
+
+html:lang(ja) body {
+  font-family: Arial,"Helvetica Neue",Helvetica,Meiryo,"Hiragino Kaku Gothic Pro",sans-serif;
 }
 
 img,
@@ -2452,7 +2448,7 @@ input#dateto:focus.DatePicker {
 }
 
 .phptextarea {
-  font-family: 'Courier New', 'Courier', monospace;
+  font-family: Consolas, 'Courier New', 'Courier', monospace;
 }
 
 
@@ -2510,7 +2506,7 @@ strong[style*='color:#EF1D1D'] {
 
 code {
   font-size: inherit;
-  font-family: 'Courier New', 'Courier', monospace;
+  font-family: Consolas, 'Courier New', 'Courier', monospace;
   background-color: #eee;
   border: 1px solid #ccc;
   padding: 1px 2px;
@@ -3156,6 +3152,28 @@ form textarea:focus,
 }
 .widget-stage .btn:hover {
   border-color: #3697CD !important;
+}
+
+#modxrecent_widget table {
+  margin-bottom: 0;
+}
+
+#modxrecent_widget .table-condensed > tbody > tr > td {
+  padding: 2px 3px;
+}
+
+#modxrecent_widget table ul {
+  margin: 0;
+  padding: 0;
+}
+
+#modxrecent_widget table li {
+  padding: 3px 5px;
+}
+
+#modxrecent_widget table li:last-child {
+  border-bottom-width: 0;
+  padding-bottom: 0;
 }
 
 #content_body #which_editor {
