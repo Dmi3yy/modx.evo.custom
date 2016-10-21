@@ -5,20 +5,20 @@
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.1.3
+ * @version     1.1.4
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
- * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.1.1 or newer
+ * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &unifyFrames=Unify Frames;list;yes,no;no;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
  * @internal    @disabled 1
- * @documentation Requirements: This plugin requires MODX Evolution 1.1.1 or later
+ * @documentation Requirements: This plugin requires MODX Evolution 1.2 or later
  * @reportissues https://github.com/pmfx/ElementsInTree
  * @link        Original Github thread https://github.com/modxcms/evolution/issues/783
  * @author      Dmi3yy https://github.com/dmi3yy
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
- * @lastupdate  17/10/2016
+ * @lastupdate  19/10/2016
  */
 
 global $_lang;
@@ -27,6 +27,7 @@ $e = &$modx->Event;
 
 if($e->name == 'OnManagerTreePrerender'){
 	
+	// useIcons
 		if ($useIcons=='yes') {
 			$tabPadding = '10px';
 		}
@@ -34,6 +35,28 @@ if($e->name == 'OnManagerTreePrerender'){
 			$tabPadding = '9px';
 		}
 	
+	// unifyFrames
+	if ($unifyFrames == 'yes') {
+	  $unifyFrames_css = '
+			body,
+			div.treeframebody {
+				background-color: #f2f2f2 !important;
+			}
+      
+			div.treeframebody {
+				background-color: transparent !important;
+				-webkit-box-shadow: none !important;
+				box-shadow: none !important;
+			}
+      
+			#treeMenu {
+				background-color: transparent !important;
+				border-bottom-color: transparent !important;
+			}
+	  ';
+	}
+	
+	// main output
 	$output = '
 <style>
 #treePane .tab-page ul {
@@ -173,6 +196,9 @@ if($e->name == 'OnManagerTreePrerender'){
 #tabTV   li.eltree:before {content: "\f022";}
 #tabPL   li.eltree:before {content: "\f1e6";}
 #tabMD   li.eltree:before {content: "\f085";}
+		
+		'.$unifyFrames_css.'
+		
 </style>
 
 <div class="tab-pane" id="treePane" style="border:0;">
