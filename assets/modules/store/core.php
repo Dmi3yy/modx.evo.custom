@@ -7,7 +7,7 @@ if(IN_MANAGER_MODE!='true' && !$modx->hasPermission('exec_module')) die('<b>INCL
 $version = "0.1.2";
 $Store = new Store;
 
-switch($_REQUEST['action']){
+switch(!empty($_REQUEST['action'])){
 case 'saveuser':
 	$_SESSION['STORE_USER'] = $modx->db->escape($_POST['res']);
 	break;
@@ -86,7 +86,7 @@ default:
 	}
 	
 	$Store->lang['user_email'] = $_SESSION['mgrEmail'];
-	$Store->lang['hash'] = stripslashes( $_SESSION['STORE_USER'] );
+	$Store->lang['hash'] = isset($_SESSION['STORE_USER']) ? stripslashes( $_SESSION['STORE_USER'] ) : '';
 	$Store->lang['lang'] = $Store->language;	
 	$Store->lang['_type'] = json_encode($PACK);	
 	$Store->lang['v'] = $version;
@@ -118,7 +118,7 @@ class Store{
 	}
 	function get_version($text){
 		preg_match('/<strong>(.*)<\/strong>/s',$text, $match);
-		return $match[1];
+		return empty($match[1]) ? '' : $match[1];
 	}
 	
 	static function parse($tpl,$field){
