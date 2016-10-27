@@ -1394,7 +1394,7 @@ class DocumentParser {
             }
             elseif($key!==''||trim($char)!=='') $key .= $char;
             
-            if(!is_null($value))
+            if(!empty($value))
             {
                 if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
                 $key=trim($key);
