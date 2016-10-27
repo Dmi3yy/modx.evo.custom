@@ -1,6 +1,16 @@
 Сборка обзавеласть собственным сайтом: http://modx.com.ua
 Так же рекоменую скачивать сборку с сайта так как на гитхаб не всегда стабильный релиз!!!
 
+1.2-d8.1.5  (28.10.2016)
+=======================================================
+- add plugin ElementsInTree (turnof by default)
+- restyle instal and modules. 
+- restyle resurces 
+- real fix setting for Plugins, Modules
+- fix Extras now work on HTTPS 
+- delete all themes, exept MODxRE2
+
+
 1.1-d8.1.3  (04.10.2016)
 =======================================================
 - new WeclomePage
