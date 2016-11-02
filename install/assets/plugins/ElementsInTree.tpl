@@ -5,10 +5,10 @@
  * Get access to all Elements and Modules inside Manager sidebar
  *
  * @category    plugin
- * @version     1.2.1
+ * @version     1.3.2
  * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU Public License (GPL v2)
- * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &treeButtonsInTab=Tree Buttons in tab;list;yes,no;yes;;Move Tree Buttons into Site Tree tab. &unifyFrames=Unify Frames;list;yes,no;no;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
- * @internal    @events OnManagerTreePrerender,OnManagerTreeRender
+ * @internal    @properties &tabTreeTitle=Tree Tab Title;text;Site Tree;;Custom title of Site Tree tab. &useIcons=Use icons in tabs;list;yes,no;yes;;Icons available in MODX version 1.2 or newer. &treeButtonsInTab=Tree Buttons in tab;list;yes,no;yes;;Move Tree Buttons into Site Tree tab. &unifyFrames=Unify Frames;list;yes,no;yes;;Unify Tree and Main frame style. Right now supports MODxRE2 theme only.
+ * @internal    @events OnManagerTreePrerender,OnManagerTreeRender,OnManagerMainFrameHeaderHTMLBlock,OnTempFormSave,OnTVFormSave,OnChunkFormSave,OnSnipFormSave,OnPluginFormSave,OnModFormSave,OnTempFormDelete,OnTVFormDelete,OnChunkFormDelete,OnSnipFormDelete,OnPluginFormDelete,OnModFormDelete
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
  * @internal    @disabled 1
@@ -19,37 +19,76 @@
  * @author      pmfx https://github.com/pmfx
  * @author      Nicola1971 https://github.com/Nicola1971
  * @author      Deesen https://github.com/Deesen
- * @lastupdate  24/10/2016
+ * @lastupdate  31/10/2016
  */
 
 global $_lang;
 
 $e = &$modx->Event;
 
-if($e->name == 'OnManagerTreePrerender'){
+if(!isset($_SESSION['elementsInTree'])) $_SESSION['elementsInTree'] = array();
+
+// Set reloadTree = true for this events
+if( in_array($e->name, array(
+		'OnTempFormSave',
+		'OnTVFormSave',
+		'OnChunkFormSave',
+		'OnSnipFormSave',
+		'OnPluginFormSave',
+		'OnModFormSave',
+
+		'OnTempFormDelete',
+		'OnTVFormDelete',
+		'OnChunkFormDelete',
+		'OnSnipFormDelete',
+		'OnPluginFormDelete',
+		'OnModFormDelete',
+
+	)) || $_GET["r"] == 2) {
+	$_SESSION['elementsInTree']['reloadTree'] = true;
+}
+
+// Trigger reloading tree for relevant actions when reloadTree = true
+if ( $e->name == "OnManagerMainFrameHeaderHTMLBlock" ) {
+	$relevantActions = array(16,19,23,300,301,77,78,22,101,102,108,76,106,107);
+	if(in_array($_GET['a'],$relevantActions) && $_SESSION['elementsInTree']['reloadTree'] == true) {
+		$_SESSION['elementsInTree']['reloadTree'] = false;
+		$html  = "<!-- elementsInTree Start -->\n";
+		$html .= "<script>";
+		$html .= "jQuery(document).ready(function() {";
+		$html .= "top.tree.location.reload();";
+		$html .= "})\n";
+		$html .= "</script>\n";
+		$html .= "<!-- elementsInTree End -->\n";
+		$e->output($html);
+	};
+}
+
+// Main elementsInTree-part
+if ($e->name == 'OnManagerTreePrerender') {
 	
 	// use icons
-		if ($useIcons=='yes') {
-			$tabPadding = '10px';
-		}
-		else {
-			$tabPadding = '9px';
-		}
+	if ($useIcons == 'yes') {
+		$tabPadding = '10px';
+	}
+	else {
+		$tabPadding = '9px';
+	}
 	
 	// unify frames
 	if ($unifyFrames == 'yes') {
-	  $unifyFrames_css = '
+		$unifyFrames_css = '
 			body,
 			div.treeframebody {
 				background-color: #f2f2f2 !important;
 			}
-      
+
 			div.treeframebody {
 				background-color: transparent !important;
 				-webkit-box-shadow: none !important;
 				box-shadow: none !important;
 			}
-      
+
 			#treeMenu {
 				background-color: transparent !important;
 				border-bottom-color: transparent !important;
@@ -62,20 +101,26 @@ if($e->name == 'OnManagerTreePrerender'){
        
         $treeButtonsInTab_js  = '
           jQuery("#treeMenu").detach().prependTo("#tabDoc");
+          jQuery("#treeMenu").addClass("is-intab");
           parent.tree.resizeTree();
         ';
         
-		$treeButtonsInTab_css = '
+        $treeButtonsInTab_css = '
       #treeHolder {
         padding-top: 10px;
         padding-left: 10px;
       }
       
       #treeMenu {
+        display: none;
         margin-left: 0;
         margin-bottom: 6px;
         background-color: transparent !important;
         border-bottom-width: 0;
+      }
+
+      #treeMenu.is-intab {
+        display: table;
       }
 
       .treeButton,
@@ -98,7 +143,7 @@ if($e->name == 'OnManagerTreePrerender'){
 	
 	// start main output
 	$output = '
-<style>
+		<style>
 		#tabDoc {
 			overflow: hidden;
 		}
@@ -115,149 +160,157 @@ if($e->name == 'OnManagerTreePrerender'){
 			background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 90%,rgba(255,255,255,1) 100%);
 		}
 
-#treePane .tab-page ul {
-  margin: 0;
-  margin-bottom: 5px;
-  padding: 0;
-}
+		#treePane .tab-page ul {
+			margin: 0;
+			margin-bottom: 5px;
+			padding: 0;
+		}
 
-#treePane .tab-page ul li {
-  list-style: none;
-  padding-left: 10px;
-}
+		#treePane .tab-page ul li {
+			list-style: none;
+			padding-left: 10px;
+		}
 
-#treePane .tab-page ul li li {
-  list-style: none;
-  padding-left: 5px;
-  line-height: 1.6;
-}
+		#treePane .tab-page ul li li {
+			list-style: none;
+			padding-left: 5px;
+			line-height: 1.6;
+		}
 
-#treePane .tab-page ul li a {
-  text-decoration: none;
-}
+		#treePane .tab-page ul li a {
+			text-decoration: none;
+		}
 
-#treePane .tab-page ul li a:hover {
-  text-decoration: underline;
-}
+		#treePane .tab-page ul li a:hover {
+			text-decoration: underline;
+		}
 
-#treePane .tab {
-  padding-left: 7px;
-  padding-right: 7px;
-}
+		#treePane .tab {
+			padding-left: 7px;
+			padding-right: 7px;
+		}
 
-#treePane .tab > span > .fa {
-  margin-right: 2px;
-  margin-left: 2px;
-}
+		#treePane .tab > span > .fa {
+			margin-right: 2px;
+			margin-left: 2px;
+		}
 
-#treePane .tab.selected {
-	padding-bottom: 6px;
-}
+		#treePane .tab.selected {
+			padding-bottom: 6px;
+		}
 
-#treePane .tab-row .tab span {
-	font-size: 14px;
-}
+		#treePane .tab-row .tab span {
+			font-size: 14px;
+		}
 
-#treePane .ext-ico {
-	text-decoration:none!important;
-	color:#97D19C!important;
-}
+		#treePane .ext-ico {
+			text-decoration:none!important;
+			color:#97D19C!important;
+		}
 
-#treePane ul > li > strong > a.catname
-{
-	color: #444;
-}
+		#treePane ul > li > strong > a.catname
+		{
+			color: #444;
+		}
 
-#treePane .fade {
-  opacity: 0;
-  -webkit-transition: opacity .15s linear;
-  -o-transition: opacity .15s linear;
-  transition: opacity .15s linear;
-}
+		#treePane .fade {
+			opacity: 0;
+			-webkit-transition: opacity .15s linear;
+			-o-transition: opacity .15s linear;
+			transition: opacity .15s linear;
+		}
 
-#treePane .fade.in {
-  opacity: 1;
-}
+		#treePane .fade.in {
+			opacity: 1;
+		}
 
-#treePane .collapse {
-  display: none;
-}
+		#treePane .collapse {
+			display: none;
+		}
 
-#treePane .collapse.in {
-  display: block;
-}
+		#treePane .collapse.in {
+			display: block;
+		}
 
-#treePane tr.collapse.in {
-  display: table-row;
-}
+		#treePane tr.collapse.in {
+			display: table-row;
+		}
 
-#treePane tbody.collapse.in {
-  display: table-row-group;
-}
+		#treePane tbody.collapse.in {
+			display: table-row-group;
+		}
 
-#treePane .collapsing {
-  position: relative;
-  height: 0;
-  overflow: hidden;
-  -webkit-transition-timing-function: ease;
-       -o-transition-timing-function: ease;
-          transition-timing-function: ease;
-  -webkit-transition-duration: .35s;
-       -o-transition-duration: .35s;
-          transition-duration: .35s;
-  -webkit-transition-property: height;
-  -o-transition-property: height;
-  transition-property: height;
-}
+		#treePane .collapsing {
+			position: relative;
+			height: 0;
+			overflow: hidden;
+			-webkit-transition-timing-function: ease;
+					 -o-transition-timing-function: ease;
+							transition-timing-function: ease;
+			-webkit-transition-duration: .35s;
+					 -o-transition-duration: .35s;
+							transition-duration: .35s;
+			-webkit-transition-property: height;
+			-o-transition-property: height;
+			transition-property: height;
+		}
 
-#treePane .panel-title a{
-	display: block;
-	padding: 4px 0 4px 15px;
-	color: #657587;
-	font-weight: bold;
-}
+		#treePane.no-transition .collapsing {
+			-webkit-transition: none;
+			-o-transition: none;
+    		transition: none;
+		}
 
-#treePane .panel-title > a::before {
-	content: "\f107"; /* fa-angle-down */
-  font-family: "FontAwesome";
-  position: absolute;
-  left: 15px;
-}
+		#treePane .panel-title a{
+			display: block;
+			padding: 4px 0 4px 15px;
+			color: #657587;
+			font-weight: bold;
+		}
+
+		#treePane .panel-title > a::before {
+			content: "\f107"; /* fa-angle-down */
+			font-family: "FontAwesome";
+			position: absolute;
+			left: 15px;
+		}
 		#treePane .panel-title > a.collapsed::before {
-  content: "\f105"; /* fa-angle-right */
-}
-#treePane .panel-title > a[aria-expanded="true"] {
-	color: #657587;
-}
+			content: "\f105"; /* fa-angle-right */
+		}
+		#treePane .panel-title > a[aria-expanded="true"] {
+			color: #657587;
+		}
 
-#treePane li.eltree {
-  margin-left: 5px;
-	line-height: 1.4em;
-}
+		#treePane li.eltree {
+			margin-left: 5px;
+			line-height: 1.4em;
+		}
 
-#treePane li.eltree:before {
-  font-family: FontAwesome;
-  padding:0 5px 0 0;
-  margin-right:2px;
-  color: #657587;
-}
+		#treePane li.eltree:before {
+			font-family: FontAwesome;
+			padding:0 5px 0 0;
+			margin-right:2px;
+			color: #657587;
+		}
 
-#tabTemp li.eltree:before {content: "\f1ea";}
-#tabCH   li.eltree:before {content: "\f009";}
-#tabSN   li.eltree:before {content: "\f121";}
-#tabTV   li.eltree:before {content: "\f022";}
-#tabPL   li.eltree:before {content: "\f1e6";}
-#tabMD   li.eltree:before {content: "\f085";}
+		#tabTemp li.eltree:before {content: "\f1ea";}
+		#tabCH   li.eltree:before {content: "\f009";}
+		#tabSN   li.eltree:before {content: "\f121";}
+		#tabTV   li.eltree:before {content: "\f022";}
+		#tabPL   li.eltree:before {content: "\f1e6";}
+		#tabMD   li.eltree:before {content: "\f085";}
+		
+		.no-events { pointer-events: none; }
 		
 		'.$unifyFrames_css.'
 		'.$treeButtonsInTab_css.'
 		
-</style>
+		</style>
 
-<div class="tab-pane" id="treePane" style="border:0;">
-<script type="text/javascript" src="media/script/tabpane.js"></script>
-<script src="media/script/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
+		<div class="tab-pane no-transition" id="treePane" style="border:0;">
+		<script type="text/javascript" src="media/script/tabpane.js"></script>
+		<script src="media/script/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="media/script/jquery.quicksearch.js"></script>
         <script>
             function initQuicksearch(inputId, listId) {
                 jQuery("#"+inputId).quicksearch("#"+listId+" ul li", {
@@ -275,13 +328,23 @@ if($e->name == 'OnManagerTreePrerender'){
                         });
                     }
                 });
+				jQuery(".filterElements-form").keydown(function (e) {
+					if (e.keyCode == 13) {
+						e.preventDefault();
+					}
+				});
             }
             
+            var storageKey = "MODX_elementsInTreeParams";
+            
+            // localStorage reset :
+            // localStorage.removeItem(storageKey);
+            
 			// Prepare remember collapsed categories function
-			var storageKey = "MODX_elementsInTreeParams";
 	        var storage = localStorage.getItem(storageKey);
 	        var elementsInTreeParams = {};
-	        
+	        var searchFieldCache = {};
+
 			try {
 	            if(storage != null) {
 	                try {
@@ -293,7 +356,50 @@ if($e->name == 'OnManagerTreePrerender'){
 	            } else {
                     elementsInTreeParams = { "cat_collapsed": {} };
                 }
+                
+                // Remember collapsed categories functions
+                function setRememberCollapsedCategories(obj=null) {
+                    obj = obj == null ? elementsInTreeParams.cat_collapsed : obj;
+					for (var type in obj) {
+						if (!elementsInTreeParams.cat_collapsed.hasOwnProperty(type)) continue;
+						for (var category in elementsInTreeParams.cat_collapsed[type]) {
+							if (!elementsInTreeParams.cat_collapsed[type].hasOwnProperty(category)) continue;
+							state = elementsInTreeParams.cat_collapsed[type][category];
+							if(state == null) continue;
+							var collapseItem = jQuery("#collapse" + type + category);
+							var toggleItem = jQuery("#toggle" + type + category);
+							if(state == 0) {
+								// Collapsed
+								collapseItem.collapse("hide");
+								toggleItem.addClass("collapsed");
+							} else {
+								// Open
+								collapseItem.collapse("show");
+								toggleItem.removeClass("collapsed");
+							} 
+						}
+					}
+					// Avoid first category collapse-flicker on reload
+					setTimeout(function() {
+				       jQuery("#treePane").removeClass("no-transition");
+					}, 50);
+				}
+
+                function setLastCollapsedCategory(type, id, state) {
+	                  state = state != 1 ? 1 : 0;
+	                  if(typeof elementsInTreeParams.cat_collapsed[type] == "undefined") elementsInTreeParams.cat_collapsed[type] = {};
+	                  elementsInTreeParams.cat_collapsed[type][id] = state;
+                }
+				function writeElementsInTreeParamsToStorage() {
+					var jsonString = JSON.stringify(elementsInTreeParams);
+					localStorage.setItem(storageKey, jsonString );
+				}
+				
 	            jQuery(document).ready(function() {
+
+                jQuery(".filterElements-form").keydown(function (e) {
+                    if(e.keyCode == 13) e.preventDefault();
+                });
               
                 '.$treeButtonsInTab_js.'
                 
@@ -328,49 +434,20 @@ if($e->name == 'OnManagerTreePrerender'){
 					      }
 					});
 					  
-	                // Remember collapsed categories function
-					for (var type in elementsInTreeParams.cat_collapsed) {
-						if (!elementsInTreeParams.cat_collapsed.hasOwnProperty(type)) continue;
-						for (var category in elementsInTreeParams.cat_collapsed[type]) {
-							if (!elementsInTreeParams.cat_collapsed[type].hasOwnProperty(category)) continue;
-							state = elementsInTreeParams.cat_collapsed[type][category];
-							if(state == null) continue;
-							var collapseItem = jQuery("#collapse" + type + category);
-							var toggleItem = jQuery("#toggle" + type + category);
-							if(state == 0) {
-								// Collapsed
-								collapseItem.collapse("hide");
-								toggleItem.addClass("collapsed");
-							} else {
-								// Open
-								collapseItem.collapse("show");
-								toggleItem.removeClass("collapsed");
-							} 
-						}
-					}
+					setRememberCollapsedCategories();
 
-	                function setLastCollapsedCategory(type, id, state) {
-	                  state = state != 1 ? 1 : 0;
-	                  if(typeof elementsInTreeParams.cat_collapsed[type] == "undefined") elementsInTreeParams.cat_collapsed[type] = {};
-	                  elementsInTreeParams.cat_collapsed[type][id] = state;
-	                }
-	                
-					function writeElementsInTreeParamsToStorage() {
-						var jsonString = JSON.stringify(elementsInTreeParams);
-						localStorage.setItem(storageKey, jsonString );
-					}
 	            });
 	        } catch(err) {
 	            alert("document.ready error: " + err);
 	        }
         </script>
-<script type="text/javascript">
-treePane = new WebFXTabPane(document.getElementById( "treePane" ),true);
-</script>
-<div class="tab-page" id="tabDoc" style="padding-left:0; padding-right:0;">
-<h2 class="tab">'.$tabTreeTitle.'</h2>
-<script type="text/javascript">treePane.addTabPage( document.getElementById( "tabDoc" ) );</script>
-';
+		<script type="text/javascript">
+		treePane = new WebFXTabPane(document.getElementById( "treePane" ),true);
+		</script>
+		<div class="tab-page" id="tabDoc" style="padding-left:0; padding-right:0;">
+		<h2 class="tab">'.$tabTreeTitle.'</h2>
+		<script type="text/javascript">treePane.addTabPage( document.getElementById( "tabDoc" ) );</script>
+	';
 	$e->output($output);
 }
 
@@ -427,7 +504,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$limit = $modx->db->getRecordCount($rs);
 			
 			if($limit<1){
-				echo $_lang['no_results'];
+				return '';
 			}
 			
 			$preCat = '';
@@ -457,6 +534,15 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
         <script>
           jQuery(\'#collapse'.$resourceTable.$row['catid'].'\').collapse();
           initQuicksearch(\'tree_'.$resourceTable.'_search\', \'tree_'.$resourceTable.'\');
+          jQuery(\'#tree_'.$resourceTable.'_search\').on(\'focus\', function () {
+            searchFieldCache = elementsInTreeParams.cat_collapsed;
+            jQuery(\'#tree_'.$resourceTable.' .accordion-toggle\').removeClass("collapsed");
+            jQuery(\'#tree_'.$resourceTable.' .accordion-toggle\').addClass("no-events");
+            jQuery(\'.'.$resourceTable.'\').collapse(\'show\');
+          }).on(\'blur\', function () {
+            setRememberCollapsedCategories(searchFieldCache);
+            jQuery(\'#tree_'.$resourceTable.' .accordion-toggle\').removeClass("no-events");
+          });
         </script>';
 			return $output;
 		}
@@ -497,7 +583,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			$limit = $modx->db->getRecordCount($rs);
 			
 			if($limit<1){
-				echo $_lang['no_results'];
+                return '';
 			}
 			
 			$preCat   = '';
@@ -506,7 +592,7 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
 			for($i=0; $i<$limit; $i++) {
 				$row = $modx->db->getRow($rs);
 				if($row['catid'] > 0) {
-				$row['catid'] = stripslashes($row['catid']);
+					$row['catid'] = stripslashes($row['catid']);
 				} else {
 					$row['catname'] = $_lang["no_category"];
 				}
@@ -528,6 +614,15 @@ if ( $modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet
     
         <script>
           initQuicksearch(\'tree_'.$resourceTable.'_search\', \'tree_'.$resourceTable.'\');
+          jQuery(\'#tree_'.$resourceTable.'_search\').on(\'focus\', function () {
+            searchFieldCache = elementsInTreeParams.cat_collapsed;
+            jQuery(\'#tree_'.$resourceTable.' .accordion-toggle\').addClass("no-events");
+            jQuery(\'#tree_'.$resourceTable.' .accordion-toggle\').removeClass("collapsed");
+            jQuery(\'.'.$resourceTable.'\').collapse(\'show\');
+          }).on(\'blur\', function () {
+            jQuery(\'#tree_'.$resourceTable.' .accordion-toggle\').removeClass("no-events");
+            setRememberCollapsedCategories(searchFieldCache);
+          });
         </script>';
 			return $output;
 		}
