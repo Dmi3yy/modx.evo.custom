@@ -37,7 +37,6 @@ return ''; # don't go any further when inside manager
 if(isset($eformOnValidate)) $eFormOnValidate = $eformOnValidate;
 if(isset($eformOnBeforeMailSent)) $eFormOnBeforeMailSent = $eformOnBeforeMailSent;
 if(isset($eformOnMailSent)) $eFormOnMailSent = $eformOnMailSent;
-if(isset($eformOnValidate)) $eFormOnValidate = $eformOnValidate;
 if(isset($eformOnBeforeFormMerge)) $eFormOnBeforeFormMerge = $eformOnBeforeFormMerge;
 if(isset($eformOnBeforeFormParse)) $eFormOnBeforeFormParse = $eformOnBeforeFormParse;
 //for sottwell :)

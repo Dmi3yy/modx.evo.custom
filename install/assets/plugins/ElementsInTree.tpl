@@ -11,7 +11,6 @@
  * @internal    @events OnManagerTreePrerender,OnManagerTreeRender,OnManagerMainFrameHeaderHTMLBlock,OnTempFormSave,OnTVFormSave,OnChunkFormSave,OnSnipFormSave,OnPluginFormSave,OnModFormSave,OnTempFormDelete,OnTVFormDelete,OnChunkFormDelete,OnSnipFormDelete,OnPluginFormDelete,OnModFormDelete
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
- * @internal    @disabled 1
  * @documentation Requirements: This plugin requires MODX Evolution 1.2 or later
  * @reportissues https://github.com/pmfx/ElementsInTree
  * @link        Original Github thread https://github.com/modxcms/evolution/issues/783
