@@ -22,7 +22,7 @@
  */
 
 // In manager
-if (isset($_SESSION['mgrValidated'])) {
+if (!$modx->checkSession()) return;
 
     $show = TRUE;
 
@@ -36,17 +36,12 @@ if (isset($_SESSION['mgrValidated'])) {
     if ($show) {
         // Replace [*#tv*] with QM+ edit TV button placeholders
         if ($tvbuttons == 'true') {
-            $e = $modx->Event;
-            if ($e->name == 'OnParseDocument') {
+        if ($modx->event->name == 'OnParseDocument') {
                  $output = &$modx->documentOutput;
                  $output = preg_replace('~\[\*#(.*?)\*\]~', '<!-- '.$tvbclass.' $1 -->[*$1*]', $output);
                  $modx->documentOutput = $output;
              }
          }
-        // In manager
-        if (isset($_SESSION['mgrValidated'])) {
             include_once($modx->config['base_path'].'assets/plugins/qm/qm.inc.php');
             $qm = new Qm($modx, $jqpath, $loadmanagerjq, $loadfrontendjq, $noconflictjq, $loadtb, $tbwidth, $tbheight, $hidefields, $hidetabs, $hidesections, $addbutton, $tpltype, $tplid, $custombutton, $managerbutton, $logout, $autohide, $editbuttons, $editbclass, $newbuttons, $newbclass, $tvbuttons, $tvbclass);
         }
-    }
-}

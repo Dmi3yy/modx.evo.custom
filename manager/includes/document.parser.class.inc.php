@@ -419,16 +419,26 @@ class DocumentParser {
     }
 
     /**
+     * Check for manager or webuser login session since v1.2
+     *
+     * @return boolean
+     */
+    function isLoggedIn($context='mgr')
+    {
+        if(substr($context,0,1)=='m') $_ = 'mgrValidated';
+        else                          $_ = 'webValidated';
+        
+        if(isset($_SESSION[$_]) && !empty($_SESSION[$_])) return true;
+        else                                              return false;
+    }
+    
+    /**
      * Check for manager login session
      *
      * @return boolean
      */
     function checkSession() {
-        if (isset ($_SESSION['mgrValidated']) && !empty($_SESSION['mgrValidated'])) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->isLoggedin();
     }
 
     /**
@@ -437,7 +447,7 @@ class DocumentParser {
      * @return boolean
      */
     function checkPreview() {
-        if ($this->checkSession() == true) {
+        if ($this->isLoggedIn() == true) {
             if (isset ($_REQUEST['z']) && $_REQUEST['z'] == 'manprev') {
                 return true;
             } else {
@@ -459,7 +469,7 @@ class DocumentParser {
             // site online
             return true;
         }
-        elseif ($siteStatus == 0 && $this->checkSession()) {
+        elseif ($siteStatus == 0 && $this->isLoggedIn()) {
             // site offline but launched via the manager
             return true;
         } else {
@@ -657,12 +667,7 @@ class DocumentParser {
         }
         // End fix by sirlancelot
 
-        $_ = array('[* *]','[( )]','{{ }}');
-        foreach($_ as $brackets) {
-            list($left,$right) = explode(' ', $brackets);
-            if(strpos($this->documentOutput,$left)!==false)
-                $this->documentOutput = $this->sweepRemainPlaceholders($this->documentOutput,$left,$right);
-        }
+        $this->documentOutput = $this->sweepGarbageStrings($this->documentOutput);
         
         // remove all unused placeholders
         if (strpos($this->documentOutput, '[+')!==false) {
@@ -687,6 +692,7 @@ class DocumentParser {
                     // strip title of special characters
                     $name= $this->documentObject['pagetitle'];
                     $name= strip_tags($name);
+                    $name= $this->sweepGarbageStrings($name);
                     $name= strtolower($name);
                     $name= preg_replace('/&.+?;/', '', $name); // kill entities
                     $name= preg_replace('/[^\.%a-z0-9 _-]/', '', $name);
@@ -1040,7 +1046,7 @@ class DocumentParser {
         foreach($matches[1] as $i=>$key) {
             $snip_call = $this->_split_snip_call($key);
             $key = $snip_call['name'];
-            $ph = $this->_snipParamsToArray($snip_call['params']);
+            $ph = $this->getParamsFromString($snip_call['params']);
             
             $value = $this->getChunk($key);
             $value = $value !== null ? $this->parseText($ph,$value,'[+','+]','hasModifier') : $matches[0][$i];
@@ -1229,6 +1235,13 @@ class DocumentParser {
      */
     function evalSnippet($phpcode, $params) {
         $etomite = $modx = & $this;
+        if(isset($params) && is_array($params)) {
+            foreach($params as $k=>$v) {
+                $v = strtolower($v);
+                if($v==='false')    $params[$k] = false;
+                elseif($v==='true') $params[$k] = true;
+            }
+        }
         $modx->event->params = & $params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
@@ -1328,7 +1341,7 @@ class DocumentParser {
         $this->currentSnippet = $snippetObject['name'];
         
         // current params
-        $params = $this->_snipParamsToArray($snip_call['params']);
+        $params = $this->getParamsFromString($snip_call['params']);
         
         if(!isset($snippetObject['properties'])){
             $snippetObject['properties'] = '';
@@ -1350,7 +1363,7 @@ class DocumentParser {
         return $value;
     }
     
-    function _snipParamsToArray($string='')
+    function getParamsFromString($string='')
     {
         if(empty($string)) return array();
         
@@ -1443,22 +1456,37 @@ class DocumentParser {
         return $params;
     }
     
-    function _findSplitter($str) {
-        $str = str_split($str);
-        $pass = false;
-        $i = -1;
-        $pos = false;
+    function _getSplitPosition($str) {
+        $closeOpt = false;
+        $maybePos = false;
         $inFilter = false;
-        foreach($str as $c) {
-            $i++;
-            if($inFilter)    {
-                if($c===')')     { $pass = false; continue; }
-                elseif($pass)    { continue; }
-                elseif($c==='(') { $pass=true; continue; }
-                elseif($c==='?') { $pos=$i; break; }
+        $total = strlen($str);
+        $i=0;
+        for($i=0;$i<$total;$i++) {
+            $c  = substr($str,$i,1);
+            $cc = substr($str,$i,2);
+            if(!$inFilter) {
+                if($c===':')                  $inFilter=true;
+                elseif($c==='?')              $pos = $i;
+                elseif($c===' ')              $maybePos = $i;
+                elseif($c==='&' && $maybePos) $pos = $maybePos;
+                elseif($c==="\n")             $pos = $i;
+                else                          $pos = false;
             }
-            elseif($c===':')     { $inFilter=true; }
-            elseif($c==='?')     { $pos = $i; break; }
+            else {
+                if    ($cc==$closeOpt) $closeOpt = false;
+                elseif($c==$closeOpt)  $closeOpt = false;
+                elseif($closeOpt)      continue;
+                elseif($cc==="('")     $closeOpt = "')";
+                elseif($cc==='("')     $closeOpt = '")';
+                elseif($cc==='(`')     $closeOpt = '`)';
+                elseif($c==='(')       $closeOpt = ')';
+                elseif($c==='?')       $pos=$i;
+                elseif($c===' ' && strpos($str,'?')===false)
+                                       $pos = $i;
+                else                   $pos = false;
+            }
+            if($pos) break;
         }
         return $pos;
     }
@@ -1469,26 +1497,13 @@ class DocumentParser {
         if(strpos($call,']]>')!==false)
             $call = str_replace(']]>', "]{$spacer}]>",$call);
         
-        $pos['?']  = $this->_findSplitter($call);
-        $pos['&']  = strpos($call, '&');
-        $pos['=']  = strpos($call, '=');
-        $pos['lf'] = strpos($call, "\n");
+        $splitPosition  = $this->_getSplitPosition($call);
         
-        if($pos['?'] !== false)
+        if($splitPosition !== false)
         {
-            if($pos['lf']!==false && $pos['?'] < $pos['lf'])
-                list($name,$params) = explode('?',$call,2);
-            elseif($pos['lf']!==false && $pos['lf'] < $pos['?'])
-                list($name,$params) = explode("\n",$call,2);
-            else {
-                $name   = substr($call, 0, $pos['?']);
-                $params = substr($call, $pos['?']+1);
-            }
+            $name   = substr($call, 0, $splitPosition);
+            $params = substr($call, $splitPosition+1);
         }
-        elseif($pos['&'] !== false && $pos['='] !== false && $pos['?'] === false)
-            list($name,$params) = explode('&',$call,2);
-        elseif($pos['lf'] !== false)
-            list($name,$params) = explode("\n",$call,2);
         else
         {
             $name   = $call;
@@ -1499,6 +1514,7 @@ class DocumentParser {
         if(strpos($params,$spacer)!==false)
             $params = str_replace("]{$spacer}]>",']]>',$params);
         $snip['params'] = $params = ltrim($params,"?& \t\n");
+        
         return $snip;
     }
     
@@ -2281,6 +2297,38 @@ class DocumentParser {
     }
 
     /**
+     * Returns Locked Elements as Array
+     * 
+     * @param int $type Types: 0=all, 1=template, 2=tv, 3=chunk, 4=snippet, 5=plugin, 6=module, 7=resource, 8=role
+     * @param bool $minimumDetails true = 
+     */
+    function getLockedElements($type=0, $minimumDetails=false) {
+        $this->buildLockedElementsCache();
+
+        if(!$minimumDetails) {
+            $lockedElements = $this->lockedElements;
+        } else {
+            // Minimum details for HTML / Ajax-requests
+            $lockedElements = array();
+            foreach($this->lockedElements as $elType=>$elements) {
+                foreach($elements as $elId=>$el) {
+                    $lockedElements[$elType][$elId] = array(
+                        'username'    => $el['username'],
+                        'firsthit_df' => $this->toDateFormat($el['firsthit']),
+                        'state'       => $this->determineLockState($el['internalKey'])
+                    );
+                }
+            }
+        }
+        
+        if($type == 0) return $lockedElements;
+
+        $type = intval($type);
+        if(isset($lockedElements[$type])) return $lockedElements[$type];
+        else return array();
+    }
+
+    /**
      * Builds the Locked Elements Cache once
      */
     function buildLockedElementsCache() {
@@ -2298,11 +2346,34 @@ class DocumentParser {
                     'username'    => $row['username'],
                     'firsthit'    => $row['firsthit'],
                     'lasthit'     => $row['lasthit'],
-                    'firsthit_df'  => $this->toDateFormat($row['firsthit']),
-                    'lasthit_df'  => $this->toDateFormat($row['lasthit'])
+                    'firsthit_df' => $this->toDateFormat($row['firsthit']),
+                    'lasthit_df'  => $this->toDateFormat($row['lasthit']),
+                    'state'       => $this->determineLockState($row['internalKey'])
                 );
             }
         }
+    }
+
+    /**
+     * Determines state of a locked element
+     *
+     * @param int $internalKey: ID of User who locked actual element
+     * @return int $state States: 0=No display, 1=viewing this element, 2=locked, 3=show unlock-button
+     */
+    function determineLockState($internalKey) {
+        $state = 0;
+        if($this->hasPermission('display_locks')) {
+            if($internalKey == $this->getLoginUserID()) {
+                $state = 1;
+            } else {
+                if($this->hasPermission('remove_locks')) {
+                    $state = 3;
+                } else {
+                    $state = 2;
+                }
+            }
+        }
+        return $state;
     }
     
     /**
@@ -3769,16 +3840,16 @@ class DocumentParser {
 
         if(!empty($context)){
             if(is_scalar($context) && isset($_SESSION[$context . 'Validated'])){
-                $out = stripslashes($_SESSION[$context . 'Shortname']);
+                $out = $this->stripslashes($_SESSION[$context . 'Shortname']);
             }
         }else{
             switch(true){
                 case ($this->isFrontend() && isset ($_SESSION['webValidated'])):{
-                    $out = stripslashes($_SESSION['webShortname']);
+                    $out = $this->stripslashes($_SESSION['webShortname']);
                     break;
                 }
                 case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):{
-                    $out = stripslashes($_SESSION['mgrShortname']);
+                    $out = $this->stripslashes($_SESSION['mgrShortname']);
                     break;
                 }
             }
@@ -4144,7 +4215,7 @@ class DocumentParser {
             for ($i= 0; $i < $numEvents; $i++) { // start for loop
                 if ($this->dumpPlugins) $eventtime = $this->getMicroTime();
                 $pluginName= $el[$i];
-                $pluginName = stripslashes($pluginName);
+                $pluginName = $this->stripslashes($pluginName);
                 // reset event object
                 $e= & $this->Event;
                 $e->_resetEventObject();
@@ -4353,7 +4424,7 @@ class DocumentParser {
                 $description_found = $r['description_found'];
                 $docblock_end_found = $r['docblock_end_found'];
                 $param = $r['param'];
-                $val = stripslashes($r['val']);
+                $val = $this->stripslashes($r['val']);
                 if(!$docblock_start_found) continue;
                 if($docblock_end_found) break;
                 if(!empty($param)) {
@@ -4507,17 +4578,44 @@ class DocumentParser {
         return str_replace($sanitize_seed, '', $string);
     }
     
-    function sweepRemainPlaceholders($content='',$left='[*',$right='*]') {
+    function sweepGarbageStrings($content='') {
+        global $sanitize_seed;
         
-        if(strpos($content,$left)===false || strpos($content,$right)===false) return false;
+        if(strpos($string,$sanitize_seed)!==false) $content = str_replace($sanitize_seed, '', $content);
         
-        $_ = $this->config['enable_filter'];
+        $enable_filter = $this->config['enable_filter'];
         $this->config['enable_filter'] = 1;
-        if($left==='[*')  $content = $this->mergeDocumentContent($content);
-        $this->config['enable_filter'] = $_;
-        
-        $content= str_replace($matches[0], '', $content);
+        $_ = array('[* *]','[( )]','{{ }}','[[ ]]');
+        foreach($_ as $brackets) {
+            list($left,$right) = explode(' ', $brackets);
+            if(strpos($content,$left)!==false) {
+                if    ($left==='[*') $content = $this->mergeDocumentContent($content);
+                elseif($left==='[(') $content = $this->mergeSettingsContent($content);
+                elseif($left==='{{') $content = $this->mergeChunkContent($content);
+                elseif($left==='[[') $content = $this->evalSnippets($content);
+                $matches = $this->getTagsFromContent($content,$left,$right);
+                $content= str_replace($matches[0], '', $content);
+            }
+        }
+        $this->config['enable_filter'] = $enable_filter;
         return $content;
+    }
+    
+    // Required in PHP 5.3 or earlier environment. However, since PHP 5.3 has already finished support on August 14, 2014, Evolution does not intend to support the stripslashes function for long time.
+    // http://php.net/manual/en/function.get-magic-quotes-gpc.php
+    function stripslashes($str='') {
+        
+        if(!get_magic_quotes_gpc()) return $str;
+        
+        $str = stripslashes($str);
+        modx_sanitize_gpc($str);
+        return $str;
+    }
+    
+    function strip_tags($str='', $allowable_tags='') {
+        $str = strip_tags($str, $allowable_tags);
+        modx_sanitize_gpc($str);
+        return $str;
     }
     
     /***************************************************************************************/
