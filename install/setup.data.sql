@@ -1,3 +1,9 @@
+# MODX Database Script for New/Upgrade Installations
+# MODX was created By Raymond Irving - Nov 2004 
+#
+# Each sql command is separated by double lines \n\n 
+
+
 CREATE TABLE IF NOT EXISTS `{PREFIX}active_users` (
   `internalKey` int(9) NOT NULL default '0',
   `username` varchar(50) NOT NULL default '',
@@ -800,3 +806,316 @@ ALTER TABLE `{PREFIX}member_groups` ADD UNIQUE INDEX `ix_group_member` (`user_gr
 ALTER TABLE `{PREFIX}web_groups` ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`);
 
 # ]]upgrade-able
+
+
+# Insert / Replace system records
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+# non-upgrade-able[[ - This block of code will not be executed during upgrades
+
+
+
+# ]]non-upgrade-able
+
+
+# Default Site Settings
+
+
+INSERT IGNORE INTO `{PREFIX}system_settings` 
+(setting_name, setting_value) VALUES 
+('manager_theme','MODxRE2'),
+('settings_version',''),
+('show_meta','0'),
+('server_offset_time','0'),
+('server_protocol','http'),
+('manager_language','{MANAGERLANGUAGE}'),
+('modx_charset','UTF-8'),
+('site_name','MODX Site By Dmi3yy'),
+('site_start','1'),
+('error_page','1'),
+('unauthorized_page','1'),
+('site_status','1'),
+('site_unavailable_message','The site is currently unavailable'),
+('track_visitors','0'),
+('top_howmany','10'),
+('auto_template_logic','{AUTOTEMPLATELOGIC}'),
+('default_template','3'),
+('old_template',''),
+('publish_default','1'),
+('cache_default','1'),
+('search_default','1'),
+('friendly_urls','1'),
+('friendly_url_prefix',''),
+('friendly_url_suffix','.html'),
+('friendly_alias_urls','1'),
+('use_alias_path','1'),
+('use_udperms','1'),
+('udperms_allowroot','0'),
+('failed_login_attempts','3'),
+('blocked_minutes','60'),
+('use_captcha','0'),
+('captcha_words','0,1,2,3,4,5,6,7,8,9'),
+('emailsender','{ADMINEMAIL}'),
+('email_method','mail'),
+('smtp_auth','0'),
+('smtp_host',''),
+('smtp_port','25'),
+('smtp_username',''),
+('emailsubject','Your login details'),
+('number_of_logs','100'),
+('number_of_messages','30'),
+('number_of_results','20'),
+('use_editor','1'),
+('use_browser','1'),
+('which_browser','mcpuk'),
+('rb_base_dir',''),
+('rb_base_url',''),
+('which_editor','TinyMCE4'),
+('fe_editor_lang','{MANAGERLANGUAGE}'),
+('fck_editor_toolbar','standard'),
+('fck_editor_autolang','0'),
+('editor_css_path',''),
+('editor_css_selectors',''),
+('strip_image_paths','1'),
+('upload_images','bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff'),
+('upload_media','au,avi,mp3,mp4,mpeg,mpg,wav,wmv'),
+('upload_flash','fla,flv,swf'),
+('upload_files','bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff,fla,flv,swf,aac,au,avi,css,cache,doc,docx,gz,gzip,htaccess,htm,html,js,mp3,mp4,mpeg,mpg,ods,odp,odt,pdf,ppt,pptx,rar,tar,tgz,txt,wav,wmv,xls,xlsx,xml,z,zip,JPG,JPEG,PNG,GIF'),
+('upload_maxsize','10485760'),
+('new_file_permissions','0644'),
+('new_folder_permissions','0755'),
+('filemanager_path',''),
+('theme_refresher',''),
+('manager_layout','4'),
+('custom_contenttype','application/rss+xml,application/pdf,application/vnd.ms-word,application/vnd.ms-excel,text/html,text/css,text/xml,text/javascript,text/plain,application/json'),
+('auto_menuindex','1'),
+('session.cookie.lifetime','604800'),
+('mail_check_timeperiod','600'),
+('manager_direction','ltr'),
+('tinymce4_theme','custom'),
+('tree_show_protected', '0'),
+('rss_url_news', 'http://feeds.feedburner.com/modx-announce'),
+('rss_url_security', 'http://feeds.feedburner.com/modxsecurity'),
+('validate_referer', '1'),
+('datepicker_offset','-10'),
+('xhtml_urls','0'),
+('allow_duplicate_alias','0'),
+('automatic_alias','1'),
+('datetime_format','dd-mm-YYYY'),
+('warning_visibility', '0'),
+('remember_last_tab', '1'),
+('enable_bindings', '1'),
+('seostrict', '1'),
+('cache_type', '2'),
+('maxImageWidth', '1600'),
+('maxImageHeight', '1200'),
+('thumbWidth', '150'),
+('thumbHeight', '150'),
+('thumbsDir', '.thumbs'),
+('jpegQuality', '90'),
+('denyZipDownload', '0'),
+('denyExtensionRename', '0'),
+('showHiddenFiles', '0'),
+('docid_incrmnt_method', '0'),
+('make_folders', '0'),
+('tree_page_click', '27'),
+('clean_uploaded_filename', '1');
+
+REPLACE INTO `{PREFIX}user_roles` 
+(id,name,description,frames,home,view_document,new_document,save_document,publish_document,delete_document,empty_trash,action_ok,logout,help,messages,new_user,edit_user,logs,edit_parser,save_parser,edit_template,settings,credits,new_template,save_template,delete_template,edit_snippet,new_snippet,save_snippet,delete_snippet,edit_chunk,new_chunk,save_chunk,delete_chunk,empty_cache,edit_document,change_password,error_dialog,about,file_manager,save_user,delete_user,save_password,edit_role,save_role,delete_role,new_role,access_permissions,bk_manager,new_plugin,edit_plugin,save_plugin,delete_plugin,new_module,edit_module,save_module,exec_module,delete_module,view_eventlog,delete_eventlog,manage_metatags,edit_doc_metatags,new_web_user,edit_web_user,save_web_user,delete_web_user,web_access_permissions,view_unpublished,import_static,export_static,remove_locks,assets_images,assets_files,change_resourcetype,display_locks) VALUES 
+(1, 'Administrator', 'Site administrators have full access to all functions',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+
+
+# 1 - "Parser Service Events", 2 -  "Manager Access Events", 3 - "Web Access Service Events", 4 - "Cache Service Events", 5 - "Template Service Events", 6 - Custom Events
+
+
+REPLACE INTO `{PREFIX}system_eventnames` 
+(id,name,service,groupname) VALUES 
+('1','OnDocPublished','5',''), 
+('2','OnDocUnPublished','5',''),
+('3','OnWebPagePrerender','5',''),
+('4','OnWebLogin','3',''),
+('5','OnBeforeWebLogout','3',''),
+('6','OnWebLogout','3',''),
+('7','OnWebSaveUser','3',''),
+('8','OnWebDeleteUser','3',''),
+('9','OnWebChangePassword','3',''),
+('10','OnWebCreateGroup','3',''),
+('11','OnManagerLogin','2',''),
+('12','OnBeforeManagerLogout','2',''),
+('13','OnManagerLogout','2',''),
+('14','OnManagerSaveUser','2',''),
+('15','OnManagerDeleteUser','2',''),
+('16','OnManagerChangePassword','2',''),
+('17','OnManagerCreateGroup','2',''),
+('18','OnBeforeCacheUpdate','4',''),
+('19','OnCacheUpdate','4',''),
+('107','OnMakePageCacheKey','4',''),
+('20','OnLoadWebPageCache','4',''),
+('21','OnBeforeSaveWebPageCache','4',''),
+('22','OnChunkFormPrerender','1','Chunks'),
+('23','OnChunkFormRender','1','Chunks'),
+('24','OnBeforeChunkFormSave','1','Chunks'),
+('25','OnChunkFormSave','1','Chunks'),
+('26','OnBeforeChunkFormDelete','1','Chunks'),
+('27','OnChunkFormDelete','1','Chunks'),
+('28','OnDocFormPrerender','1','Documents'),
+('29','OnDocFormRender','1','Documents'),
+('30','OnBeforeDocFormSave','1','Documents'),
+('31','OnDocFormSave','1','Documents'),
+('32','OnBeforeDocFormDelete','1','Documents'),
+('33','OnDocFormDelete','1','Documents'),
+('1033','OnDocFormUnDelete','1','Documents'),
+('1034','onBeforeMoveDocument','1','Documents'),
+('1035','onAfterMoveDocument','1','Documents'),
+('34','OnPluginFormPrerender','1','Plugins'),
+('35','OnPluginFormRender','1','Plugins'),
+('36','OnBeforePluginFormSave','1','Plugins'),
+('37','OnPluginFormSave','1','Plugins'),
+('38','OnBeforePluginFormDelete','1','Plugins'),
+('39','OnPluginFormDelete','1','Plugins'),
+('40','OnSnipFormPrerender','1','Snippets'),
+('41','OnSnipFormRender','1','Snippets'),
+('42','OnBeforeSnipFormSave','1','Snippets'),
+('43','OnSnipFormSave','1','Snippets'),
+('44','OnBeforeSnipFormDelete','1','Snippets'),
+('45','OnSnipFormDelete','1','Snippets'),
+('46','OnTempFormPrerender','1','Templates'),
+('47','OnTempFormRender','1','Templates'),
+('48','OnBeforeTempFormSave','1','Templates'),
+('49','OnTempFormSave','1','Templates'),
+('50','OnBeforeTempFormDelete','1','Templates'),
+('51','OnTempFormDelete','1','Templates'),
+('52','OnTVFormPrerender','1','Template Variables'),
+('53','OnTVFormRender','1','Template Variables'),
+('54','OnBeforeTVFormSave','1','Template Variables'),
+('55','OnTVFormSave','1','Template Variables'),
+('56','OnBeforeTVFormDelete','1','Template Variables'),
+('57','OnTVFormDelete','1','Template Variables'),
+('58','OnUserFormPrerender','1','Users'),
+('59','OnUserFormRender','1','Users'),
+('60','OnBeforeUserFormSave','1','Users'),
+('61','OnUserFormSave','1','Users'),
+('62','OnBeforeUserFormDelete','1','Users'),
+('63','OnUserFormDelete','1','Users'),
+('64','OnWUsrFormPrerender','1','Web Users'),
+('65','OnWUsrFormRender','1','Web Users'),
+('66','OnBeforeWUsrFormSave','1','Web Users'),
+('67','OnWUsrFormSave','1','Web Users'),
+('68','OnBeforeWUsrFormDelete','1','Web Users'),
+('69','OnWUsrFormDelete','1','Web Users'),
+('70','OnSiteRefresh','1',''),
+('71','OnFileManagerUpload','1',''),
+('72','OnModFormPrerender','1','Modules'),
+('73','OnModFormRender','1','Modules'),
+('74','OnBeforeModFormDelete','1','Modules'),
+('75','OnModFormDelete','1','Modules'),
+('76','OnBeforeModFormSave','1','Modules'),
+('77','OnModFormSave','1','Modules'),
+('78','OnBeforeWebLogin','3',''),
+('79','OnWebAuthentication','3',''),
+('80','OnBeforeManagerLogin','2',''),
+('81','OnManagerAuthentication','2',''),
+('82','OnSiteSettingsRender','1','System Settings'),
+('83','OnFriendlyURLSettingsRender','1','System Settings'),
+('84','OnUserSettingsRender','1','System Settings'),
+('85','OnInterfaceSettingsRender','1','System Settings'),
+('86','OnMiscSettingsRender','1','System Settings'),
+('87','OnRichTextEditorRegister','1','RichText Editor'),
+('88','OnRichTextEditorInit','1','RichText Editor'),
+('89','OnManagerPageInit','2',''),
+('90','OnWebPageInit','5',''),
+('101','OnLoadDocumentObject','5',''),
+('104','OnBeforeLoadDocumentObject','5',''),
+('105','OnAfterLoadDocumentObject','5',''),
+('91','OnLoadWebDocument','5',''),
+('92','OnParseDocument','5',''),
+('106','OnParseProperties','5',''),
+('93','OnManagerLoginFormRender','2',''),
+('94','OnWebPageComplete','5',''),
+('95','OnLogPageHit','5',''),
+('96','OnBeforeManagerPageInit','2',''),
+('97','OnBeforeEmptyTrash','1','Documents'),
+('98','OnEmptyTrash','1','Documents'),
+('99','OnManagerLoginFormPrerender','2',''),
+('100','OnStripAlias','1','Documents'),
+('102','OnMakeDocUrl','5',''),
+('103','OnBeforeLoadExtension','5',''),
+('200','OnCreateDocGroup','1','Documents'),
+('201','OnManagerWelcomePrerender','2',''),
+('202','OnManagerWelcomeHome','2',''),
+('203','OnManagerWelcomeRender','2',''),
+('204','OnBeforeDocDuplicate','1','Documents'),
+('205','OnDocDuplicate','1','Documents'),
+('206','OnManagerMainFrameHeaderHTMLBlock','2',''),
+('207','OnManagerPreFrameLoader','2',''),
+('208','OnManagerFrameLoader','2',''),
+('209','OnManagerTreeInit','2',''),
+('210','OnManagerTreePrerender','2',''),
+('211','OnManagerTreeRender','2',''),
+('212','OnManagerNodePrerender','2',''),
+('213','OnManagerNodeRender','2',''),
+('214','OnManagerMenuPrerender','2',''),
+('215','OnManagerTopPrerender','2',''),
+('224','OnDocFormTemplateRender','1','Documents'),
+('999','OnPageUnauthorized','1',''),
+('1000','OnPageNotFound','1',''),
+('1001','OnFileBrowserUpload','1','File Browser Events');
+
+
+# ^ I don't think we need more than 1000 built-in events. Custom events will start at 1001
+
+
+# Update System Tables 
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+UPDATE `{PREFIX}user_roles` SET 
+	bk_manager=1,
+	new_plugin=1,
+	edit_plugin=1,
+	save_plugin=1,
+	delete_plugin=1,
+	new_module=1,
+	edit_module=1,
+	save_module=1,
+	delete_module=1,
+	exec_module=1,
+	view_eventlog = 1,
+	delete_eventlog = 1,
+	manage_metatags = 1,
+	edit_doc_metatags = 1,
+	new_web_user = 1,
+	edit_web_user = 1,
+	save_web_user = 1,
+	delete_web_user = 1,
+	new_chunk = 1,
+	edit_chunk = 1,
+	save_chunk = 1,
+	delete_chunk = 1,
+	web_access_permissions = 1,
+	view_unpublished = 1,
+	publish_document = 1,
+	import_static = 1,
+	export_static = 1,
+	empty_trash = 1,
+	remove_locks = 1,
+  display_locks = 1,
+  assets_images = 1,
+  assets_files = 1,
+  change_resourcetype = 1
+	WHERE `id`=1;
+
+
+# Update any invalid Manager Themes in User Settings and reset the default theme
+
+
+UPDATE `{PREFIX}user_settings` SET
+  `setting_value`='MODxRE2'
+  WHERE `setting_name`='manager_theme';
+
+
+REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxRE2');
+
+UPDATE `{PREFIX}system_settings` set setting_value = if(setting_value REGEXP 'application/json',setting_value,concat_ws(",",setting_value,"application/json")) WHERE setting_name='custom_contenttype';
