@@ -551,83 +551,94 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
 # For backward compatibilty with early versions
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-ALTER TABLE `{PREFIX}site_content` 
-  ADD COLUMN IF NOT EXISTS `publishedon` int(20) NOT NULL DEFAULT '0' COMMENT 'Date the document was published' AFTER `deletedby`;
+IF NOT EXISTS( SELECT NULL
+            FROM INFORMATION_SCHEMA.COLUMNS
+           WHERE table_name = '{PREFIX}site_content'
+             AND column_name = 'publishedon')  THEN
+
+  ALTER TABLE `{PREFIX}site_content` 
+  ADD COLUMN `publishedon` int(20) NOT NULL DEFAULT '0' COMMENT 'Date the document was published' AFTER `deletedby`;
+
+
+END IF;
+
+
+
 
 ALTER TABLE `{PREFIX}site_content`
-  ADD COLUMN IF NOT EXISTS `publishedby` int(10) NOT NULL DEFAULT '0' COMMENT 'ID of user who published the document' AFTER `publishedon`;
+  ADD COLUMN `publishedby` int(10) NOT NULL DEFAULT '0' COMMENT 'ID of user who published the document' AFTER `publishedon`;
 
 ALTER IGNORE TABLE `{PREFIX}site_content`
-  ADD COLUMN IF NOT EXISTS `link_attributes` varchar(255) NOT NULL DEFAULT '' COMMENT 'Link attriubtes' AFTER `alias`;
+  ADD COLUMN `link_attributes` varchar(255) NOT NULL DEFAULT '' COMMENT 'Link attriubtes' AFTER `alias`;
 
 ALTER TABLE `{PREFIX}site_content`
-  ADD COLUMN IF NOT EXISTS `alias_visible` INT(2) NOT NULL DEFAULT '1' COMMENT 'Hide document from alias path';
+  ADD COLUMN `alias_visible` INT(2) NOT NULL DEFAULT '1' COMMENT 'Hide document from alias path';
 
 ALTER TABLE `{PREFIX}site_htmlsnippets`
-  ADD COLUMN IF NOT EXISTS `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none' AFTER `editor_type`;
+  ADD COLUMN `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none' AFTER `editor_type`;
 
 ALTER TABLE `{PREFIX}site_plugin_events`
-  ADD COLUMN IF NOT EXISTS `priority` INT(10) NOT NULL default '0' COMMENT 'determines the run order of the plugin' AFTER `evtid`;
+  ADD COLUMN `priority` INT(10) NOT NULL default '0' COMMENT 'determines the run order of the plugin' AFTER `evtid`;
 
 ALTER TABLE `{PREFIX}site_templates`
-  ADD COLUMN IF NOT EXISTS `selectable` TINYINT(4) NOT NULL DEFAULT '1' AFTER `locked`;
+  ADD COLUMN `selectable` TINYINT(4) NOT NULL DEFAULT '1' AFTER `locked`;
 
 ALTER TABLE `{PREFIX}site_tmplvar_templates`
-  ADD COLUMN IF NOT EXISTS `rank` integer(11) NOT NULL DEFAULT '0' AFTER `templateid`;
+  ADD COLUMN `rank` integer(11) NOT NULL DEFAULT '0' AFTER `templateid`;
 
 ALTER TABLE `{PREFIX}user_attributes`
-  ADD COLUMN IF NOT EXISTS `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;
+  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;
 
 ALTER TABLE `{PREFIX}user_attributes`
-  ADD COLUMN IF NOT EXISTS `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
+  ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `edit_chunk`          INT(1) NOT NULL DEFAULT '0' AFTER `delete_snippet`;
+  ADD COLUMN `edit_chunk`          INT(1) NOT NULL DEFAULT '0' AFTER `delete_snippet`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `new_chunk`           INT(1) NOT NULL DEFAULT '0' AFTER `edit_chunk`;
+  ADD COLUMN `new_chunk`           INT(1) NOT NULL DEFAULT '0' AFTER `edit_chunk`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `save_chunk`          INT(1) NOT NULL DEFAULT '0' AFTER `new_chunk`;
+  ADD COLUMN `save_chunk`          INT(1) NOT NULL DEFAULT '0' AFTER `new_chunk`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `delete_chunk`        INT(1) NOT NULL DEFAULT '0' AFTER `save_chunk`;
+  ADD COLUMN `delete_chunk`        INT(1) NOT NULL DEFAULT '0' AFTER `save_chunk`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `empty_trash`         INT(1) NOT NULL DEFAULT '0' AFTER `delete_document`;
+  ADD COLUMN `empty_trash`         INT(1) NOT NULL DEFAULT '0' AFTER `delete_document`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `view_unpublished`    INT(1) NOT NULL DEFAULT '0' AFTER `web_access_permissions`;
+  ADD COLUMN `view_unpublished`    INT(1) NOT NULL DEFAULT '0' AFTER `web_access_permissions`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `import_static`       INT(1) NOT NULL DEFAULT '0' AFTER `view_unpublished`;
+  ADD COLUMN `import_static`       INT(1) NOT NULL DEFAULT '0' AFTER `view_unpublished`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `export_static`       INT(1) NOT NULL DEFAULT '0' AFTER `import_static`;
+  ADD COLUMN `export_static`       INT(1) NOT NULL DEFAULT '0' AFTER `import_static`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `remove_locks`        INT(1) NOT NULL DEFAULT '0' AFTER `export_static`;
+  ADD COLUMN `remove_locks`        INT(1) NOT NULL DEFAULT '0' AFTER `export_static`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `display_locks`       INT(1) NOT NULL DEFAULT '0' AFTER `remove_locks`;
+  ADD COLUMN `display_locks`       INT(1) NOT NULL DEFAULT '0' AFTER `remove_locks`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `publish_document`    INT(1) NOT NULL DEFAULT '0' AFTER `save_document`;
+  ADD COLUMN `publish_document`    INT(1) NOT NULL DEFAULT '0' AFTER `save_document`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `change_resourcetype` INT(1) NOT NULL DEFAULT '0' AFTER `remove_locks`;
+  ADD COLUMN `change_resourcetype` INT(1) NOT NULL DEFAULT '0' AFTER `remove_locks`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `assets_images`       INT(1) NOT NULL DEFAULT '1' AFTER `file_manager`;
+  ADD COLUMN `assets_images`       INT(1) NOT NULL DEFAULT '1' AFTER `file_manager`;
 
 ALTER TABLE `{PREFIX}user_roles`
-  ADD COLUMN IF NOT EXISTS `assets_files`        INT(1) NOT NULL DEFAULT '1' AFTER `assets_images`;
+  ADD COLUMN `assets_files`        INT(1) NOT NULL DEFAULT '1' AFTER `assets_images`;
 
 ALTER TABLE `{PREFIX}web_user_attributes`
-  ADD COLUMN IF NOT EXISTS `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;
+  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;
 
 ALTER TABLE `{PREFIX}web_user_attributes`
-  ADD COLUMN IF NOT EXISTS `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
+  ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
 
 # Set the private manager group flag
 
