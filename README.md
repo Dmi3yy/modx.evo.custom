@@ -1,8 +1,40 @@
 Сборка обзавеласть собственным сайтом: http://modx.com.ua
 Так же рекоменую скачивать сборку с сайта так как на гитхаб не всегда стабильный релиз!!!
 
+1.2-d8.1.5  (28.10.2016)
+=======================================================
+- add plugin ElementsInTree (turnof by default)
+- restyle instal and modules. 
+- restyle resurces 
+- real fix setting for Plugins, Modules
+- fix Extras now work on HTTPS 
+- delete all themes, exept MODxRE2
 
-1.1RC-d7.1.*  (25.01.2016)
+
+1.1-d8.1.3  (04.10.2016)
+=======================================================
+- new WeclomePage
+- fix OnWebPagePrerender for normal work with Angular in modx
+- update sample site
+- fix setting for Plugins, Modules
+- add class for image in tinyMCE4 
+
+
+
+1.1-d8.0  (11.04.2016)
+=======================================================
+- update from modx evo all feachres
+- Wayfinder hideSubMenus still applies parentClass to empty menus #345
+- Force default template´s selectable = 1
+- Avoid trim spaces from Chunks (allows clean indented HTML)
+- jQuery into core
+- Fix sort by category
+- update tinyMCE
+- update Doclister from github
+- https://github.com/modxcms/evolution/pull/583
+
+
+1.1RC-d7.1.6  (25.02.2016)
 =======================================================
 - rename folders libs to lib 
 - add DocLister 
@@ -10,6 +42,12 @@
 - fix phpthumb for image with ext jpeg
 - turn on TinyMCE4 after install 
 - scrollWork: console.log deleted and fix bug 
+- добавлен Укрианский язык для админки
+- исправлена ошибка с системными плейсхолдерами(была в версии 7.1.5 затянул с оф ветки)
+- добавленна поддержка темы MODxPress (можно экшены теперь переносить в папку темы и менять под себя)
+- исправлен язык в tinyMCE теперь подхватывает нужный
+- исправленно Tiny MCE Emmet - конфликт с HTML5 тегами header и footer
+- Fix render properties menu
 
 
 1.1RC-d7.1.5  (09.01.2016)

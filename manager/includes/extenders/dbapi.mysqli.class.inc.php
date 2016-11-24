@@ -102,7 +102,7 @@ class DBAPI {
 			$modx->queryTime = $modx->queryTime + $totaltime;
 			if ($modx->dumpSQL) {
 				$debug = debug_backtrace();
-				array_shift($debug);	
+				array_shift($debug);
 				$debug_path = array();
 				foreach ($debug as $line) $debug_path[] = $line['function'];
 				$debug_path = implode(' > ', array_reverse($debug_path));
@@ -136,9 +136,14 @@ class DBAPI {
 
 	function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "") {
 		global $modx;
+		
+		if(is_array($fields)) $fields = $this->_getFieldsStringFromArray($fields);
+		if(is_array($from))   $from   = $this->_getFromStringFromArray($from);
+		
 		if (!$from) {
 			$modx->messageQuit("Empty \$from parameters in DBAPI::select().");
 		} else {
+			$fields = $this->replaceFullTableName($fields);
 			$from = $this->replaceFullTableName($from);
 			$where   = !empty($where)   ? (strpos(ltrim($where),   "WHERE")!==0    ? "WHERE {$where}"      : $where)   : '';
 			$orderby = !empty($orderby) ? (strpos(ltrim($orderby), "ORDER BY")!==0 ? "ORDER BY {$orderby}" : $orderby) : '';
@@ -193,7 +198,7 @@ class DBAPI {
 			return $lid;
 		}
 	}
-	
+
 	function isResult($rs) {
 		return is_object($rs);
 	}
@@ -382,11 +387,14 @@ class DBAPI {
 		}
 	}
 
-	function makeArray($rs=''){
+	function makeArray($rs='',$index=false){
 		if (!$rs) return false;
 		$rsArray = array();
+		$iterator = 0;
 		while ($row = $this->getRow($rs)) {
-			$rsArray[] = $row;
+			$returnIndex = $index !== false && isset($row[$index]) ? $row[$index] : $iterator; 
+			$rsArray[$returnIndex] = $row;
+			$iterator++;
 		}
 		return $rsArray;
 	}
@@ -421,5 +429,28 @@ class DBAPI {
 		$rs = $this->query("TRUNCATE {$table_name}");
 		return $rs;
 	}
+
+	function dataSeek($result, $row_number) {
+		return $result->data_seek($row_number);
+	}
+	
+    function _getFieldsStringFromArray($fields=array()) {
+        
+        if(empty($fields)) return '*';
+        
+        $_ = array();
+        foreach($fields as $k=>$v) {
+            if($k!==$v) $_[] = "{$v} as {$k}";
+            else        $_[] = $v;
+        }
+        return join(',', $_);
+    }
+    
+    function _getFromStringFromArray($tables=array()) {
+        $_ = array();
+        foreach($tables as $k=>$v) {
+            $_[] = $v;
+        }
+        return join(' ', $_);
+    }
 }
-?>

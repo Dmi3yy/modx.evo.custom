@@ -51,21 +51,8 @@ function hasSupport() {
 	if (typeof hasSupport.support != "undefined")
 		return hasSupport.support;
 	
-	var ie55 = /msie 5\.[56789]/i.test( navigator.userAgent );
-	
 	hasSupport.support = ( typeof document.implementation != "undefined" &&
-			document.implementation.hasFeature( "html", "1.0" ) || ie55 )
-			
-	// IE55 has a serious DOM1 bug... Patch it!
-	if ( ie55 ) {
-		document._getElementsByTagName = document.getElementsByTagName;
-		document.getElementsByTagName = function ( sTagName ) {
-			if ( sTagName == "*" )
-				return document.all;
-			else
-				return document._getElementsByTagName( sTagName );
-		};
-	}
+			document.implementation.hasFeature( "html", "1.0" ) )
 
 	return hasSupport.support;
 }

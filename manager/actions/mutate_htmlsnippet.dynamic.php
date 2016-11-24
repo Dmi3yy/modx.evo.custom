@@ -22,11 +22,14 @@ $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 $tbl_active_users      = $modx->getFullTableName('active_users');
 $tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 
-// Check to see the snippet editor isn't locked
-$rs = $modx->db->select('username', $tbl_active_users, "action=78 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getValue($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, $_lang['chunk']));
-    }
+// check to see the snippet editor isn't locked
+if ($lockedEl = $modx->elementIsLocked(3, $id)) {
+        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['chunk']));
+}
+// end check for lock
+
+// Lock snippet for other users to edit
+$modx->lockElement(3, $id);
 
 $content = array();
 if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
@@ -47,11 +50,18 @@ if ($modx->manager->hasFormValues()) {
     $modx->manager->loadFormValues();
 }
 
-if (isset($_POST['which_editor']))
-        $which_editor = $_POST['which_editor'];
-else    $which_editor = 'none';
+if (isset($_POST['which_editor'])) {
+    $which_editor = $_POST['which_editor'];
+} else {
+    $which_editor = $content['editor_name'] != 'none' ? $content['editor_name'] : 'none';
+}
 
 $content = array_merge($content, $_POST);
+
+// Add lock-element JS-Script
+$lockElementId = $id;
+$lockElementType = 3;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 
 // Print RTE Javascript function
 ?>
@@ -102,19 +112,26 @@ if (is_array($evtOut))
 <input type="hidden" name="id" value="<?php echo $_REQUEST['id']?>" />
 <input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a']?>" />
 
-    <h1><?php echo $_lang['htmlsnippet_title']?></h1>
+    <h1 class="pagetitle">
+      <span class="pagetitle-icon">
+        <i class="fa fa-th-large"></i>
+      </span>
+      <span class="pagetitle-text">
+        <?php echo $_lang['htmlsnippet_title']; ?>
+      </span>
+    </h1>
 
     <div id="actions">
           <ul class="actionButtons">
-              <li id="Button1">
+              <li id="Button1" class="transition">
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="plus"> + </span>
+                <span class="plus"> + </span>
                 <select id="stay" name="stay">
-                  <?php if ($modx->hasPermission('new_chunk')) { ?>
+          <?php if ($modx->hasPermission('new_chunk')) { ?>
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
-                  <?php } ?>
+          <?php } ?>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
@@ -122,11 +139,11 @@ if (is_array($evtOut))
           <?php if ($_REQUEST['a'] == '77') { ?>
               <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } else { ?>
+          <?php } else { ?>
               <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+          <?php } ?>
+              <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
 
@@ -139,10 +156,15 @@ if (is_array($evtOut))
     <div class="tab-page" id="tabGeneral">
         <h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
     	<script type="text/javascript">tpChunk.addTabPage( document.getElementById( "tabGeneral" ) );</script>
-    <p><?php echo $_lang['htmlsnippet_msg']?></p>
+
+        <p class="element-edit-message">
+          <?php echo $_lang['htmlsnippet_msg']?>
+        </p>
+      
     <table>
         <tr><th><?php echo $_lang['htmlsnippet_name']?></th>
-            <td>{{&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">}}<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
+            <td>{{&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">}}<span class="warning" id="savingMessage">&nbsp;</span>
+            <script>document.getElementsByName("name")[0].focus();</script></td></tr>
     <tr>
         <th><?php echo $_lang['htmlsnippet_desc']?></th>
         <td><input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars($content['description'])?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
@@ -175,7 +197,7 @@ foreach (getCategories() as $n => $v) {
             <?php echo $_lang['chunk_code']?>
         </div>
         <div class="sectionBody">
-        <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['snippet'])?></textarea>
+        <textarea dir="ltr" class="phptextarea" id="post" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['snippet'])?></textarea>
         </div>
     </div>
 

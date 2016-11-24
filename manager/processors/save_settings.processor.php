@@ -50,6 +50,14 @@ $data['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$data['fi
 $data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb_base_dir']); 
 
 if (isset($data) && count($data) > 0) {
+	if(isset($data['manager_language'])) {
+		$lang_path = MODX_MANAGER_PATH . 'includes/lang/' . $data['manager_language'] . '.inc.php';
+		if(is_file($lang_path)) {
+			include($lang_path);
+            global $modx_lang_attribute;
+            $data['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
+		}
+	}
 	$savethese = array();
 	$data['sys_files_checksum'] = $modx->manager->getSystemChecksum($data['check_files_onlogin']);
 	foreach ($data as $k => $v) {
@@ -105,11 +113,19 @@ if (isset($data) && count($data) > 0) {
 				}
 				$k = '';
 				break;
+			case 'lock_interval':
+				$v  = intval($v) < 5 ? 5 : $v; // Minimum interval 5 seconds to not hammer the server
+				break;
+			case 'lock_release_delay':
+				$v  = intval($v) < 10 ? 10 : $v; // Grant tolerance when having bad connection
+				break;
 			default:
 			break;
 		}
 		$v = is_array($v) ? implode(",", $v) : $v;
-
+		
+		$modx->config[$k] = $v;
+		
 		if(!empty($k)) $savethese[] = '(\''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
 	}
 	
