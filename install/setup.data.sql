@@ -1,224 +1,802 @@
-# MODX Database Script for New/Upgrade Installations
-#
-# Each sql command is separated by double lines
-
-
-#
-# Dumping data for table `keyword_xref`
-#
-
-
-REPLACE INTO `{PREFIX}keyword_xref` VALUES ('3','1');
-
-
-REPLACE INTO `{PREFIX}keyword_xref` VALUES ('4','1');
-
-
-#
-# Dumping data for table `documentgroup_names`
-#
-
-
-REPLACE INTO `{PREFIX}document_groups` VALUES ('1','1','3');
-
-
-REPLACE INTO `{PREFIX}documentgroup_names` VALUES ('1','Site Admin Pages','0','0');
-
-
-#
-# Dumping data for table `site_content`
-#
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('1','document','text/html','Home','Welcome to MODX','Introduction to MODX','index','','1','0','0','0','0','Create and do amazing things with MODX','<h3>Install successful!</h3>\n<p>You have successfully installed and configured MODX. We hope you find this site an adequate starting configuration for many small business, organization or personal websites; just change the template and content, and you\'ll be good to go! This site is preconfigured with a variety of options we hope are helpful, relevant and just plain cool for many marketing or personal sites:</p>\n<ul>\n<li><strong>Simple Blog.</strong> When logged into your site, you\'ll be able to create new entries from the front end. This can also be turned into a News publishing or PR publishing system. <a href=\"blog\">View example blog</a></li>\n<li><strong>Easy Comments.</strong> When logged into your site, your registered site users can comment on your posts. <a href=\"blog/article-1126081344\">View example</a></li>\n<li><strong>RSS Feeds.</strong> Your site visitors can stay up to date using your site feeds. <a href=\"feed.rss\">View RSS feed</a></li>\n<li><strong>Automatic User Registration.</strong> Those that wish to comment on blogs must first create an account. This comes pre-configured with a \"Captcha\" anti-robot registration feature. <a href=\"request-an-account\">View registration form</a></li>\n<li><strong>QuickEdit.</strong> When you\'re logged into the manager, you can edit a page directly from the front end! <a href=\"features/cms\">More about CMS features</a></li>\n<li><strong>Integrated Site Search.</strong> Allows visitors to search only the pages you wish them to search. Uses Ajax to display results without loading a new page.</li>\n<li><strong>Powerful Navigation Builder.</strong> Duplicate or build virtually any navigation system with our dynamic menu builder code. The menu above, for example. <a href=\"features/menus\">More about menu features</a></li>\n<li><strong>Ajax ready.</strong> You\'re on your way to Web 2.0 and AJAX goodness. <a href=\"features/ajax\">More about Ajax features</a></li>\n<li><strong>Custom \"page not found (404)\" page.</strong> Help visitors who go astray to find what they\'re looking for. <a href=\"doc-not-found\">View 404 page</a></li>\n<li><strong>Contact Us form.</strong> A highly configurable contact form you <em>should</em> customize to point to the right email address. Comes pre-configured to prevent mail-form-injection so your site does <em>not</em> become a source for spam. <a href=\"contact-us\">View form</a></li>\n<li><strong>Newest documents list.</strong> Shows your visitor the most recently added pages (configurable).</li>\n<li><strong>Customizable Content Manager.</strong> Preview uploaded images, hide or rename fields and lots more. See <a href=\"http://code.divandesign.biz/modx/managermanager\">ManagerManager\'s documentation</a> for details and instructions. <em>Quick start:</em> ManagerManager by default will look for \"rules\" in a Chunk named \"mm_rules\". Simply copy or rename the Chunk named \"mm_demo_rules\" to \"mm_rules\" and try it out!</li>\n<li><strong>phpThumb.</strong> Examples to use <a href=\"http://i--gu.ru/phpthumb\">phpThumb</a> to crop images.</li>\n</ul>\n<p>Full documentation can be found on the official <a href=\"https://rtfm.modx.com/extras/evo/\" target=\"_blank\">documentation site</a>.</p>\n<p><strong>To log into the MODX Control Panel and start customizing this site, point your browser to <a href=\"manager\">/manager/</a>.</strong></p>','1','{BOOTSTRAP_SQL_ID}','0','1','1','1','1144904400','1','1378084284','0','0','0','0','0','Home','0','0','0','0','0','0','0','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('2','document','text/html','Blog','My Blog','','blog','','1','0','0','0','1','','[[Ditto? &parents=`2` &display=`2` &removeChunk=`Comments` &tpl=`ditto_blog` &paginate=`1` &extenders=`summary,dateFilter` &paginateAlwaysShowLinks=`1` &tagData=`documentTags`]]\n\n<p>Showing <strong>[+start+]</strong> - <strong>[+stop+]</strong> of <strong>[+total+]</strong> Articles</p>\n\n<div id=\"ditto_pages\"> [+previous+] [+pages+] [+next+] </div>\n\n<div id=\"ditto_pages\">&nbsp;</div>\n\n[[Reflect? &config=`wordpress` &dittoSnippetParameters=`parents:2` &id=`wp` &getDocuments=`1`]]','1','{BOOTSTRAP_SQL_ID}','1','0','0','1','1144904400','1','1159818696','0','0','0','0','0','Blog','0','0','0','0','0','0','0','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('4','document','text/html','[*loginName*]','Login to Enable to Comments','','login','','1','0','0','0','0','','<p>In order to comment on blog entries, you must be a registered user of [(site_name)]. If you haven\'t already registered, you can  <a href=\"[~5~]\">request an account</a>.</p>\n<div> [!WebLogin? &tpl=`WebLogin_tplForm` &loginhomeid=`2`!] </div>','1','{BOOTSTRAP_SQL_ID}','9','0','0','1','1144904400','1','1144904400','0','0','0','0','0','[*loginName*]','0','0','0','0','0','0','1','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('5','document','text/html','Request an Account','Sign Up for Full Site Privileges','','request-an-account','','1','0','0','0','0','','[[WebSignup? &tpl=`FormSignup` &groups=`Registered Users`]]','1','{BOOTSTRAP_SQL_ID}','7','0','0','1','1144904400','1','1158320704','0','0','0','0','0','','0','0','0','0','0','0','1','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('6','document','text/html','Contact Us','Contact [(site_name)]','','contact-us','','1','0','0','0','0','','<iframe src=\"https://www.google.com/maps/embed?pb=!1m16!1m10!1m3!1d3352.3801198226956!2d-96.80891138449205!3d32.8355068809543!2m1!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864e9eee5c9601d9%3A0x5b1cf098be385cee!2s25+Highland+Park+Village+%23100%2C+Dallas%2C+TX+75205%2C+USA!5e0!3m2!1sde!2sde!4v1457530640363\" width=\"100%\" height=\"240\" frameborder=\"0\" style=\"border:0\" allowfullscreen></iframe>\n\n[!eForm? \n	&formid=`ContactForm`\n 	&vericode=`1`\n	&subject=`[+subject+]`\n	&to=`[(emailsender)]` \n	&ccsender=`1`\n	&tpl=`ContactForm`\n	&report=`ContactFormReport`\n	&invalidClass=`invalidValue`\n	&requiredClass=`requiredValue`\n	&gotoid=`46`\n!]\n','0','{BOOTSTRAP_SQL_ID}','5','1','0','1','1144904400','1','1159303922','0','0','0','0','0','Contact us','0','0','0','0','0','0','0','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('7','document','text/html','404 - Document Not Found','Uh oh ... it\'s a 404! (Page Not Found)','','doc-not-found','','1','0','0','0','0','','<p>Looks like you tried to go somewhere that does not exist... perhaps you <a href=\"\">need to login</a> or you\'d like one of the following pages instead:</p>\n\n[[Wayfinder? &startId=`0` &showDescription=`1`]]\n\n<h3>Want to find it the old fashioned way? Use the site search at the top of this site to find what you seek.</h3>\n\n','1','{BOOTSTRAP_SQL_ID}','12','0','1','1','1144904400','1','1159301173','0','0','0','0','0','','0','0','0','0','0','0','1','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('8','document','text/html','Search Results','Your Search Results','','search-results','','1','0','0','0','0','','[!AjaxSearch? &showInputForm=`0` &ajaxSearch=`0`!]','0','{BOOTSTRAP_SQL_ID}','10','0','0','1','1144904400','1','1158613055','0','0','0','0','0','','1','0','0','0','0','0','1','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('9','document','text/html','Mini-Blog HOWTO','How to Start Posting with MODX Mini-Blogs','','article-1126081344','','1','0','0','2','0','','<p>Setting up a mini-blog is relatively simple. Here\'s what you need to do to get started with making new posts:</p>\n<ol>\n<li>Login to the <a href=\"[(site_manager_url)]\">MODX Control Panel</a>.</li>\n<li>Press the plus-sign next to the Blog(2) container resource to see the blog entries posted there.</li>\n<li>To make a new Blog entry, simply right-click the Blog container document and choose the \"Create Resource here\" menu option. To edit an existing blog article, right click the entry and choose the \"Edit Resource\" menu option.</li>\n<!-- splitter -->\n<li>Write or edit the content and press save, making sure the document is published.</li>\n<li>Everything else is automatic; you\'re done!</li>\n</ol>\n{{Comments}}','1','{BOOTSTRAP_SQL_ID}','0','1','1','-1','1144904400','1','1378084370','0','0','0','0','0','','0','0','0','0','0','0','1','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('11','document','text/xml','RSS Feed','[(site_name)] RSS Feed','','feed.rss','','1','0','0','0','0','','[[Ditto? &parents=`2` &format=`rss` &display=`20` &total=`20` &removeChunk=`Comments`]]','0','0','11','0','0','1','1144904400','1','1160062859','0','0','0','0','0','','0','0','0','0','0','0','1','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('14','document','text/html','Content Management','Ways to manage content','','cms','','1','0','0','15','0','','<h2>Manage your content in the backend</h2>\n<p>The Manager is a skinnable feature-packed tool for admin users. You can add extra users and limit what functions they can access. MODX\'s Manager makes creating content and managing templates and reusable elements easy. Modules can be added to work with other datasets or make management tasks easier.</p>\n<h2>Manage your content in the frontend</h2>\n<p>The QuickEdit bar lets manager users edit content whilst browsing the site. Most content fields and template variables can be edited quickly and easily.</p>\n<h2>Enable web users to add content</h2>\n<p>Custom data entry is easy to code using the MODX API - so you can design forms and collect whatever information you need.</p>','1','{BOOTSTRAP_SQL_ID}','3','1','1','1','1144904400','1','1378086298','0','0','0','1378086298','1','Manage Content','0','0','0','0','0','0','0','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('15','document','text/html','MODX Features','MODX Features','','features','','1','0','0','0','1','','[[Wayfinder?startId=`[*id*]` &outerClass=`topnav`]]','1','{BOOTSTRAP_SQL_ID}','2','1','1','1','1144904400','1','1158452722','0','0','0','1144777367','1','Features','0','0','0','0','0','0','0','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('16','document','text/html','Ajax','Ajax and Web 2.0 ready','','ajax','','1','1159264800','0','15','0','','<b>Ajax ready out-of-the-box</b>\n<p>MODX empowers users to build engaging sites today, with its pre-integrated <a href=\"http://mootools.net/\" target=\"_blank\">Mootools</a> javascript library.</p>\n\n<p>Check out the Ajax-powered search in this example site. The libraries are also used with QuickEdit, our front-end editing tool.</p>\n\n<p>Smart integration means the scripts are only included in the document head when needed - no unnecessary bloat on simple pages!</p>\n\n<b>Web 2.0 today</b>\n<p>MODX makes child\'s play of building content managed sites with validating, accessible CSS layouts - so web standards compliance is easy. (You can create a site with excessively nested tables too, if you really want to).</p>\n','1','{BOOTSTRAP_SQL_ID}','1','1','1','1','1144904400','1','1159307504','0','0','0','0','0','Ajax','0','0','0','0','0','0','0','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('18','document','text/html','Just a pretend, older post','This post should in fact be archived','','article-1128398162','','1','0','0','2','0','','<p>Not so exciting, after all, eh?<br /></p>\n','1','{BOOTSTRAP_SQL_ID}','2','1','1','-1','1144904400','1','1159306886','0','0','0','0','0','','0','0','0','0','0','0','1','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('22','document','text/html','Menus and Lists','Flexible Menus and Lists','','menus','','1','1159178400','0','15','0','','<h2>Your documents - listed how you want them</h2>\n<p>MODX\'s document data structure has been designed to allow many different routines to redisplay the information in ways that suit your needs, such as a dynamic menu in your template.</p>\n<p>Since the last release of MODX, the community has produced many great snippets - reusable functions that you can call in your content or template. Two of the most widely useful are Ditto and Wayfinder.</p>\n<h2>Wayfinder - the menu builder</h2>\n<p>Allows you to template every part of the menu. On this site, Wayfinder is being used to generate the drop-down menus, but many types of menus and sitemaps are possible.</p>\n<h2>Ditto - the document lister</h2>\n<p>Uses include listing the most recent blog posts, producing a site map, listing related documents (using a TV filter) and generating an RSS feed. You could even write a menu with it. On this site, Ditto is being used for the blog posts list on the Blog page, and the list on the right of some templates.</p>\n<h2>Unlimited Customization</h2>\n<p>If you can\'t quite get your desired effect using templating and the many options of Ditto and Wayfinder, you can write your own routine, or look for other snippets in <a href=\"http://modx.com/extras/\">the MODX repository</a>. MODX\'s fields for Menu Title, summaries, menu position etc can be used via the API to produce anything you can imagine.</p>','1','{BOOTSTRAP_SQL_ID}','2','1','1','1','1144904400','1','1160148522','0','0','0','0','0','Menus and Lists','0','0','0','0','0','0','0','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('24','document','text/html','Extendable by design','Extendable by design','','extendable','','1','1159092732','0','15','0','','<p>The MODX community has created many add-ons which can be found in the <a href=\"http://modx.com/extras/\">Repository</a>, from image galleries and e-commerce to smaller utilities.</p>\n<h2>Template Variables with Bindings</h2>\n<p>TVs - Template Variables - are powerful extra fields that you can use with your documents. As an example of an advanced template element that returns a different thing dependent on code or data, we created an @BINDING for the name of the Login menu item. This changes the menu name from Login to Logout based on your logged in state. The @BINDING as follows was placed in the default value as: <code>@EVAL if ($modx-&gt;getLoginUserID()) return \'Logout\'; else return \'Login\';</code></p>\n<h2>Using jQuery-effects</h2>\n<p>We used some simple effects to highlight various things on the front/home page to demonstrate how easy it is to create a useful way to draw attention to things. To see them in action on the home page, click the Integrated Site Search, Related Links or Newest Documents headers.</p>\n<h2>Custom Forms</h2>\n<p>To demonstrate how to link to custom forms, we customized the calls to the Webuser Registration system and the Login system.</p>\n<h2>And more</h2>\n<p><strong>Rich Text Editor for blog entries.</strong> To make it easier to format blog posts with simple text formatting, we modified the blog to use a custom RTE-enabled Template Variable (TV).</p>\n<p><strong>Smart-Summary logic.</strong> When splitting the full blog/news posts you simply insert a \"&lt;!-- splitter --&gt;\" where you want the break to occur. In addition, if that leaves any important tags open, it will try to match them and close them so it doesn\'t mess up your site layout with unclosed OL, UL or DIV tags.</p>','1','{BOOTSTRAP_SQL_ID}','4','1','1','2','1144904400','1','1159309971','0','0','0','0','0','Extendability','0','0','0','0','0','0','0','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('32','document','text/html','Design','Site Design','','design','','1','0','0','0','0','','<h3>Credits</h3>\n<p>The MODX Starter-theme is&nbsp;based on Bootstrap 3.3.6 and made by graffx.nl and fuseit.de.</p>','1','{BOOTSTRAP_SQL_ID}','4','1','1','2','1144904400','1','1160112322','0','0','0','1144912754','1','Design','0','0','0','0','0','0','0','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('33','document','text/html','Getting Help','Getting Help with MODX','','geting-help','','1','0','0','0','0','','<p>The <a href=\"http://modx.com/\" target=\"_blank\">team behind MODX</a> strives to constantly add to and refine the documentation to help you get up to speed with MODX:</p>\n<ul>\n    <li>For basic instructions on integrating custom templates into MODX, please see the <a target=\"_blank\" href=\"http://rtfm.modx.com/display/Evo1/Designing\">Designer\'s Guide</a>. </li>\n    <li>For an introduction to working in MODX from the content editors perspectve, see the <a target=\"_blank\" href=\"http://rtfm.modx.com/display/Evo1/Content+Editing\">Content Editor\'s Guide</a>. </li>\n    <li>For a detailed overview of the backend &quot;manager&quot; and setting up Users and Groups, please peruse the <a target=\"_blank\" href=\"http://rtfm.modx.com/display/Evo1/Administration\">Administration Guide</a>.</li>\n    <li>For developers, architecture and API documentation can be found in the <a target=\"_blank\" href=\"http://rtfm.modx.com/display/Evo1/Developer%27s+Guide\">Developer\'s Guide</a>.</li>\n    <li>And if someone has installed this site for you, but you\'re curious as to the steps they went through, please see the <a target=\"_blank\" href=\"http://rtfm.modx.com/display/Evo1/Getting+Started\">Getting Started Guide</a>.</li>\n</ul>\n\n<p>And don\'t forget, you can always learn and ask questions at the <a href=\"http://forums.modx.com/\" target=\"_blank\">MODX forums</a>. \n','1','{BOOTSTRAP_SQL_ID}','3','1','1','2','1144904400','2','1144904400','0','0','0','0','0','Getting Help','0','0','0','0','0','0','0','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('37','document','text/html','[*loginName*]','The page you\'re trying to reach requires a login','','blog-login','','1','0','0','0','0','','<p>In order to add a blog entry, you must be logged in as a Site Admin webuser. Also, commenting on posts requires a login. <a href=\"[~6~]\">Contact the site owner</a> for permissions to create new post, or <a href=\"[~5~]\">create a web user account</a> to automatically receive commenting privileges. If you already have an account, please login below.</p>\n\n[!WebLogin? &tpl=`WebLogin_tplForm` &loginhomeid=`3`!]','1','{BOOTSTRAP_SQL_ID}','8','0','0','1','1144904400','1','1158599931','0','0','0','0','0','','0','0','0','0','0','0','1','1');
-
-REPLACE INTO `{PREFIX}site_content` VALUES ('46','document','text/html','Thank You','','','thank-you','','1','0','0','0','0','','<h3>Thank You!</h3>\n<p>We do appreciate your feedback. Your comments have been submitted to our office and hopefully someone will bother to actually read it. You should also receive a copy of the message in your inbox.</p>\n<p>Please be assured that we will do our best not to ignore you, but if today is a Monday please try again in a few days.</p>\n','1','{BOOTSTRAP_SQL_ID}','6','1','1','1','1159302141','1','1159302892','0','0','0','1159302182','1','','0','0','0','0','0','0','1','1');
-
-
-#
-# Dumping data for table `site_htmlsnippets`
-#
-
-
-INSERT INTO `{PREFIX}site_htmlsnippets` VALUES (NULL, 'FormSignup', 'For the weblogin signup', 0, 'none', 2, 0, '<!-- #declare:separator <hr> --> \n<!-- login form section-->\n<form role="form" id="websignupfrm" method="post" name="websignupfrm" action="[+action+]">\n\n        <h3>User Details</h3>\n	   <div class="alert alert-warning">\n		   <button type="button" class="close" data-dismiss="alert">&times;</button>\n		   Items marked by * are required</div>\n	   <div class="form-group">\n		<label for="su_username">User name:*</label> \n		<input type="text" name="username" id="su_username" class="form-control" maxlength="30" value="[+username+]" placeholder="Enter Username"/>\n		   </div>\n		   <div class="form-group">\n        <label for="fullname">Full name:</label> \n		<input type="text" name="fullname" id="fullname" class="form-control" maxlength="100" value="[+fullname+]" placeholder="Enter fullname"/>\n			</div>\n		   <div class="form-group">\n		<label for="email">Email address:*</label> \n		<input type="text" name="email" id="email" class="form-control" value="[+email+]" placeholder="Enter email"/>\n	</div>\n\n	<div class="form-group">\n	    <h3>Password</h3>\n	    <label for="su_password">Password:*</label> \n		<input type="password" name="password" id="su_password" class="form-control" placeholder="Enter password"/>\n			</div>\n	<div class="form-group">\n	    <label for="confirmpassword">Confirm password:*</label> \n		<input type="password" name="confirmpassword" id="confirmpassword" class="form-control" placeholder="Confirm password"/>\n	 </div>\n	\n	 <div class="form-group">\n		<h3>Optional Account Profile Info</h3>\n		<label for="country">Country:</label>\n		<select size="1" name="country" id="country" class="form-control" >\n			<option value="" selected="selected">&nbsp;</option>\n			<option value="1">Afghanistan</option>\n			<option value="2">Albania</option>\n			<option value="3">Algeria</option>\n			<option value="4">American Samoa</option>\n			<option value="5">Andorra</option>\n			<option value="6">Angola</option>\n			<option value="7">Anguilla</option>\n			<option value="8">Antarctica</option>\n			<option value="9">Antigua and Barbuda</option>\n			<option value="10">Argentina</option>\n			<option value="11">Armenia</option>\n			<option value="12">Aruba</option>\n			<option value="13">Australia</option>\n			<option value="14">Austria</option>\n			<option value="15">Azerbaijan</option>\n			<option value="16">Bahamas</option>\n			<option value="17">Bahrain</option>\n			<option value="18">Bangladesh</option>\n			<option value="19">Barbados</option>\n			<option value="20">Belarus</option>\n			<option value="21">Belgium</option>\n			<option value="22">Belize</option>\n			<option value="23">Benin</option>\n			<option value="24">Bermuda</option>\n			<option value="25">Bhutan</option>\n			<option value="26">Bolivia</option>\n			<option value="27">Bosnia and Herzegowina</option>\n			<option value="28">Botswana</option>\n			<option value="29">Bouvet Island</option>\n			<option value="30">Brazil</option>\n			<option value="31">British Indian Ocean Territory</option>\n			<option value="32">Brunei Darussalam</option>\n			<option value="33">Bulgaria</option>\n			<option value="34">Burkina Faso</option>\n			<option value="35">Burundi</option>\n			<option value="36">Cambodia</option>\n			<option value="37">Cameroon</option>\n			<option value="38">Canada</option>\n			<option value="39">Cape Verde</option>\n			<option value="40">Cayman Islands</option>\n			<option value="41">Central African Republic</option>\n			<option value="42">Chad</option>\n			<option value="43">Chile</option>\n			<option value="44">China</option>\n			<option value="45">Christmas Island</option>\n			<option value="46">Cocos (Keeling) Islands</option>\n			<option value="47">Colombia</option>\n			<option value="48">Comoros</option>\n			<option value="49">Congo</option>\n			<option value="50">Cook Islands</option>\n			<option value="51">Costa Rica</option>\n			<option value="52">Cote D&#39;Ivoire</option>\n			<option value="53">Croatia</option>\n			<option value="54">Cuba</option>\n			<option value="55">Cyprus</option>\n			<option value="56">Czech Republic</option>\n			<option value="57">Denmark</option>\n			<option value="58">Djibouti</option>\n			<option value="59">Dominica</option>\n			<option value="60">Dominican Republic</option>\n			<option value="61">East Timor</option>\n			<option value="62">Ecuador</option>\n			<option value="63">Egypt</option>\n			<option value="64">El Salvador</option>\n			<option value="65">Equatorial Guinea</option>\n			<option value="66">Eritrea</option>\n			<option value="67">Estonia</option>\n			<option value="68">Ethiopia</option>\n			<option value="69">Falkland Islands (Malvinas)</option>\n			<option value="70">Faroe Islands</option>\n			<option value="71">Fiji</option>\n			<option value="72">Finland</option>\n			<option value="73">France</option>\n			<option value="74">France, Metropolitan</option>\n			<option value="75">French Guiana</option>\n			<option value="76">French Polynesia</option>\n			<option value="77">French Southern Territories</option>\n			<option value="78">Gabon</option>\n			<option value="79">Gambia</option>\n			<option value="80">Georgia</option>\n			<option value="81">Germany</option>\n			<option value="82">Ghana</option>\n			<option value="83">Gibraltar</option>\n			<option value="84">Greece</option>\n			<option value="85">Greenland</option>\n			<option value="86">Grenada</option>\n			<option value="87">Guadeloupe</option>\n			<option value="88">Guam</option>\n			<option value="89">Guatemala</option>\n			<option value="90">Guinea</option>\n			<option value="91">Guinea-bissau</option>\n			<option value="92">Guyana</option>\n			<option value="93">Haiti</option>\n			<option value="94">Heard and Mc Donald Islands</option>\n			<option value="95">Honduras</option>\n			<option value="96">Hong Kong</option>\n			<option value="97">Hungary</option>\n			<option value="98">Iceland</option>\n			<option value="99">India</option>\n			<option value="100">Indonesia</option>\n			<option value="101">Iran (Islamic Republic of)</option>\n			<option value="102">Iraq</option>\n			<option value="103">Ireland</option>\n			<option value="104">Israel</option>\n			<option value="105">Italy</option>\n			<option value="106">Jamaica</option>\n			<option value="107">Japan</option>\n			<option value="108">Jordan</option>\n			<option value="109">Kazakhstan</option>\n			<option value="110">Kenya</option>\n			<option value="111">Kiribati</option>\n			<option value="112">Korea, Democratic People&#39;s Republic of</option>\n			<option value="113">Korea, Republic of</option>\n			<option value="114">Kuwait</option>\n			<option value="115">Kyrgyzstan</option>\n			<option value="116">Lao People&#39;s Democratic Republic</option>\n			<option value="117">Latvia</option>\n			<option value="118">Lebanon</option>\n			<option value="119">Lesotho</option>\n			<option value="120">Liberia</option>\n			<option value="121">Libyan Arab Jamahiriya</option>\n			<option value="122">Liechtenstein</option>\n			<option value="123">Lithuania</option>\n			<option value="124">Luxembourg</option>\n			<option value="125">Macau</option>\n			<option value="126">Macedonia, The Former Yugoslav Republic of</option>\n			<option value="127">Madagascar</option>\n			<option value="128">Malawi</option>\n			<option value="129">Malaysia</option>\n			<option value="130">Maldives</option>\n			<option value="131">Mali</option>\n			<option value="132">Malta</option>\n			<option value="133">Marshall Islands</option>\n			<option value="134">Martinique</option>\n			<option value="135">Mauritania</option>\n			<option value="136">Mauritius</option>\n			<option value="137">Mayotte</option>\n			<option value="138">Mexico</option>\n			<option value="139">Micronesia, Federated States of</option>\n			<option value="140">Moldova, Republic of</option>\n			<option value="141">Monaco</option>\n			<option value="142">Mongolia</option>\n			<option value="143">Montserrat</option>\n			<option value="144">Morocco</option>\n			<option value="145">Mozambique</option>\n			<option value="146">Myanmar</option>\n			<option value="147">Namibia</option>\n			<option value="148">Nauru</option>\n			<option value="149">Nepal</option>\n			<option value="150">Netherlands</option>\n			<option value="151">Netherlands Antilles</option>\n			<option value="152">New Caledonia</option>\n			<option value="153">New Zealand</option>\n			<option value="154">Nicaragua</option>\n			<option value="155">Niger</option>\n			<option value="156">Nigeria</option>\n			<option value="157">Niue</option>\n			<option value="158">Norfolk Island</option>\n			<option value="159">Northern Mariana Islands</option>\n			<option value="160">Norway</option>\n			<option value="161">Oman</option>\n			<option value="162">Pakistan</option>\n			<option value="163">Palau</option>\n			<option value="164">Panama</option>\n			<option value="165">Papua New Guinea</option>\n			<option value="166">Paraguay</option>\n			<option value="167">Peru</option>\n			<option value="168">Philippines</option>\n			<option value="169">Pitcairn</option>\n			<option value="170">Poland</option>\n			<option value="171">Portugal</option>\n			<option value="172">Puerto Rico</option>\n			<option value="173">Qatar</option>\n			<option value="174">Reunion</option>\n			<option value="175">Romania</option>\n			<option value="176">Russian Federation</option>\n			<option value="177">Rwanda</option>\n			<option value="178">Saint Kitts and Nevis</option>\n			<option value="179">Saint Lucia</option>\n			<option value="180">Saint Vincent and the Grenadines</option>\n			<option value="181">Samoa</option>\n			<option value="182">San Marino</option>\n			<option value="183">Sao Tome and Principe</option>\n			<option value="184">Saudi Arabia</option>\n			<option value="185">Senegal</option>\n			<option value="186">Seychelles</option>\n			<option value="187">Sierra Leone</option>\n			<option value="188">Singapore</option>\n			<option value="189">Slovakia (Slovak Republic)</option>\n			<option value="190">Slovenia</option>\n			<option value="191">Solomon Islands</option>\n			<option value="192">Somalia</option>\n			<option value="193">South Africa</option>\n			<option value="194">South Georgia and the South Sandwich Islands</option>\n			<option value="195">Spain</option>\n			<option value="196">Sri Lanka</option>\n			<option value="197">St. Helena</option>\n			<option value="198">St. Pierre and Miquelon</option>\n			<option value="199">Sudan</option>\n			<option value="200">Suriname</option>\n			<option value="201">Svalbard and Jan Mayen Islands</option>\n			<option value="202">Swaziland</option>\n			<option value="203">Sweden</option>\n			<option value="204">Switzerland</option>\n			<option value="205">Syrian Arab Republic</option>\n			<option value="206">Taiwan</option>\n			<option value="207">Tajikistan</option>\n			<option value="208">Tanzania, United Republic of</option>\n			<option value="209">Thailand</option>\n			<option value="210">Togo</option>\n			<option value="211">Tokelau</option>\n			<option value="212">Tonga</option>\n			<option value="213">Trinidad and Tobago</option>\n			<option value="214">Tunisia</option>\n			<option value="215">Turkey</option>\n			<option value="216">Turkmenistan</option>\n			<option value="217">Turks and Caicos Islands</option>\n			<option value="218">Tuvalu</option>\n			<option value="219">Uganda</option>\n			<option value="220">Ukraine</option>\n			<option value="221">United Arab Emirates</option>\n			<option value="222">United Kingdom</option>\n			<option value="223">United States</option>\n			<option value="224">United States Minor Outlying Islands</option>\n			<option value="225">Uruguay</option>\n			<option value="226">Uzbekistan</option>\n			<option value="227">Vanuatu</option>\n			<option value="228">Vatican City State (Holy See)</option>\n			<option value="229">Venezuela</option>\n			<option value="230">Viet Nam</option>\n			<option value="231">Virgin Islands (British)</option>\n			<option value="232">Virgin Islands (U.S.)</option>\n			<option value="233">Wallis and Futuna Islands</option>\n			<option value="234">Western Sahara</option>\n			<option value="235">Yemen</option>\n			<option value="236">Yugoslavia</option>\n			<option value="237">Zaire</option>\n			<option value="238">Zambia</option>\n			<option value="239">Zimbabwe</option>\n			</select>\n          </div>\n        \n          <div class="form-group">\n            <h3>Bot-Patrol</h3>\n            <p>Enter the word/number combination shown in the image below.</p>\n            <p><a href="[+action+]"><img align="top" src="[(site_manager_url)]includes/veriword.php" width="148" height="60" alt="If you have trouble reading the code, click on the code itself to generate a new random code." style="border: 1px solid #039" /></a></p>\n        <label>Form code:* \n            <input type="text" name="formcode" class="form-control" size="20" /></label>\n              </div>\n        \n          <div class="form-group">\n            <input type="submit" class="btn btn-success btn-lg" value="Submit" name="cmdwebsignup" />\n	 </div>\n\n</form>\n\n<script language="javascript" type="text/javascript"> \n	var id = "[+country+]";\n	var f = document.websignupfrm;\n	var i = parseInt(id);	\n	if (!isNaN(i)) f.country.options[i].selected = true;\n</script>\n<hr>\n<!-- notification section -->\n<p class="message">Signup completed successfully!<br />\nYour account was created. A copy of your signup information was sent to your email address.</p>\n', 0);
-
-
-INSERT INTO `{PREFIX}site_htmlsnippets` VALUES (NULL, 'nl_sidebar', 'Default Template TPL for Ditto', 0, 'none', 1, 0, '<strong><a href="[~[+id+]~]" title="[+title+]">[+title+]</a></strong><br />\n[+longtitle+]<br /><br />', 0);
-
-
-INSERT INTO `{PREFIX}site_htmlsnippets` VALUES (NULL, 'ditto_blog', 'Blog Template', 0, 'none', 1, 0, '<div class="ditto_summaryPost">\n	<img src="[[phpthumb? &input=`[*thumbnail*]` &options=`w=600,h=280,zc=C`]]" />\n	\n	<!-- [[if? &is=`[*thumbnail*]:!empty` &then=`<img src="[[phpthumb? &input=`[*thumbnail*]` &options=`w=600,h=280,zc=C`]]" />`]] -->\n	\n	<h3><a href="[~[+id+]~]" title="[+title+]">[+title+]</a></h3>\n	<div class="ditto_info">\n		By <strong>[+author+]</strong> on [+date+].\n		<a href="[~[+id+]~]#commentsAnchor">Comments <span class="badge">[!Jot?&docid=`[+id+]`&action=`count-comments`!]</span></a>\n	</div>\n	<!--  <div class="ditto_tags">Tags: [+tagLinks+]</div> -->\n	[+summary+]\n	<p class="ditto_link">[+link+]</p>\n</div>','0');
-
-
-INSERT INTO `{PREFIX}site_htmlsnippets` VALUES (NULL, 'Comments', 'Comments (Jot) showing beneath a blog entry.', 0, 'none', 1, 0, '<div id="commentsAnchor">\r\n[!Jot? &customfields=`name,email` &subscribe=`1` &pagination=`4` &badwords=`dotNet` &canmoderate=`Site Admins` 	&tplForm=`Comments_tplForm` &tplComments=`Comments_tplComments`!]\r\n</div>', 0);
-
-
-INSERT INTO `{PREFIX}site_htmlsnippets` VALUES (NULL, 'ContactForm', 'eForm-template for showing contact-form', 0, 'none', 1, 0, '<form method="post" action="[~[*id*]~]#EmailForm" id="EmailForm">\n	\n	<div class="alert alert-danger" id="form-error" role="alert">[+validationmessage+]</div>\n	\n	<input name="formid" type="hidden" value="ContactForm" />\n	\n	<div class="form-group">\n		<label for="cfName">Your name:</label>\n		<input type="text" class="form-control" name="name" id="cfName" placeholder="Your Name" eform="Your Name::1:" />\n	</div>\n	<div class="form-group">\n		<label for="cfEmail">Your Email Address:</label>\n		<input type="text" class="form-control" name="email" id="cfEmail" placeholder="Email Address" eform="Email Address:email:1"/>\n	</div>\n	\n	<div class="form-group">\n		<label for="cfRegarding">Regarding:</label>\n		<select class="form-control" name="subject" id="cfRegarding" eform="Form Subject::1">\n			<option value="General Inquiries">General Inquiries</option>\n			<option value="Press">Press or Interview Request</option>\n			<option value="Partnering">Partnering Opportunities</option>\n		</select>\n	</div>\n	\n	<div class="form-group">\n		<label for="cfMessage">Message:</label>\n		<textarea name="message" id="cfMessage" class="form-control" eform="Message:textarea:1"></textarea>\n	</div>\n	\n	<label for="vericode">Captcha Code:</label>\n	<div class="form-group">\n		<div class="row">\n			<div class="col-sm-4">\n				<img src="[+verimageurl+]" class="img-responsive" alt="verification code" />\n			</div>\n			<div class="col-sm-8">\n				<input id="vericode" name="vericode" class="form-control" type="text" placeholder="Please repeat">\n			</div>\n		</div>\n	</div>\n	\n	<div class="form-group">\n		<input type="submit" name="contact" id="cfContact" class="btn btn-primary" value="Send This Message" />\n	</div>\n\n</form>\n\n<script>$(\'#form-error:empty\').hide();</script>\n', 0);
-
-
-INSERT INTO `{PREFIX}site_htmlsnippets` VALUES (NULL, 'ContactFormReport', 'eForm-template for sending form-data by mail', 0, 'none', 1, 0, '<p>This is a response sent by <b>[+name+]</b> using the feedback form on the website. The details of the message follow below:</p>\r\n\r\n\r\n<p>Name: [+name+]</p>\r\n<p>Email: [+email+]</p>\r\n<p>Regarding: [+subject+]</p>\r\n<p>comments:<br />[+message+]</p>\r\n\r\n<p>You can use this link to reply: <a href="mailto:[+email+]?subject=RE: [+subject+]">[+email+]</a></p>\r\n', 0);
-
-
-INSERT INTO `{PREFIX}site_htmlsnippets` VALUES (NULL, 'reflect_month_tpl', 'For the yearly archive. Use with Ditto.', 0, 'none', 1, 0, '<a href="[+url+]" title="[+month+] [+year+]" class="reflect_month_link">[+month+] [+year+]</a>', 0);
-
-
-INSERT INTO `{PREFIX}site_htmlsnippets` VALUES (NULL, 'ContactStyles', 'Styles for form validation', 0, 'none', 1, 0, '<style type="text/css">\r\ndiv.errors{ color:#F00; }\r\n#EmailForm .invalidValue{ background: #FFDFDF; border:1px solid #F00; }\r\n#EmailForm .requiredValue{ background: #FFFFDF; border:1px solid #F00; }\r\n</style>', 0);
-
-
-
-#
-# Dumping data for table `site_keywords`
-#
-
-
-REPLACE INTO `{PREFIX}site_keywords` VALUES ('1','MODX');
-
-
-REPLACE INTO `{PREFIX}site_keywords` VALUES ('2','content management system');
-
-
-REPLACE INTO `{PREFIX}site_keywords` VALUES ('3','Front End Editing');
-
-
-REPLACE INTO `{PREFIX}site_keywords` VALUES ('4','login');
-
-
-#
-# Dumping data for table `site_tmplvar_contentvalues`
-#
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_contentvalues` VALUES ('1','3','9','demo miniblog howto tutorial posting');
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_contentvalues` VALUES ('2','3','18','demo older posting');
-
-
-#
-# Dumping data for table `system_settings`
-#
-
-
-REPLACE INTO `{PREFIX}system_settings` VALUES('error_page', '7');
-
-
-REPLACE INTO `{PREFIX}system_settings` VALUES('unauthorized_page', '4');
-
-
-#
-# Dumping data for table `web_groups`
-#
-
-
-REPLACE INTO `{PREFIX}web_groups` VALUES ('1','1','1');
-
-
-#
-# Dumping data for table `web_user_attributes`
-#
-
-
-REPLACE INTO `{PREFIX}web_user_attributes` VALUES ('1','1','Site Admin','0','you@example.com','','','0','0','0','25','1129049624','1129063123','0','f426f3209310abfddf2ee00e929774b4','0','0','','','','','','','','');
-
-
-#
-# Dumping data for table `web_users`
-#
-
-
-REPLACE INTO `{PREFIX}web_users` VALUES ('1','siteadmin','5f4dcc3b5aa765d61d8327deb882cf99','');
-
-
-#
-# Dumping data for table `webgroup_access`
-#
-
-
-REPLACE INTO `{PREFIX}webgroup_access` VALUES ('1','1','1');
-
-
-#
-# Dumping data for table `webgroup_names`
-#
-
-
-REPLACE INTO `{PREFIX}webgroup_names` VALUES ('1','Site Admins');
-
-
-REPLACE INTO `{PREFIX}webgroup_names` VALUES ('2','Registered Users');
-
-
-
-#
-# Table structure for table `jot_content`
-#
-
-
-CREATE TABLE IF NOT EXISTS `{PREFIX}jot_content` (`id` int(10) NOT NULL auto_increment, `title` varchar(255) default NULL, `tagid` varchar(50) default NULL, `published` int(1) NOT NULL default '0', `uparent` int(10) NOT NULL default '0', `parent` int(10) NOT NULL default '0', `flags` varchar(25) default NULL, `secip` varchar(32) default NULL, `sechash` varchar(32) default NULL, `content` mediumtext, `customfields` mediumtext, `mode` int(1) NOT NULL default '1', `createdby` int(10) NOT NULL default '0', `createdon` int(20) NOT NULL default '0', `editedby` int(10) NOT NULL default '0', `editedon` int(20) NOT NULL default '0', `deleted` int(1) NOT NULL default '0', `deletedon` int(20) NOT NULL default '0', `deletedby` int(10) NOT NULL default '0', `publishedon` int(20) NOT NULL default '0', `publishedby` int(10) NOT NULL default '0', PRIMARY KEY  (`id`), KEY `parent` (`parent`), KEY `secip` (`secip`), KEY `tagidx` (`tagid`), KEY `uparent` (`uparent`)) ENGINE=MyISAM;
-
-
-#
-# Dumping data for table `jot_content`
-#
-
-
-REPLACE INTO `{PREFIX}jot_content` VALUES ('9','The first comment','','1','9','0','','87.211.130.14','edb75dab198ff302efbf2f60e548c0b3','This is the first comment.','<custom><name></name><email></email></custom>','0','0','1160420310','0','0','0','0','0','0','0');
-
-
-REPLACE INTO `{PREFIX}jot_content` VALUES ('10','Second comment','','1','9','0','','87.211.130.14','edb75dab198ff302efbf2f60e548c0b3','This is the second comment and uses an alternate row color. I also supplied a name, but i\'m not logged in.','<custom><name>Armand</name><email></email></custom>','0','0','1160420453','0','0','0','0','0','0','0');
-
-
-REPLACE INTO `{PREFIX}jot_content` VALUES ('11','No abuse','','1','9','0','','87.211.130.14','edb75dab198ff302efbf2f60e548c0b3','Notice that I can\'t abuse <b>html</b>, ,  or [+placeholder+] tags.\r\n\r\nA new line also doesn\'t come unnoticed.','<custom><name>Armand</name><email></email></custom>','0','0','1160420681','0','0','0','0','0','0','0');
-
-
-REPLACE INTO `{PREFIX}jot_content` VALUES ('12','Posting when logged in','','1','9','0','','87.211.130.14','58fade927c1df50ba6131f2b0e53c120','When you are logged in your own posts have a special color so you can easily spot them from the comment view. \r\n\r\nThe form also does not display any guest fields when logged in.','<custom></custom>','0','-1','1160421310','0','0','0','0','0','0','0');
-
-
-REPLACE INTO `{PREFIX}jot_content` VALUES ('13','Managers','','1','9','0','','87.211.130.14','91e230cf219e3ade10f32d6a41d0bd4d','Comments posted when only logged in as a manager user will use your manager name.\r\n\r\nModerators options are always shown when you are logged in as manager user.','<custom></custom>','0','1','1160421487','0','0','0','0','0','0','0');
-
-
-REPLACE INTO `{PREFIX}jot_content` VALUES ('14','Moderation','','1','9','0','','87.211.130.14','58fade927c1df50ba6131f2b0e53c120','In this setup the Site Admins group is defined as being the moderator for this particular comment view. These users will have extra moderation options \r\n\r\nManager users, Moderators or Trusted users can post bad words like: dotNet.','<custom></custom>','0','-1','1160422081','0','0','0','0','0','0','0');
-
-
-REPLACE INTO `{PREFIX}jot_content` VALUES ('15','I\'m untrusted','','0','9','0','','87.211.130.14','edb75dab198ff302efbf2f60e548c0b3','Untrusted users however can NOT post bad words like: dotNet. When they do the posts will be unpublished.','<custom><name></name><email></email></custom>','0','0','1160422167','0','0','0','0','0','0','0');
-
-
-#
-# Table structure for table `jot_subscriptions`
-#
-
-
-CREATE TABLE IF NOT EXISTS `{PREFIX}jot_subscriptions` (`id` mediumint(10) NOT NULL auto_increment, `uparent` mediumint(10) NOT NULL default '0', `tagid` varchar(50) NOT NULL default '', `userid` mediumint(10) NOT NULL default '0', PRIMARY KEY  (`id`), KEY `uparent` (`uparent`), KEY `tagid` (`tagid`), KEY `userid` (`userid`)) ENGINE=MyISAM;
-
+CREATE TABLE IF NOT EXISTS `{PREFIX}active_users` (
+  `internalKey` int(9) NOT NULL default '0',
+  `username` varchar(50) NOT NULL default '',
+  `lasthit` int(20) NOT NULL default '0',
+  `id` int(10) default NULL,
+  `action` varchar(10) NOT NULL default '',
+  `ip` varchar(50) NOT NULL default '',
+  PRIMARY KEY  (`internalKey`)
+) ENGINE=MyISAM COMMENT='Contains data about active users.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}active_user_locks` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `internalKey` int(9) NOT NULL default '0',
+  `username` varchar(50) NOT NULL default '',
+  `firsthit` int(20) NOT NULL default '0',
+  `lasthit` int(20) NOT NULL default '0',
+  `element` int(1) NOT NULL default '0',
+  PRIMARY KEY(`id`),
+  UNIQUE INDEX  ix_element_id (`internalKey`,`element`,`id`)
+) ENGINE=MyISAM COMMENT='Contains data about all elements that are locked by active users.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}categories` (
+  `id` integer NOT NULL AUTO_INCREMENT,
+  `category` varchar(45) NOT NULL DEFAULT '',
+  PRIMARY KEY(`id`)
+) ENGINE=MyISAM COMMENT='Categories to be used snippets,tv,chunks, etc';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}document_groups` (
+  `id` int(10) NOT NULL auto_increment,
+  `document_group` int(10) NOT NULL default '0',
+  `document` int(10) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `document` (`document`),
+  KEY `document_group` (`document_group`)
+) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}documentgroup_names` (
+  `id` int(10) NOT NULL auto_increment,
+  `name` varchar(245) NOT NULL default '',
+  `private_memgroup` tinyint DEFAULT 0 COMMENT 'determine whether the document group is private to manager users',
+  `private_webgroup` tinyint DEFAULT 0 COMMENT 'determines whether the document is private to web users',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}event_log` (
+  `id` integer NOT NULL AUTO_INCREMENT,
+  `eventid` integer DEFAULT 0,
+  `createdon` integer NOT NULL DEFAULT 0,
+  `type` tinyint NOT NULL DEFAULT 1 COMMENT '1- information, 2 - warning, 3- error',
+  `user` integer NOT NULL DEFAULT 0 COMMENT 'link to user table',
+  `usertype` tinyint NOT NULL DEFAULT 0 COMMENT '0 - manager, 1 - web',
+  `source` varchar(50) NOT NULL DEFAULT '',
+  `description` text,
+  PRIMARY KEY(`id`),
+  KEY `user`(`user`)
+) ENGINE=MyISAM COMMENT='Stores event and error logs';
+
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}keyword_xref` (
+  `content_id` int(11) NOT NULL default '0',
+  `keyword_id` int(11) NOT NULL default '0',
+  KEY `content_id` (`content_id`),
+  KEY `keyword_id` (`keyword_id`)
+) ENGINE=MyISAM COMMENT='Cross reference bewteen keywords and content';
+
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}manager_log` (
+  `id` int(10) NOT NULL auto_increment,
+  `timestamp` int(20) NOT NULL default '0',
+  `internalKey` int(10) NOT NULL default '0',
+  `username` varchar(255) default NULL,
+  `action` int(10) NOT NULL default '0',
+  `itemid` varchar(10) default '0',
+  `itemname` varchar(255) default NULL,
+  `message` varchar(255) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM COMMENT='Contains a record of user interaction.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}manager_users` (
+  `id` int(10) NOT NULL auto_increment,
+  `username` varchar(100) NOT NULL default '',
+  `password` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=MyISAM COMMENT='Contains login information for backend users.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}member_groups` (
+  `id` int(10) NOT NULL auto_increment,
+  `user_group` int(10) NOT NULL default '0',
+  `member` int(10) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  UNIQUE INDEX `ix_group_member` (`user_group`,`member`)
+) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}membergroup_access` (
+  `id` int(10) NOT NULL auto_increment,
+  `membergroup` int(10) NOT NULL default '0',
+  `documentgroup` int(10) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}membergroup_names` (
+  `id` int(10) NOT NULL auto_increment,
+  `name` varchar(245) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
+  `id` int(10) NOT NULL auto_increment,
+  `type` varchar(20) NOT NULL default 'document',
+  `contentType` varchar(50) NOT NULL default 'text/html',
+  `pagetitle` varchar(255) NOT NULL default '',
+  `longtitle` varchar(255) NOT NULL default '',
+  `description` varchar(255) NOT NULL default '',
+  `alias` varchar(245) default '',
+  `link_attributes` varchar(255) NOT NULL default '' COMMENT 'Link attriubtes',
+  `published` int(1) NOT NULL default '0',
+  `pub_date` int(20) NOT NULL default '0',
+  `unpub_date` int(20) NOT NULL default '0',
+  `parent` int(10) NOT NULL default '0',
+  `isfolder` int(1) NOT NULL default '0',
+  `introtext` text COMMENT 'Used to provide quick summary of the document',  
+  `content` mediumtext,
+  `richtext` tinyint(1) NOT NULL default '1',
+  `template` int(10) NOT NULL default '0',
+  `menuindex` int(10) NOT NULL default '0',
+  `searchable` int(1) NOT NULL default '1',
+  `cacheable` int(1) NOT NULL default '1',
+  `createdby` int(10) NOT NULL default '0',
+  `createdon` int(20) NOT NULL default '0',
+  `editedby` int(10) NOT NULL default '0',
+  `editedon` int(20) NOT NULL default '0',
+  `deleted` int(1) NOT NULL default '0',
+  `deletedon` int(20) NOT NULL default '0',
+  `deletedby` int(10) NOT NULL default '0',
+  `publishedon` int(20) NOT NULL default '0' COMMENT 'Date the document was published',
+  `publishedby` int(10) NOT NULL default '0' COMMENT 'ID of user who published the document',
+  `menutitle` varchar(255) NOT NULL DEFAULT '' COMMENT 'Menu title',
+  `donthit` tinyint(1) NOT NULL default '0' COMMENT 'Disable page hit count',
+  `haskeywords` tinyint(1) NOT NULL default '0' COMMENT 'has links to keywords',
+  `hasmetatags` tinyint(1) NOT NULL default '0' COMMENT 'has links to meta tags',
+  `privateweb` tinyint(1) NOT NULL default '0' COMMENT 'Private web document',
+  `privatemgr` tinyint(1) NOT NULL default '0' COMMENT 'Private manager document',
+  `content_dispo` tinyint(1) NOT NULL default '0' COMMENT '0-inline, 1-attachment',
+  `hidemenu` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Hide document from menu',
+  `alias_visible` INT(2) NOT NULL DEFAULT '1',
+  PRIMARY KEY  (`id`),
+  KEY `id` (`id`),
+  KEY `parent` (`parent`),
+  KEY aliasidx (`alias`),
+  KEY typeidx (`type`),
+  FULLTEXT KEY `content_ft_idx` (`pagetitle`,`description`,`content`)
+) ENGINE=MyISAM COMMENT='Contains the site document tree.';
+
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_content_metatags` (
+  `content_id` int(11) NOT NULL default '0',
+  `metatag_id` int(11) NOT NULL default '0',
+  KEY `content_id` (`content_id`),
+  KEY `metatag_id` (`metatag_id`)
+) ENGINE=MyISAM COMMENT='Reference table between meta tags and content';
+
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
+  `id` int(10) NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(255) NOT NULL default 'Chunk',
+  `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none',
+  `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+  `cache_type`	tinyint(1) NOT NULL default '0' COMMENT 'Cache option',
+  `snippet` mediumtext,
+  `locked` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM COMMENT='Contains the site chunks.';
+
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_keywords` (
+  `id` int(11) NOT NULL auto_increment,
+  `keyword` varchar(40) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `keyword` (`keyword`)
+) ENGINE=MyISAM COMMENT='Site keyword list';
+
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_metatags` (
+  `id` integer NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `tag` varchar(50) NOT NULL DEFAULT '' COMMENT 'tag name',
+  `tagvalue` varchar(255) NOT NULL DEFAULT '',
+  `http_equiv` tinyint NOT NULL DEFAULT 0 COMMENT '1 - use http_equiv tag style, 0 - use name',
+  PRIMARY KEY(`id`)
+) ENGINE=MyISAM COMMENT='Site meta tags';
+
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_modules` (
+  `id` integer NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `description` varchar(255) NOT NULL DEFAULT '0',
+  `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `disabled` tinyint NOT NULL DEFAULT '0',
+  `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+  `wrap` tinyint NOT NULL DEFAULT '0',
+  `locked` tinyint NOT NULL default '0',
+  `icon` varchar(255) NOT NULL DEFAULT '' COMMENT 'url to module icon',
+  `enable_resource` tinyint NOT NULL DEFAULT '0' COMMENT 'enables the resource file feature',
+  `resourcefile` varchar(255) NOT NULL DEFAULT '' COMMENT 'a physical link to a resource file',
+  `createdon` integer NOT NULL DEFAULT '0',  
+  `editedon` integer NOT NULL DEFAULT '0',
+  `guid` varchar(32) NOT NULL DEFAULT '' COMMENT 'globally unique identifier',
+  `enable_sharedparams` tinyint NOT NULL DEFAULT '0',
+  `properties` text,
+  `modulecode` mediumtext COMMENT 'module boot up code',
+  PRIMARY KEY(`id`)
+) ENGINE=MyISAM COMMENT='Site Modules';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_module_depobj` (
+  `id` integer NOT NULL AUTO_INCREMENT,
+  `module` integer NOT NULL DEFAULT 0,
+  `resource` integer NOT NULL DEFAULT 0,
+  `type` integer(2) NOT NULL DEFAULT 0 COMMENT '10-chunks, 20-docs, 30-plugins, 40-snips, 50-tpls, 60-tvs',
+  PRIMARY KEY(`id`)
+) ENGINE=MyISAM COMMENT='Module Dependencies';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_module_access` (
+  `id` integer UNSIGNED NOT NULL AUTO_INCREMENT,
+  `module` integer NOT NULL DEFAULT 0,
+  `usergroup` integer NOT NULL DEFAULT 0,
+  PRIMARY KEY(`id`)
+) ENGINE=MyISAM COMMENT='Module users group access permission';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugins` (
+  `id` int(10) NOT NULL auto_increment,
+  `name` varchar(50) NOT NULL default '',
+  `description` varchar(255) NOT NULL default 'Plugin',
+  `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+  `cache_type` tinyint(1) NOT NULL default '0' COMMENT 'Cache option',
+  `plugincode` mediumtext,
+  `locked` tinyint(4) NOT NULL default '0',
+  `properties` text COMMENT 'Default Properties',  
+  `disabled` tinyint NOT NULL DEFAULT '0' COMMENT 'Disables the plugin',
+  `moduleguid` varchar(32) NOT NULL default '' COMMENT 'GUID of module from which to import shared parameters',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM COMMENT='Contains the site plugins.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugin_events` (
+  `pluginid` INT(10) NOT NULL,
+  `evtid` INT(10) NOT NULL default 0,
+  `priority` INT(10) NOT NULL default 0 COMMENT 'determines plugin run order',
+  PRIMARY KEY ( `pluginid` , `evtid` )
+) ENGINE=MyISAM COMMENT='Links to system events';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_snippets` (
+  `id` int(10) NOT NULL auto_increment,
+  `name` varchar(50) NOT NULL default '',
+  `description` varchar(255) NOT NULL default 'Snippet',
+  `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+  `cache_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Cache option',
+  `snippet` mediumtext,
+  `locked` tinyint(4) NOT NULL default '0',
+  `properties` text COMMENT 'Default Properties',  
+  `moduleguid` varchar(32) NOT NULL default '' COMMENT 'GUID of module from which to import shared parameters',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM COMMENT='Contains the site snippets.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
+  `id` int(10) NOT NULL auto_increment,
+  `templatename` varchar(100) NOT NULL default '',
+  `description` varchar(255) NOT NULL default 'Template',
+  `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+  `icon` varchar(255) NOT NULL default '' COMMENT 'url to icon file',
+  `template_type` integer NOT NULL DEFAULT '0' COMMENT '0-page,1-content',
+  `content` mediumtext,
+  `locked` tinyint(4) NOT NULL default '0',
+  `selectable` tinyint(4) NOT NULL default '1',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM COMMENT='Contains the site templates.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}system_eventnames` (
+  `id` INT(10) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL default '',
+  `service` tinyint NOT NULL default '0' COMMENT 'System Service number',
+  `groupname` varchar(20) NOT NULL default '',
+  PRIMARY KEY(`id`)
+) ENGINE=MyISAM COMMENT='System Event Names.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}system_settings` (
+  `setting_name` varchar(50) NOT NULL default '',
+  `setting_value` text,
+  PRIMARY KEY (`setting_name`)
+) ENGINE=MyISAM COMMENT='Contains Content Manager settings.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_access` (
+  `id` int(10) NOT NULL auto_increment,
+  `tmplvarid` int(10) NOT NULL default '0',
+  `documentgroup` int(10) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM COMMENT='Contains data used for template variable access permissions.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
+	`id` int(11) NOT NULL auto_increment,
+	`tmplvarid` int(10) NOT NULL default '0' COMMENT 'Template Variable id',
+	`contentid` int(10) NOT NULL default '0' COMMENT 'Site Content Id',
+	`value` mediumtext,
+	PRIMARY KEY  (id),
+	KEY idx_tmplvarid (tmplvarid),
+	KEY idx_id (contentid),
+	FULLTEXT KEY `value_ft_idx` (`value`)
+) ENGINE=MyISAM COMMENT='Site Template Variables Content Values Link Table';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
+	`tmplvarid` int(10) NOT NULL default '0' COMMENT 'Template Variable id',
+	`templateid` int(11) NOT NULL default '0',
+	`rank` int(11) NOT NULL default '0',
+	PRIMARY KEY (`tmplvarid`, `templateid`)
+) ENGINE=MyISAM COMMENT='Site Template Variables Templates Link Table';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
+	`id` INT(11) NOT NULL auto_increment,
+	`type` varchar(50) NOT NULL default '',
+	`name` varchar(100) NOT NULL default '',
+	`caption` varchar(80) NOT NULL default '',
+	`description` varchar(255) NOT NULL default '',
+	`editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+	`category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+	`locked` tinyint(4) NOT NULL default '0',
+	`elements` text,
+	`rank` int(11) NOT NULL default '0',
+	`display` varchar(20) NOT NULL default '' COMMENT 'Display Control',
+	`display_params` text COMMENT 'Display Control Properties',
+	`default_text` text,
+	PRIMARY KEY  (id),
+	KEY `indx_rank`(`rank`)
+) ENGINE=MyISAM COMMENT='Site Template Variables';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}user_attributes` (
+  `id` int(10) NOT NULL auto_increment,
+  `internalKey` int(10) NOT NULL default '0',
+  `fullname` varchar(100) NOT NULL default '',
+  `role` int(10) NOT NULL default '0',
+  `email` varchar(100) NOT NULL default '',
+  `phone` varchar(100) NOT NULL default '',
+  `mobilephone` varchar(100) NOT NULL default '',
+  `blocked` int(1) NOT NULL default '0',
+  `blockeduntil` int(11) NOT NULL default '0',
+  `blockedafter` int(11) NOT NULL default '0',
+  `logincount` int(11) NOT NULL default '0',
+  `lastlogin` int(11) NOT NULL default '0',
+  `thislogin` int(11) NOT NULL default '0',
+  `failedlogincount` int(10) NOT NULL default '0',
+  `sessionid` varchar(100) NOT NULL default '',
+  `dob` int(10) NOT NULL DEFAULT '0',
+  `gender` int(1) NOT NULL DEFAULT '0' COMMENT '0 - unknown, 1 - Male 2 - female',
+  `country` varchar(5) NOT NULL default '',
+  `street` varchar(255) NOT NULL DEFAULT '',
+  `city` varchar(255) NOT NULL DEFAULT '',
+  `state` varchar(25) NOT NULL default '',
+  `zip` varchar(25) NOT NULL default '',
+  `fax` varchar(100) NOT NULL default '',
+  `photo` varchar(255) NOT NULL default '' COMMENT 'link to photo',
+  `comment` text,  
+  PRIMARY KEY  (`id`),
+  KEY `userid` (`internalKey`)
+) ENGINE=MyISAM COMMENT='Contains information about the backend users.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}user_messages` (
+  `id` int(10) NOT NULL auto_increment,
+  `type` varchar(15) NOT NULL default '',
+  `subject` varchar(60) NOT NULL default '',
+  `message` text,
+  `sender` int(10) NOT NULL default '0',
+  `recipient` int(10) NOT NULL default '0',
+  `private` tinyint(4) NOT NULL default '0',
+  `postdate` int(20) NOT NULL default '0',
+  `messageread` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM COMMENT='Contains messages for the Content Manager messaging system.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
+  `id` int(10) NOT NULL auto_increment,
+  `name` varchar(50) NOT NULL default '',
+  `description` varchar(255) NOT NULL default '',
+  `frames` int(1) NOT NULL default '0',
+  `home` int(1) NOT NULL default '0',
+  `view_document` int(1) NOT NULL default '0',
+  `new_document` int(1) NOT NULL default '0',
+  `save_document` int(1) NOT NULL default '0',
+  `publish_document` int(1) NOT NULL default '0',
+  `delete_document` int(1) NOT NULL default '0',
+  `empty_trash` int(1) NOT NULL default '0',
+  `action_ok` int(1) NOT NULL default '0',
+  `logout` int(1) NOT NULL default '0',
+  `help` int(1) NOT NULL default '0',
+  `messages` int(1) NOT NULL default '0',
+  `new_user` int(1) NOT NULL default '0',
+  `edit_user` int(1) NOT NULL default '0',
+  `logs` int(1) NOT NULL default '0',
+  `edit_parser` int(1) NOT NULL default '0',
+  `save_parser` int(1) NOT NULL default '0',
+  `edit_template` int(1) NOT NULL default '0',
+  `settings` int(1) NOT NULL default '0',
+  `credits` int(1) NOT NULL default '0',
+  `new_template` int(1) NOT NULL default '0',
+  `save_template` int(1) NOT NULL default '0',
+  `delete_template` int(1) NOT NULL default '0',
+  `edit_snippet` int(1) NOT NULL default '0',
+  `new_snippet` int(1) NOT NULL default '0',
+  `save_snippet` int(1) NOT NULL default '0',
+  `delete_snippet` int(1) NOT NULL default '0',
+  `edit_chunk` int(1) NOT NULL default '0',
+  `new_chunk` int(1) NOT NULL default '0',
+  `save_chunk` int(1) NOT NULL default '0',
+  `delete_chunk` int(1) NOT NULL default '0',
+  `empty_cache` int(1) NOT NULL default '0',
+  `edit_document` int(1) NOT NULL default '0',
+  `change_password` int(1) NOT NULL default '0',
+  `error_dialog` int(1) NOT NULL default '0',
+  `about` int(1) NOT NULL default '0',
+  `file_manager` int(1) NOT NULL default '0',
+  `assets_files` int(1) NOT NULL default '0',
+  `assets_images` int(1) NOT NULL default '0',
+  `save_user` int(1) NOT NULL default '0',
+  `delete_user` int(1) NOT NULL default '0',
+  `save_password` int(11) NOT NULL default '0',
+  `edit_role` int(1) NOT NULL default '0',
+  `save_role` int(1) NOT NULL default '0',
+  `delete_role` int(1) NOT NULL default '0',
+  `new_role` int(1) NOT NULL default '0',
+  `access_permissions` int(1) NOT NULL default '0',
+  `bk_manager` int(1) NOT NULL DEFAULT 0,
+  `new_plugin` int(1) NOT NULL DEFAULT 0,
+  `edit_plugin` int(1) NOT NULL DEFAULT 0,
+  `save_plugin` int(1) NOT NULL DEFAULT 0,
+  `delete_plugin` int(1) NOT NULL DEFAULT 0,
+  `new_module` int(1) NOT NULL DEFAULT 0,
+  `edit_module` int(1) NOT NULL DEFAULT 0,
+  `save_module` int(1) NOT NULL DEFAULT 0,
+  `delete_module` int(1) NOT NULL DEFAULT 0,
+  `exec_module` int(1) NOT NULL DEFAULT 0,
+  `view_eventlog` int(1) NOT NULL DEFAULT 0,
+  `delete_eventlog` int(1) NOT NULL DEFAULT 0,
+  `manage_metatags` int(1) NOT NULL DEFAULT 0 COMMENT 'manage site meta tags and keywords',
+  `edit_doc_metatags` int(1) NOT NULL DEFAULT 0 COMMENT 'edit document meta tags and keywords' ,
+  `new_web_user` int(1) NOT NULL default '0',
+  `edit_web_user` int(1) NOT NULL default '0',
+  `save_web_user` int(1) NOT NULL default '0',
+  `delete_web_user` int(1) NOT NULL default '0',
+  `web_access_permissions` int(1) NOT NULL default '0',
+  `view_unpublished` int(1) NOT NULL default '0',
+  `import_static` int(1) NOT NULL default '0',
+  `export_static` int(1) NOT NULL default '0',
+  `remove_locks` int(1) NOT NULL default '0',
+  `display_locks` int(1) NOT NULL default '0',
+  `change_resourcetype` int(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM COMMENT='Contains information describing the user roles.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}user_settings` (
+  `user` integer NOT NULL,
+  `setting_name` varchar(50) NOT NULL default '',
+  `setting_value` text,
+  PRIMARY KEY ( `user` , `setting_name` ),
+  KEY `setting_name` (`setting_name`),
+  KEY `user` (`user`)
+) ENGINE=MyISAM COMMENT='Contains backend user settings.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}web_groups` (
+  `id` int(10) NOT NULL auto_increment,
+  `webgroup` int(10) NOT NULL default '0',
+  `webuser` int(10) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`)
+) ENGINE=MyISAM COMMENT='Contains data used for web access permissions.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}webgroup_access` (
+  `id` int(10) NOT NULL auto_increment,
+  `webgroup` int(10) NOT NULL default '0',
+  `documentgroup` int(10) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM COMMENT='Contains data used for web access permissions.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}webgroup_names` (
+  `id` int(10) NOT NULL auto_increment,
+  `name` varchar(245) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM COMMENT='Contains data used for web access permissions.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_attributes` (
+  `id` int(10) NOT NULL auto_increment,
+  `internalKey` int(10) NOT NULL default '0',
+  `fullname` varchar(100) NOT NULL default '',
+  `role` int(10) NOT NULL default '0',
+  `email` varchar(100) NOT NULL default '',
+  `phone` varchar(100) NOT NULL default '',
+  `mobilephone` varchar(100) NOT NULL default '',
+  `blocked` int(1) NOT NULL default '0',
+  `blockeduntil` int(11) NOT NULL default '0',
+  `blockedafter` int(11) NOT NULL default '0',
+  `logincount` int(11) NOT NULL default '0',
+  `lastlogin` int(11) NOT NULL default '0',
+  `thislogin` int(11) NOT NULL default '0',
+  `failedlogincount` int(10) NOT NULL default '0',
+  `sessionid` varchar(100) NOT NULL default '',
+  `dob` int(10) NOT NULL DEFAULT '0',
+  `gender` int(1) NOT NULL DEFAULT '0' COMMENT '0 - unknown, 1 - Male 2 - female',
+  `country` varchar(25) NOT NULL default '',
+  `street` varchar(255) NOT NULL DEFAULT '',
+  `city` varchar(255) NOT NULL DEFAULT '',
+  `state` varchar(25) NOT NULL default '',
+  `zip` varchar(25) NOT NULL default '',
+  `fax` varchar(100) NOT NULL default '',
+  `photo` varchar(255) NOT NULL default '' COMMENT 'link to photo',
+  `comment` text,  
+  PRIMARY KEY  (`id`),
+  KEY `userid` (`internalKey`)
+) ENGINE=MyISAM COMMENT='Contains information for web users.';
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}web_users` (
+  `id` int(10) NOT NULL auto_increment,
+  `username` varchar(100) NOT NULL default '',
+  `password` varchar(100) NOT NULL default '',
+  `cachepwd` varchar(100) NOT NULL default '' COMMENT 'Store new unconfirmed password',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
+  `webuser` integer NOT NULL,
+  `setting_name` varchar(50) NOT NULL default '',
+  `setting_value` text,
+  PRIMARY KEY ( `webuser` , `setting_name` ),
+  KEY `setting_name` (`setting_name`),
+  KEY `webuserid` (`webuser`)
+) ENGINE=MyISAM COMMENT='Contains web user settings.';
+
+
+# upgrade-able[[ - This block of code will be executed during upgrades
+
+# For backward compatibilty with early versions
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+ALTER TABLE `{PREFIX}site_content` 
+  ADD COLUMN `publishedon` int(20) NOT NULL DEFAULT '0' COMMENT 'Date the document was published' AFTER `deletedby`;
+
+ALTER TABLE `{PREFIX}site_content`
+  ADD COLUMN `publishedby` int(10) NOT NULL DEFAULT '0' COMMENT 'ID of user who published the document' AFTER `publishedon`;
+
+ALTER TABLE `{PREFIX}site_content`
+  ADD COLUMN `link_attributes` varchar(255) NOT NULL DEFAULT '' COMMENT 'Link attriubtes' AFTER `alias`;
+
+ALTER TABLE `{PREFIX}site_content`
+  ADD COLUMN `alias_visible` INT(2) NOT NULL DEFAULT '1' COMMENT 'Hide document from alias path';
+
+ALTER TABLE `{PREFIX}site_htmlsnippets`
+  ADD COLUMN `editor_name` VARCHAR(50) NOT NULL DEFAULT 'none' AFTER `editor_type`;
+
+ALTER TABLE `{PREFIX}site_plugin_events`
+  ADD COLUMN `priority` INT(10) NOT NULL default '0' COMMENT 'determines the run order of the plugin' AFTER `evtid`;
+
+ALTER TABLE `{PREFIX}site_templates`
+  ADD COLUMN `selectable` TINYINT(4) NOT NULL DEFAULT '1' AFTER `locked`;
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates`
+  ADD COLUMN `rank` integer(11) NOT NULL DEFAULT '0' AFTER `templateid`;
+
+ALTER TABLE `{PREFIX}user_attributes`
+  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;
+
+ALTER TABLE `{PREFIX}user_attributes`
+  ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `edit_chunk`          INT(1) NOT NULL DEFAULT '0' AFTER `delete_snippet`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `new_chunk`           INT(1) NOT NULL DEFAULT '0' AFTER `edit_chunk`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `save_chunk`          INT(1) NOT NULL DEFAULT '0' AFTER `new_chunk`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `delete_chunk`        INT(1) NOT NULL DEFAULT '0' AFTER `save_chunk`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `empty_trash`         INT(1) NOT NULL DEFAULT '0' AFTER `delete_document`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `view_unpublished`    INT(1) NOT NULL DEFAULT '0' AFTER `web_access_permissions`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `import_static`       INT(1) NOT NULL DEFAULT '0' AFTER `view_unpublished`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `export_static`       INT(1) NOT NULL DEFAULT '0' AFTER `import_static`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `remove_locks`        INT(1) NOT NULL DEFAULT '0' AFTER `export_static`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `display_locks`       INT(1) NOT NULL DEFAULT '0' AFTER `remove_locks`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `publish_document`    INT(1) NOT NULL DEFAULT '0' AFTER `save_document`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `change_resourcetype` INT(1) NOT NULL DEFAULT '0' AFTER `remove_locks`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `assets_images`       INT(1) NOT NULL DEFAULT '1' AFTER `file_manager`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `assets_files`        INT(1) NOT NULL DEFAULT '1' AFTER `assets_images`;
+
+ALTER TABLE `{PREFIX}web_user_attributes`
+  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;
+
+ALTER TABLE `{PREFIX}web_user_attributes`
+  ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
+
+# Set the private manager group flag
+
+UPDATE {PREFIX}documentgroup_names AS dgn
+  LEFT JOIN {PREFIX}membergroup_access AS mga ON mga.documentgroup = dgn.id
+  LEFT JOIN {PREFIX}webgroup_access AS wga ON wga.documentgroup = dgn.id
+  SET dgn.private_memgroup = (mga.membergroup IS NOT NULL),
+      dgn.private_webgroup = (wga.webgroup IS NOT NULL);
+
+
+UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Bottom Button Bar');
+
+UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Inherit Parent Template');
+
+UPDATE `{PREFIX}system_settings` SET `setting_value` = '0' WHERE `setting_name` = 'validate_referer' AND `setting_value` = '00';
+
+# start related to #MODX-1321
+
+UPDATE `{PREFIX}site_content` SET `type`='reference', `contentType`='text/html' WHERE `type`='' AND `content` REGEXP '^https?://([-\w\.]+)+(:\d+)?/?';
+
+UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/xml' WHERE `type`='' AND `alias` REGEXP '\.(rss|xml)$';
+
+UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/javascript' WHERE `type`='' AND `alias` REGEXP '\.js$';
+
+UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/css' WHERE `type`='' AND `alias` REGEXP '\.css$';
+
+UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/html' WHERE `type`='';
+
+ALTER TABLE `{PREFIX}active_users`
+  MODIFY COLUMN `ip` varchar(50) NOT NULL DEFAULT '';
+
+ALTER TABLE `{PREFIX}documentgroup_names`
+  MODIFY COLUMN `name` varchar(245) NOT NULL default '';
+
+ALTER TABLE `{PREFIX}event_log`
+  MODIFY COLUMN `source` varchar(50) NOT NULL DEFAULT '',
+  MODIFY COLUMN `description` text;
+
+ALTER TABLE `{PREFIX}categories`
+  MODIFY COLUMN `category` varchar(45) NOT NULL DEFAULT '';
+
+ALTER TABLE `{PREFIX}manager_users`
+  MODIFY COLUMN `username` varchar(100) NOT NULL DEFAULT '';
+
+ALTER TABLE `{PREFIX}membergroup_names`
+ MODIFY COLUMN `name` varchar(245) NOT NULL default '';
+
+ALTER TABLE `{PREFIX}site_content`
+  MODIFY COLUMN `pagetitle` varchar(255) NOT NULL default '',
+  MODIFY COLUMN `alias` varchar(245) default '',
+  MODIFY COLUMN `introtext` text COMMENT 'Used to provide quick summary of the document',
+  MODIFY COLUMN `content` mediumtext,
+  MODIFY COLUMN `menutitle` varchar(255) NOT NULL DEFAULT '' COMMENT 'Menu title',
+  MODIFY COLUMN `template` int(10) NOT NULL default '0';
+
+ALTER TABLE `{PREFIX}site_htmlsnippets`
+  MODIFY COLUMN `snippet` mediumtext;
+
+ALTER TABLE `{PREFIX}site_module_access`
+  MODIFY COLUMN `module` int(11) NOT NULL DEFAULT '0',
+  MODIFY COLUMN `usergroup` int(11) NOT NULL DEFAULT '0';
+
+ALTER TABLE `{PREFIX}site_module_depobj`
+  MODIFY COLUMN `module` int(11) NOT NULL DEFAULT '0',
+  MODIFY COLUMN `resource` int(11) NOT NULL DEFAULT '0';
+
+ALTER TABLE `{PREFIX}site_modules`
+  MODIFY COLUMN `name` varchar(50) NOT NULL DEFAULT '',
+  MODIFY COLUMN `disabled` tinyint(4) NOT NULL DEFAULT '0',
+  MODIFY COLUMN `icon` varchar(255) NOT NULL DEFAULT '' COMMENT 'url to module icon',
+  MODIFY COLUMN `resourcefile` varchar(255) NOT NULL DEFAULT '' COMMENT 'a physical link to a resource file',
+  MODIFY COLUMN `createdon` int(11) NOT NULL DEFAULT '0',
+  MODIFY COLUMN `editedon` int(11) NOT NULL DEFAULT '0',
+  MODIFY COLUMN `guid` varchar(32) NOT NULL DEFAULT '' COMMENT 'globally unique identifier',
+  MODIFY COLUMN `properties` text,
+  MODIFY COLUMN `modulecode` mediumtext COMMENT 'module boot up code';
+
+ALTER TABLE `{PREFIX}site_plugin_events`
+  MODIFY COLUMN `evtid` int(10) NOT NULL DEFAULT '0';
+
+ALTER TABLE `{PREFIX}site_plugins`
+  MODIFY COLUMN `properties` text COMMENT 'Default Properties',
+  MODIFY COLUMN `plugincode` mediumtext,
+  MODIFY COLUMN `moduleguid` varchar(32) NOT NULL DEFAULT '' COMMENT 'GUID of module from which to import shared parameters';
+
+ALTER TABLE `{PREFIX}site_snippets`
+  MODIFY COLUMN `properties` text COMMENT 'Default Properties',
+  MODIFY COLUMN `snippet` mediumtext,
+  MODIFY COLUMN `moduleguid` varchar(32) NOT NULL DEFAULT '' COMMENT 'GUID of module from which to import shared parameters';
+
+ALTER TABLE `{PREFIX}site_templates`
+ MODIFY COLUMN `icon` varchar(255) NOT NULL default '' COMMENT 'url to icon file',
+ MODIFY COLUMN `content` mediumtext;
+
+ALTER TABLE `{PREFIX}site_tmplvar_contentvalues`
+ MODIFY COLUMN `tmplvarid` int(10) NOT NULL DEFAULT '0' COMMENT 'Template Variable id',
+ MODIFY COLUMN `value` mediumtext;
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates`
+  MODIFY COLUMN `tmplvarid` int(10) NOT NULL DEFAULT '0' COMMENT 'Template Variable id';
+
+ALTER TABLE `{PREFIX}site_tmplvars`
+ MODIFY COLUMN `name` varchar(50) NOT NULL default '',
+ MODIFY COLUMN `elements` text,
+ MODIFY COLUMN `display` varchar(20) NOT NULL DEFAULT '' COMMENT 'Display Control',
+ MODIFY COLUMN `display_params` text COMMENT 'Display Control Properties',
+ MODIFY COLUMN `default_text` text;
+
+ALTER TABLE `{PREFIX}system_eventnames`
+ MODIFY COLUMN  `name` varchar(50) NOT NULL DEFAULT '',
+ MODIFY COLUMN `service` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'System Service number';
+
+ALTER TABLE `{PREFIX}system_settings` MODIFY COLUMN `setting_value` text;
+
+ALTER TABLE `{PREFIX}user_attributes`
+ MODIFY COLUMN `country` varchar(5) NOT NULL DEFAULT '',
+ MODIFY COLUMN `state` varchar(25) NOT NULL DEFAULT '',
+ MODIFY COLUMN `zip` varchar(25) NOT NULL DEFAULT '',
+ MODIFY COLUMN `fax` varchar(100) NOT NULL DEFAULT '',
+ MODIFY COLUMN `photo` varchar(255) NOT NULL DEFAULT '' COMMENT 'link to photo',
+ MODIFY COLUMN `comment` text;
+
+ALTER TABLE `{PREFIX}user_messages` MODIFY COLUMN `message` text;
+
+ALTER TABLE `{PREFIX}user_settings` MODIFY COLUMN `setting_value` text;
+
+ALTER TABLE `{PREFIX}web_users`
+ MODIFY COLUMN `username` varchar(100) NOT NULL DEFAULT '',
+ MODIFY COLUMN `cachepwd` varchar(100) NOT NULL DEFAULT '' COMMENT 'Store new unconfirmed password' AFTER `password`;
+
+ALTER TABLE `{PREFIX}web_user_settings` MODIFY COLUMN `setting_value` text;
+
+ALTER TABLE `{PREFIX}web_user_attributes`
+  MODIFY COLUMN `country` varchar(25) NOT NULL DEFAULT '',
+  MODIFY COLUMN `state` varchar(25) NOT NULL DEFAULT '',
+  MODIFY COLUMN `zip` varchar(25) NOT NULL DEFAULT '',
+  MODIFY COLUMN `fax` varchar(100) NOT NULL DEFAULT '',
+  MODIFY COLUMN `photo` varchar(255) NOT NULL DEFAULT '' COMMENT 'link to photo',
+  MODIFY COLUMN `comment` text;
+
+ALTER TABLE `{PREFIX}webgroup_names`
+ MODIFY COLUMN `name` varchar(245) NOT NULL default '';
+
+ALTER TABLE `{PREFIX}site_content` ADD INDEX `typeidx` (`type`);
+
+ALTER TABLE `{PREFIX}system_settings` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}system_settings` DROP INDEX `setting_name`;
+
+ALTER TABLE `{PREFIX}system_settings` ADD PRIMARY KEY (`setting_name`);
+
+ALTER TABLE `{PREFIX}user_settings` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}user_settings` ADD PRIMARY KEY (`user`, `setting_name`);
+
+ALTER TABLE `{PREFIX}web_user_settings` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}web_user_settings` ADD PRIMARY KEY (`webuser`, `setting_name`);
+
+ALTER TABLE `{PREFIX}site_plugin_events` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}site_plugin_events` ADD PRIMARY KEY (`pluginid`, `evtid`);
+
+ALTER TABLE `{PREFIX}site_tmplvar_contentvalues` ADD FULLTEXT `value_ft_idx` (`value`);
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_tmplvarid`;
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_templateid`;
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP PRIMARY KEY;
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates` ADD PRIMARY KEY (`tmplvarid`, `templateid`);
+
+ALTER TABLE `{PREFIX}member_groups` ADD UNIQUE INDEX `ix_group_member` (`user_group`,`member`);
+
+ALTER TABLE `{PREFIX}web_groups` ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`);
+
+# ]]upgrade-able
