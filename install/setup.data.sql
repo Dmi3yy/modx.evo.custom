@@ -931,7 +931,7 @@ REPLACE INTO `{PREFIX}user_roles`
 # 1 - "Parser Service Events", 2 -  "Manager Access Events", 3 - "Web Access Service Events", 4 - "Cache Service Events", 5 - "Template Service Events", 6 - Custom Events
 
 
-REPLACE INTO `{PREFIX}system_eventnames` 
+INSERT IGNORE INTO `{PREFIX}system_eventnames` 
 (id,name,service,groupname) VALUES 
 ('1','OnDocPublished','5',''), 
 ('2','OnDocUnPublished','5',''),
