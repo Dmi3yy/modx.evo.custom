@@ -551,13 +551,13 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
 # For backward compatibilty with early versions
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-ALTER TABLE `{PREFIX}site_content` 
+ALTER IGNORE TABLE `{PREFIX}site_content` 
   ADD COLUMN `publishedon` int(20) NOT NULL DEFAULT '0' COMMENT 'Date the document was published' AFTER `deletedby`;
 
-ALTER TABLE `{PREFIX}site_content`
+ALTER IGNORE TABLE `{PREFIX}site_content`
   ADD COLUMN `publishedby` int(10) NOT NULL DEFAULT '0' COMMENT 'ID of user who published the document' AFTER `publishedon`;
 
-ALTER TABLE `{PREFIX}site_content`
+ALTER IGNORE TABLE `{PREFIX}site_content`
   ADD COLUMN `link_attributes` varchar(255) NOT NULL DEFAULT '' COMMENT 'Link attriubtes' AFTER `alias`;
 
 ALTER TABLE `{PREFIX}site_content`
