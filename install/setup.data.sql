@@ -551,21 +551,9 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
 # For backward compatibilty with early versions
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-IF NOT EXISTS( SELECT NULL
-            FROM INFORMATION_SCHEMA.COLUMNS
-           WHERE table_name = '{PREFIX}site_content'
-             AND table_schema = 'db_name'
-             AND column_name = 'publishedon')  THEN
 
-
-  ALTER TABLE `{PREFIX}site_content` 
+ALTER TABLE `{PREFIX}site_content` 
   ADD COLUMN `publishedon` int(20) NOT NULL DEFAULT '0' COMMENT 'Date the document was published' AFTER `deletedby`;
-
-
-END IF;
-
-
-
 
 ALTER TABLE `{PREFIX}site_content`
   ADD COLUMN `publishedby` int(10) NOT NULL DEFAULT '0' COMMENT 'ID of user who published the document' AFTER `publishedon`;
