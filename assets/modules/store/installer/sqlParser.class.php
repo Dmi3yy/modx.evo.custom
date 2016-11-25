@@ -1,8 +1,7 @@
 <?php
-
 // MySQL Dump Parser
 // SNUFFKIN/ Alex 2004
-
+error_reporting(E_ALL & ~E_NOTICE);
 class SqlParser {
 	var $host, $dbname, $prefix, $user, $password, $mysqlErrors;
 	var $conn, $installFailed, $sitename, $adminname, $adminemail, $adminpass, $managerlanguage;
@@ -27,24 +26,9 @@ class SqlParser {
         $this->autoTemplateLogic = $auto_template_logic;
 	}
 
-	function connect() {
-		$this->conn = mysqli_connect($this->host, $this->user, $this->password);
-		mysqli_select_db($this->conn, $this->dbname);
-		if (function_exists('mysqli_set_charset')) mysqli_set_charset($this->conn, $this->connection_charset);
-
-		$this->dbVersion = 3.23; // assume version 3.23
-		if(function_exists("mysqli_get_server_info")) {
-			$ver = mysqli_get_server_info($this->conn);
-			$this->dbMODx 	 = version_compare($ver,"4.0.2");
-			$this->dbVersion = (float) $ver; // Typecasting (float) instead of floatval() [PHP < 4.2]
-		}
-
-        mysqli_query($this->conn,"{$this->connection_method} {$this->connection_charset}");
-	}
-
 	function process($filename) {
-	    global $modx_version, $custom_placeholders;
-
+	    global $modx_version,$modx;
+		
 		// check to make sure file exists
 		if (!file_exists($filename)) {
 			$this->mysqlErrors[] = array("error" => "File '$filename' not found");
@@ -62,16 +46,14 @@ class SqlParser {
 		fclose($fh);
 		$idata = str_replace("\r", '', $idata);
 
-		// check if in upgrade mode
 		if ($this->mode=="upd") {
-			// remove non-upgradeable parts
 			$s = strpos($idata,"non-upgrade-able[[");
 			$e = strpos($idata,"]]non-upgrade-able")+17;
 			if($s && $e) $idata = str_replace(substr($idata,$s,$e-$s)," Removed non upgradeable items",$idata);
 		}
 
 		// replace {} tags
-		$idata = str_replace('{PREFIX}', $this->prefix, $idata);
+		$idata = str_replace('{PREFIX}', $modx->db->config['table_prefix'], $idata);
 		$idata = str_replace('{ADMIN}', $this->adminname, $idata);
 		$idata = str_replace('{ADMINEMAIL}', $this->adminemail, $idata);
 		$idata = str_replace('{ADMINPASS}', $this->adminpass, $idata);
@@ -80,15 +62,8 @@ class SqlParser {
 		$idata = str_replace('{FILEMANAGERPATH}', $this->fileManagerPath, $idata);
 		$idata = str_replace('{MANAGERLANGUAGE}', $this->managerlanguage, $idata);
 		$idata = str_replace('{AUTOTEMPLATELOGIC}', $this->autoTemplateLogic, $idata);
-		/*$idata = str_replace('{VERSION}', $modx_version, $idata);*/
+		//$idata = str_replace('{VERSION}', $modx_version, $idata);
 
-		// Replace custom placeholders 
-		foreach($custom_placeholders as $key=>$val) {
-			if (strpos($idata, '{'.$key.'}') !== false) {
-				$idata = str_replace('{'.$key.'}', $val, $idata);
-			}
-		}
-		
 		$sql_array = explode("\n\n", $idata);
 
 		$num = 0;
@@ -106,21 +81,19 @@ class SqlParser {
 
 
 			$num = $num + 1;
-			if ($sql_do) mysqli_query($this->conn, $sql_do);
-			if(mysqli_error($this->conn)) {
+			if ($sql_do) $modx->db->query($sql_do);
+			if(mysql_error()) {
 				// Ignore duplicate and drop errors - Raymond
 				if ($this->ignoreDuplicateErrors){
-					if (mysqli_errno($this->conn) == 1060 || mysqli_errno($this->conn) == 1061 || mysqli_errno($this->conn) == 1091) continue;
+					if (mysql_errno() == 1060 || mysql_errno() == 1061 || mysql_errno() == 1091) continue;
 				}
 				// End Ignore duplicate
-				$this->mysqlErrors[] = array("error" => mysqli_error($this->conn), "sql" => $sql_do);
+				$this->mysqlErrors[] = array("error" => mysql_error(), "sql" => $sql_do);
 				$this->installFailed = true;
 			}
 		}
-	}
-
-	function close() {
-		mysqli_close($this->conn);
+		
+		
 	}
 }
 
