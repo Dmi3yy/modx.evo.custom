@@ -32,8 +32,7 @@ $moduleRelease = $modx_release_date;
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 
-
-
+if (is_file($installPath.'/'.$moduleSQLBaseFile)){ $moduleSQLDataFile = $moduleSQLBaseFile; }
 
 
 $moduleChunks = array (); // chunks - array : name, description, type - 0:file or 1:content, file or content
@@ -493,7 +492,6 @@ if (count($moduleSnippets ) > 0) {
 }
 
 // install data
-
 if (is_file($installPath.'/'.$moduleSQLDataFile)) {
     echo "<p>" . $_lang['installing_demo_site'];
     $sqlParser->process($installPath.'/'.$moduleSQLDataFile);
