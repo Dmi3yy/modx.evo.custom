@@ -82,7 +82,8 @@ class SqlParser {
 
 			$num = $num + 1;
 			if ($sql_do) $modx->db->query($sql_do);
-			
+			if($modx->db->getLastError) { continue;}
+			/*
 			if ($database_type == 'mysql'){
 				if(mysql_error()) {
 					// Ignore duplicate and drop errors - Raymond
@@ -103,7 +104,7 @@ class SqlParser {
 					$this->mysqlErrors[] = array("error" => mysqli_error($this->conn), "sql" => $sql_do);
 					$this->installFailed = true;
 				}
-			}
+			}*/
 
 		}
 		
