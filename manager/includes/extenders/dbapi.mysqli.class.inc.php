@@ -1,4 +1,4 @@
-<?php
+function <?php
 class DBAPI {
 	var $conn;
 	var $config;
@@ -96,7 +96,7 @@ class DBAPI {
 		$tstart = $modx->getMicroTime();
 		if (!($result = $this->conn->query($sql))) {
 			if(!$watchError) return;
-            switch($this->conn->connect_errno) {
+            switch(mysqli_errno($this->conn)) {
                 case 1054:
                 case 1060:
                 case 1061:
