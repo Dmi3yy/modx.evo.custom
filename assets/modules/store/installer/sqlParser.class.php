@@ -81,31 +81,7 @@ class SqlParser {
 
 
 			$num = $num + 1;
-			if ($sql_do) $modx->db->query($sql_do);
-			if($modx->db->getLastError) { continue;}
-			/*
-			if ($database_type == 'mysql'){
-				if(mysql_error()) {
-					// Ignore duplicate and drop errors - Raymond
-					if ($this->ignoreDuplicateErrors){
-						if (mysql_errno() == 1060 || mysql_errno() == 1061 || mysql_errno() == 1091) continue;
-					}
-					// End Ignore duplicate
-					$this->mysqlErrors[] = array("error" => mysql_error(), "sql" => $sql_do);
-					$this->installFailed = true;
-				}
-			}else{	
-				if(mysqli_error($this->conn)) {
-					// Ignore duplicate and drop errors - Raymond
-					if ($this->ignoreDuplicateErrors){
-						if (mysqli_errno($this->conn) == 1060 || mysqli_errno($this->conn) == 1061 || mysqli_errno($this->conn) == 1091) continue;
-					}
-					// End Ignore duplicate
-					$this->mysqlErrors[] = array("error" => mysqli_error($this->conn), "sql" => $sql_do);
-					$this->installFailed = true;
-				}
-			}*/
-
+			if ($sql_do) $modx->db->query($sql_do, false);
 		}
 		
 		
