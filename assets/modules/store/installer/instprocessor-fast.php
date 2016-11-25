@@ -492,6 +492,7 @@ if (count($moduleSnippets ) > 0) {
 }
 
 // install data
+
 if (is_file($installPath.'/'.$moduleSQLDataFile)) {
     echo "<p>" . $_lang['installing_demo_site'];
     $sqlParser->process($installPath.'/'.$moduleSQLDataFile);
