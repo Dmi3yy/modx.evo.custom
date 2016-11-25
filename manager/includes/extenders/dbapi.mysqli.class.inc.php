@@ -1,4 +1,4 @@
-function <?php
+<?php
 class DBAPI {
 	var $conn;
 	var $config;
