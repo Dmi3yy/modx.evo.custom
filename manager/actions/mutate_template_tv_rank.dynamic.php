@@ -47,7 +47,7 @@ if($limit>1) {
         $tvsArr[] = $row;
     }
     $tvsArr = array_reverse($tvsArr,true);  // reverse ORDERBY DESC
-
+	
     $i = 0;
     foreach($tvsArr as $row) {
         if ($i++ == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br /><ul id="sortlist" class="sortableList">';
