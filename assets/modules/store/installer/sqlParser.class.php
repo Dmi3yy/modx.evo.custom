@@ -81,7 +81,7 @@ class SqlParser {
 
 
 			$num = $num + 1;
-			if ($sql_do) $modx->db->query($sql_do, true);
+			if ($sql_do) $modx->db->query($sql_do, false);
 		}
 		
 		
