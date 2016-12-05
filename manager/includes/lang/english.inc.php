@@ -68,7 +68,7 @@ $_lang["allow_mgr_access"] = 'Manager Interface Access';
 $_lang["allow_mgr_access_message"] = 'Select this option to enable or disable access to the manager interface. <b>NOTE: If this option is set to no then the user will be redirected to the Manager Login Startup or Site Start web page.</b>';
 $_lang["already_deleted"] = 'has already been deleted.';
 $_lang["attachment"] = 'Attachment';
-$_lang["author_infos"] = 'Author infos';
+$_lang["author_infos"] = 'Author information';
 $_lang["automatic_alias_message"] = 'Select \'yes\' to have the system automatically generate a URL alias based on the Resource\'s page title when saving.';
 $_lang["automatic_alias_title"] = 'Automatically generate URL alias';
 $_lang["backup"] = 'Backup';
@@ -1214,6 +1214,7 @@ $_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved in and
 $_lang["bkmgr_snapshot_submit"] = 'Add Snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshots';
 $_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_restore_confirm"] = 'Are you sure you want to revert backup\n[+filename+] ?';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshots available';
 
 $_lang["files.dynamic.php1"] = 'New Text File';
