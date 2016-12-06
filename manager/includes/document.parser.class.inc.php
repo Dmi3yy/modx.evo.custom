@@ -71,7 +71,7 @@ class DocumentParser {
     var $snipLapCount;
     var $messageQuitCount;
     var $time;
-
+	
     /**
      * Document constructor
      *
@@ -419,6 +419,11 @@ class DocumentParser {
                     $docIdentifier= intval($_GET['id']);
                 }
                 break;
+            default:
+                if(strpos($_SERVER['REQUEST_URI'],'index.php')!==false) {
+                    list(,$_) = explode('index.php', $_SERVER['REQUEST_URI'], 2);
+                    if(substr($_,0,1)==='/') $this->sendErrorPage();
+                }
         }
         return $docIdentifier;
     }
@@ -2010,25 +2015,8 @@ class DocumentParser {
 
         //$_REQUEST['q'] = $_GET['q'] = $this->setRequestQ($_SERVER['REQUEST_URI']);
         
-        // IIS friendly url fix
-        if ($this->config['friendly_urls'] == 1 && strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false) {
-            $url= $_SERVER['QUERY_STRING'];
-            $err= substr($url, 0, 3);
-            if ($err == '404' || $err == '405') {
-                $k= array_keys($_GET);
-                unset ($_GET[$k[0]]);
-                unset ($_REQUEST[$k[0]]); // remove 404,405 entry
-                $qp= parse_url(str_replace($this->config['site_url'], '', substr($url, 4)));
-                $_SERVER['QUERY_STRING']= $qp['query'];
-                if (!empty ($qp['query'])) {
-                    parse_str($qp['query'], $qv);
-                    foreach ($qv as $n => $v)
-                        $_REQUEST[$n]= $_GET[$n]= $v;
-                }
-                $_SERVER['PHP_SELF']= $this->config['base_url'] . $qp['path'];
-                $_REQUEST['q']= $_GET['q']= $qp['path'];
-            }
-        }
+        if (strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false)
+            $this->_IIS_furl_fix(); // IIS friendly url fix
 
         // check site settings
         if (!$this->checkSiteStatus()) {
@@ -2117,6 +2105,31 @@ class DocumentParser {
         }
         if($this->config['seostrict']==='1') $this->sendStrictURI();
         $this->prepareResponse();
+    }
+
+    function _IIS_furl_fix()
+    {
+        if($this->config['friendly_urls'] != 1) return;
+        
+        $url= $_SERVER['QUERY_STRING'];
+        $err= substr($url, 0, 3);
+        if ($err !== '404' && $err !== '405') return;
+        
+        $k= array_keys($_GET);
+        unset ($_GET[$k[0]]);
+        unset ($_REQUEST[$k[0]]); // remove 404,405 entry
+        $qp= parse_url(str_replace($this->config['site_url'], '', substr($url, 4)));
+        $_SERVER['QUERY_STRING']= $qp['query'];
+        if (!empty ($qp['query'])) {
+            parse_str($qp['query'], $qv);
+            foreach ($qv as $n => $v)
+            {
+                $_REQUEST[$n]= $_GET[$n]= $v;
+            }
+        }
+        $_SERVER['PHP_SELF']= $this->config['base_url'] . $qp['path'];
+        $_REQUEST['q']= $_GET['q']= $qp['path'];
+        return $qp['path'];
     }
 
     function setRequestQ($request_uri) {
@@ -2511,15 +2524,15 @@ class DocumentParser {
         $type = intval($type);
         $id = intval($id);
         if(!$type || !$id || !$userId) return false;
-	    
+
         $sql = sprintf('REPLACE INTO %s (internalKey, elementType, elementId, lasthit)
                 VALUES (%d, %d, %d, %d)',
-			    $this->getFullTableName('active_user_locks'),
-			    $userId,
-			    $type,
+            $this->getFullTableName('active_user_locks'),
+            $userId,
+            $type,
             $id,
             $this->time
-		    );
+        );
         $this->db->query($sql);
     }
 
@@ -2535,21 +2548,21 @@ class DocumentParser {
         $type = intval($type);
         $id = intval($id);
         if(!$type || !$id) return false;
-	    
-	    if(!$includeAllUsers) {
+        
+        if(!$includeAllUsers) {
             $sql = sprintf('DELETE FROM %s WHERE internalKey = %d AND elementType = %d AND elementId = %d;',
-			    $this->getFullTableName('active_user_locks'),
-			    $userId,
-			    $type,
-			    $id
-		    );
-	    } else {
+                $this->getFullTableName('active_user_locks'),
+                $userId,
+                $type,
+                $id
+            );
+        } else {
             $sql = sprintf('DELETE FROM %s WHERE elementType = %d AND elementId = %d;',
-			    $this->getFullTableName('active_user_locks'),
-			    $type,
-			    $id
-		    );
-	    }
+                $this->getFullTableName('active_user_locks'),
+                $type,
+                $id
+            );
+        }
         $this->db->query($sql);
     }
 
@@ -4865,7 +4878,7 @@ class DocumentParser {
     }
 
     function messageQuit($msg= 'unspecified error', $query= '', $is_error= true, $nr= '', $file= '', $source= '', $text= '', $line= '', $output='') {
-
+        
         if(0<$this->messageQuitCount) return;
         $this->messageQuitCount++;
         
