@@ -122,7 +122,7 @@ $debug = isset($debug)? $debug : 0;
     Related:
     - <debug>
 */
-$phx = (isset($phx))? $phx : 0;
+$phx = (isset($phx))? $phx : 1;
 /*
     Param: phx
 
