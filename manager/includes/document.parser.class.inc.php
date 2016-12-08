@@ -1417,7 +1417,7 @@ class DocumentParser {
             if(isset($_['token'])) unset($_['token']);
         }
         if(strpos($key,'[')!==false)
-            $value = eval("return {$key};");
+            $value = $key ? eval("return {$key};") : '';
         elseif(0<eval("return count({$key});"))
             $value = eval("return print_r({$key},true);");
         else $value = '';
@@ -1504,7 +1504,7 @@ class DocumentParser {
             }
             elseif($key!==''||trim($char)!=='') $key .= $char;
             
-            if(!is_null($value))
+            if(isset($value) && !is_null($value))
             {
                 if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
                 $key=trim($key);
@@ -4748,9 +4748,7 @@ class DocumentParser {
     }
     
     function cleanUpMODXTags($content='') {
-        global $sanitize_seed;
-        
-        if($content !== '' && strpos($sanitize_seed,$content)!==false) $content = str_replace($sanitize_seed, '', $content);
+        $content = $this->removeSanitizeSeed($content);
         
         $enable_filter = $this->config['enable_filter'];
         $this->config['enable_filter'] = 1;
