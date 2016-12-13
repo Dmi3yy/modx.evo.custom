@@ -80,6 +80,10 @@ class DocManager {
     			if(!isset($this->modx->config['mgr_date_picker_path']))   $this->modx->config['mgr_date_picker_path']   = 'media/script/air-datepicker/datepicker.inc.php';
     			$dp = $this->modx->manager->loadDatePicker($this->modx->config['mgr_date_picker_path']);
     			$tpl = str_replace('</body>',$dp.'</body>',$tpl);
+                global $modx;
+                $evtOut = $modx->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
+                $onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? implode("\n", $evtOut) : '';
+                $tpl = str_replace('[+onManagerMainFrameHeaderHTMLBlock+]',$onManagerMainFrameHeaderHTMLBlock,$tpl);
     		}
     		if(!isset($this->modx->config['mgr_jquery_path']))  $this->modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
     		$tpl = $this->modx->mergeSettingsContent($tpl);
