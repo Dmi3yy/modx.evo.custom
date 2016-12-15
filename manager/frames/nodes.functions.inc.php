@@ -144,8 +144,8 @@ function makeHTML($indent,$parent,$expandAll,$theme) {
                 case $modx->config['site_unavailable_page'] : $icon = $_style['tree_page_hourglass']; break;
                 case $modx->config['unauthorized_page']     : $icon = $_style['tree_page_info']; break;
                 default:
-            if ($privateweb||$privatemgr) {
-                if (isset($iconsPrivate[$contentType])) $icon = $iconsPrivate[$contentType];
+                    if ($privateweb||$privatemgr) {
+                        if (isset($iconsPrivate[$contentType])) $icon = $iconsPrivate[$contentType];
                         else                                    $icon = $_style['tree_page_secure'];
                     } elseif (isset($icons[$contentType]))      $icon = $icons[$contentType];
                     else                                        $icon = $_style['tree_page'];
@@ -338,7 +338,7 @@ function getTplOpenFolderNode() {
     >[+spacer+]<img
         id="s[+id+]"
         align="absmiddle"
-        style="margin-left:-1px;"
+        style="margin-left:4px;"
         src="[&tree_minusnode&]"
         onclick="toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
         oncontextmenu="this.onclick(event); return false;"
@@ -370,7 +370,7 @@ function getTplClosedFolderNode() {
     >[+spacer+]<img
         id="s[+id+]"
         align="absmiddle"
-        style="margin-left:-1px;"
+        style="margin-left:4px;"
         src="[&tree_plusnode&]"
         onclick="toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
         oncontextmenu="this.onclick(event); return false;"
