@@ -239,7 +239,7 @@ class tinymce4bridge extends modxRTEbridge
                     $dataEls[] = "'{$cssId}': tinymce_clean_html_before_save( $('#modx_{$cssId}').html() )";
                     $phs .= (!empty($phs) ? ',' : '') . $cssId;
                 }
-                $dataEls = join(",\n                ", $dataEls);
+                $dataEls = join(",\n                    ", $dataEls);
 
                 $this->setPlaceholder('dataObject', "
                 var data = {

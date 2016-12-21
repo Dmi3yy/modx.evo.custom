@@ -53,7 +53,7 @@ function hasSupport() {
 	
 	hasSupport.support = ( typeof document.implementation != "undefined" &&
 			document.implementation.hasFeature( "html", "1.0" ) )
-
+			
 	return hasSupport.support;
 }
 
@@ -140,7 +140,7 @@ WebFXTabPane.prototype.addTabPage = function ( oElement, callBackFnc) { // modif
 	
 WebFXTabPane.prototype.dispose = function () {
 	this.element.tabPane = null;
-	this.element = null;		
+	this.element = null;
 	this.tabRow = null;
 	
 	for (var i = 0; i < this.pages.length; i++) {
@@ -300,7 +300,7 @@ function setupAllTabs() {
 		// unitiated tab page wit a valid tab pane parent
 		else if ( tabPageRe.test( cn ) && !el.tabPage &&
 					tabPaneRe.test( el.parentNode.className ) ) {
-			el.parentNode.tabPane.addTabPage( el );			
+			el.parentNode.tabPane.addTabPage( el );
 		}
 	}
 }

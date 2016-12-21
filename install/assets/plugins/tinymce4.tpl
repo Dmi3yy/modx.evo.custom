@@ -1,7 +1,7 @@
 //<?php
 /**
  * TinyMCE4
- * 
+ *
  * Javascript WYSIWYG editor
  *
  * @category    plugin

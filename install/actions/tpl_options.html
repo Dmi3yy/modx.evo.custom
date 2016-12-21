@@ -50,7 +50,7 @@
     (function($){
         $('#installChoices').find('h3').each(function(){
          $(this).append($("<span/>").addClass("actions").html($('p.actions').html()));
-        });
+        });  
         $('.actions').on('click','a', function(e){
             e.preventDefault();
             var a = $(this);
@@ -62,23 +62,23 @@
                 case a.is('.toggle_check_none'):    i.prop('checked', false); break;
                 case a.is('.toggle_check_toggle'):  i.prop('checked', function(){ return !$(this).prop('checked');}); break;
             }
-    });
+        });
         $('#installdata_field').click(function(){
-        handleSampleDataCheckbox();
-    });
-    var handleSampleDataCheckbox = function(){
+            handleSampleDataCheckbox();
+        });
+        var handleSampleDataCheckbox = function(){
             demo = $('#installdata_field').prop('checked');
             $('input:checkbox.toggle.demo').each(function(ix, el){
-            if(demo) {
+                if(demo) {
                     $(this).prop('checked', true).prop('disabled', true);
-    } else {
+                } else {
                     $(this).prop('disabled', false);
-    }
-        });
-    };
-    
-    // handle state of demo content checkbox on page load
-    handleSampleDataCheckbox();
+                }
+            });
+        };
+        
+        // handle state of demo content checkbox on page load
+        handleSampleDataCheckbox();
     })(jQuery);
     
 </script>

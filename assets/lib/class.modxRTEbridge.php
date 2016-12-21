@@ -560,7 +560,7 @@ class modxRTEbridge
             if ($row == NULL) {
                 continue;
             };     // Skip disabled config-settings
-
+        
             $row = array_merge($this->langArr, $row);
         
             $row['name'] = $this->editorKey . '_' . $name;
@@ -577,7 +577,7 @@ class modxRTEbridge
             $output = $modx->parseText($output, $ph);          // Replace values / settings
             $output = $modx->parseText($output, $row);         // Replace new PHs from values / settings
             $output = $modx->parseText($output, $ph);          // Replace last values / settings
-
+        
             $ph['rows'] .= $output . "\n";
         };
 

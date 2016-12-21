@@ -30,12 +30,12 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
         #resizer { position: absolute; top: 70px; bottom: 0; left: <?php echo $modx->config['manager_tree_width'];?>px; width: 12px; cursor: col-resize; z-index: 999 }
         #resizer #hideMenu {
             display: block;
-            margin-top:5px;
-            margin-left:-8px;
-            cursor:pointer;
+            margin-top: 5px;
+            margin-left: -8px;
+            cursor: pointer;
             background: transparent url("media/style/<?php echo $modx->config['manager_theme']; ?>/images/icons/application_side_contract.png") no-repeat !important;
-            width:16px;
-            height:16px;
+            width: 16px;
+            height: 16px;
         }
         #resizer2 { position: absolute; top: 70px; right: 20px; width: 3px; z-index: 110;}
         #resizer2 #hideTopMenu {display:block;

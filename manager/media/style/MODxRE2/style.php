@@ -140,9 +140,9 @@ $_style['icons_mail']               = $style_path.'icons/email.png';
 $_style['icons_working']            = $style_path.'icons/exclamation.png';
 
 //event log
-$_style['icons_event1']             = $style_path.'icons/event1.png';
-$_style['icons_event2']             = $style_path.'icons/event2.png';
-$_style['icons_event3']             = $style_path.'icons/event3.png';
+$_style['icons_event1']             = $style_path.'icons/event1.png'; 
+$_style['icons_event2']             = $style_path.'icons/event2.png'; 
+$_style['icons_event3']             = $style_path.'icons/event3.png'; 
 
 
 //nowhere in the manager

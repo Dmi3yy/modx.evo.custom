@@ -211,7 +211,7 @@ class template{
 			$template = $this->language['missing_placeholders_tpl'];
 		}
 		if(strpos($template,'[!')!==false) $template = str_replace(array('[!','!]'),array('[[',']]'),$template);
-			return $template;
+		return $template;
 	}
 
 	// ---------------------------------------------------

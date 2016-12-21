@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 $modx->config['mgr_jquery_path'] = 'media/script/jquery/jquery.min.js';
 $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
@@ -297,15 +297,15 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
         treeParams = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + document.sortFrm.dt.value + '&tree_sortby=' + document.sortFrm.sortby.value + '&tree_sortdir=' + document.sortFrm.sortdir.value + '&tree_nodename=' + document.sortFrm.nodename.value;
         new Ajax('index.php?'+treeParams, {method: 'get',onComplete:rpcLoadData}).request();
     }
-
-	    <?php 
-	        // Prepare lang-strings
-	        $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"], 
-                'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
-                'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
+    
+    <?php
+    // Prepare lang-strings
+    $unlockTranslations = array('msg'=>$_lang["unlock_element_id_warning"],
+                                'type1'=>$_lang["lock_element_type_1"], 'type2'=>$_lang["lock_element_type_2"], 'type3'=>$_lang["lock_element_type_3"], 'type4'=>$_lang["lock_element_type_4"],
+                                'type5'=>$_lang["lock_element_type_5"], 'type6'=>$_lang["lock_element_type_6"], 'type7'=>$_lang["lock_element_type_7"], 'type8'=>$_lang["lock_element_type_8"]);
     
     foreach ($unlockTranslations as $key=>$value) $unlockTranslations[$key] = iconv($modx->config["modx_charset"], "utf-8", $value);
-	    ?>
+    ?>
     
     var lockedElementsTranslation = <?php echo json_encode($unlockTranslations); ?>;
     
@@ -355,7 +355,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
                 var href = '';
                 if(treedisp_children==0) {
                     href = "index.php?a=3&r=1&id=" + id + getFolderState();
-				} else {
+                } else {
                     setLastClickedElement(7, id);
                     href = "index.php?a=<?php echo(!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>&r=1&id=" + id; // edit as default action
                 }
@@ -366,7 +366,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
                     top.mainMenu.reloadtree(); // Show updated locks as &r=1 will not work in popup
                 } else {
                     parent.main.location.href=href;
-				}
+                }
             }
         }
         if(ca=="parent") {
@@ -428,7 +428,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
         a.onclick = '';
     }
     }
-
+    
     function setLastClickedElement(type, id) {
         localStorage.setItem('MODX_lastClickedElement', '['+type+','+id+']' );    
     }

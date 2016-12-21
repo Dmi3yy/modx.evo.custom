@@ -32,13 +32,13 @@ if (!function_exists('modx_sanitize_gpc')) {
             foreach ($values as $key => $value) {
                 if (is_array($value)) modx_sanitize_gpc($value, $depth);
                 else                  $values[$key] = getSanitizedValue($value);
+            }
         }
-                }
         else $values = getSanitizedValue($values);
         
         return $values;
-            }
-            }
+    }
+}
 
 function getSanitizedValue($value='') {
     global $sanitize_seed;
@@ -50,11 +50,11 @@ function getSanitizedValue($value='') {
         if(strpos($value,$bracket)===false) continue;
         $sanitizedBracket = str_replace('#', $sanitize_seed, sprintf('#%s#%s#', substr($bracket,0,1), substr($bracket,1,1)));
         $value = str_replace($bracket,$sanitizedBracket,$value);
-        }
+    }
     $value = str_ireplace('<script', 'sanitized_by_modx<s cript', $value);
     $value = preg_replace('/&#(\d+);/', 'sanitized_by_modx& #$1', $value);
     return $value;
-    }
+}
 
 modx_sanitize_gpc($_GET);
 if (!defined('IN_MANAGER_MODE') || (defined('IN_MANAGER_MODE') && (!IN_MANAGER_MODE || IN_MANAGER_MODE === 'false'))) {

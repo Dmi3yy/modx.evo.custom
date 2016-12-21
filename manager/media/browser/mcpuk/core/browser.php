@@ -709,15 +709,15 @@ class browser extends uploader {
         die;
     }
 
-    protected function getFiles($dir) {
-        $thumbDir = "{$this->config['uploadDir']}/{$this->config['thumbsDir']}/$dir";
-        $dir = "{$this->config['uploadDir']}/$dir";
-        $return = array();
-        $files = dir::content($dir, array('types' => "file"));
-        if ($files === false)
-            return $return;
+	protected function getFiles($dir) {
+		$thumbDir = "{$this->config['uploadDir']}/{$this->config['thumbsDir']}/$dir";
+		$dir = "{$this->config['uploadDir']}/$dir";
+		$return = array();
+		$files = dir::content($dir, array('types' => "file"));
+		if ($files === false)
+			return $return;
 
-        foreach ($files as $file) {
+		foreach ($files as $file) {
 			$ext = file::getExtension($file);
 			$smallThumb = false;
 			if (in_array(strtolower($ext), array('png', 'jpg', 'gif', 'jpeg' )) ) {
@@ -732,31 +732,31 @@ class browser extends uploader {
 						in_array($size[2], array(IMAGETYPE_GIF, IMAGETYPE_PNG, IMAGETYPE_JPEG));
 				}
 			}
-            $stat = stat($file);
-            if ($stat === false) continue;
-            $name = basename($file);
-            $types = $this->config['types'];
-            $types = explode(' ',$types['images'].' '.$types['image']);
-            if (substr($name,0,1) == '.' && !$this->config['showHiddenFiles']) continue;
-            if ($this->type == 'images' && !in_array(strtolower($ext),$types)) continue;
-            $bigIcon = file_exists("themes/{$this->config['theme']}/img/files/big/$ext.png");
-            $smallIcon = file_exists("themes/{$this->config['theme']}/img/files/small/$ext.png");
-            $thumb = file_exists("$thumbDir/$name");
-            $return[] = array(
-                'name' => stripcslashes($name),
-                'size' => $stat['size'],
-                'mtime' => $stat['mtime'],
-                'date' => @strftime($this->dateTimeSmall, $stat['mtime']),
-                'readable' => is_readable($file),
-                'writable' => file::isWritable($file),
-                'bigIcon' => $bigIcon,
-                'smallIcon' => $smallIcon,
-                'thumb' => $thumb,
-                'smallThumb' => $smallThumb
-            );
-        }
-        return $return;
-    }
+			$stat = stat($file);
+			if ($stat === false) continue;
+			$name = basename($file);
+			$types = $this->config['types'];
+			$types = explode(' ',$types['images'].' '.$types['image']);
+			if (substr($name,0,1) == '.' && !$this->config['showHiddenFiles']) continue;
+			if ($this->type == 'images' && !in_array(strtolower($ext),$types)) continue;
+			$bigIcon = file_exists("themes/{$this->config['theme']}/img/files/big/$ext.png");
+			$smallIcon = file_exists("themes/{$this->config['theme']}/img/files/small/$ext.png");
+			$thumb = file_exists("$thumbDir/$name");
+			$return[] = array(
+				'name' => stripcslashes($name),
+				'size' => $stat['size'],
+				'mtime' => $stat['mtime'],
+				'date' => @strftime($this->dateTimeSmall, $stat['mtime']),
+				'readable' => is_readable($file),
+				'writable' => file::isWritable($file),
+				'bigIcon' => $bigIcon,
+				'smallIcon' => $smallIcon,
+				'thumb' => $thumb,
+				'smallThumb' => $smallThumb
+			);
+		}
+		return $return;
+	}
 
     protected function getTree($dir, $index=0) {
         $path = explode("/", $dir);

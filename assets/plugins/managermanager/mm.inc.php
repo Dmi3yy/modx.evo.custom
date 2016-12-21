@@ -287,7 +287,7 @@ switch ($e->name){
 			// Load the jquery library
 			$output = '<!-- Begin ManagerManager output -->'."\n";
 			if(!isset($modx->config['mgr_jquery_path']) || empty($modx->config['mgr_jquery_path']))
-			$output .= includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
+				$output .= includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
 			$output .= includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']);
 			
 			$output .= '<script type="text/javascript">'."\n";
@@ -310,7 +310,7 @@ switch ($e->name){
 		$e->output("<!-- Begin ManagerManager output -->\n");
 		// Load the js libraries
 		if(!isset($modx->config['mgr_jquery_path']) || empty($modx->config['mgr_jquery_path']))
-		$e->output(includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']));
+			$e->output(includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']));
 		$e->output(includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']));
 		$e->output(includeJsCss($jsUrls['ddTools']['url'], 'html', $jsUrls['ddTools']['name'], $jsUrls['ddTools']['version']));
 		
@@ -430,7 +430,7 @@ $j(function(){
 			// Load the jquery library
 			echo '<!-- Begin ManagerManager output -->';
 			if(!isset($modx->config['mgr_jquery_path']) || empty($modx->config['mgr_jquery_path']))
-			echo includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
+				echo includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
 			
 			// Create a mask to cover the page while the fields are being rearranged
 			echo '

@@ -959,11 +959,14 @@ class DocumentParser {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
             
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
+            list($key,$context)   = explode('@',$key,2);
             
-            if(isset($ph[$key]))             $value = $ph[$key];
-            elseif(strpos($key,'@')!==false) $value = $this->_contextValue($key);
-            elseif($modifiers)               $value = '';
-            else                             $value = $matches[0][$i];
+            if(!isset($ph[$key]) && !$context) {
+                $content= str_replace($matches[0][$i], '', $content);
+                continue;
+            }
+            elseif($context) $value = $this->_contextValue("{$key}@{$context}");
+            else             $value = $ph[$key];
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
@@ -1307,10 +1310,22 @@ class DocumentParser {
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
         }
+        
+        $lock_file_path = MODX_BASE_PATH . 'assets/cache/lock_' . str_replace(' ','-',strtolower($this->event->activePlugin)) . '.pageCache.php';
+        if($this->isBackend()) {
+            if(is_file($lock_file_path)) {
+                $msg = sprintf("Plugin parse error, Temporarily disabled '%s'.", $this->event->activePlugin);
+                $this->logEvent(0, 3, $msg, $msg);
+                return;
+            }
+            elseif(stripos($this->event->activePlugin,'ElementsInTree')===false) touch($lock_file_path);
+        }
         ob_start();
         eval($pluginCode);
         $msg = ob_get_contents();
         ob_end_clean();
+        if(is_file($lock_file_path)) unlink($lock_file_path);
+        
         if ((0 < $this->config['error_reporting']) && $msg && isset($php_errormsg)) {
             $error_info = error_get_last();
             if ($this->detectError($error_info['type'])) {
@@ -1963,20 +1978,20 @@ class DocumentParser {
             $bt= md5($source);
 
             // invoke OnParseDocument event
-            $this->documentOutput= $source; // store source code so plugins can
+            $this->documentOutput = $source; // store source code so plugins can
             $this->invokeEvent('OnParseDocument'); // work on it via $modx->documentOutput
-            $source= $this->documentOutput;
+            $source = $this->documentOutput;
 
-            $source= $this->ignoreCommentedTagsContent($source);
-            $source= $this->mergeConditionalTagsContent($source);
+            $source = $this->ignoreCommentedTagsContent($source);
+            $source = $this->mergeConditionalTagsContent($source);
             $source = $this->mergeSettingsContent($source);
             
-            $source= $this->mergeDocumentContent($source);
-            $source= $this->mergeSettingsContent($source);
-            $source= $this->mergeChunkContent($source);
+            $source = $this->mergeDocumentContent($source);
+            $source = $this->mergeSettingsContent($source);
+            $source = $this->mergeChunkContent($source);
             if($this->config['show_meta']) $source= $this->mergeDocumentMETATags($source);
-            $source= $this->evalSnippets($source);
-            $source= $this->mergePlaceholderContent($source);
+            $source = $this->evalSnippets($source);
+            $source = $this->mergePlaceholderContent($source);
             
             if($bt === md5($source)) break;
             $i++;
@@ -2486,7 +2501,7 @@ class DocumentParser {
      */
     function cleanupExpiredLocks() {
         // Clean-up active_user_sessions first
-        $timeout = intval($this->config['session_timeout']) < 2 ? 2 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
+        $timeout = intval($this->config['session_timeout']) < 2 ? 120 : $this->config['session_timeout'] * 60; // session.js pings every 10min, updateMail() in mainMenu pings every minute, so 2min is minimum
         $validSessionTimeLimit = $this->time - $timeout;
         $this->db->delete($this->getFullTableName('active_user_sessions'), "lasthit < {$validSessionTimeLimit}");
 
@@ -2499,6 +2514,8 @@ class DocumentParser {
             foreach ($rs as $row) $userIds[] = $row['internalKey'];
             $userIds = implode(',', $userIds);
             $this->db->delete($this->getFullTableName('active_user_locks'), "internalKey NOT IN({$userIds})");
+        } else {
+            $this->db->delete($this->getFullTableName('active_user_locks'));
         }
     }
 
@@ -3407,7 +3424,7 @@ class DocumentParser {
      * 
      * @return {string} - Parsed text.
      */
-    function parseText($tpl='', $ph=array(), $left= '[+', $right= '+]')
+    function parseText($tpl='', $ph=array(), $left= '[+', $right= '+]', $execModifier=true)
     {
         if(!$ph)  return $tpl;
         if(!$tpl) return $tpl;
@@ -3418,7 +3435,8 @@ class DocumentParser {
         $replace= array ();
         foreach($matches[1] as $i=>$key) {
             
-            if(strpos($key,':')!==false) list($key,$modifiers)=$this->splitKeyAndFilter($key);
+            if(strpos($key,':')!==false && $execModifier)
+                list($key,$modifiers)=$this->splitKeyAndFilter($key);
             else $modifiers = false;
             
             if(isset($ph[$key])) $value = $ph[$key];
@@ -5278,8 +5296,8 @@ class DocumentParser {
         $tpl_dir = 'assets/templates/';
         
         if(strpos($str,MODX_MANAGER_PATH)===0)               return false;
-        elseif(is_file(MODX_BASE_PATH . $str))                              $file_path = MODX_BASE_PATH.$str;
-        elseif(is_file(MODX_BASE_PATH . "{$tpl_dir}{$str}"))                $file_path = MODX_BASE_PATH.$tpl_dir.$str;
+        elseif(is_file(MODX_BASE_PATH . $str))               $file_path = MODX_BASE_PATH.$str;
+        elseif(is_file(MODX_BASE_PATH . "{$tpl_dir}{$str}")) $file_path = MODX_BASE_PATH.$tpl_dir.$str;
         else                                                 return false;
         
         if(!$file_path || !is_file($file_path)) return false;

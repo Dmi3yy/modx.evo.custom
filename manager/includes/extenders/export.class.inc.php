@@ -253,7 +253,7 @@ class EXPORT_SITE
     function curl_get_contents($url, $timeout = 30 )
     {
     	if(!function_exists('curl_init')) return @file_get_contents($url);
-    	
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);    // 0 = DO NOT VERIFY AUTHENTICITY OF SSL-CERT

@@ -404,12 +404,12 @@ class Wayfinder {
                 }
                 $sort = implode(',', $_);
             }
-
+            
             // build query
             if($modx->isFrontend()) {
                 if(!$this->_config['showPrivate']) $access = "sc.privateweb=0";
                 else                               $access = '';
-                }
+            }
             else $access = sprintf("1='%s' OR sc.privatemgr=0", $_SESSION['mgrRole']);
             
             if($access!=='') {
