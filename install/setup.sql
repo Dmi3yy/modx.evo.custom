@@ -32,10 +32,11 @@ CREATE TABLE `{PREFIX}active_user_locks` (
 DROP TABLE IF EXISTS `{PREFIX}active_user_sessions`;
 
 CREATE TABLE `{PREFIX}active_user_sessions` (
+  `sid` varchar(32) NOT NULL default '',
   `internalKey` int(9) NOT NULL default '0',
   `lasthit` int(20) NOT NULL default '0',
   `ip` varchar(50) NOT NULL default '',
-  PRIMARY KEY(`internalKey`)
+  PRIMARY KEY(`sid`)
 ) ENGINE=MyISAM COMMENT='Contains data about valid user sessions.';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}categories` (
