@@ -1,0 +1,593 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+<title>DirectResize</title>
+<style type="text/css">
+<!--
+body {
+	font: normal 10pt Tahoma;
+}
+h1 {
+	font-weight: normal;
+}
+h2 {
+	font-weight: normal;
+	font-size: 160%;
+	margin-top: 1.4em;
+}
+textarea {
+	font-size: 85%;
+	font: normal 10pt Tahoma;
+}
+code {
+	font-family: "Courier new";
+	color:#000080;
+}
+ol li {
+	list-style-type: decimal;
+}
+ul li {
+	list-style-type: square;
+}
+ul li li {
+	list-style-type: disc;
+}
+td
+{
+	padding: 4px;
+	border: 1px solid #CCC;
+}
+.theader{
+	color: #999;
+	text-align:center;
+}
+.label {
+	color: #CC0033;
+}
+-->
+</style>
+</head>
+<body>
+<h1>DirectResize 0.8.0</h1>
+<h2>Description</h2>
+<h3>Short and simple</h3>
+<p>Its like  Maxigallery but for single images. </p>
+<h3>Full</h3>
+<p>Fully customizable plugin with a number of functions like: automatic  thumbnails creation, watermarking (text or transparent PNG), using config files  to set plugin parameters, big images openning with AJAX (lightbox, slimbox, highslide...), fully  templateable output, thumbnails for WYSIWYG-editor etc...</p>
+<h3>Features</h3>
+<ul>
+	<li>Possible       to integrate any javascript display mode: Slidebox, Lightbox v2.0,       Slimbox, Highslide etc </li>
+	<li>Watermarking       (text or transparent PNG) </li>
+	<li>Plugin       settings in the config file with a big number of plugin parameters </li>
+	<li>Fully templateable output </li>
+	<li>Using       plugin to show a remote images </li>
+	<li>Special preview for WYSIWYG-editor (tested with TinyMCE)</li>
+	<li>Creation of thumbnails with cropping </li>
+	<li>New       images will be generated if it is needed, in other cases they will be taken       from the cache </li>
+	<li>Support       for JPG and PNG files (GIF is not currently supported) </li>
+</ul>
+<h3>How  it works</h3>
+<p>First of all this plugin is intended for using with the WYSIWYG-editor and the target audience of plugin users is the clients who doesn’t have any  knowledges in web-development and HTML and who needs to use images in the text  with thumbnails. It would be rather uneasy to explain such man that firstly it  is necessary to create the reduced copy of the image, then to insert it into  the document through the WYSIWYG-editor and after it to make a hyperlink to the  big image.</p>
+<p> So the actions have been simpified to the minimum – when the big image  is inserted to the text and the sizes of the thumbnail are established the  plugin will create automatically the thumbnail with needed hyperlinks.</p>
+<p> Also while the opening of a document that has such images the thumbnails  will be displayed with a special watermark in the WYSIWYG-editor instead of the  big images. This watermark speaks conditionally that the given image is not  small image only but it is a hyperlink to the big image and it allows to tell  the difference between such images and the really small images that can be in  the document.</p>
+<p> If the sizes of the thumbnails is changed then in the next using of the  plugin will be created new thumbnails in compliance with new sizes.</p>
+<p> Of course you can use the plugin without the WYSIWYG-editor simply when  you insert the image as HTML-code and point the attributes “width” and “height”  that are smaller than the real sizes.</p>
+<h2>Installation</h2>
+<ul>
+	<li> Extract the contents of the zip file to your computer </li>
+	<li> FTP to your server an go to the modx installation folder </li>
+	<li>Put the extracted assets folder to the site root and the files will go to correct place </li>
+	<li>Make the <em>assets/drgalleries/</em> folder writable (<em>CHMOD 777</em> unless you are in phpSuExec environment, in that case <em>CHMOD 755</em>)</li>
+	<li>Close your FTP program and go to the MODx manager </li>
+	<li>Create new plugin called DirecrResizeand paste the contents of <em>directResize.plugin.txt</em> to it</li>
+	<li>Copy and Paste  the following into &quot;Plugin configuration&quot; on the Configuration tab <br />
+		<textarea readonly="readonly" cols="80" rows="2" name="config">&amp;config=Configuration;string;highslide &amp;clearCache=Cache clear mode;list;0,1,2;0</textarea>
+	</li>
+	<li>On the &quot;System event&quot; tab check <em>OnWebPagePrerender</em>, <em>OnCacheUpdate, OnBeforeDocFormSave</em>, <em>OnDocFormPrerender</em></li>
+	<li>Save </li>
+</ul>
+<h2>Plugin configuration</h2>
+<p>There are two parameters on the tab “Configuration” of the plugin settings page. The parameter  “Configuration” is the name of used configuration. The file with the same name  and the suffix “.config.php” should be placed in the plugin folder “configs”.  This parameter and the related file are mandatory. </p>
+<p>&quot;<em>Cache clear mode</em>&quot; option. Plugin cache is cleared when the system cache is cleared.</p>
+<ul>
+	<li> 0 - clearing is off</li>
+	<li>1- clear cache only for edited document when saving</li>
+	<li>2- clear cache  for all documents</li>
+</ul>
+<p>Updating the cache is required in rare cases. For example, when needed to delete image files referred to in the documents no longer exist. Or when changing watermark. New images are generated only if changes in their size.  Therefore, new watermarks are not marked because the size of the images  have not changed. In this case, the cache is required to update to  remove images and generate them again.</p>
+<p>In other cases, the plugin generates new images without the need  to update the cache. So, in most cases, better to set <em>Cache clear mode</em> = 0</p>
+<h2>Standart configurations</h2>
+<p>Plugin already has a set of several standard configurations that allow  used  the effects slimbox, slidebox, lightbox, highslide on the site without any configuration. To connect one of the configurations, it is necessary to set  the configuration name in the field Configuration on the configuration tab of the plugin. Possible values:</p>
+<ul>
+	<li>slimbox</li>
+	<li>slidebox</li>
+	<li>lightboxv2</li>
+	<li>highslide</li>
+</ul>
+<p>Additional configuration is in the config files in assets\plugins\directresize\configs folder. Look for highslide.config.php as example. Be sure to customize the list of folders in which images are allowed to proccesed by the plugin. Default folder for images is assets/images. </p>
+<p>Plugin uses the same js-libraries as Maxigallery, but from own folder, so if you use Maxigallery on your site with the same effect of opening images as DirectResize, use parameter <strong>$maxigallery_jscss_packs</strong> to avoid re-connect libraries.</p>
+<h2>Quick start</h2>
+<ol>
+	<li>Install the plugin (see installation and plugin configuration above), make sure that there is drgalleries subfolder in assets  folder with write permissions.</li>
+	<li>Set one of the standart configuration in plugin configuration tab - slimbox, slidebox, lightboxv2, highslide</li>
+	<li>Make sure that the source image files are located in a folder assets/images or its subfolders</li>
+	<li>To force the plug to create thumbs and open images with selected effect,<strong> it's mandatory to set width and/or height for img tags equal width and height of thumbnail</strong>. I.e. for image <code>&lt;img src=&quot;assets/images/image.jpg&quot; width=&quot;120&quot; height=&quot;60&quot; /&gt;</code> will be genereated thumbnail with sizes 120х60. Naturally, the original image.jpg must exceed 120х60 size (otherwise there is no point in creating preview).</li>
+</ol>
+<h2>Parameters</h2>
+<p>Parameters to use in config file. File must be placed on \assets\plugins\directresize\configs folder with name ConfigName.config.php, where ConfigName is a string from “Configuration” field on the configuration tab of the plugin.</p>
+<table width="100%" border="0" cellpadding="0" cellspacing="1">
+	<tr>
+		<td width="20%" class="theader">Parameter </td>
+		<td width="15%" class="theader">Possible values </td>
+		<td width="15%" class="theader">Default value </td>
+		<td class="theader">Description, example </td>
+	</tr>
+	<tr>
+		<td><strong>$lightbox_mode</strong> </td>
+		<td><ul>
+				<li>1 </li>
+				<li>2 </li>
+			</ul></td>
+		<td>1</td>
+		<td>Mode of creation of big images and lightbox-links
+			<ul>
+				<li>1 – big image and lightbox-link to this image are created only if original image has <span class="label">drlightbox</span> label (about labels read <a href="#label">more below</a>)</li>
+				<li> 2 – big image and lightbox-link are created always (if it hasn’t any other conditions) </li>
+			</ul>
+			Despite of the value of parameter <strong>$lightbox_mode </strong>if it hasn’t any other conditions the thumbnails of images will create using all configured action for the thumbnails (overlaying water mark, cropping, etc.)</td>
+	</tr>
+	<tr>
+		<td><strong>$allow_from</strong> </td>
+		<td>&nbsp;</td>
+		<td>&quot;assets/images&quot;</td>
+		<td>A comma-separated list of folders where it is allowed to use the plugin. It is possible to specify a remote resources. All paths that is not specified in this parameter prohibited. Only relative path from site root or remote path with http:// allowed.<br />
+			This parameter is not considered if <strong>$lightbox_mode</strong> = 1</td>
+	</tr>
+	<tr>
+		<td><strong>$deny_from</strong> </td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>A comma-separated list of folders where it is not allowed to use the plugin. It is possible to specify a remote resources. All paths that is not specified in this parameter allowed. Only relative path from site root or remote path with http:// allowed. It is ignored if there is the parameter $allow_from. <br />
+			This parameter is not considered if <strong>$lightbox_mode</strong> = 1</td>
+	</tr>
+	<tr>
+		<td><strong>$allow_from_allremote</strong></td>
+		<td><ul>
+				<li>0</li>
+			<li>1</li>
+		</ul></td>
+		<td>0</td>
+		<td>This parameter allowed to use plugin on all images from remote sources w/o needed to list them all in <strong>$allow_from</strong></td>
+	</tr>
+	<tr>
+		<td><strong>$resize_method</strong> </td>
+		<td><ul>
+				<li>0 </li>
+				<li>1 </li>
+				<li>2 </li>
+				<li>3 </li>
+			</ul></td>
+		<td>3</td>
+		<td>Method of image resizing. It is used while generating thumbnails. In all cases proportions of the image will be saved. imgWidth and imgHeight are parameters of the original image.
+			<ul>
+				<li>0 – firstly image is reduced, then it is cropped to fit in the rectangle imgWidth х imgHeight </li>
+				<li>1 – The height is calculated automatically from given width </li>
+				<li>2 - The width is calculated automatically from given height. </li>
+				<li>3 – The image is reduced so as not to exceed given imgWidth and imgHeight</li>
+			</ul></td>
+	</tr>
+	<tr>
+		<td><strong>$big_quality</strong> </td>
+		<td>integer 1-100</td>
+		<td>80</td>
+		<td>JPG-quality of big image </td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_quality</strong> </td>
+		<td>integer 1-100</td>
+		<td>80</td>
+		<td>JPG-quality of thumbnails </td>
+	</tr>
+	<tr>
+		<td><strong>$wysiwyg_quality</strong> </td>
+		<td>integer 1-100</td>
+		<td>40</td>
+		<td>JPG-quality of thumbnails in the WYSIWYG editor</td>
+	</tr>
+	<tr>
+		<td><strong>$big_width</strong> </td>
+		<td>integer</td>
+		<td>800</td>
+		<td rowspan="2">&nbsp;
+			If the size of original image exceeds given sizes <strong>$big_width</strong> or <strong>$big_height</strong> it will generate image that is proportionally reduced from the original image (“big image” in the plugin terminology) with width and height that are not exceeded $big_width and $big_height.</td>
+	</tr>
+	<tr>
+		<td><strong>$big_height</strong> </td>
+		<td>integer</td>
+		<td>600</td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_default_width</strong> </td>
+		<td>integer</td>
+		<td>&nbsp;</td>
+		<td>Default width of thumbnail</td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_default_height</strong> </td>
+		<td>integer</td>
+		<td>&nbsp;</td>
+		<td>Default height of thumbnail</td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_default_sizemode</strong> </td>
+		<td><ul>
+				<li>0 </li>
+				<li>1 </li>
+				<li>2 </li>
+				<li>3 </li>
+				<li>4 </li>
+			</ul></td>
+		<td>1</td>
+		<td>The rule for using width and height of thumbnails by default.
+			<ul>
+				<li>0 – Default width and  height are not used</li>
+				<li>1 – Width and height of thumbnail are became equal default width and height (<strong>$thumb_default_width</strong> and <strong>$thumb_default_height</strong>) if it is not specified neither height nor width of the original image.</li>
+				<li>2 – Width of thumbnail are became equal default width, if it is not specified width of the original image.</li>
+				<li>3 – Height of thumbnail became equal default height if it is not specified height of the original image </li>
+				<li>4 – Width and height of thumbnail forcibly are became equal default width and default height independent of it is specified or not in the original image. </li>
+			</ul>
+			<p>Notice: despite of the parameters <strong>$thumb_default_width</strong>, <strong>$thumb_default_height</strong> and  <strong>$thumb_default_sizemode </strong>the final sizes of generated thumbnail will calculate depending on <strong>$resize_method</strong> </p>
+			<p>If you are  using force mode (4) together with TinyMCE,  width and height of source images in content will be replaced with <strong>$thumb_default_width</strong> and <strong>$thumb_default_height</strong>, original with and heigh will be lost after saving document. Its needed for correct displaying of thumbnails in visual mode.</p></td>
+	</tr>
+	<tr>
+		<td><strong>$remote_refresh_time</strong> </td>
+		<td>integer</td>
+		<td>60</td>
+		<td>Time in minutes. This is a frequency of image checking on the remote servers. If image is changed (it checks height and width only) then it will create a new local copy of image and regenerate thumbnails.</td>
+	</tr>
+	<tr>
+		<td><strong>$tpl</strong> </td>
+		<td><ul>
+				<li>Chunk name </li>
+				<li>@FILE:&lt;path to the file&gt; </li>
+				<li>@CODE:&lt;HTML code of template &gt; </li>
+			</ul></td>
+		<td>assets/plugins/ directresize/templates/ lightboxv2.html</td>
+		<td>Output template</td>
+	</tr>
+	<tr>
+		<td><strong>$language</strong> </td>
+		<td><ul>
+				<li>english </li>
+				<li>russian </li>
+			</ul></td>
+		<td>english</td>
+		<td>It sets the plugin language. The corresponding language file should be placed in the folder “lang” of plugin.</td>
+	</tr>
+	<tr>
+		<td><strong>$header</strong> </td>
+		<td>HTML-code</td>
+		<td>&nbsp;</td>
+		<td>HTML-code that will be placed in the &lt;head&gt; section. It includes necessary css and js files. It uses only on the web pages that have at least one plugin-processed image.</td>
+	</tr>
+	<tr>
+		<td><strong>$maxigallery_jscss_packs</strong> </td>
+		<td><ul>
+				<li>slimbox </li>
+				<li>slidebox </li>
+				<li>lightboxv2 </li>
+			</ul></td>
+		<td>&nbsp;</td>
+		<td><p>It includes necessary css and js files to the web page for corresponding script from the folder of MaxiGallery snippet (it is not necessarily to install this snippet but it’s files should be placed in the folder assets/snippets/maxigallery). </p>
+			<p> It is useful if you are using this plugin with Maxigallery in the same project. If any js or css files are attached already by MG, DirectResize won’t include these files again in the &lt;head&gt; section.</p></td>
+	</tr>
+</table>
+<p>Here are the parameters  taken from Maxigallery having the same meaning and processed in the same way.</p>
+<table width="100%" border="0" cellpadding="0" cellspacing="1">
+	<tr>
+		<td width="20%" class="theader">Parameter </td>
+		<td width="15%" class="theader">Possible values </td>
+		<td width="15%" class="theader">Default value </td>
+		<td class="theader">Description</td>
+	</tr>
+	<tr>
+		<td><strong>$use_ftp_commands</strong></td>
+		<td><ul>
+				<li>0</li>
+				<li>1</li>
+			</ul></td>
+		<td>0</td>
+		<td>If enabled, DirectResize uses PHP FTP commands to create filesystem  folders for the gallery pictures. This is needed in certain server  environments.</td>
+	</tr>
+	<tr>
+		<td><strong>$ftp_server</strong></td>
+		<td>FTP address</td>
+		<td>&nbsp;</td>
+		<td>FTP address to the server running MODx.</td>
+	</tr>
+	<tr>
+		<td><strong>$ftp_user</strong></td>
+		<td>username </td>
+		<td>&nbsp;</td>
+		<td>FTP account username</td>
+	</tr>
+	<tr>
+		<td><strong>$ftp_pass</strong></td>
+		<td>password </td>
+		<td>&nbsp;</td>
+		<td>FTP account password</td>
+	</tr>
+	<tr>
+		<td><strong>$ftp_base_dir</strong></td>
+		<td>path </td>
+		<td>&nbsp;</td>
+		<td>Path to go from FTP root to MODx installation root. Eg. if your FTP root directory is <em>/home/username/</em> and MODx is installed in <em>/home/username/public_html/modx/</em> you would use <em>/public_html/modx/</em> as ftp_base_dir.</td>
+	</tr>
+	<tr>
+		<td><strong>$ftp_port</strong></td>
+		<td>number </td>
+		<td>21</td>
+		<td>Port number for the FTP service.</td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_use_watermark </strong>
+			<p>&nbsp;</p></td>
+		<td><ul>
+				<li>0 </li>
+				<li>1 </li>
+			</ul></td>
+		<td><p>0 </p></td>
+		<td>Watermark the thumbnail images. </td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_watermark_font</strong></td>
+		<td><ul>
+				<li>1 </li>
+				<li>2 </li>
+				<li>3 </li>
+				<li>4 </li>
+				<li>5 </li>
+			</ul></td>
+		<td>1 </td>
+		<td>Font size of the watermark text</td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_watermark_halign </strong></td>
+		<td><ul>
+				<li>left </li>
+				<li>center </li>
+				<li>right </li>
+			</ul></td>
+		<td>right </td>
+		<td>Horizontal alignment of the watermark. </td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_watermark_img </strong></td>
+		<td>path </td>
+		<td>assets/plugins/ directresize/ images/watermark.png</td>
+		<td>Path to a watermark image.
+			Use a png image with a transparent background alpha layer. </td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_watermark_txt</strong></td>
+		<td>text </td>
+		<td>Copyright &lt;YEAR&gt; </td>
+		<td>Text that will be applied to the images as a watermark. </td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_watermark_txt_color </strong></td>
+		<td>RGB Hexadecimal </td>
+		<td>FFFFFF </td>
+		<td>Color of the watermark text. </td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_watermark_txt_hmargin</strong></td>
+		<td>Number (px) </td>
+		<td>2 </td>
+		<td>Horizontal margin of the watermark text. </td>
+	</tr>
+	<tr>
+		<td><strong>$thumb_watermark_txt_vmargin </strong></td>
+		<td>Number (px) </td>
+		<td>2 </td>
+		<td>Vertical margin of the watermark text. </td>
+	</tr>
+	<tr>
+		<td><strong>$big_use_watermark </strong>
+			<p>&nbsp;</p></td>
+		<td><ul>
+				<li>0 </li>
+				<li>1 </li>
+			</ul></td>
+		<td><p>0 </p></td>
+		<td>Watermark  big images. </td>
+	</tr>
+	<tr>
+		<td><strong>$big_watermark_font</strong></td>
+		<td><ul>
+				<li>1 </li>
+				<li>2 </li>
+				<li>3 </li>
+				<li>4 </li>
+				<li>5 </li>
+			</ul></td>
+		<td>1 </td>
+		<td>Font size of the watermark text</td>
+	</tr>
+	<tr>
+		<td><strong>$big_watermark_halign </strong></td>
+		<td><ul>
+				<li>left </li>
+				<li>center </li>
+				<li>right </li>
+			</ul></td>
+		<td>right </td>
+		<td>Horizontal alignment of the watermark. </td>
+	</tr>
+	<tr>
+		<td><strong>$big_watermark_img </strong></td>
+		<td>path </td>
+		<td>assets/plugins/directresize/ images/watermark.png</td>
+		<td>Path to a watermark image.
+			Use a png image with a transparent background alpha layer. </td>
+	</tr>
+	<tr>
+		<td><strong>$big_watermark_txt</strong></td>
+		<td>text </td>
+		<td>Copyright &lt;YEAR&gt; </td>
+		<td>Text that will be applied to the images as a watermark. </td>
+	</tr>
+	<tr>
+		<td><strong>$big_watermark_txt_color </strong></td>
+		<td>RGB Hexadecimal </td>
+		<td>FFFFFF </td>
+		<td>Color of the watermark text. </td>
+	</tr>
+	<tr>
+		<td><strong>$big_watermark_txt_hmargin</strong></td>
+		<td>Number (px) </td>
+		<td>2 </td>
+		<td>Horizontal margin of the watermark text. </td>
+	</tr>
+	<tr>
+		<td><strong>$big_watermark_txt_vmargin </strong></td>
+		<td>Number (px) </td>
+		<td>2 </td>
+		<td>Vertical margin of the watermark text. </td>
+	</tr>
+</table>
+<h2>Placeholders</h2>
+<p>Placeholders for use in <strong>$tpl</strong> template.</p>
+<table width="100%" border="0" cellpadding="0" cellspacing="1">
+	<tr>
+		<td width="21%" class="theader">Placeholder</td>
+		<td width="79%" class="theader">Description</td>
+	</tr>
+	<tr>
+		<td>[+dr.id+]</td>
+		<td>the  numeric identifier of the image, unique within the current document</td>
+	</tr>
+	<tr>
+		<td>[+dr.alt+]<br />
+			[+dr.title+]<br />
+			[+dr.class+]<br />
+			[+dr.style+]<br />
+			[+dr.align+]<br />
+			[+dr.valign+]</td>
+		<td>attributes <em>alt</em>, <em>title</em>, <em>class</em>, <em>style</em>, <em>align</em>, <em>valign</em> of the original image</td>
+	</tr>
+	<tr>
+		<td>[+dr.thumbWidth+]</td>
+		<td>width of the generated thumbnail</td>
+	</tr>
+	<tr>
+		<td>[+dr.thumbHeight+]</td>
+		<td>height of the generated thumbnail</td>
+	</tr>
+	<tr>
+		<td>[+dr.thumbPath+]</td>
+		<td>path to the generated thumbnail file</td>
+	</tr>
+	<tr>
+		<td>[+dr.thumbFilesize+]</td>
+		<td> formatted size of  the generated thumbnail file</td>
+	</tr>
+	<tr>
+		<td>[+dr.bigWidth+]</td>
+		<td>width of the generated big image (if big image is not generated - width of the original image)</td>
+	</tr>
+	<tr>
+		<td>[+dr.bigHeight+]</td>
+		<td>height of the generated big image (if big image is not generated - height of the original image)</td>
+	</tr>
+	<tr>
+		<td>[+dr.bigPath+]</td>
+		<td>path to the generated big image file  (if big image is not generated - path to the original image file  )</td>
+	</tr>
+	<tr>
+		<td>[+dr.bigFilesize+]</td>
+		<td> formatted size of  the generated big image file  (if big image is not generated - formatted size of  the original image file)</td>
+	</tr>
+	<tr>
+		<td>[+dr.originalWidth+]</td>
+		<td>width of  the original image</td>
+	</tr>
+	<tr>
+		<td>[+dr.originalHeight+]</td>
+		<td>height of  the original image</td>
+	</tr>
+	<tr>
+		<td>[+dr.originalPath+]</td>
+		<td>path to the  original image</td>
+	</tr>
+	<tr>
+		<td>[+dr.originalFilesize+]</td>
+		<td>formatted size of  the original image file</td>
+	</tr>
+	<tr>
+		<td>[+dr.originalFilename+]</td>
+		<td>filename of the original image</td>
+	</tr>
+</table>
+<h2><a name="label" id="label"></a>Labels</h2>
+<p><em>Label</em> – in terminology of this plugin it is a special word (or part of word) that may use within the img tag at any place - within attributes class, alt, title and so on and it manages some actions with given image (and with it only).</p>
+<p>For example, if the value of parameter <strong>$lightbox_mode</strong> = 1 then the thumbnail with lightbox-link generates only for image with <span class="label">drlightbox</span> label.<br />
+	Examples of images with <span class="label">drlightbox</span> label: </p>
+<ul>
+	<li><code>&lt;img src=&quot;image.jpg&quot; alt=&quot;<span class="label">drlightbox</span>&quot; /&gt;</code></li>
+	<li><code>&lt;img src=&quot;image.jpg&quot; class = &quot;<span class="label">drlightbox</span>_align_left&quot; /&gt;</code> </li>
+	<li><code>&lt;img src=&quot;image.jpg&quot; title = &quot;<span class="label">drlightbox</span> picture&quot; /&gt;</code></li>
+	<li><code>&lt;img src=&quot;image.jpg&quot; style = &quot;background: url(<span class="label">drlightbox</span>_bg.gif);&quot; /&gt;</code></li>
+	<li><code>&lt;img src=&quot;assets/images/my<span class="label">drlightbox</span>picture.jpg&quot; /&gt;</code></li>
+	<li>and even <code>&lt;img src=&quot;image.jpg&quot; <span class="label">drlightbox</span> /&gt;</code></li>
+</ul>
+<p>Don't worry about validation errors in html code if you are used labels in unallowed places. All labels will be removed from output html. So avoid to name the image files with label names - filename or part of the filename can be replaced. <strong>Warning: </strong>don't use labels outside the attributes (as in last example) if you are using WYSIWYG-editor, because labels will be removed by an editor as incorrect html-code.</p>
+<p> Label <span class="label">drthumbonly</span>. It makes sense if only parameter <strong>$lightbox_mode</strong> = 2 and it shows that plugin should not generate big image and lightbox-link  for the given image but thumbnail only.</p>
+<p> If the value of parameter <strong>$lightbox_mode</strong> = 1 plugin generates the thumbnails without lightbox-link for all images, so using of <span class="label">drthumbonly</span> is redundant in that case<em>.</em></p>
+<p>Label <span class="label">drskip</span>. Plugin is skip  processing of the image. Thumbs and lightbox link is not created.</p>
+<h2>ToDo</h2>
+<ul>
+	<li>Use of the phpThumb class for image operations.</li>
+	<li>The ability to make different sets of configuration parameters for use in various documents of a site.</li>
+</ul>
+<h2>History</h2>
+<h3>0.8.0b</h3>
+<p>First release</p>
+<h3>0.8.0</h3>
+<p>* bug with duplicate names in the same document<br />
+	* bug with using DirectResize and MaxiGallery in the same document<br />
+	*  if lightbox word is used in template (rel=&quot;lightbox&quot;) plugin removes it  from output html as label name (see readme). So label names was changed  to drlightbox and drthumbonly <br />
+	* bug causing the message &quot;Fatal  error: Call to undefined function: size() in  ...assets\plugins\directresize\directResize.php on line 141&quot; (if file  is not exist by path taken from img tag)<br />
+	* big image and lightbox link is not created when using lightbox_mode = 1 and &quot;drlightbox&quot; label <br />
+	+ add new label - drskip. Images with this label is not processed by plugin.<br />
+	* bug with gif-images on the page<br />
+	* fix with ftp commands<br />
+	+ new placeholders for style, align, valign of a source image <br />
+	+  absolute path for images is now supported and correctly works (File  Manager Path in System configuration must be correctly set)<br />
+	+ New  parameter $allow_from_allremote. This parameter allowed to use plugin  on all images from remote sources w/o needed to list them all in  $allow_from<br />
+ * Highslide updated to 3.3.6<br />
++ Added standart configuration packs for slimbox, slidebox, lightbox v2</p>
+<h3>0.8.0.1</h3>
+<p>* Fix with using $thumb_default_sizemode = 4 (override image size settings) and drthumbonly label<br />
+	+ Quick start section added to readme, some other changes in documentation</p>
+<h3>0.8.0.2</h3>
+<p>	* Fix with thumbs in TinyMCE visual mode<br />
+	* Fix - lost labels after editing in visual mode<br />
++ trim whitespaces after removing labels (only one space deleted before or after label)</p>
+<p>&nbsp;</p>
+<h2> Knowing issues</h2>
+<p>I don't know simple way in PHP &lt; 5.0 to check is the file is exist on the remote host, so if you are useing plugin with remote images and remote image with current path is no exist on remote server -  there will be a php error.</p>
+<h2>Special thanks</h2>
+<p>This version of the plugin is based on idea and developments of <em>Arnaud,</em> the author of previous versions of the DirectResize. </p>
+<p>Plugin is using parts of code from Maxigallery snippet by <em>doze</em>. This document is using part of the documentation from Maxigallery.</p>
+<p>Plugin is using  Chunkie class and PHx parser by <em>bS</em></p>
+<p>Plugin is using Thumbnail and Watermark Class by <em>Emilio Rodriguez</em><br />
+</p>
+<p> As example is used Highslide JS 
+	script by <em>Torstein Honsi</em></p>
+<p>The biggest part of this document was translated in to english by <em>Igor</em> from Russian MODx Community</p>
+<p>Thanks, guys!</p>
+<p><em>Metaller (<a href="mailto:metaller.ru@gmail.com">metaller.ru@gmail.com</a>)</em></p>
+</body>
+</html>
