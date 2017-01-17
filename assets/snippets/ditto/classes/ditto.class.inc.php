@@ -10,7 +10,7 @@
 class ditto {
 	var $template,$resource,$format,$debug,$advSort,$sqlOrderBy,$customReset,$fields,$constantFields,$prefetch,$sortOrder,$customPlaceholdersMap;
 
-	function ditto($dittoID,$format,$language,$debug) {
+	function __construct($dittoID,$format,$language,$debug) {
 		$this->format = $format;
 		$GLOBALS["ditto_lang"] = $language;
 		$this->prefetch = false;
@@ -689,7 +689,6 @@ class ditto {
 							$keep[$iKey][$key] = $v;
 						}
 					}
-					
 				}
 			}
 			
@@ -980,22 +979,10 @@ class ditto {
 	// ---------------------------------------------------
 	
 	function cleanIDs($IDs) {
-		//Define the pattern to search for
-		$pattern = array (
-			'`(,)+`', //Multiple commas
-			'`^(,)`', //Comma on first position
-			'`(,)$`' //Comma on last position
-		);
-
-		//Define replacement parameters
-		$replace = array (
-			',',
-			'',
-			''
-		);
-
 		//Clean startID (all chars except commas and numbers are removed)
-		$IDs = preg_replace($pattern, $replace, $IDs);
+		$IDs = trim($IDs,',');
+		$IDs = preg_replace('/,+/', ',', $IDs);
+		$IDs = str_replace(' ','',$IDs);
 
 		return $IDs;
 	}
@@ -1035,16 +1022,16 @@ class ditto {
 			}
 			$queryString = "";
 			foreach ($query as $param=>$value) {
-				
-        //$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
-        
-        if(!is_array($value)){
-          $queryString .= '&'.$param.'='.$value;
-        }else{
-          foreach ($value as $key=>$val){
-            $queryString .= '&'.$param.'['.$key.']='.$val;
-          }
-        }
+
+				//$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
+				if (!is_array($value)) {
+					if (!($modx->config['seostrict']=='1' and $param == $dittoID."start" and !$value)) $queryString .= '&'.$param.'='.$value;
+				}
+				else {
+					foreach ($value as $key=>$val) {
+						$queryString .= '&'.$param.'['.$key.']='.$val;
+					}
+				}
 			}
 			$cID = ($id !== false) ? $id : $modx->documentObject['id'];
 			$url = $modx->makeURL(trim($cID), '', $queryString);
@@ -1121,6 +1108,7 @@ class ditto {
 			$min_x = $max_x - $max_paginate + 1;
 		}
 
+		$modx->setPlaceholder("dittoID", $dittoID);
 		for ($x = 0; $x <= $totalpages -1; $x++) {
 			$inc = $x * $summarize;
 			$display = $x +1;
@@ -1157,6 +1145,7 @@ class ditto {
 		global $modx, $dittoID;
 		$set = $modx->getPlaceholder($dittoID."ditto_pagination_set");
 		if ($paginate && $set !== true) {
+			$modx->setPlaceholder("dittoID", $dittoID);
 			$modx->setPlaceholder($dittoID."next", "");
 			$modx->setPlaceholder($dittoID."previous", "");
 			$modx->setPlaceholder($dittoID."splitter", "");
@@ -1181,4 +1170,3 @@ class ditto {
 		return preg_replace('#(href|src)="([^:"]*)(?:")#','$1="'.$base.'$2"',$text);
 	}
 }
-?>

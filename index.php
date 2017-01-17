@@ -77,8 +77,9 @@ ob_start();
 
 define("IN_ETOMITE_PARSER", "true"); // provides compatibility with etomite 0.6 and maybe later versions
 define("IN_PARSER_MODE", "true");
-define("IN_MANAGER_MODE", "false");
-
+if (!defined('IN_MANAGER_MODE')) {
+	define("IN_MANAGER_MODE", "false");
+}
 if (!defined('MODX_API_MODE')) {
     define('MODX_API_MODE', false);
 }
@@ -98,18 +99,27 @@ if($database_user=="") {
 	$rt = @include_once(dirname(__FILE__).'/'.MGR_DIR.'/includes/config.inc.php');
 	// Be sure config.inc.php is there and that it contains some important values
 	if(!$rt || !$database_type || !$database_server || !$database_user || !$dbase) {
-	echo "
+	echo "<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>MODX is not installed!</title>
+<meta name='robots' content='noindex, nofollow'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
 <style type=\"text/css\">
 *{margin:0;padding:0}
 body{margin:50px;background:#eee;}
-.install{padding:10px;border:5px solid #f22;background:#f99;margin:0 auto;font:120%/1em serif;text-align:center;}
+.install{padding:10px;border:2px solid #f22;border-radius:10px;background:#ffe8b7;margin:0 auto;font:1.5em 'Open Sans',serif;font-weight:300;text-align:center;}
 p{ margin:20px 0; }
-a{font-size:200%;color:#f22;text-decoration:underline;margin-top: 30px;padding: 5px;}
+a{font-size:2em;color:#f22;text-decoration:underline;margin-top: 30px;padding: 5px;}
 </style>
+</head>
+<body>
 <div class=\"install\">
 <p>MODX is not currently installed or the configuration file cannot be found.</p>
-<p>Do you want to <a href=\"install/index.php\">install now</a>?</p>
-</div>";
+<p>Do you want to <a href=\"install/index.php\">install now?</a></p>
+</div>
+</body></html>";
 		exit;
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author modxcms.cz
  *
@@ -766,6 +766,7 @@ $_lang["role_actionok"] = 'Prohlížení dokončené akce na obrazovce';
 $_lang["role_bk_manager"] = 'Použít správce zálohy';
 $_lang["role_cache_refresh"] = 'Vyprázdnit zásobník stránek (cache)';
 $_lang["role_change_password"] = 'Změna hesla';
+$_lang["role_change_resourcetype"] = 'Změnit typ zdroje';
 $_lang["role_chunk_management"] = 'Správa chunků';
 $_lang["role_config_management"] = 'Správa nastavení';
 $_lang["role_content_management"] = 'Správa obsahu';
@@ -860,6 +861,8 @@ $_lang["search_criteria_content"] = 'Hledat v obsahu';
 $_lang["search_criteria_content_msg"] = 'Najít všechny dokumenty obsahující zadaný text.';
 $_lang["search_criteria_id"] = 'Hledat podle ID';
 $_lang["search_criteria_id_msg"] = 'Zadajte ID dokumentu rychlého vyhledávání.';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'Hledat podle dlouhého názvu';
 $_lang["search_criteria_longtitle_msg"] = 'Najít všechny dokumenty s vloženým textem v dlouhém názvu.';
 $_lang["search_criteria_title"] = 'Hledat podle názvu';
@@ -1156,6 +1159,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'Pokud je povoleno PHX plugin, vestavěné filtry jsou ve výchozím nastavení zakázány';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1196,6 +1200,7 @@ $_lang['email_method_mail'] = 'mail() PHP function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP－AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';

@@ -2,7 +2,7 @@
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 if(!class_exists('ForgotManagerPassword')) {
     class ForgotManagerPassword{
-        function ForgotManagerPassword(){
+        function __construct(){
             $this->errors = array();
             $this->checkLang();
         }
@@ -23,7 +23,7 @@ EOD;
             $form = <<<EOD
 <label id="FMP-email_label" for="FMP_email">{$_lang['account_email']}:</label>
 <input id="FMP-email" type="text" />
-<button id="FMP-email_button" type="button" onclick="window.location = 'index.php?action=send_email&email='+document.getElementById('FMP-email').value;">{$_lang['send']}</button>
+<button id="FMP-email_button" type="button" onclick="window.location = 'index.php?action=send_email&email='+encodeURIComponent(document.getElementById('FMP-email').value);">{$_lang['send']}</button>
 EOD;
 
             return $form;

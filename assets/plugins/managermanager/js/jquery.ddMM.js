@@ -16,6 +16,7 @@ $.ddMM = {
 		datepicker_offset: 0
 	},
 	urls: {
+		manager: 'manager/',
 		mm: 'assets/plugins/managermanager/'
 	},
 	/**
@@ -102,10 +103,11 @@ $.ddMM = {
 				}else if (
 					this == 'keywords' ||
 					this == 'metatags' ||
-					this == 'which_editor' ||
-					this == 'hidemenu' ||
-					this == 'show_in_menu' ||
-					this == 'menuindex'
+					this == 'which_editor' 
+					//||
+					//this == 'hidemenu' ||
+					//this == 'show_in_menu' ||
+					//this == 'menuindex'
 				){
 					//Do nothing
 					return;
@@ -146,7 +148,7 @@ $(function(){
 	
 	//Initialization of the corresponding jQuery element for each document field
 	for (var field in $.ddMM.fields){
-		$.ddMM.fields[field].$elem = $($.ddMM.fields[field].fieldtype + '[name="' + $.ddMM.fields[field].fieldname + '"]');
+		$.ddMM.fields[field].$elem = $('[name="' + $.ddMM.fields[field].fieldname + '"]');
 	}
 });
 })(jQuery);

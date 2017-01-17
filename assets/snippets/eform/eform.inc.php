@@ -84,7 +84,7 @@ $_dfnMaxlength = 6;
 
 
 	# load templates
-	if($tpl==$modx->documentIdentifier) return $_lang['ef_is_own_id']."'$tpl'";
+	if($tpl==$modx->documentIdentifier && $modx->documentIdentifier > 0) return $_lang['ef_is_own_id']."'$tpl'";
 
 	//required
 	if( $tmp=efLoadTemplate($tpl) ) $tpl=$tmp; else return $_lang['ef_no_doc'] . " '$tpl'";
@@ -248,8 +248,15 @@ $_dfnMaxlength = 6;
 						case "email":
 							//stricter email validation - udated to allow + in local name part
 							if (strlen($value)>0 &&  !preg_match(
-							'/^(?:[a-z0-9+_-]+?\.)*?[a-z0-9_+-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,5}$/i', $value) ){
+							'/^(?:[a-z0-9+_-]+?\.)*?[a-z0-9_+-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,24}$/i', $value) ){
 								$vMsg[count($vMsg)] = isset($formats[$name][4]) ? $formats[$name][4] : $desc . $_lang["ef_invalid_email"];
+								$rClass[$name]=$invalidClass;
+							}
+							break;
+							case "phone":
+							if (strlen($value)>0 && !preg_match(
+								'/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/', $value) ){
+								$vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_phone"];
 								$rClass[$name]=$invalidClass;
 							}
 							break;
@@ -361,7 +368,7 @@ $_dfnMaxlength = 6;
 							break;
 						case "file":
 							// set file name
-							if($value['type']!="" && $value['type']!=""){
+							if($value['type']!="" && $value['error']==0){
 								$value = $value["name"];
 								$patharray = explode(((strpos($value,"/")===false)? "\\":"/"), $value);
 								$value = $patharray[count($patharray)-1];
@@ -497,7 +504,8 @@ $_dfnMaxlength = 6;
 
 				# added in 1.4.4.8 - Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.
 				if ($fields['email']) {
-					$firstEmail = array_shift(explode(',', $fields['email']));
+					$firstEmail = explode(',', $fields['email']);
+					$firstEmail = array_shift($firstEmail);
 				} else {
 					$firstEmail = '';
 				}
@@ -955,12 +963,27 @@ function buildTagPlaceholder($tag,$attributes,$name){
 			return "<$tag$t value=".$quotedValue." [+$name:$val+]>";
 		case "input":
 			switch($type){
+				case 'file':
+				case 'image':
+    				return "<input$t/>";
 				case 'radio':
 				case 'checkbox':
 					return "<input$t value=".$quotedValue." [+$name:$val+] />";
 				case 'text':
 					if($name=='vericode') return "<input$t value=\"\" />";
 					//else pass on to next
+				case 'email':
+				case 'tel':
+				case 'url':
+				case 'number':
+				case 'range':
+				case 'date':
+				case 'month':
+				case 'week':
+				case 'time':
+				case 'datetime':
+				case 'datetime-local':
+				case 'color':
 				case 'password':
 					return "<input$t value=\"[+$name+]\" />";
 				default: //leave as is - no placeholder

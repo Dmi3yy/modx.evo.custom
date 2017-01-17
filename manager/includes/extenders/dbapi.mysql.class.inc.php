@@ -15,7 +15,7 @@ class DBAPI {
     * @name:  DBAPI
     *
     */
-   function DBAPI($host='',$dbase='', $uid='',$pwd='',$pre=NULL,$charset='',$connection_method='SET CHARACTER SET') {
+   function __construct($host='',$dbase='', $uid='',$pwd='',$pre=NULL,$charset='',$connection_method='SET CHARACTER SET') {
       $this->config['host'] = $host ? $host : $GLOBALS['database_server'];
       $this->config['dbase'] = $dbase ? $dbase : $GLOBALS['dbase'];
       $this->config['user'] = $uid ? $uid : $GLOBALS['database_user'];
@@ -255,8 +255,14 @@ class DBAPI {
       else {
          $table = $this->replaceFullTableName($table);
          if (is_array($fields)) {
-            foreach ($fields as $key => $value)
-               $fields[$key] = "`{$key}` = '{$value}'";
+			 foreach ($fields as $key => $value) {
+				 if(is_null($value) || strtolower($value) === 'null'){
+					 $flds = 'NULL';
+				 }else{
+					 $flds = "'" . $value . "'";
+				 }
+				 $fields[$key] = "`{$key}` = ".$flds;
+			 }
             $fields = implode(",", $fields);
          }
          $where = !empty($where) ? (strpos(ltrim($where), "WHERE")!==0 ? "WHERE {$where}" : $where) : '';
@@ -300,6 +306,14 @@ class DBAPI {
          return $lid;
       }
    }
+   /**
+    * @name:  isResult
+    *
+    */
+   function isResult($rs) {
+      return is_resource($rs);
+   }
+
    /**
     * @name:  freeResult
     *
@@ -591,11 +605,14 @@ class DBAPI {
    *          was passed
    * @param: $rs Recordset to be packaged into an array
    */
-   function makeArray($rs=''){
+	function makeArray($rs='',$index=false){
       if(!$rs) return false;
       $rsArray = array();
+		$iterator = 0;
       while ($row = $this->getRow($rs)) {
-            $rsArray[] = $row;
+			$returnIndex = $index !== false && isset($row[$index]) ? $row[$index] : $iterator;
+			$rsArray[$returnIndex] = $row;
+			$iterator++;
       }
       return $rsArray;
    }
@@ -647,5 +664,9 @@ class DBAPI {
        $rs = $this->query("TRUNCATE {$table_name}");
        return $rs;
    }
+
+  function dataSeek($result, $row_number) {
+    return mysql_data_seek($result, $row_number);
+  }
 }
 ?>

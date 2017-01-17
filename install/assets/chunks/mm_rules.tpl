@@ -1,8 +1,8 @@
 ﻿/**
  * mm_rules
- * 
+ *
  * Default ManagerManager rules.
- * 
+ *
  * @category	chunk
  * @version 	1.0.5
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
@@ -12,11 +12,9 @@
  */
 
 // more example rules are in assets/plugins/managermanager/example_mm_rules.inc.php
+// example of how PHP is allowed - check that a TV named documentTags exists before creating rule
 
 mm_widget_showimagetvs(); // Показываем превью ТВ
-
-mm_renameField('log', 'Дочерние ресурсы отображаются в дереве');
-mm_changeFieldHelp('log', 'Это поле используется для папок с большим числом вложенных страниц');
 
 mm_createTab('Для SEO', 'seo', '', '', '', '');
 mm_moveFieldsToTab('titl,keyw,desc,seoOverride,noIndex,sitemap_changefreq,sitemap_priority,sitemap_exclude', 'seo', '', '');

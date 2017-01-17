@@ -25,7 +25,7 @@ $tbl_system_eventnames  = $modx->getFullTableName('system_eventnames');
 
 // check to see the plugin editor isn't locked
 $rs = $modx->db->select('username',$tbl_active_users,"action='102' AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getRow($rs)) {
+    if ($username = $modx->db->getValue($rs)) {
             $modx->webAlertAndQuit(sprintf($_lang["lock_msg"],$username,$_lang['plugin']));
     }
 // end check for lock
@@ -42,10 +42,15 @@ if(isset($_GET['id']))
     {
         $modx->webAlertAndQuit($_lang["error_no_privileges"]);
     }
+    $content['properties'] = str_replace("&", "&amp;", $content['properties']);
 }
 else
 {
     $_SESSION['itemname']=$_lang["new_plugin"];
+}
+
+if ($modx->manager->hasFormValues()) {
+    $modx->manager->loadFormValues();
 }
 ?>
 <script language="JavaScript">
@@ -71,10 +76,11 @@ function setTextWrap(ctrl,b){
 
 // Current Params/Configurations
 var currentParams = {};
+var first = true;
 
 function showParameters(ctrl) {
     var c,p,df,cp;
-    var ar,desc,value,key,dt;
+    var ar,label,value,key,dt,defaultVal;
 
     currentParams = {}; // reset;
 
@@ -85,97 +91,166 @@ function showParameters(ctrl) {
         if(!f) return;
     }
 
-    // setup parameters
-    tr = (document.getElementById) ? document.getElementById('displayparamrow'):document.all['displayparamrow'];
-    dp = (f.properties.value) ? f.properties.value.split("&"):"";
-    if(!dp) tr.style.display='none';
-    else {
-        t='<table width="300" class="displayparams"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
-        for(p = 0; p < dp.length; p++) {
-            dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
-            ar = dp[p].split("=");
-            key = ar[0];        // param
-            ar = (ar[1]+'').split(";");
-            desc = ar[0];	// description
-            dt = ar[1];		// data type
-            value = decode((ar[2])? ar[2]:'');
+    tr = (document.getElementById) ? document.getElementById('displayparamrow') : document.all['displayparamrow'];
 
-            // store values for later retrieval
-            if (key && (dt=='list' || dt=='list-multi')) currentParams[key] = [desc,dt,value,ar[3]];
-            else if (key) currentParams[key] = [desc,dt,value];
+    // check if codemirror is used
+    var props = typeof myCodeMirrors != "undefined" && typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value;
+    
+    // convert old schemed setup parameters
+    if( !IsJsonString(props) ) {
+        dp = props ? props.match(/([^&=]+)=(.*?)(?=&[^&=]+=|$)/g) : ""; // match &paramname=
+        if (!dp) tr.style.display = 'none';
+        else {
+            for (p = 0; p < dp.length; p++) {
+                dp[p] = (dp[p] + '').replace(/^\s|\s$/, ""); // trim
+                ar = dp[p].match(/(?:[^\=]|==)+/g); // split by =, not by ==
+                key = ar[0];        // param
+                ar = (ar[1] + '').split(";");
+                label = ar[0];	    // label
+                dt = ar[1];	    // data type
+                value = decode((ar[2]) ? ar[2] : '');
 
-            if (dt) {
-                switch(dt) {
-                case 'int':
-                    c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
-                    break;
-                case 'menu':
-                    value = ar[3];
-                    c = '<select name="prop_'+key+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
-                    ls = (ar[2]+'').split(",");
-                    if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
-                    for(i=0;i<ls.length;i++){
-                        c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
-                    }
-                    c += '</select>';
-                    break;
-                case 'list':
-                    value = ar[3];
-                    ls = (ar[2]+'').split(",");
-                    if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
-                    c = '<select name="prop_'+key+'" size="'+ls.length+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
-                    for(i=0;i<ls.length;i++){
-                        c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
-                    }
-                    c += '</select>';
-                    break;
-                case 'list-multi':
-                    value = typeof ar[3] !== 'undefined' ? (ar[3]+'').replace(/^\s|\s$/,"") : '';
-                    arrValue = value.split(",");
-                    ls = (ar[2]+'').split(",");
-
-                    if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
-                    c = '<select name="prop_'+key+'" size="'+ls.length+'" multiple="multiple" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
-                    for(i=0;i<ls.length;i++){
-                        if(arrValue.length){
-                            var found = false;
-                            for(j=0;j<arrValue.length;j++){
-                                if (ls[i] == arrValue[j]) {
-                                    found = true;
-                                }
-                            }
-                            if(found == true){
-                                c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
-                            }else{
-                                c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
-                            }
-                        }else{
-                            c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
-                        }
-                    }
-                    c += '</select>';
-                    break;
-                case 'textarea':
-                    c = '<textarea class="phptextarea" name="prop_'+key+'" cols="50" rows="4" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">'+value+'</textarea>';
-                    break;
-                default:  // string
-                    c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
-                    break;
-
+                // convert values to new json-format
+                if (key && (dt == 'menu' || dt == 'list' || dt == 'list-multi' || dt == 'checkbox' || dt == 'radio')) {
+                    defaultVal = decode((ar[4]) ? ar[4] : ar[3]);
+                    desc = decode((ar[5]) ? ar[5] : "");
+                    currentParams[key] = [];
+                    currentParams[key][0] = {"label":label, "type":dt, "value":ar[3], "options":value, "default":defaultVal, "desc":desc };
+                } else if (key) {
+                    defaultVal = decode((ar[3]) ? ar[3] : ar[2]);
+                    desc = decode((ar[4]) ? ar[4] : "");
+                    currentParams[key] = [];
+                    currentParams[key][0] = {"label":label, "type":dt, "value":value, "default":defaultVal, "desc":desc };
                 }
-                t +='<tr><td bgcolor="#FFFFFF" width="50%">'+desc+'</td><td bgcolor="#FFFFFF" width="50%">'+c+'</td></tr>';
-            };
+            }
         }
-        t+='</table>';
-        td = (document.getElementById) ? document.getElementById('displayparams'):document.all['displayparams'];
-        td.innerHTML = t;
-        tr.style.display='';
+    } else {
+        currentParams = JSON.parse(props);
     }
+
+    t = '<table width="98%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
+
+    try {
+        var type, options, found, info, sd;
+        var ll, ls, sets = [];
+
+        Object.keys(currentParams).forEach(function(key) {
+
+                if (key == 'internal' || currentParams[key][0]['label'] == undefined) return;
+
+                cp = currentParams[key][0];
+                type = cp['type'];
+                value = cp['value'];
+                defaultVal = cp['default'];
+                label = cp['label'] != undefined ? cp['label'] : key;
+                desc = cp['desc'] + '';
+                options = cp['options'] != undefined ? cp['options'] : '';
+
+                ll = []; ls = [];
+                if(options.indexOf('==') > -1) {
+                    // option-format: label==value||label==value
+                    sets = options.split("||");
+                    for (i = 0; i < sets.length; i++) {
+                        split = sets[i].split("==");
+                        ll[i] = split[0];
+                        ls[i] = split[1] != undefined ? split[1] : split[0];
+                    }
+                } else {
+                    // option-format: value,value
+                    ls = options.split(",");
+                    ll = ls;
+                }
+
+                switch(type) {
+                    case 'int':
+                        c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
+                        break;
+                    case 'menu':
+                        c = '<select name="prop_' + key + '" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+                        if (currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
+                        for (i = 0; i < ls.length; i++) {
+                            c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
+                        }
+                        c += '</select>';
+                        break;
+                    case 'list':
+                        if (currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
+                        c = '<select name="prop_' + key + '" size="' + ls.length + '" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+                        for (i = 0; i < ls.length; i++) {
+                            c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
+                        }
+                        c += '</select>';
+                        break;
+                    case 'list-multi':
+                        // value = typeof ar[3] !== 'undefined' ? (ar[3] + '').replace(/^\s|\s$/, "") : '';
+                        arrValue = value.split(",");
+                        if (currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
+                        c = '<select name="prop_' + key + '" size="' + ls.length + '" multiple="multiple" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+                        for (i = 0; i < ls.length; i++) {
+                            if (arrValue.length) {
+                                found = false;
+                                for (j = 0; j < arrValue.length; j++) {
+                                    if (ls[i] == arrValue[j]) {
+                                        found = true;
+                                    }
+                                }
+                                if (found == true) {
+                                    c += '<option value="' + ls[i] + '" selected="selected">' + ll[i] + '</option>';
+                                } else {
+                                    c += '<option value="' + ls[i] + '">' + ll[i] + '</option>';
+                                }
+                            } else {
+                                c += '<option value="' + ls[i] + '">' + ll[i] + '</option>';
+                            }
+                        }
+                        c += '</select>';
+                        break;
+                    case 'checkbox':
+                        lv = (value + '').split(",");
+                        c = '';
+                        for (i = 0; i < ls.length; i++) {
+                            c += '<label><input type="checkbox" name="prop_' + key + '[]" value="' +  ls[i] + '"' + ((contains(lv, ls[i]) == true) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />'+ll[i]+'</label>&nbsp;';
+                        }
+                        break;
+                    case 'radio':
+                        c = '';
+                        for (i = 0; i < ls.length; i++) {
+                            c += '<label><input type="radio" name="prop_' + key + '" value="' +  ls[i] + '"' + ((ls[i] == value) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />'+ll[i]+'</label>&nbsp;';
+                        }
+                        break;
+                    case 'textarea':
+                        c = '<textarea name="prop_' + key + '" style="width:98%" rows="4" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">' + value + '</textarea>';
+                        break;
+                    default:  // string
+                        c = '<input type="text" name="prop_' + key + '" value="' + value + '" style="width:98%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
+                        break;
+                }
+
+                info = '';
+                info += desc ? '<br/><small>' + desc + '</small>' : '';
+                sd = defaultVal != undefined ? ' <small><a class="btnSetDefault" style="float:right" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></small>' : '';
+
+                t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
+            });
+
+        t += '</table>';
+        
+        createAssignEventsButton();
+        
+    } catch (e) {
+        t = e + "\n\n" + props;
+    }
+
+    td = (document.getElementById) ? document.getElementById('displayparams') : document.all['displayparams'];
+    td.innerHTML = t;
+    tr.style.display = '';
+
     implodeParameters();
 }
 
 function setParameter(key,dt,ctrl) {
     var v;
+    var arrValues, cboxes = [];
     if(!ctrl) return null;
     switch (dt) {
         case 'int':
@@ -184,47 +259,45 @@ function setParameter(key,dt,ctrl) {
             v = ctrl.value;
             break;
         case 'menu':
-            v = ctrl.options[ctrl.selectedIndex].value;
-            currentParams[key][3] = v;
-            implodeParameters();
-            return;
-            break;
         case 'list':
             v = ctrl.options[ctrl.selectedIndex].value;
-            currentParams[key][3] = v;
-            implodeParameters();
-            return;
             break;
         case 'list-multi':
-            var arrValues = new Array;
+            arrValues = [];
             for(var i=0; i < ctrl.options.length; i++){
                 if(ctrl.options[i].selected){
                     arrValues.push(ctrl.options[i].value);
                 }
             }
-            currentParams[key][3] = arrValues.toString();
-            implodeParameters();
-            return;
+            v = arrValues.toString();
+            break;
+        case 'checkbox':
+            arrValues = [];
+            cboxes = document.getElementsByName(ctrl.name);
+            for(var i=0; i < cboxes.length; i++){
+                if(cboxes[i].checked){
+                    arrValues.push(cboxes[i].value);
+                }
+            }
+            v = arrValues.toString();
             break;
         default:
             v = ctrl.value+'';
             break;
     }
-    currentParams[key][2] = v;
+    currentParams[key][0]['value'] = v;
     implodeParameters();
 }
 
 // implode parameters
 function implodeParameters(){
-    var v, p, s='';
-    for(p in currentParams){
-        if(currentParams[p]) {
-            v = currentParams[p].join(";");
-            if(s && v) s+=' ';
-            if(v) s += '&'+p+'='+ encode(v);
-        }
+    var stringified = JSON.stringify(currentParams, null, 2);
+    if(typeof myCodeMirrors != "undefined") {
+        myCodeMirrors['properties'].setValue(stringified);
+    } else {
+        f.properties.value = stringified;
     }
-    document.forms['mutate'].properties.value = s;
+    if(first) { documentDirty = false; first = false; };
 }
 
 function encode(s){
@@ -241,59 +314,145 @@ function decode(s){
     return s;
 }
 
-</script>
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
 
-<form name="mutate" method="post" action="index.php?a=103" enctype="multipart/form-data">
+function getEventsList() {
+    var cboxes = document.getElementsByName('sysevents[]');
+    var len = cboxes.length;
+    var s = [];
+    for (var i=0; i<len; i++) {
+        if(cboxes[i].checked) s.push(cboxes[i].id);
+    }
+    return s.join();
+}
+
+function createAssignEventsButton() {
+    if(document.getElementById('assignEvents') === null) {
+        var button = document.createElement("div");
+        button.setAttribute('id', 'assignEvents');
+        button.innerHTML = '<ul class="actionButtons"><li><a href="#" onclick="assignEvents();return false;"><?php echo $_lang["set_automatic"]; ?></a></li></ul>';
+        var tab = document.getElementById("tabEvents");
+        tab.insertBefore(button, tab.firstChild);
+    }
+}
+
+function assignEvents() {
+    // remove all events first
+    var sysevents = document.getElementsByName("sysevents[]");
+    for(var i = 0; i < sysevents.length; i++) { sysevents[i].checked = false; }
+    // set events
+    var events = internal[0]['events'];
+    events = events.split(',');
+    for(var i = 0; i < events.length; i++) { document.getElementById(events[i]).checked = true; }
+}
+
+function setDefaultParam(key, show) {
+    if (typeof currentParams[key][0]['default'] != 'undefined') {
+        currentParams[key][0]['value'] = currentParams[key][0]['default'];
+        if(show) { implodeParameters(); showParameters(); }
+    }
+}
+
+function setDefaults() {
+    var keys = Object.keys(currentParams);
+    var last = keys[keys.length-1],
+        show;
+    Object.keys(currentParams).forEach(function(key) {
+        show = key == last ? 1 : 0;
+        setDefaultParam(key, show);
+    });
+}
+
+function contains(a, obj) {
+    var i = a.length;
+    while (i--) {
+        if (a[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
 <?php
 // invoke OnPluginFormPrerender event
 $evtOut = $modx->invokeEvent("OnPluginFormPrerender",array("id" => $id));
 if(is_array($evtOut)) echo implode("",$evtOut);
+
+// Prepare internal params & info-tab via parseDocBlock
+$plugincode = isset($content['plugincode']) ? $modx->db->escape($content['plugincode']) : '';
+$parsed = $modx->parseDocBlockFromString($plugincode);
+$docBlockList = $modx->convertDocBlockIntoList($parsed);
+$internal = array();
+$internal[0]['events'] = isset($parsed['events']) ? $parsed['events'] : '';
 ?>
+var internal = <?php echo json_encode($internal); ?>;
+</script>
+
+<form name="mutate" method="post" action="index.php?a=103" enctype="multipart/form-data">
+
     <input type="hidden" name="id" value="<?php echo $content['id'];?>">
     <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 
-    <h1><?php echo $_lang['plugin_title']; ?></h1>
+    <h1 class="pagetitle">
+      <span class="pagetitle-icon">
+        <i class="fa fa-plug"></i>
+      </span>
+      <span class="pagetitle-text">
+        <?php echo $_lang['plugin_title']; ?>
+      </span>
+    </h1>
 
     <div id="actions">
           <ul class="actionButtons">
-              <li id="Button1">
+              <li id="Button1" class="transition">
                 <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
-                  <span class="plus"> + </span>
+                <span class="plus"> + </span>
                 <select id="stay" name="stay">
                   <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
               </li>
-              <?php
-                if ($_GET['a'] == '102') { ?>
-              <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
+          <?php if ($_GET['a'] == '101') { ?>
+              <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } else { ?>
+          <?php } else { ?>
+              <li id="Button6"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
-              <?php } ?>
-              <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+          <?php } ?>
+              <li id="Button5" class="transition"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
 
 <div class="sectionBody">
-<p><?php echo $_lang['plugin_msg']; ?></p>
+  
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="pluginPane">
     <script type="text/javascript">
-        tp = new WebFXTabPane( document.getElementById( "pluginPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+        tpSnippet = new WebFXTabPane( document.getElementById( "pluginPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
     </script>
 
 <!-- General -->
 <div class="tab-page" id="tabPlugin">
     <h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
-    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabPlugin" ) );</script>
+    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabPlugin" ) );</script>
+
+    <p class="element-edit-message">
+      <?php echo $_lang['plugin_msg']; ?>
+    </p>
+   
     <table>
       <tr>
         <th><?php echo $_lang['plugin_name']; ?>:</th>
-        <td><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;"><span class="warning" id="savingMessage">&nbsp;</span></td>
+        <td><input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;"><span class="warning" id="savingMessage">&nbsp;</span></td>
       </tr>
       <tr>
         <th><?php echo $_lang['plugin_desc']; ?>:&nbsp;&nbsp;</th>
@@ -306,7 +465,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
             <?php
                 include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
                 foreach(getCategories() as $n=>$v){
-                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".$modx->htmlspecialchars($v["category"])."</option>";
                 }
             ?>
         </select>
@@ -317,7 +476,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
         <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
       </tr>
        <tr>
-        <td valign="top" colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span></label>":$_lang['plugin_disabled']; ?></td>
+        <td valign="top" colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span>":$_lang['plugin_disabled']; ?></label></td>
       </tr>
 <?php if($modx->hasPermission('save_role')):?>
       <tr>
@@ -332,7 +491,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
             <?php echo $_lang['plugin_code']; ?>
         </div>
         <div class="sectionBody">
-        <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['plugincode']); ?></textarea>
+        <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['plugincode']); ?></textarea>
         </div>
     </div>
     <!-- PHP text editor end -->
@@ -341,7 +500,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 <!-- Configuration/Properties -->
 <div class="tab-page" id="tabProps">
     <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
-    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabProps" ) );</script>
+    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table>
       <tr>
             <th><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</th>
@@ -357,19 +516,25 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 						'sm.name'
 						);
                     while($row = $modx->db->getRow($ds)){
-                        echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
+                        echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".$modx->htmlspecialchars($row["name"])."</option>";
                     }
                 ?>
-            </select>
+                </select><br/>
+                <span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span><br /><br />
             </td>
           </tr>
+      <?php if($modx->hasPermission('save_role')):?>
           <tr>
-            <td>&nbsp;</td>
-            <td valign="top"><span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span><br /><br /></td>
+            <th valign="top"><?php echo $_lang['parse_docblock']; ?>:</th>
+            <td valign="top"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 101 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span><br/><br/></td>
           </tr>
+      <?php endif;?>
           <tr>
             <th valign="top"><?php echo $_lang['plugin_config']; ?>:</th>
-            <td valign="top"><textarea class="phptextarea" name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'];?></textarea><br /><input type="button" value="<?php echo $_lang['update_params']; ?>" /></td>
+            <td valign="top"><textarea class="phptextarea" style="width:98%;" name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'];?></textarea><br />
+                <input type="button" onclick='showParameters(this)' value="<?php echo $_lang['update_params']; ?>" />
+                <input type="button" onclick='setDefaults(this)' value="<?php echo $_lang['set_default_all']; ?>" />
+            </td>
           </tr>
           <tr id="displayparamrow">
             <td valign="top">&nbsp;</td>
@@ -381,7 +546,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 <!-- System Events -->
 <div class="tab-page" id="tabEvents">
     <h2 class="tab"><?php echo $_lang["settings_events"] ?></h2>
-    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabEvents" ) );</script>
+    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabEvents" ) );</script>
     <p><?php echo $_lang['plugin_event_msg']; ?></p>
     <table>
 <?php
@@ -437,11 +602,17 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     }
 ?>
     </table>
-            </td>
-          </tr>
-        </table>
 </div>
 
+<!-- docBlock Info -->
+<div class="tab-page" id="tabDocBlock">
+<h2 class="tab"><?php echo $_lang['information'];?></h2>
+<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
+<div class="section">
+        <?php echo $docBlockList; ?>
+</div>
+</div>
+    
 </div>
 <input type="submit" name="save" style="display:none">
 </div>

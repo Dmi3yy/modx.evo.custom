@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Mohsen Zare (MotSmart), www.modxcms.ir
  *
@@ -762,6 +762,7 @@ $_lang["role_actionok"] = 'مرور صفحه ی عملکردهای تکمیل ش
 $_lang["role_bk_manager"] = 'استفاده از مدیریت پشتیبانی داده';
 $_lang["role_cache_refresh"] = 'تخلیه ی کامل ذخیره یا کش وبگاه';
 $_lang["role_change_password"] = 'تغییر کلمه ی عبور';
+$_lang["role_change_resourcetype"] = 'تغییر نوع منبع';
 $_lang["role_chunk_management"] = 'مدیریت چانک';
 $_lang["role_config_management"] = 'مدیریت تنظیمات';
 $_lang["role_content_management"] = 'مدیریت محتوا';
@@ -856,6 +857,8 @@ $_lang["search_criteria_content"] = 'جستجو در محتوا';
 $_lang["search_criteria_content_msg"] = 'جستجوی متنی در بین همه پرونده ها و محتویاتی که شامل متن مورد نظر شماست';
 $_lang["search_criteria_id"] = 'جستجو از طریق شناسه یا ردیف';
 $_lang["search_criteria_id_msg"] = 'شناسه یا ردیف پرونده مورد نظر خود را وارد کنید تا به سرعت پرونده را پیدا کنید';
+$_lang["search_criteria_template_id"] = 'Search by template ID';
+$_lang["search_criteria_template_id_msg"] = 'Find all Resources using the specified template.';
 $_lang["search_criteria_longtitle"] = 'جستجو در عنوان بلند مطالب';
 $_lang["search_criteria_longtitle_msg"] = 'پیدا کردن کلیه ی پرونده هایی که حاوی متن مورد نظر در عنوان بلند خود هستند';
 $_lang["search_criteria_title"] = 'جستجو در عناوین';
@@ -1152,6 +1155,7 @@ $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'When PHx plugin enabled, built-in filters are disabled by default';
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1192,6 +1196,7 @@ $_lang['email_method_mail'] = 'mail() PHP function';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP－AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Encrypted SMTP';
 $_lang['smtp_username_title'] = 'SMTP user name';
 $_lang['smtp_password_title'] = 'SMTP password';
 $_lang['smtp_port_title'] = 'SMTP port';

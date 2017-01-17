@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author The MODX Project Team
  *
@@ -13,7 +13,7 @@
  * Please commit your language changes on Transifex (https://www.transifex.com/projects/p/modx-evolution/) or on GitHub (https://github.com/modxcms/evolution).
  */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL languages
-$modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
+$modx_lang_attribute = 'nl'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODX is een <a href="http://modx.com/" target="_blank">PHP Applicatie Framework en Content Management Systeem</a> gelicentieerd onder de <a href="../assets/docs/license.txt">GNU GPL</a>.';
@@ -762,6 +762,7 @@ $_lang["role_actionok"] = '\'Bewerking is voltooid\'-scherm weergeven';
 $_lang["role_bk_manager"] = 'Backupbeheer gebruiken';
 $_lang["role_cache_refresh"] = 'De cache van de website leegmaken';
 $_lang["role_change_password"] = 'Wachtwoord wijzigen';
+$_lang["role_change_resourcetype"] = 'Change Ressource-Type';
 $_lang["role_chunk_management"] = 'Chunk beheer';
 $_lang["role_config_management"] = 'Configuratiebeheer';
 $_lang["role_content_management"] = 'Inhoud beheer';
@@ -856,6 +857,8 @@ $_lang["search_criteria_content"] = 'Op inhoud zoeken';
 $_lang["search_criteria_content_msg"] = 'Zoek alle Pagina\'s met de ingevoerde tekst in de inhoud.';
 $_lang["search_criteria_id"] = 'Op ID zoeken';
 $_lang["search_criteria_id_msg"] = 'Voer de ID van de Pagina in om de Pagina snel te vinden.';
+$_lang["search_criteria_template_id"] = 'Op template ID zoeken';
+$_lang["search_criteria_template_id_msg"] = 'Zoek alle pagina\'s die de gekozen template gebruikt.';
 $_lang["search_criteria_longtitle"] = 'Zoek op uitgebreide titel';
 $_lang["search_criteria_longtitle_msg"] = 'Zoek alle Pagina\'s met de ingevoerde tekst in hun uitgebreide titel.';
 $_lang["search_criteria_title"] = 'Op titel zoeken';
@@ -1151,6 +1154,7 @@ $_lang["pwd_hash_algo_message"] = 'Wachtwoord hash algoritme.';
 $_lang["enable_bindings_title"] = '@Bindings commando\'s aanzetten';
 $_lang["enable_bindings_message"] = 'Voorkom het uitvoeren van PHP-functies via TV @Bindings. Handig wanneer u Manager gebruikers heeft die niet PHP-code kunnen creëren, maar wel in staat zijn om TV\'s te maken of te bewerken. Het tonen van een TV met een @Binding zal worden uitgeschakeld.';
 
+$_lang["enable_filter_phx_warning"] = 'Wanneer de PHx plugin is ingeschakeld dan zijn de ingebouwde filters standaard uitgeschakeld';
 $_lang["bkmgr_alert_mkdir"] = 'Een bestand kan niet worden gemaakt in een directory. Kijk wat de toestemming (permission) is van [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Een website kan worden hersteld door het gebruik van een SQL bestand.</p>';
 $_lang["bkmgr_restore_title"] = 'Herstellen';
@@ -1191,6 +1195,7 @@ $_lang['email_method_mail'] = 'mail() PHP functie';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP-AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Gecodeerde SMTP';
 $_lang['smtp_username_title'] = 'SMTP gebruikersnaam';
 $_lang['smtp_password_title'] = 'SMTP wachtwoord';
 $_lang['smtp_port_title'] = 'SMTP poort';
@@ -1269,6 +1274,6 @@ $_lang["dp_dayNames"]   = "['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderd
 $_lang["dp_monthNames"] = "['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']";
 $_lang["dp_startDay"]   = "1";
 
-$_lang["check_all"] = "Select all";
-$_lang["check_none"] = "Select none";
-$_lang["check_toggle"] = "Toggle selection";
+$_lang["check_all"] = "Selecteer alle";
+$_lang["check_none"] = "Deselecteer alle";
+$_lang["check_toggle"] = "Selectie aan/uit";

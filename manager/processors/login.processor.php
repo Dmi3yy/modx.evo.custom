@@ -55,8 +55,8 @@ $tbl_user_settings   = $modx->getFullTableName('user_settings');
 $tbl_manager_users   = $modx->getFullTableName('manager_users');
 $tbl_user_attributes = $modx->getFullTableName('user_attributes');
 
-$username = $modx->db->escape($_REQUEST['username']);
-$givenPassword = $modx->db->escape($_REQUEST['password']);
+$username = $modx->db->escape(htmlspecialchars($_REQUEST['username'], ENT_NOQUOTES, $modx->config['modx_charset']));
+$givenPassword = htmlspecialchars($_REQUEST['password'], ENT_NOQUOTES, $modx->config['modx_charset']);
 $captcha_code = $_REQUEST['captcha_code'];
 $rememberme= $_REQUEST['rememberme'];
 $failed_allowed = $modx->config["failed_login_attempts"];
@@ -101,7 +101,6 @@ while ($row = $modx->db->getRow($rs)) {
 }
 // blocked due to number of login errors.
 if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
-    $modx->db->update(array('blocked'=>1),$tbl_user_attributes,"internalKey='{$internalKey}'");
     @session_destroy();
     session_unset();
     jsAlert($_lang["login_processor_many_failed_logins"]);

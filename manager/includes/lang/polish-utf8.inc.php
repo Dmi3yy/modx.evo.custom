@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Łukasz Kowalczyk, lukasz@pixeligence.com
  * @author Piotr Łukańko, piotr.lukanko@gmail.com
@@ -767,6 +767,7 @@ $_lang["role_actionok"] = 'Pokazuj ekran zakończenia zadania';
 $_lang["role_bk_manager"] = 'Użyj menedżera backup-u';
 $_lang["role_cache_refresh"] = 'Czyszczenie cache\'u witryny';
 $_lang["role_change_password"] = 'Zmienianie hasła';
+$_lang["role_change_resourcetype"] = 'Zmien Typ zasobu';
 $_lang["role_chunk_management"] = 'Zarządzanie chunkami';
 $_lang["role_config_management"] = 'Zarządzanie konfiguracją';
 $_lang["role_content_management"] = 'Zarządzanie zawartością';
@@ -861,6 +862,8 @@ $_lang["search_criteria_content"] = 'Szukaj po zawartości';
 $_lang["search_criteria_content_msg"] = 'Znajdź wszystkie dokumenty zawierające w zawartości wpisany tekst.';
 $_lang["search_criteria_id"] = 'Szukaj po ID';
 $_lang["search_criteria_id_msg"] = 'Wpisz ID dokumentu, aby go szybko zlokalizować.';
+$_lang["search_criteria_template_id"] = 'Szukaj po ID szablonu';
+$_lang["search_criteria_template_id_msg"] = 'Znajdź wszystkie dokumenty używające określonego szablonu.';
 $_lang["search_criteria_longtitle"] = 'Szukaj w długich tytułach';
 $_lang["search_criteria_longtitle_msg"] = 'Znajdź wszystkie dokumenty posiadające wyszukiwane słowo w długim tytul.';
 $_lang["search_criteria_title"] = 'Szukaj po tytule';
@@ -1157,6 +1160,7 @@ $_lang["pwd_hash_algo_message"] = 'Algorytm haszowania hasła.';
 $_lang["enable_bindings_title"] = 'Włącz komendy @Bindings';
 $_lang["enable_bindings_message"] = 'Zapobiega wykonywaniu funkcji PHP poprzez TV @Bindings. Użyteczny gdy istnieją użytkownicy Managera, którzy nie powinni mieć dostępu do tworzenia kodu PHP, ale potrzebują tworzyć lub edytować TV. Wynikiem każdej TV która zawiera @Binding będzie "@Bindings disabled".';
 
+$_lang["enable_filter_phx_warning"] = 'Po włączeniu wtyczki PHx, filtry wbudowane są domyślnie wyłączone';
 $_lang["bkmgr_alert_mkdir"] = 'Plik nie mógł zostać utworzony w katalogu. Proszę sprawdzić uprawnienia [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Serwis może zostać przywrócony używając pliku SQL.</p>';
 $_lang["bkmgr_restore_title"] = 'Przywróć';
@@ -1197,6 +1201,7 @@ $_lang['email_method_mail'] = 'Funkcja PHP mail()';
 $_lang['email_method_smtp'] = 'Serwer SMTP';
 $_lang['smtp_auth_title'] = 'SMTP-AUTH';
 $_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_secure_title'] = 'Zaszyfrowane SMTP';
 $_lang['smtp_username_title'] = 'Nazwa użytkownika SMTP';
 $_lang['smtp_password_title'] = 'Hasło SMTP';
 $_lang['smtp_port_title'] = 'Port SMTP';
@@ -1271,10 +1276,10 @@ $_lang["login_processor_remote_ip"]          = "Nie masz zezwolenia na logowanie
 $_lang["login_processor_date"]               = "Nie masz zezwolenia na logowanie w tej chwili. Proszę spróbować później.";
 $_lang["login_processor_captcha_config"]     = "Captcha jest źle skonfigurowana.";
 
-$_lang["dp_dayNames"]   = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
-$_lang["dp_monthNames"] = "['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']";
+$_lang["dp_dayNames"]   = "['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota']";
+$_lang["dp_monthNames"] = "['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']";
 $_lang["dp_startDay"]   = "1";
 
-$_lang["check_all"] = "Select all";
-$_lang["check_none"] = "Select none";
-$_lang["check_toggle"] = "Toggle selection";
+$_lang["check_all"] = "Wybierz wszystko";
+$_lang["check_none"] = "Żaden";
+$_lang["check_toggle"] = "Odwróć zaznaczenie";

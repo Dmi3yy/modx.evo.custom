@@ -4,7 +4,7 @@
  *
  * @author Marc Hinse
  * @author Bogdan Günther
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  *
  * @language German
@@ -51,6 +51,7 @@ $_lang["checking_registerglobals"] = 'Überprüfe ob PHP register_globals ausges
 $_lang["checking_registerglobals_note"] = 'Diese Konfiguration macht Ihre Website angreifbarer für Cross Site Scripting (XSS) Attacken. Sie sollten mit Ihrem Provider sprechen, ob diese Einstellung geändert werden kann. Es gibt normalerweise drei Möglichkeiten: Ändern der globalen php.ini, Hinzufügen von Regeln zu der .htaccess-Datei im Root-Verzeichnis der MODX-Installation oder durch Hinzufügen einer angepassten php.ini in jedem Verzeichnis Ihrer MODX-Installation. Sie können MODX trotzdem installieren, aber Sie müssen sich den möglichen Sicherheitsrisiken bewusst sein.';
 $_lang["checking_sessions"] = 'Überprüfe ob die Sessions sauber definiert sind: ';
 $_lang["checking_table_prefix"] = 'Überprüfe Tabellen-Präfix `';
+$_lang["choose_language"] = 'Sprache wählen';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Für neue Linux/Unix Installationen bitte eine leere Datei <span class="mono">config.inc.php</span> im Ordner <span class="mono">/[+MGR_DIR+]/includes/</span> anlegen und die Dateirechte auf 0666 setzen.';
 $_lang["connection_screen_collation"] = 'Kollation:';
@@ -114,7 +115,7 @@ $_lang["installing_demo_site"] = 'Installiere Beispiel-Website: ';
 $_lang["language_code"] = 'de';
 $_lang["loading"] = 'Laden …';
 $_lang["modules"] = 'Module';
-$_lang["modx_footer1"] = '&copy; 2005-2014 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) Projekt. Alle Rechte vorbehalten. MODX ist unter der GNU GPL lizenziert.';
+$_lang["modx_footer1"] = '&copy; 2005-[+current_year+] <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) Projekt. Alle Rechte vorbehalten. MODX ist unter der GNU GPL lizenziert.';
 $_lang["modx_footer2"] = 'MODX ist freie Software.  Wir ermutigen Sie, kreativ zu sein und MODX so zu nutzen wie es Ihnen am besten passt. Stellen Sie nur sicher, dass Sie bei Veränderungen des Quellcodes und der Weiterverbreitung der modifizierten MODX-Version den Quelltext frei zugänglich belassen!';
 $_lang["modx_install"] = 'MODX &raquo; Installation';
 $_lang["modx_requires_php"] = ', und MODx benötigt PHP [+min_version+] oder höher';

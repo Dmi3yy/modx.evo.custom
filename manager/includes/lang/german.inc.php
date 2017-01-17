@@ -2,7 +2,7 @@
 /**
  * MODX Manager language file
  *
- * @version 1.0.14
+ * @version 1.0.15
  * @date 2014/02/24
  * @author Rainer Bachmaier
  * @author Marc Hinse
@@ -766,6 +766,7 @@ $_lang["role_actionok"] = 'Ausgeführte Aktionen anzeigen';
 $_lang["role_bk_manager"] = 'Backup-Manager benutzen';
 $_lang["role_cache_refresh"] = 'Seitencache leeren';
 $_lang["role_change_password"] = 'Passwort ändern';
+$_lang["role_change_resourcetype"] = 'Ändern Ressourcentyp';
 $_lang["role_chunk_management"] = 'Chunk-Management';
 $_lang["role_config_management"] = 'Konfigurations-Verwaltung';
 $_lang["role_content_management"] = 'Inhalts-Verwaltung';
@@ -860,6 +861,8 @@ $_lang["search_criteria_content"] = 'Suche im Inhalt';
 $_lang["search_criteria_content_msg"] = 'Findet alle Ressource in deren Inhalt der eingegebene Text vorkommt.';
 $_lang["search_criteria_id"] = 'Suche nach ID';
 $_lang["search_criteria_id_msg"] = 'Findet die Ressource dessen ID mit der eingegebenen übereinstimmt.';
+$_lang["search_criteria_template_id"] = 'Suche nach Template ID';
+$_lang["search_criteria_template_id_msg"] = 'Findet alle Ressourcen die das Template mit der angegebenen ID benutzen.';
 $_lang["search_criteria_longtitle"] = 'Suche nach Langtitel';
 $_lang["search_criteria_longtitle_msg"] = 'Findet alle Ressource in deren Langtitel der eingegebene Text vorkommt.';
 $_lang["search_criteria_title"] = 'Suche nach Titel';
@@ -1156,6 +1159,7 @@ $_lang["pwd_hash_algo_message"] = 'Algorithmus für den Passwort-Hash.';
 $_lang["enable_bindings_title"] = '@Bindings aktivieren';
 $_lang["enable_bindings_message"] = 'Verhindert die Ausführung von PHP-Code innerhalb von @Bindings in Template-Variablen. Nützlich, wenn Sie Manager-Benutzer haben, die keinen PHP-Code einsetzen dürfen, aber Template-Variablen bearbeiten und erstellen dürfen. Die Ausgabe einer Template-Variable mit @Binding lautet in diesem Fall „@Bindings disabled“.';
 
+$_lang["enable_filter_phx_warning"] = 'Wenn das PHx Plugin aktiviert ist, sind die eingebauten Filter standardmäßig deaktiviert.';
 $_lang["bkmgr_alert_mkdir"] = 'Es konnte keine Wiederherstellungs-Datei erstellt werden. Bitte überprüfen Sie die Verzeichnis-Rechte von [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Einzelne Tabellen dieser Installation können mit SQL Befehlen wiederhergestellt werden.</p>';
 $_lang["bkmgr_restore_title"] = 'Wiederherstellen';
@@ -1196,6 +1200,7 @@ $_lang['email_method_mail'] = 'PHP mail() Funktion';
 $_lang['email_method_smtp'] = 'SMTP Server';
 $_lang['smtp_auth_title'] = 'SMTP Auth';
 $_lang['smtp_host_title'] = 'SMTP Host';
+$_lang['smtp_secure_title'] = 'SMTP Verschlüsselung';
 $_lang['smtp_username_title'] = 'SMTP Benutzername';
 $_lang['smtp_password_title'] = 'SMTP Passwort';
 $_lang['smtp_port_title'] = 'SMTP Port';
