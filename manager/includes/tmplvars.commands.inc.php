@@ -30,8 +30,7 @@ function ProcessTVCommand($value, $name = '', $docid = '', $src='docform', $tvsA
         $param = parseTvValues($param, $tvsArray);
         switch ($cmd) {
             case "FILE" :
-                $output = ProcessFile(trim($param));
-                $output = str_replace('@FILE ' . $param, $output, $nvalue);
+                $output = $modx->atBindFileContent($nvalue);
                 break;
 
             case "CHUNK" : // retrieve a chunk and process it's content
@@ -147,7 +146,7 @@ function ParseCommand($binding_string)
 function parseTvValues($param, $tvsArray)
 {
 	global $modx;
-	$tvsArray = array_merge($tvsArray, $modx->documentObject);
+	$tvsArray = is_array($modx->documentObject) ? array_merge($tvsArray, $modx->documentObject) : $tvsArray;
 	if (strpos($param, '[*') !== false) {
 		$matches = $modx->getTagsFromContent($param, '[*', '*]');
 		foreach ($matches[0] as $i=>$match) {

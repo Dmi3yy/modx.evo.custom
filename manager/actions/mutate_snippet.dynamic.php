@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
-switch((int) $_REQUEST['a']) {
+switch($modx->manager->action) {
   case 22:
     if(!$modx->hasPermission('edit_snippet')) {
       $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -19,17 +19,18 @@ switch((int) $_REQUEST['a']) {
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // Get table Names (alphabetical)
-$tbl_active_users       = $modx->getFullTableName('active_users');
 $tbl_site_module_depobj = $modx->getFullTableName('site_module_depobj');
 $tbl_site_modules       = $modx->getFullTableName('site_modules');
 $tbl_site_snippets      = $modx->getFullTableName('site_snippets');
 
 // check to see the snippet editor isn't locked
-$rs = $modx->db->select('username', $tbl_active_users, "action=22 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getValue($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$username,$_lang['snippet']));
-    }
+if ($lockedEl = $modx->elementIsLocked(4, $id)) {
+        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['snippet']));
+}
 // end check for lock
+
+// Lock snippet for other users to edit
+$modx->lockElement(4, $id);
 
 $content = array();
 if(isset($_GET['id'])) {
@@ -52,6 +53,11 @@ if ($modx->manager->hasFormValues()) {
 }
 
 $content = array_merge($content, $_POST);
+
+// Add lock-element JS-Script
+$lockElementId = $id;
+$lockElementType = 4;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 ?>
 <script type="text/javascript">
 
@@ -129,7 +135,7 @@ function showParameters(ctrl) {
         currentParams = JSON.parse(props);
     }
 
-    t = '<table width="98%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
+    t = '<table width="100%" class="displayparams"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
 
     try {
         
@@ -221,18 +227,18 @@ function showParameters(ctrl) {
                         }
                         break;
                     case 'textarea':
-                        c = '<textarea name="prop_' + key + '" style="width:98%" rows="4" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">' + value + '</textarea>';
+                        c = '<textarea name="prop_' + key + '" style="width:80%" rows="4" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">' + value + '</textarea>';
                         break;
                     default:  // string
-                        c = '<input type="text" name="prop_' + key + '" value="' + value + '" style="width:98%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
+                        c = '<input type="text" name="prop_' + key + '" value="' + value + '" style="width:80%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
                         break;
                 }
 
                 info = '';
                 info += desc ? '<br/><small>'+desc+'</small>' : '';
-                sd = defaultVal != undefined ? ' <small><a class="btnSetDefault" style="float:right" onclick="setDefaultParam(\''+ key +'\',1);return false;">Set Default</a></small>' : '';
+                sd = defaultVal != undefined ? ' <ul class="actionButtons" style="position:absolute;right:0px;bottom:6px;min-height:0;"><li><a href="#" class="primary btn-small btnSetDefault" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></li></ul>' : '';
 
-            t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
+            t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">'+ info + '</span></td><td class="inputCell relative" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
             
         });
 
@@ -364,12 +370,12 @@ function contains(a, obj) {
     $docBlockList = $modx->convertDocBlockIntoList($parsed);
 ?>
     <input type="hidden" name="id" value="<?php echo $content['id']?>">
-    <input type="hidden" name="mode" value="<?php echo $_GET['a']?>">
+    <input type="hidden" name="mode" value="<?php echo $modx->manager->action;?>">
     
     <div id="actions">
           <ul class="actionButtons">
               <li id="Button1" class="transition">
-                <a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
+                <a href="#" onclick="documentDirty=false; form_save=true; document.mutate.save.click();saveWait('mutate');">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
                 <span class="plus"> + </span>
@@ -379,7 +385,7 @@ function contains(a, obj) {
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
               </li>
-          <?php if ($_GET['a'] == '23') { ?>
+          <?php if ($modx->manager->action == '23') { ?>
               <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"]?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } else { ?>
@@ -419,9 +425,9 @@ function contains(a, obj) {
        
         <table>
           <tr>
-            <th><?php echo $_lang['snippet_name']?>:</th>
+            <th><?php echo $_lang['snippet_name']?></th>
             <td>[[&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">&nbsp;]]<span class="warning" id="savingMessage">&nbsp;</span>
-            <?php if(strpos($content['name'],'Duplicate of')!==false) echo '<script>document.getElementsByName("name")[0].focus();</script>'?></td>
+            <script>document.getElementsByName("name")[0].focus();</script></td>
           </tr>
           <tr>
             <th><?php echo $_lang['snippet_desc']?></th>
@@ -441,12 +447,15 @@ function contains(a, obj) {
             </td>
           </tr>
           <tr>
-            <th><?php echo $_lang['new_category']?>:</th>
+            <th><?php echo $_lang['new_category']?></th>
             <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
           </tr>
 <?php if($modx->hasPermission('save_role')):?>
           <tr>
-            <td valign="top" colspan="2"><label style="display:block;"><input style="padding:0;margin:0;" name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?></label> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
+            <th valign="top" colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?></label> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></th>
+          </tr>
+          <tr>
+            <th valign="top" colspan="2"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 23 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span></th>
           </tr>
 <?php endif;?>
         </table>
@@ -457,11 +466,29 @@ function contains(a, obj) {
                 <?php echo $_lang['snippet_code']?>
             </div>
             <div class="sectionBody">
-            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php"."\n". trim($modx->htmlspecialchars($content['snippet'])) ."\n"."?>" ?></textarea>
+            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php"."\n". trim($modx->htmlspecialchars($content['snippet'])) ."\n"; ?></textarea>
             </div>
         </div>    
         <!-- PHP text editor end -->
     </div>
+
+<!-- Config -->
+<div class="tab-page" id="tabConfig">
+    <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
+    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabConfig" ) );</script>    
+    <table border="0" cellspacing="0" cellpadding="6" width="100%">
+        <tr>
+          <td colspan="2">
+            <ul class="actionButtons"
+              <li><a href="#" class="primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a></li>
+            </ul>
+          </td>
+        </tr>
+        <tr id="displayparamrow">
+           <td valign="top" colspan="2" width="100%" id="displayparams">&nbsp;</td>
+        </tr>
+    </table>
+</div> 
 
     <!-- Properties -->
     <div class="tab-page" id="tabProps">
@@ -470,7 +497,7 @@ function contains(a, obj) {
         <table>
           <tr>
             <th><?php echo $_lang['import_params']?></th>
-            <td valign="top"><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
+            <td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                     <option>&nbsp;</option>
                 <?php
                     $ds = $modx->db->select(
@@ -490,30 +517,20 @@ function contains(a, obj) {
           </tr>
           <tr>
             <td>&nbsp;</td>
-            <td valign="top"><span class="comment" ><?php echo $_lang['import_params_msg']?></div><br /><br /></td>
+            <td><span class="comment" ><?php echo $_lang['import_params_msg']?></span></td>
           </tr>
           <tr>
-            <th valign="top"><?php echo $_lang['parse_docblock']; ?>:</th>
-            <td valign="top"><label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $_REQUEST['a'] == 23 ? 'checked="checked"' : ''; ?> value="1" class="inputBox"> <?php echo $_lang['parse_docblock']; ?></label> <span class="comment"><?php echo $_lang['parse_docblock_msg']; ?></span><br/><br/></td>
-          </tr>
-          <tr>
-            <th valign="top"><?php echo $_lang['snippet_properties']?>:</th>
-            <td valign="top"><textarea name="properties" maxlength="65535" class="phptextarea" style="width:300px;" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties']?></textarea><br />
-                <input type="button" onclick="showParameters(this);" value="<?php echo $_lang['update_params'] ?>" style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']?>" />
-                <input type="button" onclick="setDefaults(this)" value="<?php echo $_lang['set_default_all']; ?>" />
+            <td colspan="2"><textarea name="properties" class="phptextarea" style="width:300px;" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties']?></textarea><br />
+                <ul class="actionButtons" style="min-height:0;"><li><a href="#" class="primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a></li></ul>
             </td>
           </tr>
-          <tr id="displayparamrow">
-            <td valign="top">&nbsp;</td>
-            <td id="displayparams">&nbsp;</td>
-          </tr>
         </table>
-        </div>
+    </div>
     
         <!-- docBlock Info -->
         <div class="tab-page" id="tabDocBlock">
             <h2 class="tab"><?php echo $_lang['information'];?></h2>
-            <script type="text/javascript">tp.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
+            <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabDocBlock" ) );</script>
             <div class="section">
                 <?php echo $docBlockList; ?>
             </div>

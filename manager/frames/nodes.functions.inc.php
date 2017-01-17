@@ -81,6 +81,24 @@ function makeHTML($indent,$parent,$expandAll,$theme) {
         
         $weblinkDisplay = $type=='reference' ? sprintf('&nbsp;<img src="%s">',$_style['tree_linkgo']) : '' ;
         $pageIdDisplay = '<small>('.($modx_textdir ? '&rlm;':'').$id.')</small>';
+        
+        // Prepare displaying user-locks
+        $lockedByUser = '';
+        $rowLock = $modx->elementIsLocked(7, $id, true);
+        if($rowLock && $modx->hasPermission('display_locks')) {
+            if($rowLock['sid'] == $modx->sid) {
+                $title = $modx->parseText($_lang["lock_element_editing"], array('element_type'=>$_lang["lock_element_type_7"], 'lasthit_df'=>$rowLock['lasthit_df']));
+                $lockedByUser = '<span title="'.$title.'" class="editResource" style="cursor:context-menu;"><img src="'.$_style['icons_preview_resource'].'" /></span>&nbsp;';
+            } else {
+                $title = $modx->parseText($_lang["lock_element_locked_by"], array('element_type'=>$_lang["lock_element_type_7"], 'username'=>$rowLock['username'], 'lasthit_df'=>$rowLock['lasthit_df']));
+                if($modx->hasPermission('remove_locks')) {
+                    $lockedByUser = '<a href="#" onclick="unlockElement(7, '.$id.', this);return false;" title="'.$title.'" class="lockedResource"><img src="'.$_style['icons_secured'].'" /></a>';
+                } else {
+                    $lockedByUser = '<span title="'.$title.'" class="lockedResource" style="cursor:context-menu;"><img src="'.$_style['icons_secured'].'" /></span>';
+                }
+            }
+        }
+        
         $url = $modx->makeUrl($id);
 
         $alt = '';
@@ -104,7 +122,8 @@ function makeHTML($indent,$parent,$expandAll,$theme) {
             'donthit' =>$donthit,'hidemenu' =>$hidemenu,'alias' =>$alias,'contenttype' =>$contentType,'privateweb' =>$privateweb,
             'privatemgr' =>$privatemgr,'hasAccess' => $hasAccess, 'template' => $template,
             'nodetitle' => $nodetitle, 'spacer' => $spacer, 'pad' => $pad, 'url' => $url, 'alt' => $alt,
-            'nodetitleDisplay' => $nodetitleDisplay,'weblinkDisplay' => $weblinkDisplay,'pageIdDisplay' => $pageIdDisplay
+            'nodetitleDisplay' => $nodetitleDisplay,'weblinkDisplay' => $weblinkDisplay,'pageIdDisplay' => $pageIdDisplay,
+            'lockedByUser'=>$lockedByUser
         );
         // invoke OnManagerNodePrerender event
         
@@ -125,8 +144,8 @@ function makeHTML($indent,$parent,$expandAll,$theme) {
                 case $modx->config['site_unavailable_page'] : $icon = $_style['tree_page_hourglass']; break;
                 case $modx->config['unauthorized_page']     : $icon = $_style['tree_page_info']; break;
                 default:
-            if ($privateweb||$privatemgr) {
-                if (isset($iconsPrivate[$contentType])) $icon = $iconsPrivate[$contentType];
+                    if ($privateweb||$privatemgr) {
+                        if (isset($iconsPrivate[$contentType])) $icon = $iconsPrivate[$contentType];
                         else                                    $icon = $_style['tree_page_secure'];
                     } elseif (isset($icons[$contentType]))      $icon = $icons[$contentType];
                     else                                        $icon = $_style['tree_page'];
@@ -255,7 +274,7 @@ function getNodeTitle($nodeNameSource,$row) {
             $nodetitle = $pagetitle;
             break;
         case 'longtitle':
-            $nodetitle = $longtitle;
+            $nodetitle = $longtitle ? $longtitle : $pagetitle;
             break;
         case 'createdon':
         case 'editedon':
@@ -301,9 +320,9 @@ function getTplSingleNode() {
         onmouseover="setCNS(this, 1)"
         onmouseout="setCNS(this, 0)"
         onmousedown="itemToChange=[+id+]; selectedObjectName=\'[+nodetitle_esc+]\'; selectedObjectDeleted=[+deleted+]; selectedObjectUrl=\'[+url+]\'"
-    />&nbsp;<span
+    />&nbsp;[+lockedByUser+]<span
         p="[+parent+]"
-        onclick="treeAction([+id+],\'[+nodetitle_esc+]\'); setSelected(this);"
+        onclick="treeAction(event,[+id+],\'[+nodetitle_esc+]\'); setSelected(this);"
         onmouseover="setHoverClass(this,1);"
         onmouseout="setHoverClass(this, 0);"
         class="treeNode"
@@ -319,7 +338,7 @@ function getTplOpenFolderNode() {
     >[+spacer+]<img
         id="s[+id+]"
         align="absmiddle"
-        style="margin-left:-1px;"
+        style="margin-left:4px;"
         src="[&tree_minusnode&]"
         onclick="toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
         oncontextmenu="this.onclick(event); return false;"
@@ -334,8 +353,8 @@ function getTplOpenFolderNode() {
         onmouseover="setCNS(this, 1)"
         onmouseout="setCNS(this, 0)"
         onmousedown="itemToChange=[+id+]; selectedObjectName=\'[+nodetitle_esc+]\'; selectedObjectDeleted=[+deleted+]; selectedObjectUrl=\'[+url+]\';"
-        />&nbsp;<span
-        onclick="treeAction([+id+],\'[+nodetitle_esc+]\'); setSelected(this);"
+        />&nbsp;[+lockedByUser+]<span
+        onclick="treeAction(event,[+id+],\'[+nodetitle_esc+]\'); setSelected(this);"
         onmouseover="setHoverClass(this, 1);"
         onmouseout="setHoverClass(this, 0);"
         class="treeNode"
@@ -351,7 +370,7 @@ function getTplClosedFolderNode() {
     >[+spacer+]<img
         id="s[+id+]"
         align="absmiddle"
-        style="margin-left:-1px;"
+        style="margin-left:4px;"
         src="[&tree_plusnode&]"
         onclick="toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
         oncontextmenu="this.onclick(event); return false;"
@@ -366,8 +385,8 @@ function getTplClosedFolderNode() {
         onmouseover="setCNS(this, 1)"
         onmouseout="setCNS(this, 0)"
         onmousedown="itemToChange=[+id+]; selectedObjectName=\'[+nodetitle_esc+]\'; selectedObjectDeleted=[+deleted+]; selectedObjectUrl=\'[+url+]\';"
-        />&nbsp;<span
-        onclick="treeAction([+id+],\'[+nodetitle_esc+]\'); setSelected(this);"
+        />&nbsp;[+lockedByUser+]<span
+        onclick="treeAction(event,[+id+],\'[+nodetitle_esc+]\'); setSelected(this);"
         onmouseover="setHoverClass(this, 1);"
         onmouseout="setHoverClass(this, 0);"
         class="treeNode"

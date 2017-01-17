@@ -6,6 +6,13 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 if(!isset($modx->config['manager_menu_height'])) $modx->config['manager_menu_height'] = '70';
 if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '320';
 $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
+
+if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwardToAction'])) {
+	$initMainframeAction = $_SESSION['onLoginForwardToAction'];
+	unset($_SESSION['onLoginForwardToAction']);
+} else {
+	$initMainframeAction = 2; // welcome.static
+}
 ?>
 <!DOCTYPE html>
 <html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
@@ -23,12 +30,12 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
         #resizer { position: absolute; top: 70px; bottom: 0; left: <?php echo $modx->config['manager_tree_width'];?>px; width: 12px; cursor: col-resize; z-index: 999 }
         #resizer #hideMenu {
             display: block;
-            margin-top:5px;
-            margin-left:-8px;
-            cursor:pointer;
+            margin-top: 5px;
+            margin-left: -8px;
+            cursor: pointer;
             background: transparent url("media/style/<?php echo $modx->config['manager_theme']; ?>/images/icons/application_side_contract.png") no-repeat !important;
-            width:16px;
-            height:16px;
+            width: 16px;
+            height: 16px;
         }
         #resizer2 { position: absolute; top: 70px; right: 20px; width: 3px; z-index: 110;}
         #resizer2 #hideTopMenu {display:block;
@@ -56,7 +63,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
     </div>
 
     <div id="main">
-        <iframe name="main" id="mainframe" src="index.php?a=2" scrolling="auto" frameborder="0" onload="if (mainMenu.stopWork()) mainMenu.stopWork(); scrollWork();"></iframe>
+        <iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="if (mainMenu.stopWork()) mainMenu.stopWork(); scrollWork();"></iframe>
     </div>
 
     <script language="JavaScript" type="text/javascript">

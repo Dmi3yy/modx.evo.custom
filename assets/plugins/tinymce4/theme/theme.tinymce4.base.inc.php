@@ -64,13 +64,16 @@ $this->set('image_advtab',          'small',                        'string' ); 
 $this->set('image_advtab',          true,                           'bool' );       // https://www.tinymce.com/docs/plugins/image/#image_advtab // replacement for 3.x-plugin advimage
 $this->set('image_class_list', '[{title: "None", value: ""},{title: "Float left", value: "justifyleft"},{title: "Float right", value: "justifyright"},{title: "Image Responsive",value: "img-responsive"}]', 'json' );
 
+// https://www.tinymce.com/docs/plugins/spellchecker/
+// https://github.com/extras-evolution/tinymce4-for-modx-evo/issues/26
+$this->set('browser_spellcheck',    ($this->pluginParams['browser_spellcheck'] == 'enabled' ? true : false), 'bool' );
 
 // https://www.tinymce.com/docs/plugins/paste/#paste_word_valid_elements
 $this->set('paste_word_valid_elements', 'a[href|name],p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,th,td[colspan|rowspan],tr,thead,tfoot,tbody,br,hr,sub,sup,u', 'string');
 
 // @todo: final base-setup like tinymce3 "default"-theme?
 $this->set('plugins', 'anchor visualblocks autolink autosave save advlist fullscreen paste modxlink media contextmenu table youtube image imagetools code textcolor', 'string');    // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
-$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough fontsizeselect pastetext code | fullscreen help', 'string');
+$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect fontsizeselect pastetext code | fullscreen help', 'string');
 $this->set('toolbar2', 'image media youtube link unlink anchor | alignleft aligncenter alignright | bullist numlist | blockquote outdent indent | table hr | visualblocks styleprops removeformat', 'string');
 
 // Bridge does not return NULL, and does not use this->set() itself, so these parameters must be set at least once..

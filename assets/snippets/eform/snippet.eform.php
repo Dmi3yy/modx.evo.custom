@@ -5,7 +5,7 @@
  * Robust form parser/processor with validation, multiple sending options, chunk/page support for forms and reports, and file uploads
  *
  * @category   snippet
- * @version    1.4.7
+ * @version    1.4.8
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal   @properties
  * @internal   @modx_category Forms
@@ -34,10 +34,9 @@ return ''; # don't go any further when inside manager
 }
 
 //tidying up some casing errors in parameters
-if(isset($eformOnValidate)) $eFormOnValidate = $eformOnValidate;
-if(isset($eformOnBeforeMailSent)) $eFormOnBeforeMailSent = $eformOnBeforeMailSent;
-if(isset($eformOnMailSent)) $eFormOnMailSent = $eformOnMailSent;
-if(isset($eformOnValidate)) $eFormOnValidate = $eformOnValidate;
+if(isset($eformOnValidate))        $eFormOnValidate        = $eformOnValidate;
+if(isset($eformOnBeforeMailSent))  $eFormOnBeforeMailSent  = $eformOnBeforeMailSent;
+if(isset($eformOnMailSent))        $eFormOnMailSent        = $eformOnMailSent;
 if(isset($eformOnBeforeFormMerge)) $eFormOnBeforeFormMerge = $eformOnBeforeFormMerge;
 if(isset($eformOnBeforeFormParse)) $eFormOnBeforeFormParse = $eformOnBeforeFormParse;
 //for sottwell :)
@@ -47,7 +46,7 @@ if(isset($eFormCSS)) $cssStyle = $eFormCSS;
 $_params = array (
    // Snippet Path
    'snipPath' => $snipPath, //includes $snipFolder
-	 'snipFolder' => $snipFolder,
+   'snipFolder' => $snipFolder,
 
 // eForm Params
    'vericode' => isset($vericode)? $vericode:"",
@@ -58,7 +57,7 @@ $_params = array (
    'cc' => isset($cc)? $cc:"",
    'bcc' => isset($bcc)? $bcc:"",
    'subject' => isset($subject)? $subject:"",
-   'ccsender' => isset($ccsender)?$ccsender:0,
+   'ccsender' => isset($ccsender) ? $ccsender:0,
    'sendirect' => isset($sendirect)? $sendirect:0,
    'mselector' => isset($mailselector)? $mailselector:0,
    'mobile' => isset($mobile)? $mobile:'',
@@ -102,7 +101,7 @@ $_params = array (
    'errorTpl' => isset($errorTpl)?$errorTpl:'<div class="errors"><strong>[+ef_message_text+]</strong><br />[+ef_wrapper+]</div>',
    'errorRequiredTpl' => isset($errorRequiredTpl)?$errorRequiredTpl:'<span class="requiredlist"><span>[+ef_required_list+]</span>.</span>',
    'errorRequiredSeparator' => isset($errorRequiredSeparator)?$errorRequiredSeparator:'</span>, <span>',
-   'version' => '1.4.6'
+   'version' => '1.4.8'
 );
 
 // pixelchutes PHx workaround

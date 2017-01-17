@@ -14,7 +14,7 @@ function link(){
 	mass = location.href.split('?');
 	return mass[0]+'?id='+_GET['id']+'&a='+_GET['a'];
 }
-		
+
 function store_search(val){
 	$('.item_list .catalog_item').each(function(){
 		var search_name = $(this).find('h3').html();
@@ -26,7 +26,7 @@ function store_search(val){
 		}
 	})
 }	
-
+	
 store = {
 	categories:{},
 	types:{},
@@ -148,14 +148,14 @@ store = {
 			store.get_own_list({}, store.updateUserPack );
 			return false;
 		});
-		
+				
 		$('.item_header :input').change(function(){
 			store.get_list({}, store.update_list );
 		});
 		
 	},
 	install:function(elm){
-		
+			
 		var el = $(elm).closest('.catalog_item').find('.informer');
 		var file = $(elm).closest('.catalog_item').find('[name="link"]').val();
 		store.query('download',{id:$(elm).attr('data-id')},function(data){
@@ -287,7 +287,7 @@ store = {
 			str = $str.wrapAll('<div></div>').parent().html();
 			
 		}
-		
+			
 		if ( array.type ) {
 			array.type = array.type == 'snippet'?'snippets':array.type;
 			array.type = array.type == 'module'?'modules':array.type;

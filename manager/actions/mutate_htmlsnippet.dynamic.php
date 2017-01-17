@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
-switch ((int) $_REQUEST['a']) {
+switch ($modx->manager->action) {
     case 78:
         if (!$modx->hasPermission('edit_chunk')) {
             $modx->webAlertAndQuit($_lang["error_no_privileges"]);
@@ -19,14 +19,16 @@ switch ((int) $_REQUEST['a']) {
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // Get table names (alphabetical)
-$tbl_active_users      = $modx->getFullTableName('active_users');
 $tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 
-// Check to see the snippet editor isn't locked
-$rs = $modx->db->select('username', $tbl_active_users, "action=78 AND id='{$id}' AND internalKey!='".$modx->getLoginUserID()."'");
-    if ($username = $modx->db->getValue($rs)) {
-            $modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $username, $_lang['chunk']));
-    }
+// check to see the snippet editor isn't locked
+if ($lockedEl = $modx->elementIsLocked(3, $id)) {
+        $modx->webAlertAndQuit(sprintf($_lang['lock_msg'],$lockedEl['username'],$_lang['chunk']));
+}
+// end check for lock
+
+// Lock snippet for other users to edit
+$modx->lockElement(3, $id);
 
 $content = array();
 if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
@@ -54,6 +56,11 @@ if (isset($_POST['which_editor'])) {
 }
 
 $content = array_merge($content, $_POST);
+
+// Add lock-element JS-Script
+$lockElementId = $id;
+$lockElementType = 3;
+require_once(MODX_MANAGER_PATH.'includes/active_user_locks.inc.php');
 
 // Print RTE Javascript function
 ?>
@@ -101,8 +108,8 @@ if (is_array($evtOut))
 
 ?>
 <input type="hidden" name="a" value="79" />
-<input type="hidden" name="id" value="<?php echo $_REQUEST['id']?>" />
-<input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a']?>" />
+<input type="hidden" name="id" value="<?php echo $_REQUEST['id']; ?>" />
+<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>" />
 
     <h1 class="pagetitle">
       <span class="pagetitle-icon">
@@ -116,7 +123,7 @@ if (is_array($evtOut))
     <div id="actions">
           <ul class="actionButtons">
               <li id="Button1" class="transition">
-                <a href="#" onclick="documentDirty=false; document.mutate.save.click();">
+                <a href="#" onclick="documentDirty=false; form_save=true; document.mutate.save.click();">
                   <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
                 </a>
                 <span class="plus"> + </span>
@@ -128,7 +135,7 @@ if (is_array($evtOut))
                   <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
               </li>
-          <?php if ($_REQUEST['a'] == '77') { ?>
+          <?php if ($modx->manager->action == '77') { ?>
               <li id="Button6" class="disabled"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
               <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
           <?php } else { ?>
@@ -156,7 +163,7 @@ if (is_array($evtOut))
     <table>
         <tr><th><?php echo $_lang['htmlsnippet_name']?></th>
             <td>{{&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">}}<span class="warning" id="savingMessage">&nbsp;</span>
-            <?php if(strpos($content['name'],'Duplicate of')!==false) echo '<script>document.getElementsByName("name")[0].focus();</script>'?></td></tr>
+            <script>document.getElementsByName("name")[0].focus();</script></td></tr>
     <tr>
         <th><?php echo $_lang['htmlsnippet_desc']?></th>
         <td><input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars($content['description'])?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
@@ -178,8 +185,8 @@ foreach (getCategories() as $n => $v) {
         <th><?php echo $_lang['new_category']?></th>
         <td><input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : ''?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td></tr>
 <?php if($modx->hasPermission('save_role')):?>
-    <tr><td colspan="2"><label style="display:block;"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 || $content['locked'] == 'on' ? ' checked="checked"' : ''?> class="inputBox" value="on" /> <?php echo $_lang['lock_htmlsnippet']?></label>
-        <span class="comment"><?php echo $_lang['lock_htmlsnippet_msg']?></span></td>
+    <tr><th colspan="2"><label style="display:block;"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 || $content['locked'] == 'on' ? ' checked="checked"' : ''?> class="inputBox" value="on" /> <?php echo $_lang['lock_htmlsnippet']?></label>
+        <span class="comment"><?php echo $_lang['lock_htmlsnippet_msg']?></span></th>
     </tr>
 <?php endif;?>
     </table>

@@ -15,14 +15,7 @@ if(!$modx->config['lang_code']) {
     $modx->config['lang_code'] = !$modx_lang_attribute ? 'en' : $modx_lang_attribute;
 }
 
-// Large Icons
-$_style['icons_backup_large']       = 'fa fa-database fa-fw fa-2x';
-$_style['icons_mail_large']         = 'fa fa-envelope fa-fw fa-2x';
-$_style['icons_modules_large']      = 'fa fa-cogs fa-fw fa-2x';
-$_style['icons_resources_large']    = 'fa fa-th fa-fw fa-2x';
-$_style['icons_security_large']     = 'fa fa-lock fa-fw fa-2x';
-$_style['icons_webusers_large']     = 'fa fa-users fa-fw fa-2x';
-$_style['icons_help_large']         = 'fa fa-question-circle fa-fw fa-2x';
+if($_GET['a']==2) include_once('welcome.php');
 
 // Tree Menu Toolbar
 $_style['add_doc_tree']             = '<i class="fa fa-file fa-lg"></i>';
@@ -102,11 +95,32 @@ $_style['icons_resource_overview']  = $style_path.'icons/info-sign.png';
 $_style['icons_edit_document']      = $style_path.'icons/save.png';
 $_style['icons_preview_resource']   = $style_path.'icons/eye.png';
 
-//Manage Files
+//file manager icons
+$_style['files_save']               = 'fa fa-floppy-o fa-fw fa-lg';
+$_style['files_folder']             = 'fa fa-folder-o fa-lg';
+$_style['files_deleted_folder']     = 'fa fa-folder-o fa-lg';
+$_style['files_folder-open']        = 'fa fa-folder-open-o fa-lg';
+$_style['files_page_php']           = 'fa fa-file-o fa-lg';
+$_style['files_page_html']          = 'fa fa-file-o fa-lg';
+$_style['files_cancel']             = 'fa fa-times-circle fa-fw fa-lg';
+$_style['files_top']                = 'fa fa-folder-open-o fa-lg';
+$_style['files_add']                = 'fa fa-plus-circle fa-fw fa-lg';
+$_style['files_upload']             = 'fa fa-upload fa-fw fa-lg';
+$_style['files_delete']             = 'fa fa-trash fa-fw fa-lg';
+$_style['files_duplicate']          = 'fa fa-clone fa-fw fa-lg';
+$_style['files_rename']             = 'fa fa-i-cursor fa-fw fa-lg';
+$_style['files_view']               = 'fa fa-eye fa-fw fa-lg';
+$_style['files_download']           = 'fa fa-download fa-fw fa-lg';
+$_style['files_unzip']              = 'fa fa-file-archive-o fa-fw fa-lg';
+$_style['files_edit']               = 'fa fa-pencil-square-o fa-fw fa-lg';
+
+//for back compatibility 
+
 $_style['icons_save']               = $style_path.'icons/save.png';
 $_style['icons_delete']             = $style_path.'icons/trash.png';
 $_style['icons_deleted_folder']     = $style_path.'tree/deletedfolder.png';
 $_style['icons_unzip']              = $style_path.'icons/download-alt.png';
+
 
 // Indicators
 $_style['icons_tooltip']            = $style_path.'icons/question-sign-trans.png';
@@ -147,9 +161,9 @@ $_style['icons_mail']               = $style_path.'icons/email.png';
 $_style['icons_working']            = $style_path.'icons/exclamation.png';
 
 //event log
-$_style['icons_event1']             = $style_path.'icons/event1.png';
-$_style['icons_event2']             = $style_path.'icons/event2.png';
-$_style['icons_event3']             = $style_path.'icons/event3.png';
+$_style['icons_event1']             = $style_path.'icons/event1.png'; 
+$_style['icons_event2']             = $style_path.'icons/event2.png'; 
+$_style['icons_event3']             = $style_path.'icons/event3.png'; 
 
 
 //nowhere in the manager
@@ -168,5 +182,3 @@ $_style['tx']                       = $style_path.'misc/_tx_.gif';
 $_style['icons_right_arrow']        = $style_path.'icons/arrow-right.png';
 $_style['fade']                     = $style_path.'misc/fade.gif';
 $_style['ed_save']                  = $style_path.'misc/ed_save.gif';
-
-?>

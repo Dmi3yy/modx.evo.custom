@@ -38,7 +38,7 @@ $distinct = isset($distinct) ? $distinct : false;
 
 // If no fieldname value has been supplied, don't do anything else
 if ($distinct === false) {
-	return false;	
+	return false;
 }
 
 // It would be nice if this was class based, so it doesn't pollute the global namespace

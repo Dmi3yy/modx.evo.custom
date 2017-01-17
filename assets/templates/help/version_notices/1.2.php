@@ -28,14 +28,39 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	<li><strong>Snippet - Shortcut param = true</strong>
 		<p>[[snippetName?param1&amp;param2]] will automatically be handled as [[snippetName?param1=`1`&amp;param2=`1`]] while param=`` will still be handled as empty value.</p>
 	</li>
-	<li><strong>New Conditional Tags / Modifiers</strong>
-		<p>Can be enabled/disabled via Configuration -> "Enable Filters". More examples at <a href="https://github.com/modxcms/evolution/issues/622" target="_blank">#622</a> and <a href="https://github.com/modxcms/evolution/issues/623" target="_blank">#623</a>. Example:</p>
+	<li><strong>Output value of $_GET, $_POST, $_COOKIE, $_SERVER, $_SESSION</strong>
+		<pre>[!$_SERVER['REQUEST_TIME']:dateFormat='Y'!]</pre>
+	</li>
+	<li><strong>New Conditional Tags &lt;@IF&gt; &lt;@ELSEIF&gt; &lt;@ELSE&gt; &lt;@ENDIF&gt; and Modifiers</strong>
+		<p>Can be enabled/disabled via Configuration -> "Enable Filters". More examples at <a href="https://github.com/modxcms/evolution/issues/622" target="_blank">#622</a> and <a href="https://github.com/modxcms/evolution/issues/623" target="_blank">#623</a>. <br />
+			Performance is good because it does not parse the block which is judged false.<br />
+			Example:</p>
 		<pre>[*longtitle:ifempty=[*pagetitle*]*]</pre>
-		<pre>&lt;!--@IF:[*id:is('[(site_start)]')*]>
+		<pre>&lt;@IF:[*id:is('[(site_start)]')*]>
 Top page
-<@ELSE>
+&lt;@ELSE&gt;
 Sub page
-<@ENDIF--&gt;</pre>
+&lt;@ENDIF&gt;</pre>
+		<p>In combination with $_GET :</p>
+		<pre>&lt;@IF:[!$_GET['value']:preg('/^[0-9]+$/')!]>
+Value is numeric.
+&lt;@ELSE&gt;
+Value is not numeric.
+&lt;@ENDIF&gt;</pre>
+		<p>UltimateParent</p>
+		<pre>[[UltimateParent:is=`8`:then=`8`:else=`11`]]
+&lt;@IF:[[UltimateParent:is=8]]>
+8
+&lt;@ELSE&gt;
+11
+&lt;@ENDIF&gt;</pre>
+
+		<p>Combination with Cross-references (<a href="https://github.com/modxcms/evolution/commit/956c9ae1028535308bdb6039483a20b2d697bee9" target="_blank">modxcms/evolution@956c9ae</a>)</p>
+		<pre>&lt;@IF:[*id@ultimateparent:is=8*]>
+8
+&lt;@ELSE&gt;
+11
+&lt;@ENDIF&gt;</pre>
 	</li>
 
 	<li><strong>New Comment Tag</strong>
@@ -55,8 +80,10 @@ Sub page
 	</li>
 
 	<li><strong>File-binded Templates via @INCLUDE</strong>
-		<p>Templates can be included via @INCLUDE using external PHP- & HTML-files. More infos at <a href="https://github.com/modxcms/evolution/issues/627" target="_blank">#627</a>. Example:</p>
-		<p>MODX-Template:</p>
+		<p>Templates can be included via @INCLUDE using external PHP- & HTML-files. More infos at <a href="https://github.com/modxcms/evolution/issues/627" target="_blank">#627</a>. Examples:</p>
+		<p>HTML Template:</p>
+		<pre>@INCLUDE:assets/templates/mydesign/template.html</pre>
+		<p>PHP Template:</p>
 		<pre>@INCLUDE:assets/templates/mydesign/template.inc.php</pre>
 		<p>template.inc.php :</p>
 		<pre>switch($modx->documentIdentifier) {
@@ -66,6 +93,53 @@ Sub page
         return file_get_contents('assets/templates/mydesign/page.html');
 }</pre>
 	</li>
+	<li><strong>Snippet-calls improved and supporting Modifiers</strong>
+		<pre>[[snippetName]]
+[[snippet Name]]
+[[snippetName?param=`value`]]
+[[snippet Name?param=`value`]]
+[[snippetName? &amp;param=`value`]]
+[[snippetName ? &amp;param=`value`]]
+[[snippetName &amp;param=`value`]]
+[[snippetName?
+    &amp;param=`value`
+]]
+[[snippetName
+    &amp;param=`value`
+]]
+[[snippet Name?
+    &amp;param=`value`
+]]
+[[snippetName?param]]
+
+[[snippetName:modifier]]
+[[snippetName:modifier?param=`value`]]
+[[snippetName:modifier ?
+    &amp;param=`value`
+]]
+[[snippetName:modifier
+    &amp;param=`value`
+]]
+[[snippetName:modifier=`option`
+    &amp;param=`value`
+]]
+[[snippetName:modifier(option)
+    &amp;param=`value`
+]]
+[[snippetName:modifier('option')
+    &amp;param=`value`
+]]
+[[snippetName:modifier("option")
+    &amp;param=`value`
+]]
+[[snippetName:modifier(`option`)
+    &amp;param=`value`
+]]</pre>
+	</li>
+    <li><strong>Wayfinder Debug-Mode</strong>
+        <p>More infos at <a href="https://github.com/modxcms/evolution/issues/719" target="_blank">#719</a></p>
+        <pre>[[Wayfinder?debug]]</pre>
+    </li>
 </ul>
 
 <h1>New Manager Roles</h1>

@@ -17,6 +17,8 @@ if($inlineMode == 'enabled' && $e->name == 'OnWebPagePrerender') {
     $options = array('editable'=>array(
         'theme'=>isset($inlineTheme) ? $inlineTheme : 'inline'
     ));
+} else {
+    $options = is_array($options) ? $options : array();
 }
 
 $rte = new tinymce4bridge($options);
@@ -27,6 +29,7 @@ $rte->setDebug(false);  // true or 'full' for Debug-Infos in HTML-comments
 // $rte->force('height',         isset($height) ? $height : '400px', 'string' );  // Get/set height from plugin-configuration
 // $rte->force('height',         NULL );                                          // Removes "height" completely from editor-init
 
+$rte->pluginParams['customParams'] = !empty($rte->pluginParams['customParams']) ? ','. trim($rte->pluginParams['customParams'], ',') : '';
 
 // Internal Stuff - Don´t touch!
 $showSettingsInterface = true;  // Show/Hide interface in Modx- / user-configuration
@@ -45,8 +48,8 @@ switch ($e->name) {
             if($introtextRte == 'enabled' && isset($rte->pluginParams['elements']) && !defined($editor . '_INIT_INTROTEXT')) {
 				define($editor . '_INIT_INTROTEXT', 1);
                 if(!in_array('introtext',$rte->pluginParams['elements'])) {
-                $rte->pluginParams['elements'][] = 'introtext';
-                $rte->tvOptions['introtext']['theme'] = 'introtext';
+					$rte->pluginParams['elements'][]      = 'introtext';
+					$rte->tvOptions['introtext']['theme'] = 'introtext';
 				};
             }
             $script = $rte->getEditorScript();

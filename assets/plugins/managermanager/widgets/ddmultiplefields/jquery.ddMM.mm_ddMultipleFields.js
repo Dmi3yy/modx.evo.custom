@@ -527,7 +527,7 @@ $.ddMM.mm_ddMultipleFields = {
 	makeDate: function(value, title, $fieldCol){
 		//name нужен для DatePicker`а
 		var $field = $('<input type="text" title="' + title + '" class="ddField DatePicker" name="ddMultipleDate" />').val(value).appendTo($fieldCol);
-
+		
 		return $field;
 	},
 	//Make textarea field

@@ -11,6 +11,8 @@ $phpMinVersion = "5.3.0";
 if (version_compare(phpversion(), $phpMinVersion) < 0) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['you_running_php'] . phpversion() . str_replace('[+min_version+]', $phpMinVersion, $_lang["modx_requires_php"]) . "</p>";
     $errors += 1;
+} else {
+    echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 }
 // check php register globals off
 echo "<p>" . $_lang['checking_registerglobals'];
@@ -18,6 +20,15 @@ $register_globals = (int) ini_get('register_globals');
 if ($register_globals == '1'){
     echo "<span class=\"notok\">" . $_lang['failed'].  "</span></p><p><strong>".$_lang['checking_registerglobals_note']."</strong></p>";
     // $errors += 1; // comment out for now so we still allow installs if folks are simply stubborn
+} else {
+    echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+}
+// check if iconv is available
+echo "<p>" . $_lang['checking_iconv'];
+$iconv = (int) function_exists('iconv');
+if ($iconv == '0'){
+    echo "<span class=\"notok\">" . $_lang['failed'].  "</span></p><p><strong>".$_lang['checking_iconv_note']."</strong></p>";
+    $errors += 1;
 } else {
     echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 }
@@ -300,7 +311,7 @@ foreach ($modules as $i => $module) echo "<input type=\"hidden\" name=\"module[]
 <input type="checkbox" value="1" id="chkagree" name="chkagree" style="line-height:18px" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?><?php echo $agreeToggle;?>/><label for="chkagree" style="display:inline;float:none;line-height:18px;"> <?php echo $_lang['iagree_box']?> </label>
 </p>
     <p class="buttonlinks">
-        <a href="javascript:document.getElementById('install_form').action='index.php?action=options&language=<?php $install_language?>';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
+        <a href="javascript:document.getElementById('install_form').action='index.php?action=options&language=<?php echo $install_language?>';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
         <a id="nextbutton" href="javascript:document.getElementById('install_form').submit();" title="<?php echo $nextButton ?>" style="visibility:<?php echo $nextVisibility;?>"><span><?php echo $nextButton ?></span></a>
     </p>
 </form>
