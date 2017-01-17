@@ -312,6 +312,10 @@ switch ($actionToTake) {
 		$publishedon = ($published ? $currentdate : 0);
 		$publishedby = ($published ? $modx->getLoginUserID() : 0);
 
+        if ((!empty($pub_date))&&($published)){
+            $publishedon=$pub_date;
+        }
+
 		$dbInsert = array
         (
             "introtext"        => $introtext ,
@@ -485,8 +489,10 @@ switch ($actionToTake) {
 		if (!$was_published && $published) {
 			$publishedon = $currentdate;
 			$publishedby = $modx->getLoginUserID();
-		}
-		elseif ($was_published && !$published) {
+        	}elseif ((!empty($pub_date)&& $pub_date<=$currentdate && $published)) {
+			$publishedon = $pub_date;
+			$publishedby = $modx->getLoginUserID();
+       		}elseif ($was_published && !$published) {
 			$publishedon = 0;
 			$publishedby = 0;
 		} else {
@@ -657,6 +663,9 @@ switch ($actionToTake) {
 		if ($_POST['refresh_preview'] == '1')
 			$header = "Location: ".MODX_SITE_URL."index.php?id=$id&z=manprev";
 		else {
+			if ($_POST['stay'] != '2' && $id > 0) {
+				$modx->unlockElement(7, $id);
+			}
 			if ($_POST['stay'] != '') {
 				$id = $_REQUEST['id'];
 				if ($type == "reference") {

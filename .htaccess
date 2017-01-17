@@ -15,6 +15,10 @@ RewriteBase /
 RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]
 RewriteRule .* - [F,L]
 
+#redirect http to https
+#RewriteCond %{HTTP:SSL} !=1 [NC]
+#RewriteRule ^(.*) https://%{SERVER_NAME}/$1 [L,R=301]
+
 # Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
 #RewriteCond %{HTTP_HOST} .
 #RewriteCond %{HTTP_HOST} !^www\.example\.com [NC]
