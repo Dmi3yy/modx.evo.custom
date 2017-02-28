@@ -42,6 +42,7 @@ CREATE TABLE `{PREFIX}active_user_sessions` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}categories` (
   `id` integer NOT NULL AUTO_INCREMENT,
   `category` varchar(45) NOT NULL DEFAULT '',
+  `rank` INT(5) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY(`id`)
 ) ENGINE=MyISAM COMMENT='Categories to be used snippets,tv,chunks, etc';
 
@@ -441,6 +442,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `change_password` int(1) NOT NULL default '0',
   `error_dialog` int(1) NOT NULL default '0',
   `about` int(1) NOT NULL default '0',
+  `category_manager` int(1) NOT NULL default '0',
   `file_manager` int(1) NOT NULL default '0',
   `assets_files` int(1) NOT NULL default '0',
   `assets_images` int(1) NOT NULL default '0',
@@ -636,6 +638,12 @@ ALTER TABLE `{PREFIX}user_roles`
 
 ALTER TABLE `{PREFIX}user_roles`
   ADD COLUMN `assets_files`        INT(1) NOT NULL DEFAULT '1' AFTER `assets_images`;
+
+ALTER TABLE `{PREFIX}user_roles`
+  ADD COLUMN `category_manager`    INT(1) NOT NULL DEFAULT '0' AFTER `about`;
+
+ALTER TABLE `{PREFIX}categories`
+  ADD COLUMN `rank` INT(5) UNSIGNED NOT NULL DEFAULT '0' AFTER `category`;
 
 ALTER TABLE `{PREFIX}web_user_attributes`
   ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`;

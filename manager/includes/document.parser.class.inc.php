@@ -13,6 +13,7 @@ class DocumentParser {
     var $event, $Event; // event object
     var $pluginEvent;
     var $config= null;
+    var $configGlobal= null; // contains backup of settings overwritten by user-settings 
     var $rs;
     var $result;
     var $sql;
@@ -293,8 +294,6 @@ class DocumentParser {
      */
     function getSettings() {
         $tbl_system_settings   = $this->getFullTableName('system_settings');
-        $tbl_web_user_settings = $this->getFullTableName('web_user_settings');
-        $tbl_user_settings     = $this->getFullTableName('user_settings');
         if (!is_array($this->config) || empty ($this->config)) {
             if ($included= file_exists(MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php')) {
                 $included= include_once (MODX_BASE_PATH . $this->getCacheFolder() . 'siteCache.idx.php');
@@ -320,72 +319,99 @@ class DocumentParser {
             // added for backwards compatibility - garry FS#104
             $this->config['etomite_charset'] = & $this->config['modx_charset'];
 
+            // setup default site id - new installation should generate a unique id for the site.
+            if(!isset($this->config['site_id'])) $this->config['site_id'] = "MzGeQ2faT4Dw06+U49x3";
+
             // store base_url and base_path inside config array
-            $this->config['base_url']= MODX_BASE_URL;
-            $this->config['base_path']= MODX_BASE_PATH;
-            $this->config['site_url']= MODX_SITE_URL;
-            $this->config['valid_hostnames']= MODX_SITE_HOSTNAMES;
-            $this->config['site_manager_url']=MODX_MANAGER_URL;
-            $this->config['site_manager_path']=MODX_MANAGER_PATH;
-
-            // load user setting if user is logged in
-            $usrSettings= array ();
-            if ($id= $this->getLoginUserID()) {
-                $usrType= $this->getLoginUserType();
-                if (isset ($usrType) && $usrType == 'manager')
-                    $usrType= 'mgr';
-
-                if ($usrType == 'mgr' && $this->isBackend()) {
-                    // invoke the OnBeforeManagerPageInit event, only if in backend
-                    $this->invokeEvent("OnBeforeManagerPageInit");
-                }
-
-                if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
-                    $usrSettings= & $_SESSION[$usrType . 'UsrConfigSet'];
-                } else {
-                    if ($usrType == 'web')
-                    {
-                        $from = $tbl_web_user_settings;
-                        $where = "webuser='{$id}'";
-                    }
-                    else
-                    {
-                        $from = $tbl_user_settings;
-                        $where = "user='{$id}'";
-                    }
-                    $result= $this->db->select('setting_name, setting_value', $from, $where);
-                    while ($row= $this->db->getRow($result))
-                        $usrSettings[$row['setting_name']]= $row['setting_value'];
-                    if (isset ($usrType))
-                        $_SESSION[$usrType . 'UsrConfigSet']= $usrSettings; // store user settings in session
-                }
-            }
-            if ($this->isFrontend() && $mgrid= $this->getLoginUserID('mgr')) {
-                $musrSettings= array ();
-                if (isset ($_SESSION['mgrUsrConfigSet'])) {
-                    $musrSettings= & $_SESSION['mgrUsrConfigSet'];
-                } else {
-                    if ($result= $this->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
-                        while ($row= $this->db->getRow($result)) {
-                            $musrSettings[$row['setting_name']]= $row['setting_value'];
-                        }
-                        $_SESSION['mgrUsrConfigSet']= $musrSettings; // store user settings in session
-                    }
-                }
-                if (!empty ($musrSettings)) {
-                    $usrSettings= array_merge($musrSettings, $usrSettings);
-                }
-            }
-            $this->error_reporting = $this->config['error_reporting'];
-            $this->config= array_merge($this->config, $usrSettings);
-            $this->config['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
-            $this->config['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
+            $this->config['base_url']           = MODX_BASE_URL;
+            $this->config['base_path']          = MODX_BASE_PATH;
+            $this->config['site_url']           = MODX_SITE_URL;
+            $this->config['valid_hostnames']    = MODX_SITE_HOSTNAMES;
+            $this->config['site_manager_url']   = MODX_MANAGER_URL;
+            $this->config['site_manager_path']  = MODX_MANAGER_PATH;
+            $this->error_reporting              = $this->config['error_reporting'];
+            $this->config['filemanager_path']   = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
+            $this->config['rb_base_dir']        = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
+            
             $where = "plugincode LIKE '%phx.parser.class.inc.php%OnParseDocument();%' AND disabled != 1";
             $count = $this->db->getRecordCount($this->db->select('id', '[+prefix+]site_plugins', $where));
             if($count) $this->config['enable_filter'] = '0';
         }
+        // now merge user settings into MODX-configuration
+        $this->getUserSettings();
     }
 
+    /**
+     * Get user settings and merge into MODX configuration
+     */
+    function getUserSettings() {
+        $tbl_web_user_settings = $this->getFullTableName('web_user_settings');
+        $tbl_user_settings     = $this->getFullTableName('user_settings');
+        
+        // load user setting if user is logged in
+        $usrSettings= array ();
+        if ($id= $this->getLoginUserID()) {
+            $usrType= $this->getLoginUserType();
+            if (isset ($usrType) && $usrType == 'manager')
+                $usrType= 'mgr';
+
+            if ($usrType == 'mgr' && $this->isBackend()) {
+                // invoke the OnBeforeManagerPageInit event, only if in backend
+                $this->invokeEvent("OnBeforeManagerPageInit");
+            }
+
+            if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
+                $usrSettings= & $_SESSION[$usrType . 'UsrConfigSet'];
+            } else {
+                if ($usrType == 'web')
+                {
+                    $from = $tbl_web_user_settings;
+                    $where = "webuser='{$id}'";
+                }
+                else
+                {
+                    $from = $tbl_user_settings;
+                    $where = "user='{$id}'";
+                }
+                
+                $which_browser_default = $this->configGlobal['which_browser'] ? $this->configGlobal['which_browser'] : $this->config['which_browser'];
+                
+                $result= $this->db->select('setting_name, setting_value', $from, $where);
+                while ($row= $this->db->getRow($result)) {
+                    if($row['setting_name'] == 'which_browser' && $row['setting_value'] == 'default') $row['setting_value'] = $which_browser_default;
+                    $usrSettings[$row['setting_name']] = $row['setting_value'];
+                }
+                if (isset ($usrType))
+                    $_SESSION[$usrType . 'UsrConfigSet']= $usrSettings; // store user settings in session
+            }
+        }
+        if ($this->isFrontend() && $mgrid= $this->getLoginUserID('mgr')) {
+            $musrSettings= array ();
+            if (isset ($_SESSION['mgrUsrConfigSet'])) {
+                $musrSettings= & $_SESSION['mgrUsrConfigSet'];
+            } else {
+                if ($result= $this->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
+                    while ($row= $this->db->getRow($result)) {
+                        $musrSettings[$row['setting_name']]= $row['setting_value'];
+                    }
+                    $_SESSION['mgrUsrConfigSet']= $musrSettings; // store user settings in session
+                }
+            }
+            if (!empty ($musrSettings)) {
+                $usrSettings= array_merge($musrSettings, $usrSettings);
+            }
+        }
+        // save global values before overwriting/merging array
+        foreach($usrSettings as $param=>$value) 
+            if(isset($this->config[$param])) $this->configGlobal[$param] = $this->config[$param];
+        
+        $this->config                     = array_merge($this->config, $usrSettings);
+        $this->config['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
+        $this->config['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
+        
+        return $usrSettings;
+    }
+    
     /**
      * Get the method by which the current document/resource was requested
      *
@@ -908,6 +934,7 @@ class DocumentParser {
         $lc=0;
         $rc=0;
         $fetch = '';
+        $tags = array();
         foreach($piece as $v) {
             if($v===$left) {
                 if(0<$lc) $fetch .= $left;
@@ -917,7 +944,16 @@ class DocumentParser {
                 if($lc===0) continue;
                 $rc++;
                 if($lc===$rc) {
-                    if( !isset($tags) || !in_array($fetch, $tags)) {  // Avoid double Matches
+                    // #1200 Enable modifiers in Wayfinder - add nested placeholders to $tags like for $fetch = "phx:input=`[+wf.linktext+]`:test"
+                    if(strpos($fetch,$left)!==false) {
+                        $nested = $this->_getTagsFromContent($fetch,$left,$right);
+                        foreach($nested as $tag) {
+                            if(!in_array($tag, $tags))
+                                $tags[] = $tag;
+                        }
+                    }
+
+                    if(!in_array($fetch, $tags)) {  // Avoid double Matches
                         $tags[] = $fetch; // Fetch
                     };
                     $fetch = ''; // and reset
@@ -930,8 +966,6 @@ class DocumentParser {
                 else continue;
             }
         }
-        if(!$tags) return array();
-        
         return $tags;
     }
     
@@ -958,9 +992,9 @@ class DocumentParser {
             list($key,$modifiers) = $this->splitKeyAndFilter($key);
             list($key,$context)   = explode('@',$key,2);
             
-            if(!isset($ph[$key]) && !$context) continue;
-            elseif($context) $value = $this->_contextValue("{$key}@{$context}");
-            else             $value = $ph[$key];
+            // if(!isset($ph[$key]) && !$context) continue; // #1218 TVs/PHs will not be rendered if custom_meta_title is not assigned to template like [*custom_meta_title:ne:then=`[*custom_meta_title*]`:else=`[*pagetitle*]`*]
+            if($context) $value = $this->_contextValue("{$key}@{$context}");
+            else         $value = $ph[$key];
             
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
@@ -1357,7 +1391,8 @@ class DocumentParser {
             extract($params, EXTR_SKIP);
         }
         ob_start();
-        $return = eval($phpcode);
+        if(strpos($phpcode,';')!==false) $return = eval($phpcode);
+        else                             $return = call_user_func_array($phpcode,array($params));
         $echo = ob_get_contents();
         ob_end_clean();
         if ((0 < $this->config['error_reporting']) && isset($php_errormsg)) {
@@ -1771,7 +1806,15 @@ class DocumentParser {
                     $res = $this->db->select("id,alias,isfolder,parent,alias_visible", $this->getFullTableName('site_content'),  "id IN (".$ids.") AND isfolder = '0'");
                     while( $row = $this->db->getRow( $res ) ) {
                         if ($this->config['use_alias_path'] == '1') {
-                            $aliases[$row['id']] = $aliases[$row['parent']].'/'.$row['alias'];
+                            $parent = $row['parent'];
+                            $path   = $aliases[$parent];
+
+                            while ( isset( $this->aliasListing[$parent] ) && $this->aliasListing[$parent]['alias_visible'] == 0 ) {
+                                $path   = $this->aliasListing[$parent]['path'];
+                                $parent = $this->aliasListing[$parent]['parent'];
+                            }
+
+                            $aliases[$row['id']] = $path . '/' . $row['alias'];
                         } else {
                             $aliases[$row['id']] = $row['alias'];
                         }
@@ -1807,7 +1850,7 @@ class DocumentParser {
     }
     
     function sendStrictURI(){
-	$q = isset($_GET['q']) ? $_GET['q'] : '';
+        $q = isset($_GET['q']) ? $_GET['q'] : '';
         // FIX URLs
         if (empty($this->documentIdentifier) || $this->config['seostrict']=='0' || $this->config['friendly_urls']=='0')
              return;
@@ -1955,7 +1998,7 @@ class DocumentParser {
                 $documentObject= array_merge($documentObject, $tmplvars);
             }
             $out = $this->invokeEvent('OnAfterLoadDocumentObject', compact('method', 'identifier', 'documentObject'));
-            if(is_array($out) && is_array($out[0])){
+            if(is_array($out) && array_key_exists(0,$out) !== FALSE && is_array($out[0])){
                 $documentObject = $out[0];
             }
         }
@@ -2087,9 +2130,21 @@ class DocumentParser {
                         $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and alias='{$docAlias}'");
                         if($this->db->getRecordCount($rs)==0)
                         {
+                            if (!is_numeric($docAlias)) {$this->sendErrorPage();}
                             $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$parentId}' and id='{$docAlias}'");
                         }
                         $docId = $this->db->getValue($rs);
+
+                        if ( !$docId ) {
+                            if ( !empty( $this->config['friendly_url_suffix'] ) ) {
+                                $pos = strrpos( $alias, $this->config['friendly_url_suffix'] );
+
+                                if ( $pos !== false ) {
+                                    $alias = substr( $alias, 0, $pos );
+                                }
+                            }
+                            $docId = $this->getIdFromAlias( $alias );
+                        }
 
                         if ($docId > 0)
                         {
@@ -2909,7 +2964,6 @@ class DocumentParser {
      * @return array
      */
     function getActiveChildren($id= 0, $sort= 'menuindex', $dir= 'ASC', $fields= 'id, pagetitle, description, parent, alias, menutitle') {
-    	
         $cacheKey = md5(print_r(func_get_args(),true));
         if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
         
@@ -3362,11 +3416,11 @@ class DocumentParser {
                     'isfolder' => (int)$q['isfolder'],
                 );
                 if($this->aliasListing[$id]['parent']>0){
-                    $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
                     //fix alias_path_usage
                     if ($this->config['use_alias_path'] == '1') {
                         //&& $tmp['path'] != '' - fix error slash with epty path
-                        $this->aliasListing[$id]['path'] = $tmp['path'] . (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'];
+                        $tmp = $this->getAliasListing($this->aliasListing[$id]['parent']);
+                        $this->aliasListing[$id]['path'] = $tmp['path'] . ($tmp['alias_visible'] ? (($tmp['parent']>0 && $tmp['path'] != '') ? '/' : '') .$tmp['alias'] : '');
                     } else {
                         $this->aliasListing[$id]['path'] = '';
                     }
@@ -3817,7 +3871,6 @@ class DocumentParser {
      * @return {array; false} - Result array, or false.
      */
     function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 1, $sort = 'rank', $dir = 'ASC'){
-        
         $cacheKey = md5(print_r(func_get_args(),true));
         if(isset($this->tmpCache[__FUNCTION__][$cacheKey])) return $this->tmpCache[__FUNCTION__][$cacheKey];
         
@@ -4123,17 +4176,20 @@ class DocumentParser {
      * @return boolean|string
      */
     function getUserInfo($uid) {
-        $rs = $this->db->select(
-            'mu.username, mu.password, mua.*',
-            $this->getFullTableName("manager_users") . " mu
-                INNER JOIN " . $this->getFullTableName("user_attributes") . " mua ON mua.internalkey=mu.id",
-            "mu.id = '{$uid}'"
-            );
-        if ($row = $this->db->getRow($rs)) {
-            if (!isset($row['usertype']) or !$row["usertype"])
-                $row["usertype"]= "manager";
-            return $row;
-        }
+        if(isset($this->tmpCache[__FUNCTION__][$uid])) return $this->tmpCache[__FUNCTION__][$uid];
+        
+        $from  = '[+prefix+]manager_users mu INNER JOIN [+prefix+]user_attributes mua ON mua.internalkey=mu.id';
+        $where = sprintf("mu.id='%s'", $this->db->escape($uid));
+        $rs = $this->db->select('mu.username, mu.password, mua.*', $from, $where, '', 1);
+        
+        if(!$this->db->getRecordCount($rs)) return $this->tmpCache[__FUNCTION__][$uid] = false;
+        
+        $row = $this->db->getRow($rs);
+        if (!isset($row['usertype']) || !$row['usertype']) $row['usertype']= 'manager';
+        
+        $this->tmpCache[__FUNCTION__][$uid] = $row;
+        
+        return $row;
     }
 
     /**
@@ -5309,6 +5365,31 @@ class DocumentParser {
         return '0 b';
     }
 
+    function getHiddenIdFromAlias( $parentid, $alias ) { 
+        $table = $this->getFullTableName( 'site_content' );
+        $query = $this->db->query( "SELECT sc.id, children.id AS child_id, children.alias, COUNT(children2.id) AS children_count 
+            FROM {$table} sc 
+            JOIN {$table} children ON children.parent = sc.id 
+            LEFT JOIN {$table} children2 ON children2.parent = children.id 
+            WHERE sc.parent = {$parentid} AND sc.alias_visible = '0' GROUP BY children.id;"
+        );
+
+        while ( $child = $this->db->getRow( $query ) ) { 
+            if ( $child['alias'] == $alias || $child['child_id'] == $alias ) {
+                return $child['child_id'];
+            }
+
+            if ( $child['children_count'] > 0 ) {
+                $id = $this->getHiddenIdFromAlias( $child['id'], $alias );
+                if ( $id ) {
+                    return $id;
+                }
+            }
+        }
+
+        return false;
+    }
+
     function getIdFromAlias($alias)
     {
         $children = array();
@@ -5317,6 +5398,10 @@ class DocumentParser {
         $tbl_site_content = $this->getFullTableName('site_content');
         if($this->config['use_alias_path']==1)
         {
+            if ( $alias == '.' ) {
+                return 0;
+            }
+
             if(strpos($alias,'/')!==false) $_a = explode('/', $alias);
             else                           $_a[] = $alias;
             $id= 0;
@@ -5327,8 +5412,8 @@ class DocumentParser {
                 $alias = $this->db->escape($alias);
                 $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and alias='{$alias}'");
                 if($this->db->getRecordCount($rs)==0) $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and id='{$alias}'");
-                $id = $this->db->getValue($rs);
-                if (!$id) $id = false;
+                $next = $this->db->getValue($rs);
+                $id = !$next ? $this->getHiddenIdFromAlias( $id, $alias ) : $next;
             }
         }
         else
