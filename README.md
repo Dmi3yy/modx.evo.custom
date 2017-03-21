@@ -1,6 +1,15 @@
 Сайт сборки: http://modx.com.ua
 
 Актуальная версия: https://github.com/dmi3yy/modx.evo.custom/releases
+1.2.1-d9.1.2  (21.03.2017)
+- delete (Wayfinder) use DLBuildMenu
+- delete (Breadcrumbs) use DLcrumbs
+- delete (Ditto) use DocLister
+- delete (eForm) use FormLister (for SHK http://modx.im/blog/questions/4888.html#comment40634)
+- Fix empty params on install (assets/)
+- H1 - H3 in tinyMCE4 by default
+- fix Cattegory for access
+- 9.1.1 (all from off Evolution)
 
 
 1.2.1-d9.1.0  (11.01.2017)
