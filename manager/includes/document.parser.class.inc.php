@@ -42,6 +42,7 @@ class DocumentParser {
     var $documentListing;
     var $dumpSnippets;
     var $snippetsCode;
+    var $snippetsCount=array();
     var $snippetsTime=array();
     var $chunkCache;
     var $snippetCache;
@@ -3537,32 +3538,16 @@ class DocumentParser {
      * 
      * @return {string} - Parsed text.
      */
-    function parseText($tpl='', $ph=array(), $left= '[+', $right= '+]', $execModifier=true)
-    {
-        if(!$ph)  return $tpl;
-        if(!$tpl) return $tpl;
-        
-        $matches = $this->getTagsFromContent($tpl,$left,$right);
-        if(!$matches) return $tpl;
-        
-        foreach($matches[1] as $i=>$key) {
-            
-            if(strpos($key,':')!==false && $execModifier)
-                list($key,$modifiers)=$this->splitKeyAndFilter($key);
-            else $modifiers = false;
-            
-            if(!isset($ph[$key])) continue;
-            
-            $value = $ph[$key];
-            
-            if($modifiers!==false) {
-                if(strpos($modifiers,$left)!==false) $modifiers=$this->parseText($modifiers,$ph,$left,$right);
-                $value = $this->applyFilter($value,$modifiers,$key);
-            }
-            $tpl = str_replace($matches[0][$i], $value, $tpl);
+	function parseText($chunk, $chunkArr=array(), $prefix = '[+', $suffix = '+]'){
+		if (!is_array($chunkArr)){
+			return $chunk;
+		}
+		
+		foreach ($chunkArr as $key => $value){
+			$chunk = str_replace($prefix.$key.$suffix, $value, $chunk);
         }
         
-        return $tpl;
+		return $chunk;
     }
     
     /**
