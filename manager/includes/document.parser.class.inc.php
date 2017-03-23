@@ -1242,6 +1242,7 @@ class DocumentParser {
         
         $etomite= & $this;
         
+        if(!$this->snippetCache) $this->setSnippetCache();
         $matches = $this->getTagsFromContent($content,'[[',']]');
         
         if(!$matches) return $content;
@@ -1250,18 +1251,23 @@ class DocumentParser {
         if ($this->dumpSnippets)
             $this->snippetsCode .= sprintf('<fieldset><legend><b style="color: #821517;">PARSE PASS %s</b></legend><p>The following snippets (if any) were parsed during this pass.</p>', $this->snipLapCount);
         
-        foreach($matches[1] as $i=>$call) {
-            if(substr($call,0,2)==='$_') {
-                if(strpos($content,'_PHX_INTERNAL_')===false) $value = $this->_getSGVar($call);
-                else                                          $value = $matches[0][$i];
-                $content = str_replace($matches[0][$i], $value, $content);
-                continue;
+        $replace= array ();
+		foreach($matches[1] as $i=>$value)
+		{
+			$find = $i - 1;
+			while( $find >= 0 )
+			{
+				$tag = $matches[0][ $find ];
+				if(isset($replace[$find]) && strpos($value,$tag)!==false)
+        {
+					$value = str_replace($tag,$replace[$find],$value);
+					break;
             }
-            $value = $this->_get_snip_result($call);
-            if(is_null($value)) continue;
-            
-            $content = str_replace($matches[0][$i], $value, $content);
+				$find--;
+			}
+            $replace[$i] = $this->_get_snip_result($value);
         }
+        $content = str_replace($matches['0'], $replace, $content);
         
         if ($this->dumpSnippets) $this->snippetsCode .= '</fieldset><br />';
         
@@ -1299,15 +1305,13 @@ class DocumentParser {
         $snip_call = $this->_split_snip_call($piece);
         $key = $snip_call['name'];
         
-        list($key,$modifiers) = $this->splitKeyAndFilter($key);
-        $snip_call['name'] = $key;
         $snippetObject = $this->_getSnippetObject($key);
         if(is_null($snippetObject['content'])) return null;
         
         $this->currentSnippet = $snippetObject['name'];
         
         // current params
-        $params = $this->getParamsFromString($snip_call['params']);
+        $params = $this->_snipParamsToArray($snip_call['params']);
         
         if(!isset($snippetObject['properties'])){
             $snippetObject['properties'] = '';
@@ -1316,8 +1320,6 @@ class DocumentParser {
         $params = array_merge($default_params,$params);
         
         $value = $this->evalSnippet($snippetObject['content'], $params);
-        $this->currentSnippet = '';
-        if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
         
         if($this->dumpSnippets)
         {
@@ -1332,7 +1334,7 @@ class DocumentParser {
         return $value;
     }
     
-    function getParamsFromString($string='')
+    function _snipParamsToArray($string='')
     {
         if(empty($string)) return array();
         
@@ -1347,35 +1349,27 @@ class DocumentParser {
         
         $_tmp = $string;
         $_tmp = ltrim($_tmp, '?&');
-        $temp_params = array();
-        $key = '';
-        $value = null;
-        while($_tmp!=='') {
+        $params = array();
+        while($_tmp!==''):
             $bt = $_tmp;
             $char = substr($_tmp,0,1);
             $_tmp = substr($_tmp,1);
+            $doParse = false;
             
             if($char==='=')
             {
                 $_tmp = trim($_tmp);
-                $delim = substr($_tmp,0,1);
-                if(in_array($delim, array('"', "'", '`')))
+                $nextchar = substr($_tmp,0,1);
+                if(in_array($nextchar, array('"', "'", '`')))
                 {
-                    list($null, $value, $_tmp) = explode($delim, $_tmp, 3);
-                    if(substr(trim($_tmp), 0, 2)==='//') $_tmp = strstr($_tmp, "\n");
-                    $i=0;
-                    while($delim==='`' && substr(trim($_tmp),0,1)!=='&' && 1<substr_count($_tmp,'`')) {
-                        list($inner, $outer, $_tmp) = explode('`', $_tmp, 3);
-                        $value .= "`{$inner}`{$outer}";
-                        $i++;
-                        if(20<$i) exit('The nest of values are hard to read. Please use three different quotes.');
-                    }
-                    if($i&&$delim==='`') $value = rtrim($value, '`');
+                    list($null, $value, $_tmp) = explode($nextchar, $_tmp, 3);
+                    if($nextchar !== "'") $doParse = true;
                 }
                 elseif(strpos($_tmp,'&')!==false)
                 {
                     list($value, $_tmp) = explode('&', $_tmp, 2);
                     $value = trim($value);
+                    $doParse = true;
                 }
                 else
                 {
@@ -1385,29 +1379,23 @@ class DocumentParser {
             }
             elseif($char==='&')
             {
-                if(trim($key)!=='') $value = '1';
-                else continue;
+                $value = '';
             }
-            elseif($_tmp==='')
-            {
-                $key .= $char;
-                $value = '1';
-            }
-            elseif($key!==''||trim($char)!=='') $key .= $char;
+            else $key .= $char;
             
-            if(isset($value) && !is_null($value))
+            if(!is_null($value))
             {
                 if(strpos($key,'amp;')!==false) $key = str_replace('amp;', '', $key);
                 $key=trim($key);
-                if(strpos($value,'[!')!==false) $value = str_replace(array('[!','!]'), array('[[',']]'), $value);
-                $value = $this->mergeDocumentContent($value);
-                $value = $this->mergeSettingsContent($value);
-                $value = $this->mergeChunkContent($value);
-                $value = $this->evalSnippets($value);
-                if(substr($value,0,6)!=='@CODE:')
-                    $value = $this->mergePlaceholderContent($value);
-                
-                $temp_params[][$key]=$value;
+                if($doParse)
+                {
+                    if(strpos($value,'[*')!==false) $value = $this->mergeDocumentContent($value);
+                    if(strpos($value,'[(')!==false) $value = $this->mergeSettingsContent($value);
+                    if(strpos($value,'{{')!==false) $value = $this->mergeChunkContent($value);
+                    if(strpos($value,'[[')!==false) $value = $this->evalSnippets($value);
+                    if(strpos($value,'[+')!==false) $value = $this->mergePlaceholderContent($value);
+                }
+                $params[$key]=$value;
                 
                 $key   = '';
                 $value = null;
@@ -1419,28 +1407,11 @@ class DocumentParser {
             if($_tmp===$bt)
             {
                 $key = trim($key);
-                if($key!=='') $temp_params[][$key] = '';
+                if($key!=='') $params[$key] = '';
                 break;
             }
-        }
+        endwhile;
         
-        foreach($temp_params as $p)
-        {
-            $k = key($p);
-            if(substr($k,-2)==='[]')
-            {
-                $k = substr($k,0,-2);
-                $params[$k][] = current($p);
-            }
-            elseif(strpos($k,'[')!==false && substr($k,-1)===']')
-            {
-                list($k, $subk) = explode('[', $k, 2);
-                $subk = substr($subk,0,-1);
-                $params[$k][$subk] = current($p);
-            }
-            else
-                $params[$k] = current($p);
-        }
         return $params;
     }
     
