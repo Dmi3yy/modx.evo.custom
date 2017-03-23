@@ -1188,128 +1188,6 @@ class DocumentParser {
         return $content;
     }
 
-    function mergeConditionalTagsContent($content, $iftag='<@IF:', $elseiftag='<@ELSEIF:', $elsetag='<@ELSE>', $endiftag='<@ENDIF>')
-    {
-        $bt = md5($content);
-        
-        if(strpos($content,'<!--@IF ')!==false)      $content = str_replace('<!--@IF ',$iftag,$content);
-        if(strpos($content,'<!--@IF:')!==false)      $content = str_replace('<!--@IF:',$iftag,$content);
-        if(strpos($content,$iftag)===false)          return $content;
-        if(strpos($content,'<!--@ELSEIF:')!==false)  $content = str_replace('<!--@ELSEIF:', $elseiftag,  $content);
-        if(strpos($content,'<!--@ELSE-->')!==false)  $content = str_replace('<!--@ELSE-->', $elsetag,   $content);
-        if(strpos($content,'<!--@ENDIF-->')!==false) $content = str_replace('<!--@ENDIF-->',$endiftag,$content);
-        if(strpos($content,'<@ENDIF-->')!==false)    $content = str_replace('<@ENDIF-->',$endiftag,$content);
-        
-        $_ = '#'.md5('ConditionalTags'.$_SERVER['REQUEST_TIME']).'#';
-        $s = array('<@IF:'    ,     '<@ELSEIF:',     '<@ELSE>',     '<@ENDIF>');
-        $r = array("{$_}<@IF:", "{$_}<@ELSEIF:", "{$_}<@ELSE>", "{$_}<@ENDIF>");
-        $content = str_replace($s, $r, $content);
-        $splits = explode($_, $content);
-        unset($_);
-        foreach($splits as $i=>$split) {
-            if($i===0) {
-                $content = $split;
-                $excute  = false;
-                $depth = 0;
-                continue;
-            }
-            
-            if    (substr($split,0,5)==='<@IF:')     $scope = '@IF';
-            elseif(substr($split,0,9)==='<@ELSEIF:') $scope = '@ELSEIF';
-            elseif(substr($split,0,6)==='<@ELSE')    $scope = '@ELSE';
-            elseif(substr($split,0,7)==='<@ENDIF')   $scope = '@ENDIF';
-            else exit('Unknown error '.__LINE__);
-            
-            if($scope==='@IF')    $depth++;
-            if(1<$depth) {
-                if($scope==='@ENDIF') $depth--;
-                if($excute) $content .= $split;
-                continue;
-            }
-            if($scope==='@ENDIF') $depth--;
-            
-            if($scope==='@IF' || $scope==='@ELSEIF') {
-                if($excute) continue;
-                $_ = md5('@:>@');
-                if(strpos($split,':>')!==false) $split = str_replace(':>', ':'.$_, $split);
-                list($cmd, $text) = explode('>', $split, 2);
-                $cmd = rtrim($cmd,'-');
-                if(strpos($cmd,$_)!==false)  $cmd  = str_replace($_, '>', $cmd);
-                if(strpos($text,$_)!==false) $text = str_replace($_, '>', $text);
-                $cmd = substr($cmd,strpos($cmd,':')+1);
-                $cmd = trim($cmd);
-                $reverse = substr($cmd,0,1)==='!' ? true : false;
-                if($reverse) $cmd = ltrim($cmd,'!');
-                
-                if(strpos($cmd,'[!')!==false) $cmd = str_replace(array('[!','!]'),array('[[',']]'),$cmd);
-                $safe=0;
-                $bt=md5('');
-                $_ = $this->config['enable_filter'];
-                $this->config['enable_filter'] = 1;
-                while($bt!==md5($cmd)) {
-                    $bt = md5($cmd);
-                    if(strpos($cmd,'[*')!==false) $cmd= $this->mergeDocumentContent($cmd);
-                    if(strpos($cmd,'[(')!==false) $cmd= $this->mergeSettingsContent($cmd);
-                    if(strpos($cmd,'{{')!==false) $cmd= $this->mergeChunkContent($cmd);
-                    if(strpos($cmd,'[[')!==false) $cmd= $this->evalSnippets($cmd);
-                    if(strpos($cmd,'[+')!==false
-                     &&strpos($cmd,'[[')===false) $cmd= $this->mergePlaceholderContent($cmd);
-                    $safe++;
-                    if(20<$safe) break;
-                }
-                $this->config['enable_filter'] = $_;
-                $cmd = ltrim($cmd);
-                $cmd = rtrim($cmd,'-');
-                $cmd = trim($cmd);
-                $cmd = str_ireplace(array(' and ',' or '),array('&&','||'),$cmd);
-                
-                if($cmd!=='' && !preg_match('@^[0-9]*$@', $cmd) && preg_match('@^[0-9<= \-\+\*/\(\)%!&|]*$@', $cmd))
-                    $cmd = (int) eval("return {$cmd};");
-                if($cmd < 0) $cmd = 0;
-                
-                if( (!$reverse && !empty($cmd)) || ($reverse && empty($cmd)) ) {
-                    $content .= $text;
-                    $excute = true;
-                }
-                else $excute = false;
-            }
-            elseif($scope==='@ELSE') {
-                if($excute) continue;
-                list(, $text) = explode('>', $split, 2);
-                $content .= $text;
-                $excute = true;
-            }
-            elseif($scope==='@ENDIF') {
-                list(, $text) = explode('>', $split, 2);
-                $content .= $text;
-                $excute = false;
-            }
-        }
-        
-        if(strpos($content,$iftag) && $bt!==md5($content))
-            $content = $this->mergeConditionalTagsContent($content, $iftag, $elseiftag, $elsetag, $endiftag);
-        
-        return $content;
-    }
-    
-    /**
-     * Remove Comment-Tags from output like <!--@- Comment -@-->
-     */
-    function ignoreCommentedTagsContent($content, $left='<!--@-', $right='-@-->') {
-        if(strpos($content,$left)===false) return $content;
-
-        $matches = $this->getTagsFromContent($content,$left,$right);
-        if(!empty($matches)) {
-            foreach($matches[0] as $i=>$v) {
-                $addBreakMatches[$i] = $v."\n";
-            }
-            $content = str_replace($addBreakMatches,'',$content);
-            if(strpos($content,$left)!==false)
-                $content = str_replace($matches[0],'',$content);
-        }
-        return $content;
-    }
-    
     /**
      * Detect PHP error according to MODX error level
      *
@@ -1380,14 +1258,6 @@ class DocumentParser {
      */
     function evalSnippet($phpcode, $params) {
         $etomite = $modx = & $this;
-        /*
-        if(isset($params) && is_array($params)) {
-            foreach($params as $k=>$v) {
-                $v = strtolower($v);
-                if($v==='false')    $params[$k] = false;
-                elseif($v==='true') $params[$k] = true;
-            }
-        }*/
         $modx->event->params = & $params; // store params inside event object
         if (is_array($params)) {
             extract($params, EXTR_SKIP);
@@ -2038,8 +1908,7 @@ class DocumentParser {
             $this->invokeEvent('OnParseDocument'); // work on it via $modx->documentOutput
             $source = $this->documentOutput;
 
-            if(strpos($source,'<!--@-')!==false) $source = $this->ignoreCommentedTagsContent($source);
-            if(strpos($source,'<@IF')!==false)   $source = $this->mergeConditionalTagsContent($source);
+            //$source = $this->mergeSettingsContent($source);
             
             if(strpos($source,'[*')!==false)     $source = $this->mergeDocumentContent($source);
             if(strpos($source,'[(')!==false)     $source = $this->mergeSettingsContent($source);
