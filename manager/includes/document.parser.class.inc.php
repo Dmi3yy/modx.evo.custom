@@ -896,79 +896,51 @@ class DocumentParser {
     }
 
     function getTagsFromContent($content,$left='[+',$right='+]') {
-        $_ = $this->_getTagsFromContent($content,$left,$right);
-        if(empty($_)) return array();
-        foreach($_ as $v)
+        $hash = explode($left,$content);
+        foreach($hash as $i=>$v) {
+          if(0<$i) $hash[$i] = $left.$v;
+        }
+        
+        $i=0;
+        $count = count($hash);
+        $safecount = 0;
+        $temp_hash = array();
+        while(0<$count) {
+            $open  = 1;
+            $close = 0;
+            $safecount++;
+            if(1000<$safecount) break;
+            while($close < $open && 0 < $count) {
+                $safecount++;
+                if(!isset($temp_hash[$i])) $temp_hash[$i] = '';
+                if(1000<$safecount) break;
+                $remain = array_shift($hash);
+                $remain = explode($right,$remain);
+                foreach($remain as $v)
         {
-            $tags[0][] = "{$left}{$v}{$right}";
-            $tags[1][] = $v;
+            		if($close < $open)
+                	{
+                		$close++;
+                		$temp_hash[$i] .= $v . $right;
         }
-        return $tags;
+            		else break;
     }
-    
-    function _getTagsFromContent($content, $left='[+',$right='+]') {
-        if(strpos($content,$left)===false) return array();
-        if(strpos($content,';}}')!==false)  $content = str_replace(';}}', '',$content);
-        if(strpos($content,'{{}}')!==false) $content = str_replace('{{}}','',$content);
-        if(strpos($content,']]]]')!==false) $content = str_replace(']] ]]','',$content);
-        if(strpos($content,']]]')!==false)  $content = str_replace('] ]]', '',$content);
-        
-        $pos['<![CDATA['] = strpos($content,'<![CDATA[');
-        $pos[']]>']       = strpos($content,']]>');
-        
-        if($pos['<![CDATA[']!==false && $pos[']]>']!==false) {
-            $content = substr($content,0,$pos['<![CDATA[']) . substr($content,$pos[']]>']+3);
+                $count = count($hash);
+                if(0<$i && strpos($temp_hash[$i],$right)===false) $open++;
+            }
+            $i++;
         }
-        
-        $lp = explode($left,$content);
-        $piece = array();
-        foreach($lp as $lc=>$lv) {
-            if($lc!==0) $piece[] = $left;
-            if(strpos($lv,$right)===false) $piece[] = $lv;
-            else {
-                $rp = explode($right,$lv);
-                foreach($rp as $rc=>$rv) {
-                    if($rc!==0) $piece[] = $right;
-                    $piece[] = $rv;
-                }
+        $matches=array();
+        $i = 0;
+        foreach($temp_hash as $v) {
+            if(strpos($v,$left)!==false) {
+                $v = substr($v,0,strrpos($v,$right));
+                $matches[0][$i] = $v . $right;
+                $matches[1][$i] = substr($v,strlen($left));
+                $i++;
             }
         }
-        $lc=0;
-        $rc=0;
-        $fetch = '';
-        $tags = array();
-        foreach($piece as $v) {
-            if($v===$left) {
-                if(0<$lc) $fetch .= $left;
-                $lc++;
-            }
-            elseif($v===$right) {
-                if($lc===0) continue;
-                $rc++;
-                if($lc===$rc) {
-                    // #1200 Enable modifiers in Wayfinder - add nested placeholders to $tags like for $fetch = "phx:input=`[+wf.linktext+]`:test"
-                    if(strpos($fetch,$left)!==false) {
-                        $nested = $this->_getTagsFromContent($fetch,$left,$right);
-                        foreach($nested as $tag) {
-                            if(!in_array($tag, $tags))
-                                $tags[] = $tag;
-                        }
-                    }
-
-                    if(!in_array($fetch, $tags)) {  // Avoid double Matches
-                        $tags[] = $fetch; // Fetch
-                    };
-                    $fetch = ''; // and reset
-                    $lc=0;
-                    $rc=0;
-                }
-                else $fetch .= $right;
-            } else {
-                if(0<$lc) $fetch .= $v;
-                else continue;
-            }
-        }
-        return $tags;
+        return $matches;
     }
     
     /**
@@ -977,42 +949,18 @@ class DocumentParser {
      * @param string $template
      * @return string
      */
-    function mergeDocumentContent($content,$ph=false) {
+    function mergeDocumentContent($content) {
         if (strpos($content, '[*') === false)
             return $content;
         if(!isset($this->documentIdentifier)) return $content;
         if(!isset($this->documentObject) || empty($this->documentObject)) return $content;
         
-        if(!$ph) $ph = $this->documentObject;
-        
-        $matches = $this->getTagsFromContent($content,'[*','*]');
+		$matches = $this->getTagsFromContent($content, '[*', '*]');
         if(!$matches) return $content;
         
         foreach($matches[1] as $i=>$key) {
             if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
-            
-            list($key,$modifiers) = $this->splitKeyAndFilter($key);
-            list($key,$context)   = explode('@',$key,2);
-            
-            // if(!isset($ph[$key]) && !$context) continue; // #1218 TVs/PHs will not be rendered if custom_meta_title is not assigned to template like [*custom_meta_title:ne:then=`[*custom_meta_title*]`:else=`[*pagetitle*]`*]
-            if($context) $value = $this->_contextValue("{$key}@{$context}");
-            else         $value = $ph[$key];
-            
-            if (is_array($value)) {
-                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
-                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
-                $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
-            }
-            
-            if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
-            
-            $content= str_replace($matches[0][$i], $value, $content);
-        }
-        
-        return $content;
-    }
-
-    function _contextValue($key) {
+            if(strpos($key,'@')!==false) {
         list($key,$str) = explode('@',$key,2);
         $context = strtolower($str);
         if(substr($str,0,5)==='alias' && strpos($str,'(')!==false)
@@ -1084,7 +1032,19 @@ class DocumentParser {
         if(preg_match('@^[1-9][0-9]*$@',$docid))
             $value = $this->getField($key,$docid);
         else $value = '';
-        return $value;
+				}
+            elseif(!isset($this->documentObject[$key])) $value = '';
+            else $value= $this->documentObject[$key];
+            
+            if (is_array($value)) {
+                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
+                include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
+                $value = getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
+			}
+            $content= str_replace($matches['0'][$i], $value, $content);
+		}
+        
+		return $content;
     }
     
     /**
