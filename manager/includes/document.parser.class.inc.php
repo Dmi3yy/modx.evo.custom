@@ -1093,23 +1093,20 @@ class DocumentParser {
      * @param string $template
      * @return string
      */
-    function mergeSettingsContent($content,$ph=false) {
+    function mergeSettingsContent($content) {
         if (strpos($content, '[(') === false)
             return $content;
+        $replace= array ();
+        $matches = $this->getTagsFromContent($content, '[(', ')]');
+        if ($matches) {
+            for ($i = 0; $i < count($matches[1]); $i++) {
+                if ($matches[1][$i] && array_key_exists($matches[1][$i], $this->config)){
+                    //$replace[$i] = $this->config[$matches[1][$i]];
+                    $content = str_replace($matches[0][$i], $this->config[$matches[1][$i]], $content);
+                }
+            }
         
-        if(!$ph) $ph = $this->config;
-        
-        $matches = $this->getTagsFromContent($content,'[(',')]');
-        if(!$matches) return $content;
-        
-        foreach($matches[1] as $i=>$key) {
-            list($key,$modifiers) = $this->splitKeyAndFilter($key);
             
-            if(isset($ph[$key])) $value = $ph[$key];
-            else continue;
-            
-            if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
-            $content= str_replace($matches[0][$i], $value, $content);
         }
         return $content;
     }
@@ -1120,37 +1117,32 @@ class DocumentParser {
      * @param string $content
      * @return string
      */
-    function mergeChunkContent($content,$ph=false) {
-        if(strpos($content,'{{')===false) return $content;
-        
-        if(!$ph) $ph = $this->chunkCache;
-        
-        $matches = $this->getTagsFromContent($content,'{{','}}');
-        if(!$matches) return $content;
-        
-        foreach($matches[1] as $i=>$key) {
-            $snip_call = $this->_split_snip_call($key);
-            $key = $snip_call['name'];
-            $params = $this->getParamsFromString($snip_call['params']);
-
-            list($key,$modifiers) = $this->splitKeyAndFilter($key);
-            
-            if(!isset($ph[$key])) $ph[$key] = $this->getChunk($key);
-            $value = $ph[$key];
-            
-            if(is_null($value)) continue;
-            
-            $value = $this->mergePlaceholderContent($value,$params);
-            $value = $this->mergeConditionalTagsContent($value);
-            $value = $this->mergeDocumentContent($value);
-            $value = $this->mergeSettingsContent($value);
-            $value = $this->mergeChunkContent($value);
-            
-            if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
-            
-            $content= str_replace($matches[0][$i], $value, $content);
-        }
+    function mergeChunkContent($content) {
+		if (strpos($content, '{{') === false)
         return $content;
+		$replace = array();
+		$matches = $this->getTagsFromContent($content, '{{', '}}');
+		if ($matches) {
+			for ($i = 0; $i < count($matches[1]); $i++) {
+				if ($matches[1][$i]) {
+					if (isset($this->chunkCache[$matches[1][$i]])) {
+						$replace[$i] = $this->chunkCache[$matches[1][$i]];
+					} else {
+						$result = $this->db->select('snippet', $this->getFullTableName('site_htmlsnippets'), "name='".$this->db->escape($matches[1][$i])."'");
+						if ($snippet = $this->db->getValue($result)) {
+							$this->chunkCache[$matches[1][$i]] = $snippet;
+							$replace[$i] = $snippet;
+						} else {
+							$this->chunkCache[$matches[1][$i]] = '';
+							$replace[$i] = '';
+						}
+					}
+				}
+			}
+			$content = str_replace($matches[0], $replace, $content);
+			$content = $this->mergeSettingsContent($content);
+		}
+		return $content;
     }
 
     /**
@@ -1159,31 +1151,24 @@ class DocumentParser {
      * @param string $content
      * @return string
      */
-    function mergePlaceholderContent($content,$ph=false) {
-        
-        if (strpos($content, '[+') === false) return $content;
-        
-        if(!$ph) $ph = $this->placeholders;
-        
-        $content= $this->mergeConditionalTagsContent($content);
-        $content= $this->mergeDocumentContent($content);
-        $content= $this->mergeSettingsContent($content);
-        $matches = $this->getTagsFromContent($content,'[+','+]');
-        if(!$matches) return $content;
-        foreach($matches[1] as $i=>$key) {
-            
-            list($key,$modifiers) = $this->splitKeyAndFilter($key);
-            
-            if (isset($ph[$key])) $value = $ph[$key];
-            elseif($key==='phx')  $value = '';
-            else continue;
-            
-            if($modifiers!==false)
-            {
-                $modifiers = $this->mergePlaceholderContent($modifiers);
-                $value = $this->applyFilter($value,$modifiers,$key);
+    function mergePlaceholderContent($content) {
+		if (strpos($content, '[+') === false)
+			return $content;
+		$replace = array();
+		$content = $this->mergeSettingsContent($content);
+		$matches = $this->getTagsFromContent($content, '[+', '+]');
+		if ($matches) {
+			for ($i = 0; $i < count($matches[1]); $i++) {
+				$v = '';
+				$key = $matches[1][$i];
+				if ($key && is_array($this->placeholders) && array_key_exists($key, $this->placeholders))
+					$v = $this->placeholders[$key];
+				if ($v === '')
+					unset($matches[0][$i]); // here we'll leave empty placeholders for last.
+				else
+					$replace[$i] = $v;
             }
-            $content= str_replace($matches[0][$i], $value, $content);
+			$content = str_replace($matches[0], $replace, $content);
         }
         return $content;
     }
