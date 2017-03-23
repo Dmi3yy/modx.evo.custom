@@ -1781,20 +1781,22 @@ class DocumentParser {
         if(!$source) return $source;
         
         // set the number of times we are to parse the document source
-        if(empty ($this->maxParserPasses))     $this->maxParserPasses     = 10;
-        if(!isset($this->config['show_meta'])) $this->config['show_meta'] = 0; // deprecated
         
-        $bt = '';
-        $i = 0;
-        while($i < $this->maxParserPasses) {
-            $bt= md5($source);
+        if(!isset($this->config['show_meta'])) $this->config['show_meta'] = 0; // deprecated
+        $this->minParserPasses= empty ($this->minParserPasses) ? 2 : $this->minParserPasses;
+        $this->maxParserPasses= empty ($this->maxParserPasses) ? 10 : $this->maxParserPasses;
+        $passes= $this->minParserPasses;
+        for ($i= 0; $i < $passes; $i++) {
+            // get source length if this is the final pass
+            if ($i == ($passes -1))
+                $st= strlen($source);
 
             // invoke OnParseDocument event
             $this->documentOutput = $source; // store source code so plugins can
             $this->invokeEvent('OnParseDocument'); // work on it via $modx->documentOutput
             $source = $this->documentOutput;
 
-            //$source = $this->mergeSettingsContent($source);
+            $source = $this->mergeSettingsContent($source);
             
             if(strpos($source,'[*')!==false)     $source = $this->mergeDocumentContent($source);
             if(strpos($source,'[(')!==false)     $source = $this->mergeSettingsContent($source);
@@ -1803,8 +1805,15 @@ class DocumentParser {
             if(strpos($source,'[[')!==false)     $source = $this->evalSnippets($source);
             if(strpos($source,'[+')!==false)     $source = $this->mergePlaceholderContent($source);
             
-            if($bt === md5($source)) break;
-            $i++;
+			$source = $this->mergeSettingsContent($source);
+            
+
+             if ($i == ($passes -1) && $i < ($this->maxParserPasses - 1)) {
+                // check if source length was changed
+                $et= strlen($source);
+                if ($st != $et)
+                    $passes++; // if content change then increase passes because
+            } // we have not yet reached maxParserPasses
         }
         return $source;
     }
