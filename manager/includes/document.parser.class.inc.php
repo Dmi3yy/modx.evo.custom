@@ -2012,7 +2012,8 @@ class DocumentParser {
         // we now know the method and identifier, let's check the cache
         $this->documentContent= $this->getDocumentObjectFromCache($this->documentIdentifier, true);
         
-            // get document object
+        if ($this->documentContent == '') {
+            // get document object from DB
             $this->documentObject= $this->getDocumentObject($this->documentMethod, $this->documentIdentifier, 'prepareResponse');
 
             // write the documentName to the object
