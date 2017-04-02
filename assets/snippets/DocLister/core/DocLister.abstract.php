@@ -1091,6 +1091,11 @@ abstract class DocLister
                 $return['rows'][] = APIHelpers::getkey($item, $key, $item);
             }
             $return['total'] = $this->getChildrenCount();
+        }elseif ('simple' == $this->getCFGDef('JSONformat', 'old')) {
+            $return = array();
+            foreach ($out as $key => $item) {
+                $return[] = APIHelpers::getkey($item, $key, $item);
+            }
         } else {
             $return = $out;
         }
