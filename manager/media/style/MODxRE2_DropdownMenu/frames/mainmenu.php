@@ -4,7 +4,7 @@ menu->Build('id','parent','name','link','alt','onclick','permission','target','d
 */
 
 //mainMenu
-$sitemenu['site'] = array('site', 'main', '<i class="fa fa-modx fa-lg"></i>' . $_lang['home'], 'index.php?a=2";', $_lang['home'], 'new NavToggle(this);', '', 'main', 0, 10, 'active');
+$sitemenu['site'] = array('site', 'main', '<i class="fa fa-modx fa-lg"></i>' . $_lang['home'], 'index.php?a=2', $_lang['home'], 'new NavToggle(this);', '', 'main', 0, 10, 'active');
 
 if ($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('file_manager')) {
     $sitemenu['elements'] = array('elements', 'main', '<i class="fa fa-th fa-lg"></i>' . $_lang['elements'], '#elements', $_lang['elements'], 'new NavToggle(this); return false;', '', '', 0, 20, '');

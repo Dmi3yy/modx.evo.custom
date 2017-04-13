@@ -354,7 +354,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 //			if(jQuery(this).offset().left > jQuery(window).width() / 2) {
 //				dropdown_menu.css({
 //					left: 'auto',
-//					right: right: jQuery(window).width() - (jQuery(this).offset().left + jQuery(this).outerWidth()) + 'px'
+//					right: jQuery(window).width() - (jQuery(this).offset().left + jQuery(this).outerWidth()) + 'px'
 //				})
 //			} else {
 //				dropdown_menu.css({
@@ -379,18 +379,16 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 //			$this.hover(function() {
 //			}, function() {
 //				var $this = jQuery(this);
-//				if(dropdown.is(':hover')) {
+//				dropdown.removeClass('show');
+//				$this.removeClass('hover');
+//				
+//				dropdown.hover(function() {
 //					dropdown.addClass('show');
-//					$this.addClass('hover');
-//					dropdown.hover(function() {
-//					}, function() {
-//						dropdown.removeClass('show');
-//						$this.removeClass('hover');
-//					})
-//				} else {
+//					jQuery('.dropdown-menu').eq(dropdown.data('index')).parent().find('.dropdown-toggle').addClass('hover')
+//				}, function() {
 //					dropdown.removeClass('show');
-//					$this.removeClass('hover');
-//				}
+//					$this.removeClass('hover')
+//				});
 //			})
 //																		
 //		});
@@ -400,7 +398,6 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		jQuery('.dropdown-toggle').hover(function() {
 			var $this = jQuery(this);
 			var el = $this.parent().find('.dropdown-menu');
-			var dropdown_menu = '';
 			var dropdown_menu = el.clone();
 			var dropdown_index = el.index('.dropdown-menu');
 			
@@ -436,25 +433,19 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			}
 		}, function() {
 			var $this = jQuery(this);
-			if(typeof dropdown_menu !== 'undefined'){ 
-				if(dropdown_menu.is(':hover')) {
-					dropdown.addClass('show');
-					$this.addClass('hover');
-					dropdown.hover(function() {
-					}, function() {
-						dropdown.removeClass('show');
-						$this.removeClass('hover');
-					})
-				} else {
-					dropdown.removeClass('show');
-					$this.removeClass('hover');
-				}
-			}
+			dropdown.removeClass('show');
+			$this.removeClass('hover');
+			
+			dropdown.hover(function() {
+				dropdown.addClass('show');
+				jQuery('.dropdown-menu').eq(dropdown.data('index')).parent().find('.dropdown-toggle').addClass('hover')
+			}, function() {
+				dropdown.removeClass('show');
+				$this.removeClass('hover')
+			});
 		});
 		// Event
-		dropdown.mouseleave(function(){
- 			dropdown.removeClass('show');
-		});
+		
 		
 	});
 </script>	
