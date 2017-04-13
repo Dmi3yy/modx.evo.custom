@@ -48,7 +48,7 @@ width: 16px; height: 16px; }
 <div id="resizer"> <a id="hideMenu" onClick="mainMenu.toggleTreeFrame();"></a> </div>
 <div id="resizer2"> <a id="hideTopMenu" onClick="mainMenu.toggleMenuFrame();"></a> </div>
 <div id="mainMenu">
-	<iframe name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0" noresize="noresize"></iframe>
+	<iframe name="mainMenu" id="mainMenuFrame" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0" noresize="noresize"></iframe>
 </div>
 <div id="tree">
 	<iframe name="tree" src="index.php?a=1&amp;f=tree" scrolling="no" frameborder="0" onresize="mainMenu.resizeTree();"></iframe>

@@ -91,6 +91,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		parent.document.getElementById('resizer2').style.top = pos + 'px';
 		parent.document.getElementById('main').style.top    = pos + 'px';
 		parent.document.getElementById('mainMenu').style.height    = pos + 'px';
+		parent.document.getElementById('mainMenuFrame').style.height    = pos + 'px';
 	}
 
 	function toggleMenuFrame() {
