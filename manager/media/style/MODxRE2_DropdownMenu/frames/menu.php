@@ -288,13 +288,8 @@ if(is_array($evtOut)) {
 					</a>
 				</li>
 
-				<?php $style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : ''; ?>
-				<?php
-				if(stristr($modx->config['settings_version'], 'd') === FALSE) {
-					$version = 'MODx EVO';
-				} else {
-					$version = 'MODx EVO custom';
-				}
+				<?php $style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : ''; 
+				$version = stristr($modx->config['settings_version'], 'd') === FALSE ? 'MODX Evolution' : 'MODX EVO Custom';
 				?>
 				<?php
 				echo sprintf('<li><span title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
