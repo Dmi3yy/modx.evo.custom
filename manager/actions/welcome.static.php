@@ -240,7 +240,7 @@ if (substr($target, 0, 1)==='@') {
 }
 
 // merge placeholders
-$content = $modx->mergeConditionalTagsContent($content);
+//$content = $modx->mergeConditionalTagsContent($content);
 $content = $modx->mergeSettingsContent($content);
 $content = $modx->parseText($content,$ph);
 if(strpos($content,'[+')!==false) {
