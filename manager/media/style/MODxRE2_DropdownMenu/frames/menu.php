@@ -603,12 +603,14 @@ if(is_array($evtOut)) {
 				dropdown.html(jQuery('#searchresult').clone());
 				dropdown.addClass('show')
 			}
+
 		}).on('blur', function() {
 			if(dropdown.is(':hover')) {
 				dropdown.addClass('show')
 			} else {
 				dropdown.removeClass('show')
 			}
+
 		})
 
 	});

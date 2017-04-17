@@ -252,6 +252,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 #frameset .dropdown-menu a:hover { color: #fff }
 #frameset .dropdown-menu a .fa { margin-right: 10px; color: #39545e; width: 15px; text-align: center; }
 #frameset .dropdown-menu span { text-align: center; font-size: 11px; color: #999; }
+#frameset .dropdown #searchresult { display: block !important }
 /* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu { min-width: 450px; background: url("images/misc/headers.jpg") repeat scroll 0 0 #23393C; }
 #Navcontainer { color: #fff; }
