@@ -2228,7 +2228,15 @@ class DocumentParser {
             if(strpos($q,'?')!==false) $q = substr($q,0,strpos($q,'?'));
             if($q=='index.php')        $q = '';
         }
-        
+
+        $out = $this->invokeEvent("OnAfterCreateRequestQ",array(
+            'requestQ' => $q
+        ));
+        if( is_array($out) && !empty($out) ){
+            $out = array_pop($out);
+            $q = $out;
+        }
+
         $_REQUEST['q'] = $_GET['q'] = $q;
         return $q;
     }
