@@ -288,7 +288,7 @@ if(is_array($evtOut)) {
 					</a>
 				</li>
 
-				<?php $style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : ''; 
+				<?php $style = $modx->config['settings_version'] != $modx->getVersionData('version') ? 'style="color:#ffff8a;"' : '';
 				$version = stristr($modx->config['settings_version'], 'd') === FALSE ? 'MODX Evolution' : 'MODX EVO Custom';
 				?>
 				<?php
@@ -385,7 +385,7 @@ if(is_array($evtOut)) {
 			jQuery(parent.document.body).addClass('resizer-move');
 
 			jQuery(parent.document).on('mousemove touchmove', function(e) {
-				pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length  ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
+				pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
 
 				if(parseInt(pos.x) > 0) {
 					jQuery(parent.document.body).addClass('tree-show').removeClass('tree-hide')
@@ -539,6 +539,71 @@ if(is_array($evtOut)) {
 			});
 		});
 		// Event
+
+		jQuery('#searchform input').on('keyup', function(e) {
+			e.preventDefault();
+			var searchresult;
+
+			if(!jQuery('#searchresult').length) {
+				searchresult = jQuery('<div id="searchresult" style="display: none"></div>');
+				jQuery(this).parent().append(searchresult);
+			} else {
+				searchresult = jQuery('#searchresult')
+			}
+
+			dropdown.css({
+				left: 'auto',
+				right: jQuery(window).width() - (jQuery(this).parent().offset().left + jQuery(this).parent().outerWidth()) + 'px'
+			});
+
+			if(jQuery(this).val() !== '') {
+				var url = 'index.php?a=71';
+				var params = {
+					searchid: jQuery(this).val(),
+					submitok: 'Search'
+				};
+				jQuery.ajax({
+					url: url,
+					data: params,
+					method: 'post',
+					dataFilter: function(data) {
+						data = jQuery(data).find('.sortabletable');
+						jQuery('a', data).each(function(i, el) {
+							jQuery(el).attr('target', 'main')
+						});
+						return data;
+					},
+					success: function(data) {
+						if(data.length) {
+							searchresult.html(data);
+
+							dropdown.html(searchresult.clone()).addClass('show')
+						} else {
+							dropdown.removeClass('show').empty()
+						}
+					},
+					error: function(xhr, ajaxOptions, thrownError) {
+						alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+					}
+				})
+
+			} else {
+				dropdown.removeClass('show').empty()
+			}
+			dropdown.hover(function() {
+			}, function() {
+				dropdown.removeClass('show');
+			})
+		}).on('click', function() {
+			dropdown.css({
+				left: 'auto',
+				right: jQuery(window).width() - (jQuery(this).parent().offset().left + jQuery(this).parent().outerWidth()) + 'px'
+			});
+			if(jQuery('#searchresult').length) {
+				dropdown.html(jQuery('#searchresult').clone());
+				dropdown.addClass('show')
+			}
+		})
 
 	});
 </script>
