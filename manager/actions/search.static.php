@@ -275,9 +275,10 @@ if(isset($_REQUEST['submitok'])) {
   if ($tvscounts > 0){
     $output .='<li><b>'.$_lang["settings_templvars"].' ('.$tvscounts.')</b></li>';
     while ($row = $modx->db->getRow($rs)) {
-      $output .='<li><a href="index.php?a=30&id='.$row['id'].'">'.$row['name'].'</a></li>';
+      $output .='<li><a href="index.php?a=301&id='.$row['id'].'">'.$row['name'].'</a></li>';
     }
   } 
+//
 
   //Chunks
   $rs = $modx->db->select("id,name", $modx->getFullTableName('site_htmlsnippets'),  "`id` like '%" . $searchfields ."%' 
