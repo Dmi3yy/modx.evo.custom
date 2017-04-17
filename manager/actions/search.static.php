@@ -243,7 +243,7 @@ if(isset($_REQUEST['submitok'])) {
    //docs
    $docscounts = $modx->db->getRecordCount($rs);
    if ($docscounts > 0){
-    $output .='<li><b>Документы ('.$docscounts.')</b></li>';
+    $output .='<li><b>'.$_lang["manage_documents"].' ('.$docscounts.')</b></li>';
     while ($row = $modx->db->getRow($rs)) {
       $output .='<li><a href="index.php?a=27&id='.$row['id'].'">'.$row['pagetitle'].' ('.$row['id'].')</a></li>';
     }
@@ -256,7 +256,7 @@ if(isset($_REQUEST['submitok'])) {
     OR `content` like '%" . $searchfields ."%'");
   $templatecounts = $modx->db->getRecordCount($rs); 
   if ($templatecounts > 0){
-    $output .='<li><b>Шаблоны ('.$templatecounts.')</b></li>';
+    $output .='<li><b>'.$_lang["manage_templates"].' ('.$templatecounts.')</b></li>';
     while ($row = $modx->db->getRow($rs)) {
       $output .='<li><a href="index.php?a=16&id='.$row['id'].'">'.$row['templatename'].'</a></li>';
     }
@@ -273,7 +273,7 @@ if(isset($_REQUEST['submitok'])) {
     OR `default_text` like '%" . $searchfields ."%'");
   $tvscounts = $modx->db->getRecordCount($rs); 
   if ($tvscounts > 0){
-    $output .='<li><b>TVs ('.$tvscounts.')</b></li>';
+    $output .='<li><b>'.$_lang["settings_templvars"].' ('.$tvscounts.')</b></li>';
     while ($row = $modx->db->getRow($rs)) {
       $output .='<li><a href="index.php?a=30&id='.$row['id'].'">'.$row['name'].'</a></li>';
     }
@@ -286,7 +286,7 @@ if(isset($_REQUEST['submitok'])) {
     OR `snippet` like '%" . $searchfields ."%'");
   $chunkscounts = $modx->db->getRecordCount($rs); 
   if ($chunkscounts > 0){
-    $output .='<li><b>Чанки ('.$chunkscounts.')</b></li>';
+    $output .='<li><b>'.$_lang["manage_htmlsnippets"].' ('.$chunkscounts.')</b></li>';
     while ($row = $modx->db->getRow($rs)) {
       $output .='<li><a href="index.php?a=78&id='.$row['id'].'">'.$row['name'].'</a></li>';
     }
@@ -301,7 +301,7 @@ if(isset($_REQUEST['submitok'])) {
     OR `moduleguid` like '%" . $searchfields ."%'");
   $snippetscounts = $modx->db->getRecordCount($rs); 
   if ($snippetscounts > 0){
-    $output .='<li><b>Чанки ('.$snippetscounts.')</b></li>';
+    $output .='<li><b>'.$_lang["manage_snippets"].' ('.$snippetscounts.')</b></li>';
     while ($row = $modx->db->getRow($rs)) {
       $output .='<li><a href="index.php?a=22&id='.$row['id'].'">'.$row['name'].'</a></li>';
     }
@@ -315,7 +315,7 @@ if(isset($_REQUEST['submitok'])) {
     OR `moduleguid` like '%" . $searchfields ."%'");
   $pluginscounts = $modx->db->getRecordCount($rs); 
   if ($pluginscounts > 0){
-    $output .='<li><b>Чанки ('.$pluginscounts.')</b></li>';
+    $output .='<li><b>'.$_lang["manage_plugins"].' ('.$pluginscounts.')</b></li>';
     while ($row = $modx->db->getRow($rs)) {
       $output .='<li><a href="index.php?a=102&id='.$row['id'].'">'.$row['name'].'</a></li>';
     }
@@ -330,7 +330,7 @@ if(isset($_REQUEST['submitok'])) {
     OR `resourcefile` like '%" . $searchfields ."%'");
   $modulescounts = $modx->db->getRecordCount($rs); 
   if ($modulescounts > 0){
-    $output .='<li><b>Чанки ('.$modulescounts.')</b></li>';
+    $output .='<li><b>'.$_lang["modules"].' ('.$modulescounts.')</b></li>';
     while ($row = $modx->db->getRow($rs)) {
       $output .='<li><a href="index.php?a=112&id='.$row['id'].'">'.$row['name'].'</a></li>';
     }
