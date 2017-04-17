@@ -557,7 +557,7 @@ if(is_array($evtOut)) {
 			});
 
 			if(jQuery(this).val() !== '') {
-				var url = 'index.php?a=71';
+				var url = 'index.php?a=71&ajax=1';
 				var params = {
 					searchid: jQuery(this).val(),
 					submitok: 'Search'
@@ -567,7 +567,7 @@ if(is_array($evtOut)) {
 					data: params,
 					method: 'post',
 					dataFilter: function(data) {
-						data = jQuery(data).find('.sortabletable');
+						data = jQuery(data).find('.ajaxSearchResults');
 						jQuery('a', data).each(function(i, el) {
 							jQuery(el).attr('target', 'main')
 						});
