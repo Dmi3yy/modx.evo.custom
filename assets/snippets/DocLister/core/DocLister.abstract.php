@@ -1009,7 +1009,7 @@ abstract class DocLister
     {
         $class = array();
 
-        $iterationName = ($i % 2 == 0) ? 'Odd' : 'Even';
+        $iterationName = ($i % 2 == 1) ? 'Odd' : 'Even';
         $tmp = strtolower($iterationName);
         $class[] = $this->getCFGDef($tmp . 'Class', $tmp);
 
