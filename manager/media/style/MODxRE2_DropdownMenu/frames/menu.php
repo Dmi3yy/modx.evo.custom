@@ -55,9 +55,9 @@ $useEVOModal = '';
 
 		function showResponse(request) {
 			var counts = request.split(',');
-			var elm = $('msgCounter');
+			var elm = document.getElementById('msgCounter');
 			if(elm) elm.innerHTML = '(' + counts[0] + ' / ' + counts[1] + ')';
-			var elm = $('newMail');
+			var elm = document.getElementById('newMail');
 			if(elm) elm.style.display = counts[0] > 0 ? 'inline' : 'none';
 		}
 
@@ -66,7 +66,7 @@ $useEVOModal = '';
 			updateMail.periodical(<?php echo $modx->config['mail_check_timeperiod'] * 1000 ?>, '', true); // Periodical Updater
 			if(top.__hideTree) {
 				// display toc icon
-				var elm = $('tocText');
+				var elm = document.getElementById('tocText');
 				if(elm) elm.innerHTML = "<a href='#' onclick='document.mainMenu.defaultTreeFrame();'><?php echo $_lang['show_tree']?></a>";
 			}
 		});
@@ -149,7 +149,7 @@ $useEVOModal = '';
 		// GENERAL FUNCTIONS - Refresh
 		// These functions are used for refreshing the tree or menu
 		function reloadtree() {
-			var elm = $('buildText');
+			var elm = document.getElementById("buildText");
 			if(elm) {
 				elm.innerHTML = '<img src="<?php echo $_style['icons_loading_doc_tree']?>" width="16" height="16" />&nbsp;<?php echo $_lang['loading_doc_tree']?>';
 				elm.style.display = 'block';
@@ -160,7 +160,7 @@ $useEVOModal = '';
 
 		function reloadmenu() {
 			<?php if($manager_layout == 0) { ?>
-			var elm = $('buildText');
+			var elm = document.getElementById("buildText");
 			if(elm) {
 				elm.innerHTML = '<img src="<?php echo $_style['icons_working']?>" width="16" height="16" />&nbsp;<?php echo $_lang['loading_menu']?>';
 				elm.style.display = 'block';
@@ -188,13 +188,13 @@ $useEVOModal = '';
 		// GENERAL FUNCTIONS - Work
 		// These functions are used for showing the user the system is working
 		function work() {
-			var elm = $('workText');
+			var elm = document.getElementById('workText');
 			if(elm) elm.innerHTML = '<img src="<?php echo $_style['icons_working']?>" width="16" height="16" />&nbsp;<?php echo $_lang['working']?>';
 			else w = window.setTimeout('work()', 50);
 		}
 
 		function stopWork() {
-			var elm = $('workText');
+			var elm = document.getElementById('workText');
 			if(elm) elm.innerHTML = "";
 			else  ww = window.setTimeout('stopWork()', 50);
 		}
@@ -330,39 +330,39 @@ if(is_array($evtOut)) {
 			<ul class="dropdown-menu">
 				<?php if($modx->hasPermission('settings')) { ?>
 					<li>
-						<a href="index.php?a=17" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-cog fw"></i><?php echo $_lang['edit_settings'] ?>
+						<a href="index.php?a=17" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-cog fw"></i><?php echo $_lang['edit_settings'] ?>
 						</a>
 					</li>
 				<?php } ?>
 
 				<?php if($modx->hasPermission('view_eventlog')) { ?>
 					<li>
-						<a href="index.php?a=70" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-calendar"></i><?php echo $_lang['site_schedule'] ?>
+						<a href="index.php?a=70" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-calendar"></i><?php echo $_lang['site_schedule'] ?>
 						</a>
 					</li>
 				<?php } ?>
 
 				<?php if($modx->hasPermission('view_eventlog')) { ?>
 					<li>
-						<a href="index.php?a=114" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-exclamation-triangle"></i><?php echo $_lang['eventlog_viewer'] ?>
+						<a href="index.php?a=114" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-exclamation-triangle"></i><?php echo $_lang['eventlog_viewer'] ?>
 						</a>
 					</li>
 				<?php } ?>
 
 				<?php if($modx->hasPermission('logs')) { ?>
 					<li>
-						<a href="index.php?a=13" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-user-secret"></i><?php echo $_lang['view_logging'] ?>
+						<a href="index.php?a=13" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-user-secret"></i><?php echo $_lang['view_logging'] ?>
 						</a>
 					</li>
 					<li>
-						<a href="index.php?a=53" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-info-circle"></i><?php echo $_lang['view_sysinfo'] ?>
+						<a href="index.php?a=53" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-info-circle"></i><?php echo $_lang['view_sysinfo'] ?>
 						</a>
 					</li>
 				<?php } ?>
 
 				<?php if($modx->hasPermission('help')) { ?>
 					<li>
-						<a href="index.php?a=9#version_notices" target="main" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-question-circle"></i><?php echo $_lang['help'] ?>
+						<a href="index.php?a=9#version_notices" target="main" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-question-circle"></i><?php echo $_lang['help'] ?>
 						</a>
 					</li>
 				<?php } ?>
@@ -370,7 +370,7 @@ if(is_array($evtOut)) {
 			</ul>
 		</li>
 		<li>
-			<a href="../" target="_blank" title="<?php echo $_lang['preview'] ?>" onclick="document.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-home"></i></a>
+			<a href="../" target="_blank" title="<?php echo $_lang['preview'] ?>" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-home"></i></a>
 		</li>
 	</ul>
 </div>
@@ -385,7 +385,6 @@ if(is_array($evtOut)) {
 	jQuery(function() {
 
 		stopWork();
-		parent.scrollWork();
 
 		// resizer
 		var pos = {
@@ -446,7 +445,7 @@ if(is_array($evtOut)) {
 			});
 		});
 		// Event
-		
+
 		// modx Search
 		var searchresult = jQuery(parent.document).find('#searchresult');
 		var searchresultWidth = 400/*(jQuery(this).outerWidth() - jQuery('#searchform').offset().left)*/;
