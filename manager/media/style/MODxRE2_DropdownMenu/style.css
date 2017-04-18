@@ -65,20 +65,28 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 .messageUnread { color: #3CB371; font-weight: 500; }
 .right { font-weight: 500; color: #333; float: left; padding: 0 20px 20px; }
 .rtl .right { float: right; }
+.gridster > * { -webkit-transition: height .4s, width .4s !important; -moz-transition: height .4s !important; -o-transition: height .4s !important; -ms-transition: height .4s !important; transition: height .4s !important; }
 /* frameSet*/
-.resizer-move::before { position: fixed; left: 0; top:  0; width: 100%; height: 100%; z-index: 900; background-color: transparent; content: "" }
+.resizer-move::before { position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 900; background-color: transparent; content: "" }
 #mainMenu, #tree, #main { position: absolute; }
 #mainMenu iframe, #tree iframe, #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
 #mainMenu { position: relative; height: 48px; width: 100%; box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25); z-index: 100; }
 #mainMenu iframe { height: 48px }
 #tree { width: 320px; top: 48px; left: 0; bottom: 0; overflow: hidden; }
 #main { top: 48px; left: 320px; right: 0; bottom: 0; }
-#resizer { position: absolute; top: 48px; bottom: 0; left: 320px; width: 12px; cursor: col-resize; z-index: 999 }
-.resizer-move #resizer::before, .tree-hide #resizer::before { position: absolute; left: 0; top: 0; bottom: 0; width: 5px; content: ""; background-color: #444 }
-#resizer #hideMenu { position: absolute; z-index: 9; left: -12px; top: 5px; width: 24px; height: 24px; line-height: 24px; font-size: 20px; text-align: right; text-indent: -2px; cursor: pointer; content: "\f054" }
-.tree-show #resizer #hideMenu { text-align: center }
-.tree-show #resizer #hideMenu i::before { content: "\f053" }
-#resizer2 #hideTopMenu { display: block; margin-top: -4px; margin-left: 0px; cursor: pointer; width: 16px; height: 16px; }
+/*resizer*/
+#resizer_mask { position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 9999; background-color: transparent; cursor: col-resize; }
+#resizer { position: absolute; z-index: 99; top: 48px; bottom: 0; left: 320px; width: 8px; margin-left: -1px; cursor: col-resize; }
+#resizer .handler { position: absolute; z-index: 1; top: 25px; bottom: 0; width: 100%; background-color: transparent; -webkit-transition: background-color .3s; transition: background-color .3s }
+#resizer:hover .handler, #resizer.hover .handler { background-color: rgba(0, 0, 0, 0.07); }
+#resizer .switcher { position: absolute; z-index: 9; left: -15px; top: 0; width: 16px; height: 31px; line-height: 31px; font-size: 11px; text-align: center; cursor: pointer; border-radius: 3px 0 0 3px; background-color: #f2f2f2; border: 1px solid rgba(0, 0, 0, 0.1); border-right: none; }
+#resizer .switcher::before { content: ""; position: absolute; z-index: -1; top: 0; right: 0; width: 10px; height: 100%; background-color: #f2f2f2; transition: all .2s }
+#resizer:hover .switcher::before, #resizer.hover .switcher::before { right: -8px }
+.sidebar-closed #resizer .handler { background-color: rgba(0, 0, 0, 0.1); cursor: pointer }
+.sidebar-closed #resizer:hover .handler { background-color: rgba(0, 0, 0, 0.15); }
+.sidebar-closed #resizer .switcher { left: 0; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 0 3px 3px 0; }
+.sidebar-closed #resizer .switcher::before { right: 8px }
+.sidebar-closed #resizer .switcher i::before { content: "\f054" }
 /* -------------------------[ Topbar ]--- */
 .dropdown-menu { display: none }
 #topbar, #tocText { margin: 0; color: #333; padding: 0 5px; float: left; width: 10px; white-space: nowrap; line-height: 48px; }
@@ -242,6 +250,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .cntxMnuItem img, .cntxMnuItemDisabled img { }
 .cntxMnuSeparator { font-size: 0; height: 1px; background-color: #D8D8D8; overflow: hidden; margin: 3px 0; }
 .rtl .cntxMnuSeparator { margin: 3px 28px 3px 1px; }
+#frameset { overflow: hidden; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
 #frameset .dropdown { display: block; position: absolute; z-index: 1001; left: auto; top: 48px; right: auto; min-width: 200px; background-color: #fff; border-radius: 0; box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); opacity: 0; visibility: hidden; overflow: auto; max-height: 400px; max-height: calc(100% - 48px); transition: opacity 0.3s, visibility 0.1s }
 #frameset .show.dropdown { opacity: 1; visibility: visible }
 #frameset .dropdown-menu { display: block; margin: 0; padding: 0px; overflow: hidden; }
@@ -253,6 +262,15 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 #frameset .dropdown-menu a .fa { margin-right: 10px; color: #39545e; width: 15px; text-align: center; }
 #frameset .dropdown-menu span { text-align: center; font-size: 11px; color: #999; }
 #frameset .dropdown #searchresult { display: block !important }
+#frameset #searchresult { position: absolute; z-index: 98; overflow: auto; top: 48px; right: 0; bottom: 0; width: 0; margin-right: -100%; transition: margin-right 0.3s; background-color: #fcfcfc; box-shadow: 0 0 60px rgba(0, 0, 0, 0.15); border-left: 1px solid rgba(0, 0, 0, 0.1); box-sizing: border-box; }
+#frameset #searchresult.open { margin-right: 0 !important }
+#frameset #searchresult .ajaxSearchResults ul, #frameset #searchresult .ajaxSearchResults li { margin: 0; padding: 0; list-style: none }
+#frameset #searchresult .ajaxSearchResults b, #frameset #searchresult .ajaxSearchResults strong, #frameset #searchresult .ajaxSearchResults a { display: block; background-color: #ddd; color: #333; padding: 5px 10px; margin-top: -1px; border-top: 1px solid rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.03); box-sizing: border-box }
+#frameset #searchresult .ajaxSearchResults a { color: #3697CD; padding: 4px 0 4px 10px; background-color: #fcfcfc; text-decoration: none; }
+#frameset #searchresult .ajaxSearchResults a:hover { color: #333; background-color: #fff; }
+#frameset #searchresult .ajaxSearchResults a .fa { position: relative; float: right; margin: -3px 0; padding: 4px 5px; color: #3d5764 }
+#frameset #searchresult .ajaxSearchResults a.selected { background-color: #0b9991; color: #fff; font-weight: 700; }
+#frameset #searchresult .ajaxSearchResults a .text-danger { color: #333; font-weight: 700 }
 /* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu { min-width: 450px; background: url("images/misc/headers.jpg") repeat scroll 0 0 #23393C; }
 #Navcontainer { color: #fff; }
@@ -509,7 +527,7 @@ form input[type="text"], form input[type="password"], form input[type="number"],
 #helpPane li > strong { display: block; font-size: 14px; }
 #helpPane pre { font-size: 12px; border: 1px solid #888; border-radius: 5px; background-color: #fff; padding: 1em; margin: 10px 0; }
 /* Top nav search form */
-#searchform { float: right; padding: 9px 0px; }
+#searchform { position: relative; float: right; padding: 9px 0px; height: 30px; }
 @media (max-width: 959px) {
 #nav > li > a > .fa { margin-right: 0; line-height: 40px; font-size: 17px; }
 #nav > li > a { font-size: 0px; }
@@ -524,6 +542,7 @@ div.username { display: none !important; }
   -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3) inset;
   */ -moz-transition-duration: 0.2s; -webkit-transition-duration: 0.2s; transition-duration: 0.2s; }
 #searchform input[type=text]:focus { width: 250px; /*border-color: rgba(255,255,255,0.5);*/ background: rgba(0, 0, 0, 0.2); text-align: left; }
+#searchform .fa-refresh { position: absolute; top: 17px; right: 12px; color: #e0e0e0; }
 /*
  * MODxRE2 styles
  * css above is original MODxRE

@@ -23,6 +23,18 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 	$initMainframeAction = 2; // welcome.static
 }
 
+$bodyClass = '';
+
+if(isset($_COOKIE['MODX_positionSideBar'])) {
+	$MODX_positionSideBar = $_COOKIE['MODX_positionSideBar'];
+} else {
+	$MODX_positionSideBar = $modx->config['manager_tree_width'];
+}
+
+if(!$MODX_positionSideBar) {
+	$bodyClass .= 'sidebar-closed';
+}
+
 ?>
 <!DOCTYPE html>
 <html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"'; ?>>
@@ -32,72 +44,79 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
 	<style>
-		#tree { width: <?php echo $modx->config['manager_tree_width'] ?>px }
-		#main, #resizer { left: <?php echo $modx->config['manager_tree_width'] ?>px }
+		#tree { width: <?php echo $MODX_positionSideBar ?>px }
+		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>px }
 	</style>
 </head>
-<body id="frameset" class="tree-show">
-<div id="resizer">
-	<a id="hideMenu">
-		<i class="fa fa-chevron-right"></i>
-	</a>
-</div>
-<div id="mainMenu">
-	<iframe name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0"></iframe>
-</div>
-<div id="tree">
-	<iframe name="tree" src="index.php?a=1&amp;f=tree" scrolling="no" frameborder="0"></iframe>
-</div>
-<div id="main">
-	<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="if (mainMenu.stopWork()) mainMenu.stopWork(); scrollWork();"></iframe>
-</div>
-<div class="dropdown"></div>
+<body class="<?php echo $bodyClass ?>">
+<div id="frameset">
+	<div id="resizer">
+		<a class="switcher"><i class="fa fa-chevron-left"></i></a> <i class="handler"></i></div>
+	<div id="mainMenu">
+		<iframe name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0"></iframe>
+	</div>
+	<div id="tree">
+		<iframe name="tree" src="index.php?a=1&amp;f=tree" scrolling="no" frameborder="0"></iframe>
+	</div>
+	<div id="main">
+		<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="if (mainMenu.stopWork()) mainMenu.stopWork(); scrollWork();"></iframe>
+	</div>
+	<div class="dropdown"></div>
+	<div id="searchresult"></div>
+	<script type="text/javascript">
 
-<script type="text/javascript">
+		var reloadmenu = function() {
+			mainMenu.reloadmenu()
+		};
 
-	//save scrollPosition
-	function getQueryVariable(variable, query) {
-		var vars = query.split('&');
-		for(var i = 0; i < vars.length; i++) {
-			var pair = vars[i].split('=');
-			if(decodeURIComponent(pair[0]) == variable) {
-				return decodeURIComponent(pair[1]);
-			}
-		}
-	}
+		mainMenu.reloadtree = function() {
+			mainMenu.reloadtree()
+		};
 
-	function scrollWork() {
-		var frm = document.getElementById("mainframe").contentWindow;
-		currentPageY = localStorage.getItem('page_y');
-		pageUrl = localStorage.getItem('page_url');
-		if(currentPageY === undefined) {
-			localStorage.setItem('page_y', 0);
-		}
-		if(pageUrl === null) {
-			pageUrl = frm.location.search.substring(1);
-		}
-		if(getQueryVariable('a', pageUrl) == getQueryVariable('a', frm.location.search.substring(1))) {
-			if(getQueryVariable('id', pageUrl) == getQueryVariable('id', frm.location.search.substring(1))) {
-				frm.scrollTo(0, currentPageY);
+		//save scrollPosition
+		function getQueryVariable(variable, query) {
+			var vars = query.split('&');
+			for(var i = 0; i < vars.length; i++) {
+				var pair = vars[i].split('=');
+				if(decodeURIComponent(pair[0]) == variable) {
+					return decodeURIComponent(pair[1]);
+				}
 			}
 		}
 
-		frm.onscroll = function() {
-			if(frm.pageYOffset > 0) {
-				localStorage.setItem('page_y', frm.pageYOffset);
-				localStorage.setItem('page_url', frm.location.search.substring(1));
+		function scrollWork() {
+			var frm = document.getElementById("mainframe").contentWindow;
+			currentPageY = localStorage.getItem('page_y');
+			pageUrl = localStorage.getItem('page_url');
+			if(currentPageY === undefined) {
+				localStorage.setItem('page_y', 0);
+			}
+			if(pageUrl === null) {
+				pageUrl = frm.location.search.substring(1);
+			}
+			if(getQueryVariable('a', pageUrl) == getQueryVariable('a', frm.location.search.substring(1))) {
+				if(getQueryVariable('id', pageUrl) == getQueryVariable('id', frm.location.search.substring(1))) {
+					frm.scrollTo(0, currentPageY);
+				}
+			}
+
+			frm.onscroll = function() {
+				if(frm.pageYOffset > 0) {
+					localStorage.setItem('page_y', frm.pageYOffset);
+					localStorage.setItem('page_url', frm.location.search.substring(1));
+				}
+			}
+
+			function ExtractNumber(value) {
+				var n = parseInt(value);
+				return n == null || isNaN(n) ? 0 : n
 			}
 		}
 
-		function ExtractNumber(value) {
-			var n = parseInt(value);
-			return n == null || isNaN(n) ? 0 : n
-		}
-	}
-
-</script>
-<?php
-$modx->invokeEvent('OnManagerFrameLoader', array('action' => $action));
-?>
+	</script>
+	<?php
+	$modx->invokeEvent('OnManagerFrameLoader', array('action' => $action));
+	?>
+</div>
 </body>
 </html>

@@ -7,6 +7,12 @@ if(!array_key_exists('mail_check_timeperiod', $modx->config) || !is_numeric($mod
 }
 $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
+
+if(!isset($modx->config['manager_tree_width'])) {
+	$modx->config['manager_tree_width'] = '320';
+}
+
+$useEVOModal = '';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"'; ?>>
@@ -228,6 +234,24 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		function setLastClickedElement(type, id) {
 			localStorage.setItem('MODX_lastClickedElement', '[' + type + ',' + id + ']');
 		}
+
+		function modxOpenWindow(data) {
+			if(typeof data == 'object') {
+				if(data.width == undefined)
+					data.width = parent.window.outerWidth * 0.9;
+				if(data.height == undefined)
+					data.height = parent.window.outerHeight * 0.8;
+				if(data.left == undefined)
+					data.left = parent.window.outerWidth * 0.05;
+				if(data.top == undefined)
+					data.top = parent.window.outerHeight * 0.1;
+				if(data.title == undefined)
+					data.title = Math.floor((Math.random() * 999999) + 1);
+				if(data.url !== undefined)
+					window.open(data.url, data.title, 'width=' + data.width + ',height=' + data.height + ',top=' + data.top + ',left=' + data.left + ',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no');
+				return false;
+			}
+		}
 	</script>
 </head>
 <body id="topMenu" class="<?php echo $modx_textdir ? 'rtl' : 'ltr' ?>">
@@ -350,7 +374,7 @@ if(is_array($evtOut)) {
 <div id="searchform">
 	<form action="index.php?a=71#results" method="post" target="main">
 		<input type="hidden" value="Search" name="submitok" />
-		<input type="text" name="searchid" size="25" class="form-control input-sm" placeholder="<?php echo $_lang['search'] ?>">
+		<input type="text" name="searchid" size="25" class="form-control input-sm" autocomplete="off" placeholder="<?php echo $_lang['search'] ?>">
 	</form>
 </div>
 <div id="menuSplitter"></div>
@@ -360,133 +384,98 @@ if(is_array($evtOut)) {
 		stopWork();
 		parent.scrollWork();
 
-		jQuery('#hideMenu', jQuery(parent.document)).click(function() {
-			var pos = 0;
-			if(jQuery('#tree', jQuery(parent.document)).width()) {
-				jQuery(parent.document.body).removeClass('tree-show').addClass('tree-hide');
-			} else {
-				jQuery(parent.document.body).addClass('tree-show').removeClass('tree-hide');
-				pos = 320
+		// resizer
+		var pos = {
+			x: <?php echo $modx->config['manager_tree_width'] ?>
+		};
+
+		if(!localStorage.getItem('MODX_lastPositionSideBar')) {
+			localStorage.setItem('MODX_lastPositionSideBar', <?php echo $modx->config['manager_tree_width'] ?>);
+		}
+
+		jQuery('#resizer .switcher', parent.document).click(function() {
+			if(!localStorage.getItem('MODX_lastPositionSideBar')) {
+				localStorage.setItem('MODX_lastPositionSideBar', <?php echo $modx->config['manager_tree_width'] ?>);
 			}
-			jQuery(parent.document.body).removeClass('resizer-move');
-			jQuery('#tree', jQuery(parent.document)).css({
-				width: pos
+
+			if(jQuery('#main', parent.document).offset().left) {
+				pos.x = 0;
+				jQuery(parent.document.body).addClass('sidebar-closed');
+				localStorage.setItem('MODX_lastPositionSideBar', jQuery('#main', parent.document).offset().left);
+			} else {
+				pos.x = parseInt(localStorage.getItem('MODX_lastPositionSideBar'));
+				if(pos.x == 0) {
+					pos.x = modx.sidebarWidth
+				}
+				jQuery(parent.document.body).removeClass('sidebar-closed');
+				localStorage.setItem('MODX_lastPositionSideBar', 0);
+			}
+
+			jQuery('#tree', parent.document).css({
+				width: pos.x
 			});
-			jQuery('#resizer, #main', jQuery(parent.document)).css({
-				left: pos
+
+			jQuery('#resizer, #main', parent.document).css({
+				left: pos.x
 			});
+
+			parent.document.cookie = 'MODX_positionSideBar=' + pos.x;
 		});
 
-		// resizer
-		jQuery(parent.document).on('mousedown touchstart', '#resizer', function(e) {
-			var pos = {};
-			pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
-
-			jQuery(parent.document.body).addClass('resizer-move');
-
-			jQuery(parent.document).on('mousemove touchmove', function(e) {
+		jQuery('#resizer .handler', parent.document).on('mousedown touchstart', function(e) {
+			if(!jQuery(parent.document.body).hasClass('sidebar-closed')) {
 				pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
 
-				if(parseInt(pos.x) > 0) {
-					jQuery(parent.document.body).addClass('tree-show').removeClass('tree-hide')
-				} else {
-					pos.x = 0;
-					jQuery(parent.document.body).removeClass('tree-show').addClass('resizer-move')
+				jQuery('#frameset', parent.document).append('<div id="resizer_mask"><div>');
+				jQuery('#resizer', parent.document).addClass('hover');
+
+				jQuery(parent.document.body).on('mousemove touchmove', function(e) {
+					pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
+
+					if(parseInt(pos.x) < 100) {
+						pos.x = 100;
+					}
+					
+					console.log(pos.x);
+
+					jQuery('#tree', parent.document).css({
+						width: pos.x
+					});
+					jQuery('#resizer, #main', parent.document).css({
+						left: pos.x
+					})
+				});
+
+				jQuery(parent.document).one('mouseup touchend', function(e) {
+					pos.x = jQuery('#main', parent.document).offset().left
+					jQuery(parent.document).off('mousemove touchmove');
+					jQuery('#resizer', parent.document).removeClass('hover');
+					jQuery('#resizer_mask', parent.document).remove();
+					localStorage.setItem('MODX_lastPositionSideBar', pos.x);
+					parent.document.cookie = 'MODX_positionSideBar=' + pos.x;
+				})
+			} else {
+				pos.x = parseInt(localStorage.getItem('MODX_lastPositionSideBar'));
+				if(pos.x == 0) {
+					pos.x = <?php echo $modx->config['manager_tree_width'] ?>
 				}
 
-				jQuery('#tree', jQuery(parent.document)).css({
+				jQuery(parent.document.body).removeClass('sidebar-closed');
+				localStorage.setItem('MODX_lastPositionSideBar', 0);
+
+				jQuery('#tree', parent.document).css({
 					width: pos.x
 				});
-				jQuery('#resizer, #main', jQuery(parent.document)).css({
+				jQuery('#resizer, #main', parent.document).css({
 					left: pos.x
 				});
-			});
-
-			jQuery(parent.document).one('mouseup touchend', function(e) {
-				if(typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length) {
-					pos.x = e.originalEvent.touches[0].clientX
-				} else if(typeof e.originalEvent.changedTouches != 'undefined' && e.originalEvent.changedTouches.length) {
-					pos.x = e.originalEvent.changedTouches[0].clientX
-				} else {
-					pos.x = e.clientX
-				}
-
-				jQuery(parent.document).off('mousemove touchmove');
-				if(parseInt(pos.x) > 0) {
-					jQuery(parent.document.body).removeClass('resizer-move').addClass('tree-show').removeClass('tree-hide')
-				} else {
-					jQuery(parent.document.body).removeClass('resizer-move').removeClass('tree-show').addClass('tree-hide')
-				}
-			});
+				parent.document.cookie = 'MODX_positionSideBar=' + pos.x;
+			}
 
 		});
 
 		// dropdown mainMenu
-
 		var dropdown = jQuery(parent.document).find('.dropdown');
-
-		// Event click
-//		jQuery('.dropdown-toggle').click(function() {
-//			var $this = jQuery(this);
-//			var el = $this.parent().find('.dropdown-menu');
-//			var dropdown_menu = el.clone();
-//			var dropdown_index = el.index('.dropdown-menu');
-//			var timer = false;
-//
-//			jQuery('a', dropdown_menu).each(function(index, element) {
-//				if(jQuery(element).attr('onclick')) {
-//					jQuery(element).attr('onclick', jQuery(element).attr('onclick').search('setLastClickedElement') == 0 ? 'document.mainMenu.' + jQuery(element).attr('onclick') : jQuery(element).attr('onclick'))
-//				}
-//			});
-//
-//			jQuery('a', dropdown_menu).click(function() {
-//				dropdown.removeClass('show');
-//				jQuery('#nav li').removeClass('active');
-//				el.parent('li').addClass('active')
-//			});
-//
-//			if(jQuery(this).offset().left > jQuery(window).width() / 2) {
-//				dropdown_menu.css({
-//					left: 'auto',
-//					right: jQuery(window).width() - (jQuery(this).offset().left + jQuery(this).outerWidth()) + 'px'
-//				})
-//			} else {
-//				dropdown_menu.css({
-//					left: jQuery(this).offset().left + 'px',
-//					right: 'auto'
-//				})
-//			}
-//
-//			if(dropdown.data('index') != dropdown_index) {
-//				dropdown.removeClass('show');
-//				dropdown.html(dropdown_menu).addClass('show').data('index', dropdown_index)
-//			} else {
-//				dropdown.toggleClass('show')
-//			}
-//
-//			dropdown.hover(function() {
-//			}, function() {
-//				dropdown.removeClass('show');
-//				$this.removeClass('hover');
-//			});
-//
-//			$this.hover(function() {
-//			}, function() {
-//				var $this = jQuery(this);
-//				dropdown.removeClass('show');
-//				$this.removeClass('hover');
-//
-//				dropdown.hover(function() {
-//					dropdown.addClass('show');
-//					jQuery('.dropdown-menu').eq(dropdown.data('index')).parent().find('.dropdown-toggle').addClass('hover')
-//				}, function() {
-//					dropdown.removeClass('show');
-//					$this.removeClass('hover')
-//				});
-//			})
-//
-//		});
-		// Event
 
 		// Event hover
 		jQuery('.dropdown-toggle').hover(function() {
@@ -504,7 +493,7 @@ if(is_array($evtOut)) {
 			jQuery('a', dropdown_menu).click(function() {
 				dropdown.removeClass('show');
 				jQuery('#nav li, #supplementalNav li').removeClass('active');
-				el.parent('li').addClass('active')
+				el.parent('li').addClass('active');
 			});
 
 			if(jQuery(this).offset().left > jQuery(window).width() / 2) {
@@ -539,24 +528,29 @@ if(is_array($evtOut)) {
 			});
 		});
 		// Event
+		
+		// modx Search
+		var searchresult = jQuery(parent.document).find('#searchresult');
+		var searchresultWidth = 400/*(jQuery(this).outerWidth() - jQuery('#searchform').offset().left)*/;
+
+		searchresult.css({
+			'width': searchresultWidth + 'px',
+			'margin-right': -searchresultWidth - 50 + 'px'
+		});
+
+		var modalParams = {
+			width: parseInt(parent.window.outerWidth * 0.9),
+			height: parseInt(parent.window.outerHeight * 0.8),
+			left: parseInt(parent.window.outerWidth * 0.05),
+			top: parseInt(parent.window.outerHeight * 0.1)
+		};
 
 		jQuery('#searchform input').on('keyup', function(e) {
+			var self = this;
 			e.preventDefault();
-			var searchresult;
+			jQuery(this).next('.fa').remove();
 
-			if(!jQuery('#searchresult').length) {
-				searchresult = jQuery('<div id="searchresult" style="display: none"></div>');
-				jQuery(this).parent().append(searchresult);
-			} else {
-				searchresult = jQuery('#searchresult')
-			}
-
-			dropdown.css({
-				left: 'auto',
-				right: jQuery(window).width() - (jQuery(this).parent().offset().left + jQuery(this).parent().outerWidth()) + 'px'
-			});
-
-			if(jQuery(this).val() !== '') {
+			if(this.value.length !== '' && this.value.length > 2) {
 				var url = 'index.php?a=71&ajax=1';
 				var params = {
 					searchid: jQuery(this).val(),
@@ -566,20 +560,26 @@ if(is_array($evtOut)) {
 					url: url,
 					data: params,
 					method: 'post',
+					beforeSend: function() {
+						jQuery(self).after('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+					},
 					dataFilter: function(data) {
 						data = jQuery(data).find('.ajaxSearchResults');
 						jQuery('a', data).each(function(i, el) {
-							jQuery(el).attr('target', 'main')
+							jQuery(el).attr('target', 'main').append('<span onclick="<?php echo($useEVOModal ? 'top.EVO.modal.show' : 'top.mainMenu.modxOpenWindow') ?>({title:\'' + el.innerText + '\',id:\'' + el.id + '\',url:\'' + el.href + '\',width:\'' + modalParams.width + 'px\',height:\'' + modalParams.height + 'px\',left:\'' + modalParams.left + 'px\',top:\'' + modalParams.top + 'px\'});return false;"><?php echo $_style['icons_external_link']?></span>');
 						});
-						return data;
+						return data.length ? data.html() : '';
 					},
 					success: function(data) {
-						if(data.length) {
-							searchresult.html(data);
-
-							dropdown.html(searchresult.clone()).addClass('show')
+						jQuery(self).next('.fa').fadeOut();
+						if(data) {
+							searchresult.html('<div class="ajaxSearchResults">' + data + '</div>').addClass('open');
+							jQuery('a', searchresult).click(function() {
+								jQuery('.selected', searchresult).removeClass('selected');
+								jQuery(this).addClass('selected')
+							})
 						} else {
-							dropdown.removeClass('show').empty()
+							searchresult.removeClass('open').empty()
 						}
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
@@ -588,30 +588,39 @@ if(is_array($evtOut)) {
 				})
 
 			} else {
-				dropdown.removeClass('show').empty()
+				searchresult.removeClass('open').empty()
 			}
-			dropdown.hover(function() {
-			}, function() {
-				dropdown.removeClass('show');
-			})
-		}).on('click', function() {
-			dropdown.css({
-				left: 'auto',
-				right: jQuery(window).width() - (jQuery(this).parent().offset().left + jQuery(this).parent().outerWidth()) + 'px'
-			});
-			if(jQuery('#searchresult').length) {
-				dropdown.html(jQuery('#searchresult').clone());
-				dropdown.addClass('show')
+		}).on('focus', function() {
+			if(jQuery('.ajaxSearchResults', searchresult).length) {
+				searchresult.addClass('open')
 			}
-
 		}).on('blur', function() {
-			if(dropdown.is(':hover')) {
-				dropdown.addClass('show')
-			} else {
-				dropdown.removeClass('show')
-			}
+			setTimeout(function() {
+				if(!searchresult.is(':hover')) {
+					searchresult.removeClass('open')
+				}
+			}, 300)
+		});
 
-		})
+		jQuery('#searchform').hover(function() {
+			if(jQuery('.ajaxSearchResults', searchresult).length) {
+				searchresult.addClass('open')
+			}
+		}, function() {
+			setTimeout(function() {
+				if(!searchresult.is(':hover')) {
+					searchresult.removeClass('open')
+				}
+			}, 300)
+		});
+
+		searchresult.hover(function() {
+			jQuery(this).addClass('open')
+		}, function() {
+			jQuery(this).removeClass('open')
+		});
+
+		// end modx Search
 
 	});
 </script>
