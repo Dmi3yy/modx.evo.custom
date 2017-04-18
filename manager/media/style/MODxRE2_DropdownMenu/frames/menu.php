@@ -404,7 +404,7 @@ if(is_array($evtOut)) {
 
 			jQuery('a', dropdown_menu).each(function(index, element) {
 				if(jQuery(element).attr('onclick')) {
-					jQuery(element).attr('onclick', jQuery(element).attr('onclick').search('setLastClickedElement') == 0 ? 'document.mainMenu.' + jQuery(element).attr('onclick') : jQuery(element).attr('onclick'))
+					jQuery(element).attr('onclick', jQuery(element).attr('onclick').search('setLastClickedElement') == 0 ? 'top.mainMenu.' + jQuery(element).attr('onclick') : jQuery(element).attr('onclick'))
 				}
 			});
 
