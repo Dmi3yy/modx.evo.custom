@@ -73,18 +73,21 @@ $useEVOModal = '';
 
 
 		function setTreeFrameWidth(pos) {
+			if(pos > 0) {
+				parent.document.getElementById('frameset').className = 'sidebar-opened';
+				localStorage.setItem('MODX_lastPositionSideBar', 0);
+			} else {
+				parent.document.getElementById('frameset').className = 'sidebar-closed';
+				localStorage.setItem('MODX_lastPositionSideBar', parseInt(parent.document.getElementById('tree').offsetWidth));
+			}
+			parent.document.cookie = 'MODX_positionSideBar=' + pos;
 			parent.document.getElementById('tree').style.width = pos + 'px';
 			parent.document.getElementById('resizer').style.left = pos + 'px';
 			parent.document.getElementById('main').style.left = pos + 'px';
-			if(pos > 0) {
-				parent.document.getElementById('frameset').classList.add('tree-show');
-			} else {
-				parent.document.getElementById('frameset').classList.remove('tree-show');
-			}
 		}
 
 		function toggleTreeFrame() {
-			var pos = parseInt(parent.document.getElementById('tree').style.width) != 0 ? 0 : 320;
+			var pos = parseInt(parent.document.getElementById('tree').offsetWidth) != 0 ? 0 : (localStorage.getItem('MODX_lastPositionSideBar') ? parseInt(localStorage.getItem('MODX_lastPositionSideBar')) : 320);
 			setTreeFrameWidth(pos);
 		}
 
@@ -388,91 +391,6 @@ if(is_array($evtOut)) {
 		var pos = {
 			x: <?php echo $modx->config['manager_tree_width'] ?>
 		};
-
-		if(!localStorage.getItem('MODX_lastPositionSideBar')) {
-			localStorage.setItem('MODX_lastPositionSideBar', <?php echo $modx->config['manager_tree_width'] ?>);
-		}
-
-		jQuery('#resizer .switcher', parent.document).click(function() {
-			if(!localStorage.getItem('MODX_lastPositionSideBar')) {
-				localStorage.setItem('MODX_lastPositionSideBar', <?php echo $modx->config['manager_tree_width'] ?>);
-			}
-
-			if(jQuery('#main', parent.document).offset().left) {
-				pos.x = 0;
-				jQuery(parent.document.body).addClass('sidebar-closed');
-				localStorage.setItem('MODX_lastPositionSideBar', jQuery('#main', parent.document).offset().left);
-			} else {
-				pos.x = parseInt(localStorage.getItem('MODX_lastPositionSideBar'));
-				if(pos.x == 0) {
-					pos.x = modx.sidebarWidth
-				}
-				jQuery(parent.document.body).removeClass('sidebar-closed');
-				localStorage.setItem('MODX_lastPositionSideBar', 0);
-			}
-
-			jQuery('#tree', parent.document).css({
-				width: pos.x
-			});
-
-			jQuery('#resizer, #main', parent.document).css({
-				left: pos.x
-			});
-
-			parent.document.cookie = 'MODX_positionSideBar=' + pos.x;
-		});
-
-		jQuery('#resizer .handler', parent.document).on('mousedown touchstart', function(e) {
-			if(!jQuery(parent.document.body).hasClass('sidebar-closed')) {
-				pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
-
-				jQuery('#frameset', parent.document).append('<div id="resizer_mask"><div>');
-				jQuery('#resizer', parent.document).addClass('hover');
-
-				jQuery(parent.document.body).on('mousemove touchmove', function(e) {
-					pos.x = typeof e.originalEvent.touches != 'undefined' && e.originalEvent.touches.length ? e.originalEvent.touches[0].clientX || e.originalEvent.changedTouches[0].clientX : e.clientX;
-
-					if(parseInt(pos.x) < 100) {
-						pos.x = 100;
-					}
-					
-					console.log(pos.x);
-
-					jQuery('#tree', parent.document).css({
-						width: pos.x
-					});
-					jQuery('#resizer, #main', parent.document).css({
-						left: pos.x
-					})
-				});
-
-				jQuery(parent.document).one('mouseup touchend', function(e) {
-					pos.x = jQuery('#main', parent.document).offset().left
-					jQuery(parent.document).off('mousemove touchmove');
-					jQuery('#resizer', parent.document).removeClass('hover');
-					jQuery('#resizer_mask', parent.document).remove();
-					localStorage.setItem('MODX_lastPositionSideBar', pos.x);
-					parent.document.cookie = 'MODX_positionSideBar=' + pos.x;
-				})
-			} else {
-				pos.x = parseInt(localStorage.getItem('MODX_lastPositionSideBar'));
-				if(pos.x == 0) {
-					pos.x = <?php echo $modx->config['manager_tree_width'] ?>
-				}
-
-				jQuery(parent.document.body).removeClass('sidebar-closed');
-				localStorage.setItem('MODX_lastPositionSideBar', 0);
-
-				jQuery('#tree', parent.document).css({
-					width: pos.x
-				});
-				jQuery('#resizer, #main', parent.document).css({
-					left: pos.x
-				});
-				parent.document.cookie = 'MODX_positionSideBar=' + pos.x;
-			}
-
-		});
 
 		// dropdown mainMenu
 		var dropdown = jQuery(parent.document).find('.dropdown');

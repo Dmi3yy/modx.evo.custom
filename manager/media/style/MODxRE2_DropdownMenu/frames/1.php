@@ -48,10 +48,13 @@ if(!$MODX_positionSideBar) {
 		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>px }
 	</style>
 </head>
-<body class="<?php echo $bodyClass ?>">
-<div id="frameset">
-	<div id="resizer">
-		<a class="switcher"><i class="fa fa-chevron-left"></i></a> <i class="handler"></i></div>
+<body>
+<div id="frameset" class="<?php echo $bodyClass ?>">
+    <div id="resizer">
+        <a id="hideMenu" onclick="mainMenu.toggleTreeFrame();">
+			<i class="fa fa-angle-left"></i>
+		</a>
+    </div>	
 	<div id="mainMenu">
 		<iframe name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0"></iframe>
 	</div>
@@ -106,13 +109,90 @@ if(!$MODX_positionSideBar) {
 					localStorage.setItem('page_url', frm.location.search.substring(1));
 				}
 			}
-
-			function ExtractNumber(value) {
-				var n = parseInt(value);
-				return n == null || isNaN(n) ? 0 : n
-			}
 		}
 
+        function ExtractNumber(value) {
+            var n = parseInt(value);
+            return n == null || isNaN(n) ? 0 : n
+        }
+
+		// resizer 
+        var _startY = 48;
+        var _dragElement;
+        var _oldZIndex = 999;
+        var _left;
+        var mask = document.createElement('div');
+        mask.id = 'mask_resizer';
+        mask.style.zIndex = _oldZIndex;
+
+		if(!localStorage.getItem('MODX_lastPositionSideBar')) {
+			localStorage.setItem('MODX_lastPositionSideBar', <?php echo $modx->config['manager_tree_width'] ?>);
+		}
+		
+        InitDragDrop();
+
+        function InitDragDrop() {
+            document.getElementById('resizer').onmousedown = OnMouseDown;
+            document.getElementById('resizer').onmouseup = OnMouseUp
+        }
+
+        function OnMouseDown(e) {
+            if (e == null) e = window.event;
+            _dragElement = e.target != null ? e.target : e.srcElement;
+            if ((e.buttons == 1 && window.event != null || e.button == 0) && _dragElement.id == 'resizer') {
+                _oldZIndex = _dragElement.style.zIndex;
+                _dragElement.style.zIndex = 10000;
+                _dragElement.style.background = '#bbb';
+				localStorage.setItem('MODX_lastPositionSideBar', (_dragElement.offsetLeft > 0 ? _dragElement.offsetLeft : 0));
+                document.body.appendChild(mask)
+                document.onmousemove = OnMouseMove;
+                document.body.focus();
+                document.onselectstart = function () {
+                    return false
+                };
+                _dragElement.ondragstart = function () {
+                    return false
+                };
+                return false
+            }
+        }
+
+        function OnMouseMove(e) {
+            if (e == null) var e = window.event;
+			if(e.clientX > 0) {
+				_left = e.clientX
+			} else {
+				_left  = 0;
+			}
+            _dragElement.style.left = _left + 'px';
+            document.getElementById('tree').style.width = _left + 'px';
+            document.getElementById('main').style.left = _left + 'px'
+			if(e.clientX < -2) {
+				OnMouseUp(e);
+			}
+        }
+
+        function OnMouseUp(e) {
+            if (_dragElement != null && e.button == 0 && _dragElement.id == 'resizer') {
+				if(e.clientX > 0) {
+					document.getElementById('frameset').className = 'sidebar-opened';
+					_left = e.clientX;
+				} else {
+					document.getElementById('frameset').className = 'sidebar-closed';
+					_left  = 0;
+				}
+				document.cookie = 'MODX_positionSideBar=' + _left;
+                _dragElement.style.zIndex = _oldZIndex;
+                _dragElement.style.background = '';
+                _dragElement.ondragstart = null;
+                _dragElement = null;
+                document.body.removeChild(mask);
+                document.onmousemove = null;
+                document.onselectstart = null;
+            }
+        }
+		// end resizer
+		
 	</script>
 	<?php
 	$modx->invokeEvent('OnManagerFrameLoader', array('action' => $action));

@@ -366,5 +366,3 @@ function highlightingCoincidence($text, $search) {
   $regexp = '!(' . str_replace(array('(', ')'), array('\(', '\)'), $search) . ')!isu';
   return preg_replace($regexp, '<span class="text-danger">$1</span>' , $text);
 }
-
-?>
