@@ -263,7 +263,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 #frameset #searchresult .ajaxSearchResults a:hover { color: #333; background-color: #fff; }
 #frameset #searchresult .ajaxSearchResults a .fa { position: relative; float: right; margin: -3px 0; padding: 4px 5px; color: #3d5764 }
 #frameset #searchresult .ajaxSearchResults a.selected { background-color: #0b9991; color: #fff; font-weight: 700; }
-#frameset #searchresult .ajaxSearchResults a .text-danger { color: #3697CD; font-weight: 700 }
+#frameset #searchresult .ajaxSearchResults a .text-danger { font-weight: 700 }
 /* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu { min-width: 450px; background: url("images/misc/headers.jpg") repeat scroll 0 0 #23393C; }
 #Navcontainer { color: #fff; }
