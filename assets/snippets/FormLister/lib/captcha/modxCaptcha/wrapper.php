@@ -31,7 +31,7 @@ class ModxCaptchaWrapper
     {
         $this->cfg = $cfg;
         $this->captcha = new \ModxCaptcha($modx, \APIhelpers::getkey($this->cfg, 'width', 100),
-            \APIhelpers::getkey($this->cfg, 'width', 60));
+            \APIhelpers::getkey($this->cfg, 'height', 60));
     }
 
     /**
@@ -65,7 +65,7 @@ class ModxCaptchaWrapper
             $out = MODX_BASE_URL . $connectorDir . 'connector.php?formid=' . \APIhelpers::getkey($this->cfg, 'id',
                     'modx');
             $out .= '&w=' . \APIhelpers::getkey($this->cfg, 'width', 100);
-            $out .= '&h=' . \APIhelpers::getkey($this->cfg, 'width', 60);
+            $out .= '&h=' . \APIhelpers::getkey($this->cfg, 'height', 60);
         }
 
         return $out;
