@@ -251,7 +251,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 #frameset .dropdown-menu a, #frameset .dropdown-menu span { display: block; position: relative; padding: 10px 15px; text-decoration: none; border-bottom: 1px solid rgba(0, 0, 0, 0.1); color: #39545e }
 #frameset .dropdown-menu li:last-child a, #frameset .dropdown-menu li:last-child span { border: none }
 #frameset .dropdown-menu a:hover::after { position: absolute; z-index: -1; content: ""; left: 0px; top: -1px; right: 0px; bottom: -1px; background-color: #0b9991; }
-#frameset .dropdown-menu a:hover { color: #fff }
+#frameset .dropdown-menu a:hover,#frameset .dropdown-menu a:hover .fa  { color: #fff }
 #frameset .dropdown-menu a .fa { margin-right: 10px; color: #39545e; width: 15px; text-align: center; }
 #frameset .dropdown-menu span { text-align: center; font-size: 11px; color: #999; }
 #frameset .dropdown #searchresult { display: block !important }
