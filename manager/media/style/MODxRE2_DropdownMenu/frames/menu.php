@@ -461,49 +461,53 @@ if(is_array($evtOut)) {
 			left: parseInt(parent.window.outerWidth * 0.05),
 			top: parseInt(parent.window.outerHeight * 0.1)
 		};
-
+		
+		var searchtimer = 0;
+		
 		jQuery('#searchform input').on('keyup', function(e) {
 			var self = this;
 			e.preventDefault();
-			jQuery(this).next('.fa').remove();
-
+			jQuery(this).parent().find('.fa-refresh').remove();
+			clearTimeout(searchtimer);
+			
 			if(this.value.length !== '' && this.value.length > 2) {
 				var url = 'index.php?a=71&ajax=1';
 				var params = {
 					searchid: jQuery(this).val(),
 					submitok: 'Search'
 				};
-				jQuery.ajax({
-					url: url,
-					data: params,
-					method: 'post',
-					beforeSend: function() {
-						jQuery(self).after('<i class="fa fa-refresh fa-spin fa-fw"></i>');
-					},
-					dataFilter: function(data) {
-						data = jQuery(data).find('.ajaxSearchResults');
-						jQuery('a', data).each(function(i, el) {
-							jQuery(el).attr('target', 'main').append('<span onclick="<?php echo($useEVOModal ? 'top.EVO.modal.show' : 'top.mainMenu.modxOpenWindow') ?>({title:\'' + el.innerText + '\',id:\'' + el.id + '\',url:\'' + el.href + '\',width:\'' + modalParams.width + 'px\',height:\'' + modalParams.height + 'px\',left:\'' + modalParams.left + 'px\',top:\'' + modalParams.top + 'px\'});return false;"><?php echo $_style['icons_external_link']?></span>');
-						});
-						return data.length ? data.html() : '';
-					},
-					success: function(data) {
-						jQuery(self).next('.fa').fadeOut();
-						if(data) {
-							searchresult.html('<div class="ajaxSearchResults">' + data + '</div>').addClass('open');
-							jQuery('a', searchresult).click(function() {
-								jQuery('.selected', searchresult).removeClass('selected');
-								jQuery(this).addClass('selected')
-							})
-						} else {
-							searchresult.removeClass('open').empty()
+				searchtimer = setTimeout(function() {
+					jQuery.ajax({
+						url: url,
+						data: params,
+						method: 'post',
+						beforeSend: function() {
+							jQuery(self).parent().append('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+						},
+						dataFilter: function(data) {
+							data = jQuery(data).find('.ajaxSearchResults');
+							jQuery('a', data).each(function(i, el) {
+								jQuery(el).attr('target', 'main').append('<span onclick="<?php echo($useEVOModal ? 'top.EVO.modal.show' : 'top.mainMenu.modxOpenWindow') ?>({title:\'' + el.innerText + '\',id:\'' + el.id + '\',url:\'' + el.href + '\',width:\'' + modalParams.width + 'px\',height:\'' + modalParams.height + 'px\',left:\'' + modalParams.left + 'px\',top:\'' + modalParams.top + 'px\'});return false;"><?php echo $_style['icons_external_link']?></span>');
+							});
+							return data.length ? data.html() : '';
+						},
+						success: function(data) {
+							jQuery(self).next('.fa').fadeOut();
+							if(data) {
+								searchresult.html('<div class="ajaxSearchResults">' + data + '</div>').addClass('open');
+								jQuery('a', searchresult).click(function() {
+									jQuery('.selected', searchresult).removeClass('selected');
+									jQuery(this).addClass('selected')
+								})
+							} else {
+								searchresult.removeClass('open').empty()
+							}
+						},
+						error: function(xhr, ajaxOptions, thrownError) {
+							alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 						}
-					},
-					error: function(xhr, ajaxOptions, thrownError) {
-						alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-					}
-				})
-
+					})
+				}, 600)
 			} else {
 				searchresult.removeClass('open').empty()
 			}
