@@ -18,7 +18,7 @@ if(isset($_REQUEST['searchid'])) {
   <ul class="actionButtons">
     <li id="Button5" class="transition">
       <a href="#" onClick="documentDirty=false;document.location.href='index.php?a=2';">
-        <img alt="icons_cancel" src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel'] ?>
+        <i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['cancel']?></span>
       </a>
     </li>
   </ul>
@@ -74,11 +74,11 @@ if(isset($_REQUEST['searchid'])) {
           <td colspan="4">
             <ul class="actionButtons">
               <li>
-                <a class="default" href="#" onClick="document.searchform.submitok.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['search'] ?>
+                <a class="default" href="#" onClick="document.searchform.submitok.click();"><i class="<?php echo $_style["actions_search"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['search'] ?></span>
                 </a>
               </li>
               <li>
-                <a href="index.php?a=2"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel'] ?>
+                <a href="index.php?a=2"><i class="<?php echo $_style["actions_cancel"] ?>" aria-hidden="true"></i> <span><?php echo $_lang['cancel']?></span>
                 </a>
               </li>
             </ul>
@@ -225,7 +225,7 @@ if(isset($_REQUEST['submitok'])) {
               ?>
               <tr>
                 <td align="center">
-                  <a href="index.php?a=3&id=<?php echo $row['id']; ?>" title="<?php echo $_lang['search_view_docdata']; ?>"><img src="<?php echo $_style['icons_resource_overview']; ?>" /></a>
+                  <a href="index.php?a=3&id=<?php echo $row['id']; ?>" title="<?php echo $_lang['search_view_docdata']; ?>"><i class="<?php echo $_style['icons_resource_overview']; ?>" /></i></a>
                 </td>
                 <td><?php echo $row['id']; ?></td>
                 <?php
