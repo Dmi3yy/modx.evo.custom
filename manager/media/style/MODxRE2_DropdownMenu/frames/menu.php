@@ -323,6 +323,7 @@ if(is_array($evtOut)) {
 				?>
 			</ul>
 		</li>
+		<?php if($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help') ) { ?>
 		<li>
 			<a class="dropdown-toggle">
 				<i class="fa fa-sliders" aria-hidden="true"></i>
@@ -369,8 +370,9 @@ if(is_array($evtOut)) {
 
 			</ul>
 		</li>
+		<?php } ?>
 		<li>
-			<a href="../" target="_blank" title="<?php echo $_lang['preview'] ?>" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-home"></i></a>
+			<a href="../" target="_blank" title="<?php echo $_lang['preview'] ?>" onclick="top.mainMenu.setLastClickedElement(0,0);this.blur();"><i class="fa fa-desktop"></i></a>
 		</li>
 	</ul>
 </div>
