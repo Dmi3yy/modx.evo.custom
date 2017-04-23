@@ -196,7 +196,10 @@ zoom: 1; -moz-box-shadow: 0px 1px 0px #fff inset; -webkit-box-shadow: 0px 1px 0p
 thead, .fancyrow { color: #333; height: 18px !important; background-color: #E4E4E4; }
 thead td { color: #333; border-top: 1px solid #fff; }
 .fancyrow2 { height: 18px !important; background-color: #F0A62F; background-position: top; background-repeat: repeat-x; border-bottom: 1px solid #fff; color: #fff; }
-li { padding: 0; margin: 0; list-style: disc outside url(images/misc/li.png); }
+li { padding: 0; margin: 0; list-style: none; }
+.sectionBody li:before{font-family: FontAwesome;content: '\f105'; display: block;font-weight:bold;font-size: 15px;color:#bdbdbd;position: absolute;margin-left: -13px;}
+.actionButtons li:before{display: none;content: ''; }
+
 ul { margin: 0 20px 0 10px; }
 .rtl ul { margin: 0 10px 0 20px; }
 .screen { border: 1px solid #ddd; text-align: center; }
