@@ -95,7 +95,7 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #mainMenu .account .icon { display: inline-block; border-radius: 50%; overflow: hidden; width: 30px; height: 30px; line-height: 30px; text-align: center; vertical-align: middle; background: no-repeat 50% 50%; background-size: cover; }
 #mainMenu .account .icon.photo { width: 36px; height: 36px }
 #mainMenu .account .icon .fa { width: 30px; height: 30px; }
-#mainMenu .account #msgCounter { display: none; position: absolute; z-index: 1; right: 14px; top: 3px; background-color: rgba(0, 0, 0, 0.5); line-height: 13px; font-size: 10px; padding: 2px 5px; border-radius: 7px; }
+#mainMenu .account #msgCounter { display: none; position: absolute; z-index: 1; right: 15px; top: 5px; background-color: rgba(0, 0, 0, 0.5); line-height: 13px; font-size: 10px; padding: 2px 5px; border-radius: 7px; }
 #mainMenu .account #msgCounter::before { position: absolute; z-index: -1; left: 2px; top: 2px; right: 2px; bottom: 2px; background-color: #e91e4f; border-radius: 6px; content: "" }
 #mainMenu .account #newMail { display: none }
 #mainMenu .nav > li > ul { display: block; position: absolute; left: auto; top: 100%; right: auto; min-width: 15rem; max-height: 400px; max-height: -webkit-calc(100vh - 48px); max-height: calc(100vh - 48px); margin: 0; padding: 0; opacity: 0; visibility: hidden; overflow: auto; background-color: #fff; border-radius: 0; box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); -webkit-transition: 0.2s; transition: 0.2s; transform: translateZ(0) }
@@ -178,6 +178,7 @@ input.submit { display: block !important; float: none !important; margin: 20px 0
 .rtl .form fieldset.list label, .rtl .form fieldset.list input { float: right; }
 .form fieldset.list label { padding-left: 5px; text-align: left; width: auto; }
 /* -------------------------[ Misc stuff ]--- */
+.sectionBody li:before { font-family: FontAwesome; content: '\f105'; display: block; font-weight: bold; font-size: 15px; color: #bdbdbd; position: absolute; margin-left: -13px; }
 .sectionBody fieldset { background: none repeat scroll 0 0 #FDFDFD; border: 1px solid #CCCCCC; padding: 15px !important; }
 .sectionBody legend { font-weight: 500; padding: 5px 15px; background: #fff; border: 1px solid #ccc; -moz-box-shadow: 1px 1px 3px #ccc; -webkit-box-shadow: 1px 1px 3px #ccc; box-shadow: 1px 1px 3px #ccc; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
 .sectionBody fieldset h3 { font-size: 14px; color: #789; font-weight: 500; padding-bottom: 0; margin-bottom: 0; }
@@ -197,9 +198,6 @@ thead, .fancyrow { color: #333; height: 18px !important; background-color: #E4E4
 thead td { color: #333; border-top: 1px solid #fff; }
 .fancyrow2 { height: 18px !important; background-color: #F0A62F; background-position: top; background-repeat: repeat-x; border-bottom: 1px solid #fff; color: #fff; }
 li { padding: 0; margin: 0; list-style: none; }
-.sectionBody li:before{font-family: FontAwesome;content: '\f105'; display: block;font-weight:bold;font-size: 15px;color:#bdbdbd;position: absolute;margin-left: -13px;}
-.actionButtons li:before{display: none;content: ''; }
-
 ul { margin: 0 20px 0 10px; }
 .rtl ul { margin: 0 10px 0 20px; }
 .screen { border: 1px solid #ddd; text-align: center; }
@@ -216,11 +214,10 @@ a img { border: 0; }
 .row1, .row2, .row3 { background-color: #fff; color: #333; }
 .row2 { background-color: #fff; }
 .row3 { background-color: #f5f5f5; }
-div.treeframebody { -webkit-box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1); box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1); }
+div.treeframebody { background-color: #ebebeb; -webkit-box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1); box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1); }
 .treeframebody { height: 100% }
-#treeMenu { margin-left: 2px; background-color: rgba(0, 0, 0, 0.1); border-bottom: 1px solid #fff; }
-#treeMenu table td { padding: 3px 0px; }
-#treeMenu * { vertical-align: middle; }
+#treeMenu { overflow: hidden; padding: 2px; height: 32px; border-bottom: 1px solid #dbdbdb; background-color: rgba(0, 0, 0, 0.05); }
+#treeMenu a { display: inline-block }
 #treeHolder { cursor: default; overflow: auto; height: 100%; height: calc(100% - 34px); padding: 5px 10px; line-height: 1.5em; white-space: nowrap }
 #treeRoot { cursor: default; }
 #treeRoot div { position: relative; margin-left: 20px; }
@@ -234,6 +231,7 @@ div.treeframebody { -webkit-box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1
 #treeRoot .fa.fa-angle-down, #treeRoot .fa.fa-angle-right { position: absolute; left: -20px; top: 0; margin: 0; line-height: 1.2rem; font-size: 1rem; text-align: center; cursor: pointer }
 #treeRoot .fa-file, #treeRoot .fa-file-o, #treeRoot .fa-file-code, #treeRoot .fa-file-code-o { }
 #treeRoot .fa-folder, #treeRoot .fa-folder-open, #treeRoot .fa-folder-o, #treeRoot .fa-folder-open-o, #treeRoot .fa-exclamation-triangle { text-align: left }
+#treeRoot .fa-link { font-size: 12px }
 #treeRoot .lockedResource { cursor: pointer; }
 #floater { display: none; position: absolute; width: 100%; padding: 15px; padding-bottom: 10px; top: 31px; left: 0px; background: #fff; border: 1px solid #b0b0b0; box-shadow: 0 5px 5px 0 rgba(0, 0, 0, .1); box-sizing: border-box; z-index: 500; }
 #floater td { padding: 0 !important; }
@@ -389,6 +387,7 @@ select#stay { margin-top: -7px; padding: 6px 5px 6px 2px; width: auto !important
 .rtl #actions { left: 10px; text-align: left; }
 ul.actionButtons { margin: 0; padding: 0; /* accommodate border on buttons - */ background: none; min-height: 40px; width: auto; white-space: nowrap; padding-top: 5px; }
 .actionButtons li { list-style: none; margin-right: 3px; padding: 0; float: left; }
+.actionButtons li:before { display: none; content: ''; }
 .actionButtons img { vertical-align: top; margin-top: 1px; filter: alpha(opacity=30); -moz-opacity: 0.3; opacity: 0.3; }
 .actionButtons:hover img { filter: alpha(opacity=100); -moz-opacity: 1; opacity: 1; }
 .actionButtons a { border: 1px solid #BBB; border-radius: 3px 3px 3px 3px; color: #333; font-weight: 500; outline: medium none; padding: 7px 8px 7px 4px; text-decoration: none; vertical-align: top; white-space: nowrap; text-shadow: 0px 1px 0px #FFF; -moz-box-shadow: 1px 1px 2px #ccc; -webkit-box-shadow: 1px 1px 2px #ccc; box-shadow: 1px 1px 2px #ccc; background: -moz-linear-gradient(#FFFFFF, #E0E0E0); background: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E0E0E0)); background: -o-linear-gradient(#FFFFFF, #E0E0E0); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFF, endColorstr=#E0E0E0);
@@ -540,11 +539,8 @@ form input[type="text"], form input[type="password"], form input[type="number"],
  * css above is original MODxRE
  * css below is basicaly MODxRE overrides to get MODxRE2 look
  */
-div.treeframebody { background-color: #ebebeb !important; }
 /* nav */
 .alert-warning { color: #3697cd; }
-/* tree */
-#treeMenu { background-color: rgba(0, 0, 0, 0.05); border-bottom: 1px solid #dbdbdb; }
 /* tab panes */
 .dynamic-tab-pane-control.tab-pane { margin-top: 10px; }
 .sectionBody > .dynamic-tab-pane-control.tab-pane, #treePane.dynamic-tab-pane-control.tab-pane { margin-top: 0; }
@@ -619,12 +615,13 @@ a.man_el_name:hover { text-decoration: none; }
 .resourceTable ul.elements { margin: 0 -15px; padding: 0 0 10px 0; }
 .resourceTable ul.elements > li { padding: 0 !important; border-bottom: 1px dotted #dedede; border-left: 3px solid #FFF; transition: all 0.1s ease; margin: 0 !important; }
 .resourceTable ul.elements > li:hover { background: #f9f9f9; border-left: 3px solid #3697CD; }
+.resourceTable ul.elements > li::before { display: none }
 #resourcesPane .panel-group ul { }
 ul.resourceTable .category_name { float: none; display: block; clear: both; margin-top: 20px; }
 /* Manager Elements Buttons bar*/
 ul.elements_buttonbar { list-style: none; margin: 0; padding: 0; display: table; table-layout: fixed; }
 ul.elements_buttonbar li { display: table-cell; padding: 0 !important; width: 2em; }
-ul.elements_buttonbar li a { display: block; width: 2em; padding: 4px 2px 2px 2px; margin: 1px; min-width:22px;}
+ul.elements_buttonbar li a { display: block; width: 2em; padding: 4px 2px 2px 2px; margin: 1px; min-width: 22px; }
 ul.elements_buttonbar .fa { font-size: 13px !important; padding: 1px 1px 0; }
 /* Manage elements views-form */
 .switchForm { display: block; width: 100%; float: left; clear: left; margin: 7px 0 7px -4px; padding: 5px; background-color: #fff; border: 1px solid #E4E4E4; border-radius: 3px; }
@@ -647,6 +644,7 @@ ul.elements_buttonbar .fa { font-size: 13px !important; padding: 1px 1px 0; }
 /* View-dependent styles */
 /* List-view */
 .resourceTable.list li { }
+.sortableList > li::before { display: none }
 /* Inline-view */
 .resourceTable.inline ul.elements { margin: 0 !important; }
 .resourceTable.inline ul.elements > li { float: left; margin: 10px 10px 0 0 !important; padding: 0 !important; border: 1px dotted #dedede; }
@@ -794,3 +792,5 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .ElementsInTree #treeHolder #treePane .tab-page { padding: 15px !important; }
 .ElementsInTree #treeHolder #treePane .tab-page .panel-group .panel, .ElementsInTree #treeHolder #treePane #tabDoc.tab-page > div { max-height: calc(100vh - 180px); overflow: auto; }
 .ElementsInTree #treeHolder #treePane .tab-page .panel-group { overflow: visible !important; max-height: none !important; box-sizing: border-box !important }
+/* gridster */
+.gs-w:hover .gs-resize-handle, .resizing .gs-resize-handle { right: 6px; bottom: 0 }
