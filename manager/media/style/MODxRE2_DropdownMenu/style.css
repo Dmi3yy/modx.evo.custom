@@ -85,7 +85,7 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #mainMenu .nav { margin: 0; padding: 0; list-style: none }
 #mainMenu .nav > li { position: relative; float: left; list-style: none }
 #mainMenu .nav > li > a .fa { margin-right: 0.85rem; vertical-align: top; line-height: inherit; font-size: 17px; width: 15px }
-#mainMenu .float-right .nav > li > a .fa { margin: 0; font-size: 28px; width: 28px }
+#mainMenu .float-right .nav > li > a .fa { margin: 0; font-size: 28px; width: 28px; text-align: center }
 #mainMenu .nav > li > a, #searchform .fa-search { float: left; overflow: hidden; padding: 0 18px; height: 48px; line-height: 48px; text-decoration: none; font-weight: 700; white-space: nowrap; color: #e0e0e0; cursor: pointer; }
 #mainMenu .nav > li:hover > a, #searchform .fa-search:hover { color: #fff; background-color: rgba(255, 255, 255, 0.05) }
 #mainMenu .nav > li.active > a, #mainMenu .nav > li.active > a:hover { background: rgba(0, 0, 0, 0.15) }
@@ -109,21 +109,21 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #statusbar .fa { margin-right: 5px }
 #statusbar .fa-warning { color: #F44336 }
 #tocText { display: none }
-@media (max-width: 959px) {
+@media (max-width: 998px) {
 #mainMenu #nav.nav > li > a > .fa { margin-right: 0; font-size: 17px; }
 #mainMenu #nav.nav > li > a { font-size: 0px; }
 #mainMenu .account .username { display: none; }
 }
 /* search */
 #searchform { position: relative }
-#searchform input[type=text] { position: absolute; z-index: 0; top: 0; right: -100%; height: 27px; width: 0; padding: 0 10px; margin: 11px 64px 0 0; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0; background: rgba(0, 0, 0, 0.1); color: #fff; text-align: left; opacity: 0; -webkit-transition-duration: 0.2s; transition-duration: 0.2s; }
-#searchform input[type=text]:focus { z-index: 9; width: 15rem; background: rgba(0, 0, 0, 0.2); text-align: left; border-color: rgba(255, 255, 255, 0.3); opacity: 1 }
+#searchform input[type=text] { position: absolute; z-index: 0; top: 0; right: 0; height: 28px; width: 0; padding: 0 10px; margin: 10px 10px 0 0; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0; background: rgba(0, 0, 0, 0.1); color: #fff; text-align: left; opacity: 0; -webkit-transition-duration: 0.2s; transition-duration: 0.2s; }
+#searchform input[type=text]:focus { z-index: 9; width: 15rem; background: rgba(0, 0, 0, 0.2); text-align: left; border-color: rgba(255, 255, 255, 0.75); opacity: 1 }
 #searchform .mask { content: ""; position: absolute; z-index: 1; top: 0; right: -999rem; left: -999rem; height: 48px; opacity: 0; visibility: hidden; background-color: rgba(0, 0, 0, 0.65); -webkit-transition: all 0.3s; transition: all 0.3s; transform: translateZ(0) }
 #searchform input[type=text]:focus + .mask { opacity: 0.7; visibility: visible; }
 #searchform .fa-search { position: relative; z-index: 1; color: #e0e0e0; height: 48px; line-height: 48px; font-size: 20px; font-weight: 400; cursor: pointer }
 #searchform .fa-refresh { position: absolute; z-index: 9; top: 14px; right: 18px; font-size: 18px; color: #e0e0e0; }
-#frameset #searchresult { position: absolute; z-index: 98; overflow: auto; top: 48px; right: 0; bottom: 0; width: 0; margin-right: -100%; background-color: #fcfcfc; border-left: 1px solid rgba(0, 0, 0, 0.1); transition: margin-right 0.3s, box-shadow 0.3s; transition-delay: 0.3s; }
-#frameset #searchresult.open { margin-right: 0 !important; box-shadow: 0 0 60px rgba(0, 0, 0, 0.15); -webkit-transition-delay: 0s; transition-delay: 0s }
+#frameset #searchresult { position: absolute; z-index: 99; overflow: auto; top: 48px; right: 0; bottom: 0; width: 0; margin-right: -100%; background-color: #fcfcfc; border-left: 1px solid rgba(0, 0, 0, 0.1); transition: margin-right 0.3s, box-shadow 0.3s; transition-delay: 0.3s; }
+#frameset #searchresult.open, #frameset #searchresult:hover { margin-right: 0 !important; box-shadow: 0 0 60px rgba(0, 0, 0, 0.15); -webkit-transition-delay: 0s; transition-delay: 0s }
 #frameset #searchresult .ajaxSearchResults ul, #frameset #searchresult .ajaxSearchResults li { margin: 0; padding: 0; list-style: none }
 #frameset #searchresult .ajaxSearchResults b, #frameset #searchresult .ajaxSearchResults strong, #frameset #searchresult .ajaxSearchResults a { display: block; background-color: #ddd; color: #333; padding: 5px 10px; margin-top: -1px; border-top: 1px solid rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.03); box-sizing: border-box }
 #frameset #searchresult .ajaxSearchResults a { position: relative; color: #3697CD; padding: 4px 25px 4px 10px; background-color: #fcfcfc; text-decoration: none; }
@@ -131,6 +131,15 @@ hr { color: #777; background-color: #777; height: 1px; border: 0; }
 #frameset #searchresult .ajaxSearchResults a > i { position: absolute; right: 0; top: 50%; width: 27px; height: 27px; margin-top: -14px; line-height: 27px; text-align: center; color: #3d5764; }
 #frameset #searchresult .ajaxSearchResults a.selected { background-color: #0b9991; color: #fff; font-weight: 700; }
 #frameset #searchresult .ajaxSearchResults a .text-danger { color: #333; font-weight: 700 }
+@media (max-width: 640px) {
+#mainMenu .nav > li > a, #searchform .fa-search { padding: 0 15px }
+}
+@media (max-width: 500px) {
+#searchform { display: none }
+}
+@media (max-width: 420px) {
+#searchform { display: none }
+}
 /*resizer*/
 #resizer { position: absolute; z-index: 99; top: 48px; bottom: 0; left: 320px; width: 8px; margin-left: -1px; cursor: col-resize; background-color: transparent; transition: background-color .3s }
 #resizer:hover { background-color: #e0e0e0; }
@@ -793,4 +802,4 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .ElementsInTree #treeHolder #treePane .tab-page .panel-group .panel, .ElementsInTree #treeHolder #treePane #tabDoc.tab-page > div { max-height: calc(100vh - 180px); overflow: auto; }
 .ElementsInTree #treeHolder #treePane .tab-page .panel-group { overflow: visible !important; max-height: none !important; box-sizing: border-box !important }
 /* gridster */
-.gs-w:hover .gs-resize-handle, .resizing .gs-resize-handle { right: 6px; bottom: 0 }
+.gs-w:hover .gs-resize-handle, .resizing .gs-resize-handle { right: 0; bottom: 0 }

@@ -173,6 +173,16 @@ if($user['which_browser'] == 'default') {
 		</div>
 		<div class="col float-right">
 			<ul class="nav">
+				<li id="searchform">
+					<form action="index.php?a=71#results" method="post" target="main">
+						<input type="hidden" value="Search" name="submitok" />
+						<label for="searchid">
+							<i class="fa fa-search fa-2x"></i>
+						</label>
+						<input type="text" id="searchid" name="searchid" size="25" class="form-control input-sm">
+						<div class="mask"></div>
+					</form>
+				</li>
 				<li>
 					<a href="../" target="_blank" title="<?php echo $_lang['preview'] ?>" onclick="setLastClickedElement(0,0);">
 						<i class="fa fa-desktop"></i>
@@ -259,18 +269,6 @@ if($user['which_browser'] == 'default') {
 					</ul>
 				</li>
 			</ul>
-		</div>
-		<div class="col float-right">
-			<div id="searchform">
-				<form action="index.php?a=71#results" method="post" target="main">
-					<input type="hidden" value="Search" name="submitok" />
-					<label for="searchid">
-						<i class="fa fa-search fa-2x"></i>
-					</label>
-					<input type="text" id="searchid" name="searchid" size="25" class="form-control input-sm">
-					<div class="mask"></div>
-				</form>
-			</div>
 		</div>
 	</div>
 	<div id="tree">
