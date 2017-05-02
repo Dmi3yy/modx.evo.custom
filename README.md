@@ -1,6 +1,16 @@
 Сайт сборки: http://modx.com.ua
 
 Актуальная версия: https://github.com/dmi3yy/modx.evo.custom/releases
+1.2.1-d9.1.4  (02.05.2017)
+=======================================================
+- MODxRE2 dropdownMenu , обновленна все иконки FA, убраны 2 фрейма с дерева и меню
+- fix OnParseProperties event #1325
+- fix Ditto + Cross references = not working
+- fix Broken parser logic
+- fix ddselectdocuments with jquery 3.1
+- Managermanager work with tinymce4 (use кшереуче from modx settings)
+
+
 1.2.1-d9.1.3  (18.04.2017)
 =======================================================
 - добавленна новая тема MODxRE2 dropdownMenu (пока не по умолчанию)
