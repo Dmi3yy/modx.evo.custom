@@ -8,7 +8,7 @@
 - fix Ditto + Cross references = not working
 - fix Broken parser logic
 - fix ddselectdocuments with jquery 3.1
-- Managermanager work with tinymce4 (use кшереуче from modx settings)
+- Managermanager work with tinymce4 (use richtext from modx settings)
 
 
 1.2.1-d9.1.3  (18.04.2017)
