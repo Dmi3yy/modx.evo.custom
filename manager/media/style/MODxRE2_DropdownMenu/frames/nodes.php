@@ -23,6 +23,7 @@ $parent = intval($_GET['parent']);
 $expandAll = intval($_GET['expandAll']);
 $output = '';
 $theme = $manager_theme . "/";
+$hereid = isset($_GET['id']) ? $_GET['id'] : '';
 
 // setup sorting
 $sortParams = array(
@@ -50,7 +51,7 @@ if(isset($_SESSION['openedArray'])) {
 $opened2 = array();
 $closed2 = array();
 
-makeHTML($indent, $parent, $expandAll, $theme);
+makeHTML($indent, $parent, $expandAll, $theme, $hereid);
 echo $output;
 
 // check for deleted documents on reload

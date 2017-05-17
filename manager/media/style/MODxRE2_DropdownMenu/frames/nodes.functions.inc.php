@@ -3,7 +3,14 @@ if(IN_MANAGER_MODE != 'true') {
 	die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.');
 }
 
-function makeHTML($indent, $parent, $expandAll, $theme) {
+/**
+ * @param $indent
+ * @param $parent
+ * @param $expandAll
+ * @param $theme
+ * @param string $hereid
+ */
+function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 	global $modx;
 	global $icons, $iconsPrivate, $_style;
 	global $output, $_lang, $opened, $opened2, $closed2; //added global vars
@@ -161,7 +168,8 @@ function makeHTML($indent, $parent, $expandAll, $theme) {
 			'nodetitleDisplay' => $nodetitleDisplay,
 			'weblinkDisplay' => $weblinkDisplay,
 			'pageIdDisplay' => $pageIdDisplay,
-			'lockedByUser' => $lockedByUser
+			'lockedByUser' => $lockedByUser,
+			'treeNodeSelected' => $row['id'] == $hereid ? ' treeNodeSelected' : ''
 		);
 		// invoke OnManagerNodePrerender event
 
@@ -205,31 +213,88 @@ function makeHTML($indent, $parent, $expandAll, $theme) {
 			}
 			$ph['icon'] = $icon;
 			$tpl = getTplSingleNode();
-			$node = $modx->parseText($tpl, $ph);
-			$node = $modx->parseText($node, $_lang, '[%', '%]');
+			if($modx->config['tree_page_click'] == 3) {
+				if($row['parent'] == 0) {
+					$node = $modx->parseText($tpl, $ph);
+					$node = $modx->parseText($node, $_lang, '[%', '%]');
+				}
+			} else {
+				$node = $modx->parseText($tpl, $ph);
+				$node = $modx->parseText($node, $_lang, '[%', '%]');
+			}
 		} else {
 			$isPrivate = ($row['privateweb'] == 1 || $row['privatemgr'] == 1) ? '1' : '0';
 			$ph['isPrivate'] = $isPrivate;
-			// expandAll: two type for partial expansion
-			if($expandAll == 1 || ($expandAll == 2 && in_array($row['id'], $opened))) {
-				if($expandAll == 1) {
-					$opened2[] = $row['id'];
+
+			if($modx->config['tree_page_click'] == 3) {
+				$checkIsFolder = checkIsFolder($row['id'], 1); // folders
+				$checkNoFolder = checkIsFolder($row['id'], 0); // no folders
+
+				// expandAll: two type for partial expansion
+				if($expandAll == 1 || ($expandAll == 2 && in_array($row['id'], $opened))) {
+					if($expandAll == 1) {
+						$opened2[] = $row['id'];
+					}
+					$tpl = getTplOpenFolderNode();
+
+					if(!$checkIsFolder || (!$checkIsFolder && !$checkNoFolder)) {
+						$ph['src'] = $isPrivate ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
+						$tpl = str_replace('[&tree_minusnode&]', '', $tpl);
+					} else {
+						$ph['src'] = $isPrivate ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
+						$tpl = str_replace('modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);',
+							'if(tree.ca==\'parent\'||tree.ca==\'move\'||tree.ca==\'link\'){modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);}else{' . ($checkNoFolder ? 'if(this.parentNode.lastChild.style.display !== \'block\'){modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);}' : '' ) . 'modx.tree.toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;let tam = ' . $checkNoFolder . '}',
+							$tpl);
+					}
+
+					$node = $modx->parseText($tpl, $ph);
+					$node = $modx->parseText($node, $_lang, '[%', '%]');
+					$node = $modx->parseText($node, $_style, '[&', '&]');
+					$output .= $node;
+					if($checkIsFolder) {
+						makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
+					}
+					$node = '</div></div>';
+				} else {
+					$tpl = getTplClosedFolderNode();
+					$ph['src'] = $isPrivate ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
+
+					if(!$checkIsFolder || (!$checkIsFolder && !$checkNoFolder)) {
+						$tpl = str_replace('[&tree_plusnode&]', '', $tpl);
+					} else {
+						$tpl = str_replace('modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);',
+							'if(tree.ca==\'parent\'||tree.ca==\'move\'||tree.ca==\'link\'){modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);}else{' . ($checkNoFolder ? 'if(this.parentNode.lastChild.style.display !== \'block\'){modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);}' : '' ) . 'modx.tree.toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;let tam = ' . $checkNoFolder . '}',
+							$tpl);
+					}
+
+					$node = $modx->parseText($tpl, $ph);
+					$node = $modx->parseText($node, $_lang, '[%', '%]');
+					$node = $modx->parseText($node, $_style, '[&', '&]');
+					$closed2[] = $row['id'];
 				}
-				$tpl = getTplOpenFolderNode();
-				$ph['src'] = $isPrivate ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
-				$node = $modx->parseText($tpl, $ph);
-				$node = $modx->parseText($node, $_lang, '[%', '%]');
-				$node = $modx->parseText($node, $_style, '[&', '&]');
-				$output .= $node;
-				makeHTML($indent + 1, $row['id'], $expandAll, $theme);
-				$node = '</div></div>';
+
 			} else {
-				$tpl = getTplClosedFolderNode();
-				$ph['src'] = $isPrivate ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
-				$node = $modx->parseText($tpl, $ph);
-				$node = $modx->parseText($node, $_lang, '[%', '%]');
-				$node = $modx->parseText($node, $_style, '[&', '&]');
-				$closed2[] = $row['id'];
+				// expandAll: two type for partial expansion
+				if($expandAll == 1 || ($expandAll == 2 && in_array($row['id'], $opened))) {
+					if($expandAll == 1) {
+						$opened2[] = $row['id'];
+					}
+					$tpl = getTplOpenFolderNode();
+					$ph['src'] = $isPrivate ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
+					$node = $modx->parseText($tpl, $ph);
+					$node = $modx->parseText($node, $_lang, '[%', '%]');
+					$node = $modx->parseText($node, $_style, '[&', '&]');
+					$output .= $node;
+					makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
+					$node = '</div></div>';
+				} else {
+					$tpl = getTplClosedFolderNode();
+					$ph['src'] = $isPrivate ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
+					$node = $modx->parseText($tpl, $ph);
+					$node = $modx->parseText($node, $_lang, '[%', '%]');
+					$node = $modx->parseText($node, $_style, '[&', '&]');
+					$closed2[] = $row['id'];
+				}
 			}
 		}
 		$node = $evtOut . $node;
@@ -377,6 +442,12 @@ function isDateNode($nodeNameSource) {
 	}
 }
 
+function checkIsFolder($parent = 0, $isfolder = 1) {
+	global $modx;
+
+	return (int) $modx->db->getValue($modx->db->query('SELECT count(id) FROM ' . $modx->getFullTableName('site_content') . ' WHERE parent=' . $parent . ' AND isfolder=' . $isfolder . ' '));
+}
+
 function getTplSingleNode() {
 	return '<div
     id="node[+id+]"
@@ -389,10 +460,8 @@ function getTplSingleNode() {
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\'"
         >[+icon+]</span>[+lockedByUser+]<span
         p="[+parent+]"
-        class="treeNode"
+        class="treeNode[+treeNodeSelected+]"
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);"
-        onmouseover="modx.tree.setHoverClass(this,1);"
-        onmouseout="modx.tree.setHoverClass(this, 0);"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         oncontextmenu="document.getElementById(\'p[+id+]\').onclick(event);return false;"
         title="[+alt+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</div>';
@@ -413,10 +482,8 @@ function getTplOpenFolderNode() {
         oncontextmenu="this.onclick(event);return false;"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         >[+src+]</span>[+lockedByUser+]<span
-        class="treeNode"
+        class="treeNode[+treeNodeSelected+]"
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);"
-        onmouseover="modx.tree.setHoverClass(this, 1);"
-        onmouseout="modx.tree.setHoverClass(this, 0);"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);return false;"
         title="[+alt+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]<div style="display:block">';
@@ -437,10 +504,8 @@ function getTplClosedFolderNode() {
         oncontextmenu="this.onclick(event);return false;"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         >[+src+]</span>[+lockedByUser+]<span
-        class="treeNode"
+        class="treeNode[+treeNodeSelected+]"
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);"
-        onmouseover="modx.tree.setHoverClass(this, 1);"
-        onmouseout="modx.tree.setHoverClass(this, 0);"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);return false;"
         title="[+alt+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]<div style="display:none"></div></div>';

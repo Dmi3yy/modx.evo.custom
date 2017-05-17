@@ -3,7 +3,7 @@ body {-moz-osx-font-smoothing: grayscale;}
   padding-top: 5px;
 }
 .dashboard * {
-  font-size: 13px;
+  /*font-size: 13px;*/
 }
 .dashboard h1 {
 	font-size : 24px;
