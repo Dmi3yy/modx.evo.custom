@@ -12,7 +12,8 @@
 			this.resizer.init();
 			this.setLastClickedElement(0, 0);
 			w.setInterval(this.keepMeAlive, 1000 * 60 * this.config.session_timeout);
-			w.onload = this.updateMail(true)
+			w.onload = this.updateMail(true);
+			d.onclick = this.hideDropDown
 		},
 		mainMenu: {
 			id: 'mainMenu',
@@ -163,6 +164,7 @@
 				let el = d.getElementById('workText');
 				if(el) {
 					modx.animation.fadeOut(el);
+					w.main.onclick = modx.hideDropDown;
 				}
 				else setTimeout('modx.main.stopWork()', 50)
 			},
@@ -214,9 +216,9 @@
 				d.getElementById(modx.resizer.id).onmouseup = modx.resizer.onMouseUp
 			},
 			onMouseDown: function(e) {
-				if(e === null) e = w.event;
+				e = e || w.event;
 				modx.resizer.dragElement = e.target !== null ? e.target : e.srcElement;
-				if((e.buttons === 1 && w.event !== null || e.button === 0) && modx.resizer.dragElement.id === modx.resizer.id) {
+				if((e.buttons === 1 && e.button === 0) && modx.resizer.dragElement.id === modx.resizer.id) {
 					modx.resizer.oldZIndex = modx.resizer.dragElement.style.zIndex;
 					modx.resizer.dragElement.style.zIndex = modx.resizer.newZIndex;
 					modx.resizer.dragElement.style.background = modx.resizer.background;
@@ -234,7 +236,7 @@
 				}
 			},
 			onMouseMove: function(e) {
-				if(e === null) e = w.event;
+				e = e || w.event;
 				if(e.clientX > 0) {
 					modx.resizer.left = e.clientX
 				} else {
@@ -292,7 +294,6 @@
 			}
 		},
 		tree: {
-			_rc: 0,
 			rpcNode: null,
 			itemToChange: null,
 			selectedObjectName: null,
@@ -320,8 +321,8 @@
 							el.innerHTML = modx.style.tree_info + loadText;
 							el.style.display = 'block'
 						}
-						modx.get('index.php?a=1&f=nodes&indent=' + b + '&parent=' + c + '&expandAll=' + e + folderState, function(r, t) {
-							t.tree.rpcLoadData(r)
+						modx.get('index.php?a=1&f=nodes&indent=' + b + '&parent=' + c + '&expandAll=' + e + folderState, function(r) {
+							modx.tree.rpcLoadData(r)
 						})
 					}
 					this.rpcNode.style.display = 'block';
@@ -418,6 +419,7 @@
 					i11 = d.getElementById('item11'),
 					el = d.querySelector('#tree .treeNodeSelectedByContext');
 				if(el) el.classList.remove('treeNodeSelectedByContext');
+				modx.hideDropDown(mnu);
 				d.querySelector('#node' + a + '>.treeNode').classList.add('treeNodeSelectedByContext');
 				if(modx.permission.publish_document === 1) {
 					i9.style.display = 'block';
@@ -456,8 +458,7 @@
 				this.itemToChange = a;
 				this.selectedObjectName = b;
 				this.dopopup(x + 10, y);
-				e.cancelBubble = true;
-				return false
+				e.stopPropagation()
 			},
 			dopopup: function(a, b) {
 				if(this.selectedObjectName.length > 20) {
@@ -467,19 +468,8 @@
 					el = d.getElementById("nameHolder");
 				c.style.left = a + (modx.config.textdir ? '-190' : '') + "px";
 				c.style.top = b + "px";
-				c.style.visibility = 'visible';
-				el.innerHTML = this.selectedObjectName;
-				this._rc = 1;
-				let _t = this;
-				setTimeout(function() {
-					_t._rc = 0;
-					w.main.onclick = function() {
-						_t.hideMenu(1)
-					};
-					d.onclick = function() {
-						_t.hideMenu(1)
-					}
-				}, 200)
+				c.classList.add('show');
+				el.innerHTML = this.selectedObjectName
 			},
 			menuHandler: function(a) {
 				switch(a) {
@@ -545,12 +535,6 @@
 						alert('Unknown operation command.')
 				}
 			},
-			hideMenu: function() {
-				if(this._rc) return false;
-				d.getElementById('mx_contextmenu').style.visibility = 'hidden';
-				let el = d.querySelector('#tree .treeNodeSelectedByContext');
-				if(el) el.classList.remove('treeNodeSelectedByContext')
-			},
 			setSelected: function(a) {
 				let el = d.querySelector('.treeNodeSelected');
 				if(el) el.classList.remove('treeNodeSelected');
@@ -577,8 +561,8 @@
 				}
 				this.setItemToChange();
 				this.rpcNode = d.getElementById('treeRoot');
-				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2&id=' + this.itemToChange, function(r, t) {
-					t.tree.rpcLoadData(r)
+				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2&id=' + this.itemToChange, function(r) {
+					modx.tree.rpcLoadData(r)
 				})
 			},
 			expandTree: function() {
@@ -588,8 +572,8 @@
 					el.innerHTML = modx.style.tree_info + modx.lang.loading_doc_tree;
 					el.style.display = 'block'
 				}
-				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=1&id=' + this.itemToChange, function(r, t) {
-					t.tree.rpcLoadData(r)
+				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=1&id=' + this.itemToChange, function(r) {
+					modx.tree.rpcLoadData(r)
 				})
 			},
 			collapseTree: function() {
@@ -599,10 +583,10 @@
 					el.innerHTML = modx.style.tree_info + modx.lang.loading_doc_tree;
 					el.style.display = 'block'
 				}
-				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=0&id=' + this.itemToChange, function(r, t) {
-					t.openedArray = [];
-					t.tree.saveFolderState();
-					t.tree.rpcLoadData(r)
+				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=0&id=' + this.itemToChange, function(r) {
+					modx.openedArray = [];
+					modx.tree.saveFolderState();
+					modx.tree.rpcLoadData(r)
 				})
 			},
 			updateTree: function() {
@@ -614,8 +598,8 @@
 				}
 				let a = d.sortFrm;
 				let b = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + a.dt.value + '&tree_sortby=' + a.sortby.value + '&tree_sortdir=' + a.sortdir.value + '&tree_nodename=' + a.nodename.value + '&id=' + this.itemToChange;
-				modx.get('index.php?' + b, function(r, t) {
-					t.tree.rpcLoadData(r)
+				modx.get('index.php?' + b, function(r) {
+					modx.tree.rpcLoadData(r)
 				})
 			},
 			getFolderState: function() {
@@ -635,8 +619,15 @@
 			saveFolderState: function() {
 				modx.get('index.php?a=1&f=nodes&savestateonly=1' + this.getFolderState())
 			},
-			showSorter: function() {
-				d.getElementById('floater').classList.toggle('open')
+			showSorter: function(e) {
+				e = e || w.event;
+				let el = d.getElementById('floater');
+				el.classList.toggle('show');
+				el.onclick = function(e) {
+					e.stopPropagation()
+				};
+				modx.hideDropDown(el);
+				e.stopPropagation()
 			},
 			emptyTrash: function() {
 				if(confirm(modx.lang.confirm_empty_trash) === true) {
@@ -644,14 +635,14 @@
 				}
 			},
 			showBin: function(a) {
-				let t = this, el = d.getElementById('treeMenu_emptytrash');
+				let el = d.getElementById('treeMenu_emptytrash');
 				if(el) {
 					if(a) {
 						el.title = modx.lang.empty_recycle_bin;
 						el.classList.remove('disabled');
 						el.innerHTML = modx.style.empty_recycle_bin;
 						el.onclick = function() {
-							t.emptyTrash()
+							modx.tree.emptyTrash()
 						}
 					} else {
 						el.title = modx.lang.empty_recycle_bin_empty;
@@ -664,8 +655,8 @@
 			unlockElement: function(a, b, c) {
 				let m = modx.lockedElementsTranslation.msg.replace('[+id+]', b).replace('[+element_type+]', modx.lockedElementsTranslation['type' + a]);
 				if(confirm(m) === true) {
-					modx.get('index.php?a=67&type=' + a + '&id=' + b, function(r, t) {
-						if(parseInt(r) === 1) t.animation.fadeOut(c, true);
+					modx.get('index.php?a=67&type=' + a + '&id=' + b, function(r) {
+						if(parseInt(r) === 1) modx.animation.fadeOut(c, true);
 						else alert(r)
 					})
 				}
@@ -820,6 +811,14 @@
 				'height': b
 			}
 		},
+		hideDropDown: function(a) {
+			let elms = d.getElementsByClassName('dropdown-menu');
+			for(let i = 0; i < elms.length; i++) {
+				if(a === null || (a !== null && a !== elms[i])) elms[i].classList.remove('show')
+			}
+			let el = d.querySelector('#tree .treeNodeSelectedByContext');
+			if(el) el.classList.remove('treeNodeSelectedByContext')
+		},
 		animation: {
 			fadeIn: function(a, b) {
 				a.style.opacity = 0;
@@ -852,20 +851,18 @@
 			return ('XMLHttpRequest' in w) ? new XMLHttpRequest : new ActiveXObject('Microsoft.XMLHTTP');
 		},
 		get: function(a, b) {
-			let t = this,
-				x = this.XHR();
+			let x = this.XHR();
 			x.open('GET', a, true);
 			x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 			x.onload = function() {
 				if(this.status === 200 && typeof b === 'function') {
-					return b(this.responseText, t)
+					return b(this.responseText)
 				}
 			};
 			x.send()
 		},
 		post: function(a, b, c) {
-			let t = this,
-				x = this.XHR(),
+			let x = this.XHR(),
 				f = '';
 			if(typeof b === 'function') c = b;
 			if(typeof b === 'object') {
@@ -879,7 +876,7 @@
 			x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 			x.onload = function() {
 				if(this.status === 200 && c !== u) {
-					return c(this.responseText, t)
+					return c(this.responseText)
 				}
 			};
 			x.send(f)

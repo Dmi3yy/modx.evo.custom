@@ -1,11 +1,10 @@
 /* -------------------------[ Neutralize styles, fonts and viewport ]--- */
 * html { overflow-x: hidden; overflow-y: auto; }
 /* for IE7 */
-
 html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }
 html { font-size: 100.01%; line-height: 1.5; color: #333; }
-body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important; font-size: 13px; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important; /*-webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden;*/ }
+body { font-family: Arial, sans-serif !important; font-size: 13px; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important; /*-webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden;*/ }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
 /* For Chinese Font */
@@ -244,8 +243,8 @@ div.treeframebody { background-color: #ebebeb; -webkit-box-shadow: inset -2px 2p
 #treeRoot .fa-folder, #treeRoot .fa-folder-open, #treeRoot .fa-folder-o, #treeRoot .fa-folder-open-o, #treeRoot .fa-exclamation-triangle { text-align: left }
 #treeRoot .fa-link { margin-right: 0; font-size: 12px }
 #treeRoot .lockedResource { cursor: pointer; }
-#floater { display: none; position: fixed; padding: 15px 15px 10px; top: 81px; left: 0; background: #fff; -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); z-index: 500; }
-#floater.open { display: block }
+#floater { display: none; position: fixed; padding: 15px 15px 10px; top: 81px; left: 0; background: #fff; -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); z-index: 1000; }
+#floater.show { display: block }
 #floater input, #floater select { box-sizing: border-box; width: 150px; margin-bottom: 5px; }
 .rtl #floater { right: 4px }
 .rootNode, .treeNode, .treeNodeHover, .treeNodeSelected, .emptyNode { border: 1px solid transparent; padding: 0 2px; margin-right: 2px; line-height: 16px; color: #000; cursor: pointer; }
@@ -283,7 +282,7 @@ label.disabled { color: #aaa; }
 .searchtoolbarbtn img { vertical-align: middle; padding: 3px; }
 .searchtoolbarbtn:hover { text-decoration: none; border: 1px solid #88939E; background: #fff; }
 /* -------------------------[ home page main links ]--- */
-a.hometblink, a.hometblink:active, a.hometblink:visited, a.hometblink:link, .hometblink { text-decoration: underline; color: #333; font-weight: 500; font-size:12px;}
+a.hometblink, a.hometblink:active, a.hometblink:visited, a.hometblink:link, .hometblink { text-decoration: underline; color: #333; font-weight: 500; font-size: 12px; }
 a.hometblink:hover { text-decoration: underline; color: Gray; }
 .notice { width: 100%; padding: 5px; border: 1px solid #eee; background-color: #f5f5f5; color: #707070; }
 #preLoader { position: absolute; z-index: 50000; width: 100%; height: 100%; text-align: center; vertical-align: middle; padding: 100px 0 0 0; background-color: rgba(255, 255, 255, 0.5); }
@@ -306,6 +305,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 #frameset { overflow: hidden; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
 /* -------------------------[ Contextual Menu used in the Tree Menu ]--- */
 #mx_contextmenu { position: absolute; top: 0; min-width: 200px; height: auto; visibility: hidden; z-index: 10000; background: #fff; margin: 0; padding: 4px; line-height: 11px; font-size: 12px; white-space: nowrap; -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); }
+#mx_contextmenu.show { visibility: visible }
 #mx_contextmenu .menuLink { cursor: pointer; color: #222; padding: 4px 2px 4px 4px; line-height: 16px; border: 1px solid #fff; }
 #mx_contextmenu .menuLink:hover { background: #E5F0D6; border-color: #98BF6C; color: #333; }
 #mx_contextmenu .menuLink:hover, #mx_contextmenu .menuLinkDisabled { cursor: pointer; }
@@ -349,7 +349,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .treeButton { display: block; cursor: pointer; color: #3d5764 !important; border: 1px solid transparent; border-radius: 2px; padding: 0 0.35em; line-height: 2em; white-space: nowrap; text-align: center; vertical-align: middle; }
 .treeButton:hover:not(.disabled) { border-color: #6e7a86; background-color: #fff; background-color: rgba(255, 255, 255, .5); cursor: pointer }
 .treeButton:not(.disabled):active { background-color: #d5d5d5 }
-.treeButton .fa { min-width: 14px; font-size: 14px; vertical-align: 0 }
+.treeButton .fa { min-width: 14px; font-size: 14px; }
 .treeButton.disabled { color: #777; opacity: 0.5 }
 /* -------------------------[ Welcome Page ]--- */
 a.hometblink, a.hometblink img { border: 0 !important; text-decoration: none !important; }
