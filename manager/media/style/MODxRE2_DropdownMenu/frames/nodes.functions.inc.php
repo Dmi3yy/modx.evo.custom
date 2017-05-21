@@ -257,6 +257,8 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph = $prenode;
 					}
 
+					if ($ph['showChildren'] == 0) {$_style['icon_node_toggle'] = '';}
+
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
 					$node = $modx->parseText($node, $_style, '[&', '&]');
@@ -290,6 +292,8 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph = $prenode;
 					}
 
+					if ($ph['showChildren'] == 0) {$_style['icon_node_toggle'] = '';}
+
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
 					$node = $modx->parseText($node, $_style, '[&', '&]');
@@ -319,6 +323,8 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph = $prenode;
 					}
 
+					if ($ph['showChildren'] == 0) {$_style['icon_node_toggle'] = '';}
+
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
 					$node = $modx->parseText($node, $_style, '[&', '&]');
@@ -346,7 +352,9 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					if(is_array($prenode)) {
 						$ph = $prenode;
 					}
-
+					
+					if ($ph['showChildren'] == 0) {$_style['icon_node_toggle'] = '';}
+					
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
 					$node = $modx->parseText($node, $_style, '[&', '&]');
