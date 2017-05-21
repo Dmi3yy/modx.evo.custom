@@ -332,6 +332,9 @@ if($user['which_browser'] == 'default') {
 				<option value="editedon" <?php echo $_SESSION['tree_nodename'] == 'editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
 				<option value="publishedon" <?php echo $_SESSION['tree_nodename'] == 'publishedon' ? "selected='selected'" : "" ?>><?php echo $_lang['page_data_publishdate']; ?></option>
 			</select>
+			<p>
+				<label><input type="checkbox" name="showonlyfolders" value="<?php echo($_SESSION['tree_show_only_folders'] ? 1 : '') ?>" onclick="this.value = this.value ? '' : 1;" <?php echo($_SESSION['tree_show_only_folders'] ? ' checked="checked"' : '') ?> /> <?php echo $_lang['view_child_resources_in_container'] ?>
+				</label></p>
 			<div>
 				<ul class="actionButtons">
 					<li>

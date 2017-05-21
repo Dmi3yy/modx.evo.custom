@@ -16,15 +16,6 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 	global $output, $_lang, $opened, $opened2, $closed2; //added global vars
 	global $modx_textdir;
 
-	$pad = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	$pad = '';
-
-	// setup spacer
-	$spacer = '';
-//	for($i = 1; $i <= $indent; $i++) {
-//		$spacer .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-//	}
-
 	// manage order-by
 	if(!isset($_SESSION['tree_sortby']) && !isset($_SESSION['tree_sortdir'])) {
 		// This is the first startup, set default sort order
@@ -73,14 +64,13 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 	$where = "(parent={$parent}) {$access} GROUP BY sc.id";
 	$result = $modx->db->select($field, $from, $where, $orderby);
 	if($modx->db->getRecordCount($result) == 0) {
-		$output .=  sprintf('<div>%s%s %s&nbsp;<span class="emptyNode">%s</span></div>', $spacer, $pad, $_style['tree_deletedpage'], $_lang['empty_folder']);
+		$output .= sprintf('<div> %s&nbsp;<span class="emptyNode">%s</span></div>', $_style['tree_deletedpage'], $_lang['empty_folder']);
 	}
 
 	$nodeNameSource = $_SESSION['tree_nodename'] == 'default' ? $modx->config['resource_tree_node_name'] : $_SESSION['tree_nodename'];
 	while($row = $modx->db->getRow($result)) {
 
 		$nodetitle = getNodeTitle($nodeNameSource, $row);
-		$nodetitle_esc = addslashes($nodetitle);
 		$protectedClass = $row['hasAccess'] == 0 ? ' protectedNode' : '';
 
 		if($row['deleted'] == 1) {
@@ -161,30 +151,25 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			'hasAccess' => $row['hasAccess'],
 			'template' => $row['template'],
 			'nodetitle' => $nodetitle,
-			'spacer' => $spacer,
-			'pad' => $pad,
 			'url' => $url,
 			'alt' => $alt,
 			'nodetitleDisplay' => $nodetitleDisplay,
 			'weblinkDisplay' => $weblinkDisplay,
 			'pageIdDisplay' => $pageIdDisplay,
 			'lockedByUser' => $lockedByUser,
-			'treeNodeSelected' => $row['id'] == $hereid ? ' treeNodeSelected' : ''
+			'treeNodeSelected' => $row['id'] == $hereid ? ' treeNodeSelected' : '',
+			'tree_page_click' => $modx->config['tree_page_click'],
+			'showChildren' => 1,
+			'openFolder' => 1
 		);
-		// invoke OnManagerNodePrerender event
 
-		$evtOut = $modx->invokeEvent('OnManagerNodePrerender', $data);
-		if(is_array($evtOut)) {
-			$evtOut = implode("\n", $evtOut);
-		}
-
-		$node = '';
 		$ph = $data;
-		$ph['nodetitle_esc'] = $nodetitle_esc;
+		$ph['nodetitle_esc'] = addslashes($nodetitle);
 		$ph['indent'] = $indent + 1;
 		$ph['expandAll'] = $expandAll;
 
 		if(!$row['isfolder']) {
+			$tpl = getTplSingleNode();
 			switch($row['id']) {
 				case $modx->config['site_start']            :
 					$icon = $_style['tree_page_home'];
@@ -212,92 +197,163 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					}
 			}
 			$ph['icon'] = $icon;
-			$tpl = getTplSingleNode();
-			if($modx->config['tree_page_click'] == 3) {
+
+			// invoke OnManagerNodePrerender event
+			$prenode = $modx->invokeEvent("OnManagerNodePrerender", array('ph' => $ph));
+			$prenode = unserialize($prenode[0]);
+			if(is_array($prenode)) {
+				$ph = $prenode;
+			}
+
+			if(!$_SESSION['tree_show_only_folders']) {
 				if($row['parent'] == 0) {
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
+				} else {
+					$node = '';
 				}
 			} else {
 				$node = $modx->parseText($tpl, $ph);
 				$node = $modx->parseText($node, $_lang, '[%', '%]');
 			}
-		} else {
-			$isPrivate = ($row['privateweb'] == 1 || $row['privatemgr'] == 1) ? '1' : '0';
-			$ph['isPrivate'] = $isPrivate;
 
-			if($modx->config['tree_page_click'] == 3) {
-				$checkIsFolder = checkIsFolder($row['id'], 1); // folders
-				$checkNoFolder = checkIsFolder($row['id'], 0); // no folders
+		} else {
+			$tpl = getTplFolderNode();
+			$ph['isPrivate'] = ($row['privateweb'] == 1 || $row['privatemgr'] == 1) ? '1' : '0';
+			$ph['icon_folder_open'] = $ph['isPrivate'] ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
+			$ph['icon_folder_close'] = $ph['isPrivate'] ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
+
+			if(!$_SESSION['tree_show_only_folders']) {
+				$checkFolders = checkIsFolder($row['id'], 1) ? 1 : 0; // folders
+				$checkDocs = checkIsFolder($row['id'], 0) ? 1 : 0; // no folders
+				$ph['tree_page_click'] = 3;
 
 				// expandAll: two type for partial expansion
 				if($expandAll == 1 || ($expandAll == 2 && in_array($row['id'], $opened))) {
 					if($expandAll == 1) {
 						$opened2[] = $row['id'];
 					}
-					$tpl = getTplOpenFolderNode();
+					$ph['icon'] = $ph['icon_folder_open'];
+					$_style['icon_node_toggle'] = $_style['tree_minusnode'];
 
-					if(!$checkIsFolder || (!$checkIsFolder && !$checkNoFolder)) {
-						$ph['src'] = $isPrivate ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
-						$tpl = str_replace('[&tree_minusnode&]', '', $tpl);
+					if(($checkDocs && !$checkFolders) || (!$checkDocs && !$checkFolders)) {
+						$ph['showChildren'] = 1;
+						$_style['icon_node_toggle'] = '';
+						$ph['icon'] = $ph['icon_folder_close'];
+					} elseif(!$checkDocs && $checkFolders) {
+						$ph['showChildren'] = 0;
+						$ph['openFolder'] = 2;
 					} else {
-						$ph['src'] = $isPrivate ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
-						$tpl = str_replace('modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);',
-							'if(tree.ca==\'parent\'||tree.ca==\'move\'||tree.ca==\'link\'){modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);}else{' . ($checkNoFolder ? 'if(this.parentNode.lastChild.style.display !== \'block\'){modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);}' : '' ) . 'modx.tree.toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;let tam = ' . $checkNoFolder . '}',
-							$tpl);
+						$ph['openFolder'] = 2;
+					}
+
+					// invoke OnManagerNodePrerender event
+					$prenode = $modx->invokeEvent("OnManagerNodePrerender", array(
+						'ph' => $ph,
+						'opened' => '1'
+					));
+					$prenode = unserialize($prenode[0]);
+					if(is_array($prenode)) {
+						$ph = $prenode;
 					}
 
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
 					$node = $modx->parseText($node, $_style, '[&', '&]');
 					$output .= $node;
-					if($checkIsFolder) {
+					if($checkFolders) {
 						makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
 					}
 					$node = '</div></div>';
 				} else {
-					$tpl = getTplClosedFolderNode();
-					$ph['src'] = $isPrivate ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
+					$closed2[] = $row['id'];
+					$ph['icon'] = $ph['icon_folder_close'];
+					$_style['icon_node_toggle'] = $_style['tree_plusnode'];
 
-					if(!$checkIsFolder || (!$checkIsFolder && !$checkNoFolder)) {
-						$tpl = str_replace('[&tree_plusnode&]', '', $tpl);
+					if(($checkDocs && !$checkFolders) || (!$checkDocs && !$checkFolders)) {
+						$ph['showChildren'] = 1;
+						$_style['icon_node_toggle'] = '';
+					} elseif(!$checkDocs && $checkFolders) {
+						$ph['showChildren'] = 0;
+						$ph['openFolder'] = 2;
 					} else {
-						$tpl = str_replace('modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);',
-							'if(tree.ca==\'parent\'||tree.ca==\'move\'||tree.ca==\'link\'){modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);}else{' . ($checkNoFolder ? 'if(this.parentNode.lastChild.style.display !== \'block\'){modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);}' : '' ) . 'modx.tree.toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;let tam = ' . $checkNoFolder . '}',
-							$tpl);
+						$ph['openFolder'] = 2;
+					}
+
+					// invoke OnManagerNodePrerender event
+					$prenode = $modx->invokeEvent("OnManagerNodePrerender", array(
+						'ph' => $ph,
+						'opened' => '0'
+					));
+					$prenode = unserialize($prenode[0]);
+					if(is_array($prenode)) {
+						$ph = $prenode;
 					}
 
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
 					$node = $modx->parseText($node, $_style, '[&', '&]');
-					$closed2[] = $row['id'];
+					$node .= '</div></div>';
 				}
-
 			} else {
 				// expandAll: two type for partial expansion
 				if($expandAll == 1 || ($expandAll == 2 && in_array($row['id'], $opened))) {
 					if($expandAll == 1) {
 						$opened2[] = $row['id'];
 					}
-					$tpl = getTplOpenFolderNode();
-					$ph['src'] = $isPrivate ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
+					$ph['icon'] = $ph['icon_folder_open'];
+					$_style['icon_node_toggle'] = $_style['tree_minusnode'];
+
+					if($row['donthit']) {
+						$ph['tree_page_click'] = 3;
+						$_style['icon_node_toggle'] = '';
+					}
+
+					// invoke OnManagerNodePrerender event
+					$prenode = $modx->invokeEvent("OnManagerNodePrerender", array(
+						'ph' => $ph,
+						'opened' => '1'
+					));
+					$prenode = unserialize($prenode[0]);
+					if(is_array($prenode)) {
+						$ph = $prenode;
+					}
+
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
 					$node = $modx->parseText($node, $_style, '[&', '&]');
 					$output .= $node;
-					makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
+					if(!$row['donthit']) {
+						makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
+					}
 					$node = '</div></div>';
 				} else {
-					$tpl = getTplClosedFolderNode();
-					$ph['src'] = $isPrivate ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
+					$closed2[] = $row['id'];
+					$ph['icon'] = $ph['icon_folder_close'];
+					$_style['icon_node_toggle'] = $_style['tree_plusnode'];
+
+					if($row['donthit']) {
+						$ph['tree_page_click'] = 3;
+						$_style['icon_node_toggle'] = '';
+					}
+
+					// invoke OnManagerNodePrerender event
+					$prenode = $modx->invokeEvent("OnManagerNodePrerender", array(
+						'ph' => $ph,
+						'opened' => '0'
+					));
+					$prenode = unserialize($prenode[0]);
+					if(is_array($prenode)) {
+						$ph = $prenode;
+					}
+
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
 					$node = $modx->parseText($node, $_style, '[&', '&]');
-					$closed2[] = $row['id'];
+					$node .= '</div></div>';
 				}
 			}
 		}
-		$node = $evtOut . $node;
 
 		// invoke OnManagerNodeRender event
 		$data['node'] = $node;
@@ -310,22 +366,6 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 		}
 
 		$output .= $node;
-		// store vars in Javascript
-		$scr = '';
-		if($expandAll == 1) {
-			$scr .= '<script type="text/javascript"> ';
-			foreach($opened2 as $item) {
-				$scr .= sprintf('parent.openedArray[%d] = 1; ', $item);
-			}
-			$scr .= '</script> ';
-		} elseif($expandAll == 0) {
-			$scr .= '<script type="text/javascript"> ';
-			foreach($closed2 as $item) {
-				$scr .= sprintf('parent.openedArray[%d] = 0; ', $item);
-			}
-			$scr .= '</script> ';
-		}
-		$output = $scr . $output;
 	}
 }
 
@@ -445,68 +485,41 @@ function isDateNode($nodeNameSource) {
 function checkIsFolder($parent = 0, $isfolder = 1) {
 	global $modx;
 
-	return (int) $modx->db->getValue($modx->db->query('SELECT count(id) FROM ' . $modx->getFullTableName('site_content') . ' WHERE parent=' . $parent . ' AND isfolder=' . $isfolder . ' '));
+	return (int) $modx->db->getValue($modx->db->query('SELECT count(*) FROM ' . $modx->getFullTableName('site_content') . ' WHERE parent=' . $parent . ' AND isfolder=' . $isfolder . ' '));
 }
 
 function getTplSingleNode() {
-	return '<div
-    id="node[+id+]"
-    p="[+parent+]"
-    >[+spacer+][+pad+]<span
+	return '<div id="node[+id+]"><span
         id="p[+id+]"
-        title="[%click_to_context%]"
         onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
         oncontextmenu="this.onclick(event);return false;"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\'"
         >[+icon+]</span>[+lockedByUser+]<span
-        p="[+parent+]"
         class="treeNode[+treeNodeSelected+]"
-        onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);"
+        onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\');"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         oncontextmenu="document.getElementById(\'p[+id+]\').onclick(event);return false;"
         title="[+alt+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</div>';
 }
 
-function getTplOpenFolderNode() {
-	return '<div
-    id="node[+id+]"
-    p="[+parent+]"
-    >[+spacer+]<span
+function getTplFolderNode() {
+	return '<div id="node[+id+]"><span
         id="s[+id+]"
+        data-icon-expanded="[&tree_plusnode&]"
+        data-icon-collapsed="[&tree_minusnode&]"
         onclick="modx.tree.toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
         oncontextmenu="this.onclick(event); return false;"
-        >[&tree_minusnode&]</span><span
+        >[&icon_node_toggle&]</span><span
         id="f[+id+]"
-        title="[%click_to_context%]"
+        data-icon-folder-open="[+icon_folder_open+]"
+        data-icon-folder-close="[+icon_folder_close+]"
         onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
         oncontextmenu="this.onclick(event);return false;"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
-        >[+src+]</span>[+lockedByUser+]<span
+        >[+icon+]</span>[+lockedByUser+]<span
         class="treeNode[+treeNodeSelected+]"
-        onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);"
+        onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\',[+showChildren+],[+openFolder+]);"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);return false;"
-        title="[+alt+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]<div style="display:block">';
-}
-
-function getTplClosedFolderNode() {
-	return '<div
-    id="node[+id+]"
-    p="[+parent+]"
-    >[+spacer+]<span
-        id="s[+id+]"
-        onclick="modx.tree.toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
-        oncontextmenu="this.onclick(event); return false;"
-        >[&tree_plusnode&]</span><span
-        id="f[+id+]"
-        title="[%click_to_context%]"
-        onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
-        oncontextmenu="this.onclick(event);return false;"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
-        >[+src+]</span>[+lockedByUser+]<span
-        class="treeNode[+treeNodeSelected+]"
-        onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\'); modx.tree.setSelected(this);"
-        onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
-        oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);return false;"
-        title="[+alt+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]<div style="display:none"></div></div>';
+        title="[+alt+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]<div>';
 }

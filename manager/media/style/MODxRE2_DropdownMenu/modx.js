@@ -213,12 +213,12 @@
 				modx.resizer.mask.style.zIndex = modx.resizer.oldZIndex;
 				d.getElementById(modx.resizer.switcher).onclick = modx.resizer.toggle;
 				d.getElementById(modx.resizer.id).onmousedown = modx.resizer.onMouseDown;
-				d.getElementById(modx.resizer.id).onmouseup = modx.resizer.onMouseUp
+				d.getElementById(modx.resizer.id).onmouseup = modx.resizer.mask.onmouseup = modx.resizer.onMouseUp
 			},
 			onMouseDown: function(e) {
 				e = e || w.event;
 				modx.resizer.dragElement = e.target !== null ? e.target : e.srcElement;
-				if((e.buttons === 1 && e.button === 0) && modx.resizer.dragElement.id === modx.resizer.id) {
+				if((e.buttons === 1 || e.button === 0) && modx.resizer.dragElement.id === modx.resizer.id) {
 					modx.resizer.oldZIndex = modx.resizer.dragElement.style.zIndex;
 					modx.resizer.dragElement.style.zIndex = modx.resizer.newZIndex;
 					modx.resizer.dragElement.style.background = modx.resizer.background;
@@ -306,12 +306,13 @@
 			toggleNode: function(a, b, c, e, f) {
 				f = (!f || f === '0') ? '0' : '1';
 				this.rpcNode = a.parentNode.lastChild;
-				let rpcNodeText, loadText = modx.lang.loading_doc_tree,
-					signImg = d.getElementById("s" + c),
-					folderImg = d.getElementById("f" + c);
-				if(this.rpcNode.style.display !== 'block') {
-					signImg.innerHTML = modx.style.tree_minusnode;
-					folderImg.innerHTML = (f === '0') ? modx.style.tree_folderopen : modx.style.tree_folderopen_secure;
+				let rpcNodeText,
+					loadText = modx.lang.loading_doc_tree,
+					iconNodeToggle = d.getElementById("s" + c),
+					iconNode = d.getElementById("f" + c);
+				if(this.rpcNode.innerHTML === '') {
+					iconNodeToggle.innerHTML = iconNodeToggle.dataset.iconCollapsed;
+					iconNode.innerHTML = iconNode.dataset.iconFolderOpen;
 					rpcNodeText = this.rpcNode.innerHTML;
 					modx.openedArray[c] = 1;
 					if(rpcNodeText === "" || rpcNodeText.indexOf(loadText) > 0) {
@@ -325,13 +326,11 @@
 							modx.tree.rpcLoadData(r)
 						})
 					}
-					this.rpcNode.style.display = 'block';
 					this.saveFolderState()
 				} else {
-					signImg.innerHTML = modx.style.tree_plusnode;
-					folderImg.innerHTML = (f === '0') ? modx.style.tree_folder : modx.style.tree_folder_secure;
+					iconNodeToggle.innerHTML = iconNodeToggle.dataset.iconExpanded;
+					iconNode.innerHTML = iconNode.dataset.iconFolderClose;
 					delete modx.openedArray[c];
-					this.rpcNode.style.display = 'none';
 					this.rpcNode.innerHTML = '';
 					this.saveFolderState()
 				}
@@ -339,7 +338,6 @@
 			rpcLoadData: function(a) {
 				if(this.rpcNode !== null) {
 					this.rpcNode.innerHTML = typeof a === 'object' ? a.responseText : a;
-					this.rpcNode.style.display = 'block';
 					this.rpcNode.loaded = true;
 					let el = d.getElementById('buildText');
 					if(el) {
@@ -357,7 +355,7 @@
 					}
 				}
 			},
-			treeAction: function(e, a, b, c) {
+			treeAction: function(e, a, b, c, f, g) {
 				if(tree.ca === "move") {
 					try {
 						w.main.setMoveValue(a, b)
@@ -371,28 +369,31 @@
 					} else {
 						let href = '';
 						modx.setLastClickedElement(7, a);
-
-						let el = d.createElement('div');
-						el.style.zIndex = 999;
-						el.style.position = 'absolute';
-						el.style.left = 0;
-						el.style.top = 0;
-						el.style.right = 0;
-						el.style.bottom = 0;
-						d.getElementById('treeRoot').appendChild(el);
-						if(c === 0) {
-							href = "index.php?a=3&r=1&id=" + a + this.getFolderState()
+						if(!isNaN(parseFloat(c)) && isFinite(c)) {
+							href = "index.php?a=" + c + "&r=1&id=" + a + (g === 0 ? this.getFolderState() : '')
 						} else {
-							href = "index.php?a=" + modx.config.tree_page_click + "&r=1&id=" + a
+							href = c;
 						}
-						if(e.shiftKey) {
-							w.getSelection().removeAllRanges();
-							modx.openWindow(href);
-							this.restoreTree()
-						} else {
-							w.main.location.href = href
+
+						if(g === 2) {
+							if(f !== 1) {
+								href = '';
+							}
+							d.getElementById('s' + a).onclick()
+						}
+
+						if(href) {
+							if(e.shiftKey) {
+								w.getSelection().removeAllRanges();
+								modx.openWindow(href);
+								this.restoreTree()
+							} else {
+								w.main.location.href = href
+							}
 						}
 					}
+					let el = d.querySelector('#node' + a + '>.treeNode');
+					modx.tree.setSelected(el)
 				}
 				if(tree.ca === "parent") {
 					try {
@@ -546,7 +547,7 @@
 			},
 			setItemToChange: function() {
 				let a = d.getElementById(modx.main.idFrame).contentWindow, b = a.location.search.substring(1);
-				if(parseInt(modx.main.getQueryVariable('a', b)) === 27 && modx.main.getQueryVariable('id', b)) {
+				if((parseInt(modx.main.getQueryVariable('a', b)) === 27 || parseInt(modx.main.getQueryVariable('a', b)) === 3) && modx.main.getQueryVariable('id', b)) {
 					this.itemToChange = parseInt(modx.main.getQueryVariable('id', b))
 				} else {
 					this.itemToChange = null
@@ -573,7 +574,8 @@
 					el.style.display = 'block'
 				}
 				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=1&id=' + this.itemToChange, function(r) {
-					modx.tree.rpcLoadData(r)
+					modx.tree.rpcLoadData(r);
+					modx.tree.saveFolderState();
 				})
 			},
 			collapseTree: function() {
@@ -597,7 +599,7 @@
 					el.style.display = 'block'
 				}
 				let a = d.sortFrm;
-				let b = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + a.dt.value + '&tree_sortby=' + a.sortby.value + '&tree_sortdir=' + a.sortdir.value + '&tree_nodename=' + a.nodename.value + '&id=' + this.itemToChange;
+				let b = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + a.dt.value + '&tree_sortby=' + a.sortby.value + '&tree_sortdir=' + a.sortdir.value + '&tree_nodename=' + a.nodename.value + '&id=' + this.itemToChange + '&showonlyfolders=' + a.showonlyfolders.value;
 				modx.get('index.php?' + b, function(r) {
 					modx.tree.rpcLoadData(r)
 				})
