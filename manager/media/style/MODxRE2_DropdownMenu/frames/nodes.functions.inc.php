@@ -321,6 +321,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					if($ph['donthit'] == 1) {
 						$ph['tree_page_click'] = 3;
 						$_style['icon_node_toggle'] = '';
+						$ph['icon'] = $ph['icon_folder_close'];
 					}
 
 					// invoke OnManagerNodePrerender event
@@ -359,6 +360,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					if($ph['donthit'] == 1) {
 						$ph['tree_page_click'] = 3;
 						$_style['icon_node_toggle'] = '';
+						$ph['icon'] = $ph['icon_folder_close'];
 					}
 
 					// invoke OnManagerNodePrerender event
