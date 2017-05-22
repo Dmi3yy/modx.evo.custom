@@ -27,8 +27,6 @@ $hereid = isset($_GET['id']) ? $_GET['id'] : '';
 
 if(isset($_GET['showonlyfolders'])) {
 	$_SESSION['tree_show_only_folders'] = $_GET['showonlyfolders'];
-} elseif(!isset($_SESSION['tree_show_only_folders'])) {
-	$_SESSION['tree_show_only_folders'] = 1;
 }
 
 // setup sorting
@@ -61,15 +59,15 @@ makeHTML($indent, $parent, $expandAll, $theme, $hereid);
 echo $output;
 
 // store vars in Javascript
-$scr = '';
-if($expandAll == 1) {
-	$scr .= '<script type="text/javascript">';
-	foreach($opened2 as $item) {
-		$scr .= sprintf('modx.openedArray[%d] = 1; ', $item);
-	}
-	$scr .= '</script> ';
-}
-echo $scr;
+//$scr = '';
+//if($expandAll == 1) {
+//	$scr .= '<script type="text/javascript">';
+//	foreach($opened2 as $item) {
+//		$scr .= "\n" . sprintf('modx.openedArray[%d] = 1; ', $item);
+//	}
+//	$scr .= '</script> ';
+//}
+//echo $scr;
 
 // check for deleted documents on reload
 if($expandAll == 2) {

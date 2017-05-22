@@ -27,6 +27,10 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 	$initMainframeAction = 2; // welcome.static
 }
 
+if(!isset($_SESSION['tree_show_only_folders'])) {
+	$_SESSION['tree_show_only_folders'] = 1;
+}
+
 $body_class = '';
 $menu_height = $modx->config['manager_menu_height'];
 $tree_width = $modx->config['manager_tree_width'];

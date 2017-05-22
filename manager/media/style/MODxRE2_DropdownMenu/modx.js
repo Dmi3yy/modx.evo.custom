@@ -1,7 +1,7 @@
 'use strict';
 (function($, w, d, u) {
 	let _ = {
-		parent: this,
+		frameset: 'frameset',
 		init: function() {
 			if(!localStorage.getItem('MODX_lastPositionSideBar')) {
 				localStorage.setItem('MODX_lastPositionSideBar', this.config.tree_width)
@@ -294,6 +294,7 @@
 			}
 		},
 		tree: {
+			ctx: null,
 			rpcNode: null,
 			itemToChange: null,
 			selectedObjectName: null,
@@ -358,6 +359,7 @@
 			treeAction: function(e, a, b, c, f, g) {
 				if(tree.ca === "move") {
 					try {
+						this.setSelectedByContext(a);
 						w.main.setMoveValue(a, b)
 					} catch(oException) {
 						alert(modx.lang.unable_set_parent)
@@ -397,6 +399,7 @@
 				}
 				if(tree.ca === "parent") {
 					try {
+						this.setSelectedByContext(a);
 						w.main.setParent(a, b)
 					} catch(oException) {
 						alert(modx.lang.unable_set_parent)
@@ -404,6 +407,7 @@
 				}
 				if(tree.ca === "link") {
 					try {
+						this.setSelectedByContext(a);
 						w.main.setLink(a)
 					} catch(oException) {
 						alert(modx.lang.unable_set_link)
@@ -411,66 +415,113 @@
 				}
 			},
 			showPopup: function(a, b, c, f, g, e) {
-				let mnu = d.getElementById('mx_contextmenu'),
-					i4 = d.getElementById('item4'),
-					i5 = d.getElementById('item5'),
-					i8 = d.getElementById('item8'),
-					i9 = d.getElementById('item9'),
-					i10 = d.getElementById('item10'),
-					i11 = d.getElementById('item11'),
-					el = d.querySelector('#tree .treeNodeSelectedByContext');
-				if(el) el.classList.remove('treeNodeSelectedByContext');
-				modx.hideDropDown(mnu);
-				d.querySelector('#node' + a + '>.treeNode').classList.add('treeNodeSelectedByContext');
-				if(modx.permission.publish_document === 1) {
-					i9.style.display = 'block';
-					i10.style.display = 'block';
-					if(c === 1) i9.style.display = 'none';
-					else i10.style.display = 'none'
-				} else {
-					i5.style.display = 'none'
-				}
-				if(modx.permission.delete_document === 1) {
-					i4.style.display = 'block';
-					i8.style.display = 'block';
-					if(f === 1) {
-						i4.style.display = 'none';
-						i9.style.display = 'none';
-						i10.style.display = 'none'
-					} else {
-						i8.style.display = 'none'
+				let node = d.getElementById('node' + a),
+					tree = d.getElementById('tree');
+
+				if(node.dataset.contextmenu) {
+					modx.hideDropDown();
+					this.ctx = d.createElement('div');
+					this.ctx.id = 'contextmenu';
+					this.ctx.className = 'dropdown-menu';
+					d.getElementById(modx.frameset).appendChild(this.ctx);
+					this.setSelectedByContext(a);
+					let dataJson = JSON.parse(node.dataset.contextmenu);
+					for(let key in dataJson) {
+						if(dataJson.hasOwnProperty(key)) {
+							let item = d.createElement('div');
+							for(let k in dataJson[key]) {
+								if(dataJson[key].hasOwnProperty(k)) {
+									if(k.substring(0, 2) === 'on') {
+										let onEvent = dataJson[key][k];
+										item[k] = function() {
+											eval(onEvent)
+										}
+									} else {
+										item[k] = dataJson[key][k]
+									}
+								}
+							}
+							if(key.indexOf('header') === 0) item.className += ' menuHeader';
+							if(key.indexOf('item') === 0) item.className += ' menuLink';
+							if(key.indexOf('seperator') === 0 || key.indexOf('separator') === 0) item.className += ' seperator separator';
+							this.ctx.appendChild(item)
+						}
 					}
-				}
-				if(g === 1) i11.style.display = 'block';
-				else i11.style.display = 'none';
-				el = d.getElementById('tree');
-				let bodyHeight = el.offsetHeight + el.offsetTop;
-				let x = e.clientX > 0 ? e.clientX : e.pageX;
-				let y = e.clientY > 0 ? e.clientY : e.pageY;
-				if(y + mnu.offsetHeight / 2 > bodyHeight) {
-					y = bodyHeight - mnu.offsetHeight - 5
-				} else if(y - mnu.offsetHeight / 2 < el.offsetTop) {
-					y = el.offsetTop + 5
+					let bodyHeight = tree.offsetHeight + tree.offsetTop;
+					let x = e.clientX > 0 ? e.clientX : e.pageX;
+					let y = e.clientY > 0 ? e.clientY : e.pageY;
+					if(y + this.ctx.offsetHeight / 2 > bodyHeight) {
+						y = bodyHeight - this.ctx.offsetHeight - 5
+					} else if(y - this.ctx.offsetHeight / 2 < tree.offsetTop) {
+						y = tree.offsetTop + 5
+					} else {
+						y = y - this.ctx.offsetHeight / 2
+					}
+					let el = e.target.closest('.treeNode');
+					if(el === null) x += 50;
+					this.itemToChange = a;
+					this.selectedObjectName = b;
+					this.dopopup(this.ctx, x + 10, y);
+					this.ctx.classList.add('show');
+					e.stopPropagation()
 				} else {
-					y = y - mnu.offsetHeight / 2
+					let ctx = d.getElementById('mx_contextmenu');
+					modx.hideDropDown(ctx);
+					this.setSelectedByContext(a);
+					let i4 = d.getElementById('item4'),
+						i5 = d.getElementById('item5'),
+						i8 = d.getElementById('item8'),
+						i9 = d.getElementById('item9'),
+						i10 = d.getElementById('item10'),
+						i11 = d.getElementById('item11');
+					if(modx.permission.publish_document === 1) {
+						i9.style.display = 'block';
+						i10.style.display = 'block';
+						if(c === 1) i9.style.display = 'none';
+						else i10.style.display = 'none'
+					} else {
+						i5.style.display = 'none'
+					}
+					if(modx.permission.delete_document === 1) {
+						i4.style.display = 'block';
+						i8.style.display = 'block';
+						if(f === 1) {
+							i4.style.display = 'none';
+							i9.style.display = 'none';
+							i10.style.display = 'none'
+						} else {
+							i8.style.display = 'none'
+						}
+					}
+					if(g === 1) i11.style.display = 'block';
+					else i11.style.display = 'none';
+					let bodyHeight = tree.offsetHeight + tree.offsetTop;
+					let x = e.clientX > 0 ? e.clientX : e.pageX;
+					let y = e.clientY > 0 ? e.clientY : e.pageY;
+					if(y + ctx.offsetHeight / 2 > bodyHeight) {
+						y = bodyHeight - ctx.offsetHeight - 5
+					} else if(y - ctx.offsetHeight / 2 < tree.offsetTop) {
+						y = tree.offsetTop + 5
+					} else {
+						y = y - ctx.offsetHeight / 2
+					}
+					let el = e.target.closest('.treeNode');
+					if(el === null) x += 50;
+					this.itemToChange = a;
+					this.selectedObjectName = b;
+					this.dopopup(ctx, x + 10, y);
+					e.stopPropagation()
 				}
-				el = e.target.closest('.treeNode');
-				if(el === null) x += 50;
-				this.itemToChange = a;
-				this.selectedObjectName = b;
-				this.dopopup(x + 10, y);
-				e.stopPropagation()
 			},
-			dopopup: function(a, b) {
+			dopopup: function(el, a, b) {
 				if(this.selectedObjectName.length > 20) {
 					this.selectedObjectName = this.selectedObjectName.substr(0, 20) + "..."
 				}
-				let c = d.getElementById('mx_contextmenu'),
-					el = d.getElementById("nameHolder");
-				c.style.left = a + (modx.config.textdir ? '-190' : '') + "px";
-				c.style.top = b + "px";
-				c.classList.add('show');
-				el.innerHTML = this.selectedObjectName
+				let f = d.getElementById("nameHolder");
+				el.style.left = a + (modx.config.textdir ? '-190' : '') + "px";
+				el.style.top = b + "px";
+				el.classList.add('show');
+				f.innerHTML = this.selectedObjectName
 			},
 			menuHandler: function(a) {
 				switch(a) {
@@ -544,6 +595,11 @@
 			setActiveFromContextMenu: function(a) {
 				let el = d.querySelector('#node' + a + '>.treeNode');
 				if(el) this.setSelected(el)
+			},
+			setSelectedByContext: function(a) {
+				let el = d.querySelector('#tree .treeNodeSelectedByContext');
+				if(el) el.classList.remove('treeNodeSelectedByContext');
+				if(a) d.querySelector('#node' + a + '>.treeNode').classList.add('treeNodeSelectedByContext');
 			},
 			setItemToChange: function() {
 				let a = d.getElementById(modx.main.idFrame).contentWindow, b = a.location.search.substring(1);
@@ -818,8 +874,13 @@
 			for(let i = 0; i < elms.length; i++) {
 				if(a === null || (a !== null && a !== elms[i])) elms[i].classList.remove('show')
 			}
-			let el = d.querySelector('#tree .treeNodeSelectedByContext');
-			if(el) el.classList.remove('treeNodeSelectedByContext')
+			if(tree.ca === "open" || tree.ca === "") {
+				modx.tree.setSelectedByContext();
+			}
+			if(modx.tree.ctx !== null) {
+				d.getElementById(modx.frameset).removeChild(modx.tree.ctx);
+				modx.tree.ctx = null
+			}
 		},
 		animation: {
 			fadeIn: function(a, b) {
@@ -871,7 +932,9 @@
 				let e = [],
 					i = 0,
 					k;
-				for(k in b) e[i++] = k + '=' + b[k];
+				for(k in b) {
+					if(b.hasOwnProperty(k)) e[i++] = k + '=' + b[k];
+				}
 				f = e.join('&')
 			}
 			x.open('POST', a, true);

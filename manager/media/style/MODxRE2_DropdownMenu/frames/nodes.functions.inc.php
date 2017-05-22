@@ -112,24 +112,24 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 
 		$url = $modx->makeUrl($row['id']);
 
-		$alt = '';
+		$title = '';
 		if(isDateNode($nodeNameSource)) {
-			$alt = $_lang['pagetitle'] . ': ' . $row['pagetitle'] . '[+lf+]';
+			$title = $_lang['pagetitle'] . ': ' . $row['pagetitle'] . '[+lf+]';
 		}
-		$alt .= $_lang['id'] . ': ' . $row['id'];
-		$alt .= '[+lf+]' . $_lang['resource_opt_menu_title'] . ': ' . $row['menutitle'];
-		$alt .= '[+lf+]' . $_lang['resource_opt_menu_index'] . ': ' . $row['menuindex'];
-		$alt .= '[+lf+]' . $_lang['alias'] . ': ' . (!empty($row['alias']) ? $row['alias'] : '-');
-		$alt .= '[+lf+]' . $_lang['template'] . ': ' . $row['templatename'];
-		$alt .= '[+lf+]' . $_lang['publish_date'] . ': ' . $modx->toDateFormat($row['pub_date']);
-		$alt .= '[+lf+]' . $_lang['unpublish_date'] . ': ' . $modx->toDateFormat($row['unpub_date']);
-		$alt .= '[+lf+]' . $_lang['page_data_web_access'] . ': ' . ($row['privateweb'] ? $_lang['private'] : $_lang['public']);
-		$alt .= '[+lf+]' . $_lang['page_data_mgr_access'] . ': ' . ($row['privatemgr'] ? $_lang['private'] : $_lang['public']);
-		$alt .= '[+lf+]' . $_lang['resource_opt_richtext'] . ': ' . ($row['richtext'] == 0 ? $_lang['no'] : $_lang['yes']);
-		$alt .= '[+lf+]' . $_lang['page_data_searchable'] . ': ' . ($row['searchable'] == 0 ? $_lang['no'] : $_lang['yes']);
-		$alt .= '[+lf+]' . $_lang['page_data_cacheable'] . ': ' . ($row['cacheable'] == 0 ? $_lang['no'] : $_lang['yes']);
-		$alt = $modx->htmlspecialchars($alt);
-		$alt = str_replace('[+lf+]', ' &#13;', $alt);   // replace line-breaks with empty space as fall-back
+		$title .= $_lang['id'] . ': ' . $row['id'];
+		$title .= '[+lf+]' . $_lang['resource_opt_menu_title'] . ': ' . $row['menutitle'];
+		$title .= '[+lf+]' . $_lang['resource_opt_menu_index'] . ': ' . $row['menuindex'];
+		$title .= '[+lf+]' . $_lang['alias'] . ': ' . (!empty($row['alias']) ? $row['alias'] : '-');
+		$title .= '[+lf+]' . $_lang['template'] . ': ' . $row['templatename'];
+		$title .= '[+lf+]' . $_lang['publish_date'] . ': ' . $modx->toDateFormat($row['pub_date']);
+		$title .= '[+lf+]' . $_lang['unpublish_date'] . ': ' . $modx->toDateFormat($row['unpub_date']);
+		$title .= '[+lf+]' . $_lang['page_data_web_access'] . ': ' . ($row['privateweb'] ? $_lang['private'] : $_lang['public']);
+		$title .= '[+lf+]' . $_lang['page_data_mgr_access'] . ': ' . ($row['privatemgr'] ? $_lang['private'] : $_lang['public']);
+		$title .= '[+lf+]' . $_lang['resource_opt_richtext'] . ': ' . ($row['richtext'] == 0 ? $_lang['no'] : $_lang['yes']);
+		$title .= '[+lf+]' . $_lang['page_data_searchable'] . ': ' . ($row['searchable'] == 0 ? $_lang['no'] : $_lang['yes']);
+		$title .= '[+lf+]' . $_lang['page_data_cacheable'] . ': ' . ($row['cacheable'] == 0 ? $_lang['no'] : $_lang['yes']);
+		$title = $modx->htmlspecialchars($title);
+		$title = str_replace('[+lf+]', ' &#13;', $title);   // replace line-breaks with empty space as fall-back
 
 		$data = array(
 			'id' => $row['id'],
@@ -152,15 +152,17 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			'template' => $row['template'],
 			'nodetitle' => $nodetitle,
 			'url' => $url,
-			'alt' => $alt,
+			'title' => $title,
 			'nodetitleDisplay' => $nodetitleDisplay,
 			'weblinkDisplay' => $weblinkDisplay,
 			'pageIdDisplay' => $pageIdDisplay,
 			'lockedByUser' => $lockedByUser,
+			'treeNodeClass' => 'treeNode',
 			'treeNodeSelected' => $row['id'] == $hereid ? ' treeNodeSelected' : '',
 			'tree_page_click' => $modx->config['tree_page_click'],
 			'showChildren' => 1,
-			'openFolder' => 1
+			'openFolder' => 1,
+			'contextmenu' => ''
 		);
 
 		$ph = $data;
@@ -203,6 +205,10 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			$prenode = unserialize($prenode[0]);
 			if(is_array($prenode)) {
 				$ph = $prenode;
+			}
+
+			if($ph['contextmenu']) {
+				$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
 			}
 
 			if(!$_SESSION['tree_show_only_folders']) {
@@ -257,7 +263,9 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph = $prenode;
 					}
 
-					if ($ph['showChildren'] == 0) {$_style['icon_node_toggle'] = '';}
+					if($ph['contextmenu']) {
+						$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
+					}
 
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
@@ -292,7 +300,9 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph = $prenode;
 					}
 
-					if ($ph['showChildren'] == 0) {$_style['icon_node_toggle'] = '';}
+					if($ph['contextmenu']) {
+						$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
+					}
 
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
@@ -323,7 +333,9 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph = $prenode;
 					}
 
-					if ($ph['showChildren'] == 0) {$_style['icon_node_toggle'] = '';}
+					if($ph['contextmenu']) {
+						$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
+					}
 
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
@@ -352,9 +364,11 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					if(is_array($prenode)) {
 						$ph = $prenode;
 					}
-					
-					if ($ph['showChildren'] == 0) {$_style['icon_node_toggle'] = '';}
-					
+
+					if($ph['contextmenu']) {
+						$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
+					}
+
 					$node = $modx->parseText($tpl, $ph);
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
 					$node = $modx->parseText($node, $_style, '[&', '&]');
@@ -496,22 +510,31 @@ function checkIsFolder($parent = 0, $isfolder = 1) {
 	return (int) $modx->db->getValue($modx->db->query('SELECT count(*) FROM ' . $modx->getFullTableName('site_content') . ' WHERE parent=' . $parent . ' AND isfolder=' . $isfolder . ' '));
 }
 
+function _htmlentities($array) {
+	global $modx;
+
+	$array = json_encode($array, JSON_UNESCAPED_UNICODE);
+	$array = htmlentities($array, ENT_COMPAT, $modx->config['modx_charset']);
+
+	return $array;
+}
+
 function getTplSingleNode() {
-	return '<div id="node[+id+]"><span
+	return '<div id="node[+id+]"[+contextmenu+]><span
         id="p[+id+]"
         onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
         oncontextmenu="this.onclick(event);return false;"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\'"
         >[+icon+]</span>[+lockedByUser+]<span
-        class="treeNode[+treeNodeSelected+]"
+        class="[+treeNodeClass+][+treeNodeSelected+]"
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\');"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         oncontextmenu="document.getElementById(\'p[+id+]\').onclick(event);return false;"
-        title="[+alt+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</div>';
+        title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]</div>';
 }
 
 function getTplFolderNode() {
-	return '<div id="node[+id+]"><span
+	return '<div id="node[+id+]"[+contextmenu+]><span
         id="s[+id+]"
         data-icon-expanded="[&tree_plusnode&]"
         data-icon-collapsed="[&tree_minusnode&]"
@@ -525,9 +548,9 @@ function getTplFolderNode() {
         oncontextmenu="this.onclick(event);return false;"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         >[+icon+]</span>[+lockedByUser+]<span
-        class="treeNode[+treeNodeSelected+]"
+        class="[+treeNodeClass+][+treeNodeSelected+]"
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\',[+showChildren+],[+openFolder+]);"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);return false;"
-        title="[+alt+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]<div>';
+        title="[+title+]">[+nodetitleDisplay+][+weblinkDisplay+]</span>[+pageIdDisplay+]<div>';
 }
