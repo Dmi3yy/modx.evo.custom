@@ -318,7 +318,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					$ph['icon'] = $ph['icon_folder_open'];
 					$_style['icon_node_toggle'] = $_style['tree_minusnode'];
 
-					if($row['donthit']) {
+					if($ph['donthit'] == 1) {
 						$ph['tree_page_click'] = 3;
 						$_style['icon_node_toggle'] = '';
 					}
@@ -333,9 +333,9 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						$ph = $prenode;
 					}
 
-					if ($ph['showChildren'] == 0) {
+					if($ph['showChildren'] == 0) {
 						$_style['icon_node_toggle'] = '';
-						$ph['donthit'] = 0;
+						$ph['donthit'] = 1;
 						$ph['icon'] = $ph['icon_folder_close'];
 					}
 					
@@ -347,7 +347,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					$node = $modx->parseText($node, $_lang, '[%', '%]');
 					$node = $modx->parseText($node, $_style, '[&', '&]');
 					$output .= $node;
-					if($ph['donthit'] == 1) {
+					if($ph['donthit'] == 0) {
 						makeHTML($indent + 1, $row['id'], $expandAll, $theme, $hereid);
 					}
 					$node = '</div></div>';
@@ -356,7 +356,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					$ph['icon'] = $ph['icon_folder_close'];
 					$_style['icon_node_toggle'] = $_style['tree_plusnode'];
 
-					if($row['donthit']) {
+					if($ph['donthit'] == 1) {
 						$ph['tree_page_click'] = 3;
 						$_style['icon_node_toggle'] = '';
 					}
@@ -373,6 +373,8 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 
 					if ($ph['showChildren'] == 0) {
 						$_style['icon_node_toggle'] = '';
+						$ph['donthit'] = 1;
+						$ph['icon'] = $ph['icon_folder_close'];
 					}
 					
 					if($ph['contextmenu']) {
