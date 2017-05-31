@@ -696,7 +696,7 @@ ul.elements_buttonbar .fa { font-size: 13px !important; padding: 1px 1px 0; }
 #treePane .actionButtons img { display: inline; }
 .actionButtons--tableheader .fa { font-size: 14px; }
 .sectionBody .actionButtons { padding-top: 0; min-height: 48px; }
-.sectionBody .actionButtons li { margin-right: 10px; }
+.sectionBody .actionButtons li { margin-right: 0 10px 10px 0; }
 .sectionBody .actionButtons a { display: inline-block; padding: 9px 10px; line-height: 1; }
 input[type="button"], input[type="submit"] { background: #ededed; border: 1px solid #ddd; border-radius: 3px !important; }
 input[type="button"]:hover, input[type="submit"]:hover { background: #3697CD; border: 1px solid #3697CD; color: #fff; }
