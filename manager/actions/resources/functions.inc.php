@@ -151,7 +151,7 @@ function prepareElementRowPh($row, $resourceTable, $resources) {
 	if ($rowLock && $modx->hasPermission('display_locks')) {
 		if ($rowLock['sid'] == $modx->sid) {
 			$title        = $modx->parseText($_lang["lock_element_editing"], array('element_type' => $_lang["lock_element_type_" . $lockElementType], 'lasthit_df' => $rowLock['lasthit_df']));
-			$lockedByUser = '<span title="' . $title . '" class="editResource" style="cursor:context-menu;"><img src="' . $_style['icons_preview_resource'] . '" /></span>&nbsp;';
+			$lockedByUser = '<span title="' . $title . '" class="editResource" style="cursor:context-menu;">' . $_style['tree_preview_resource'] . '</span>&nbsp;';
 		}
 		else {
 			$title = $modx->parseText($_lang["lock_element_locked_by"], array('element_type' => $_lang["lock_element_type_" . $lockElementType], 'username' => $rowLock['username'], 'lasthit_df' => $rowLock['lasthit_df']));

@@ -5,6 +5,7 @@ html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }
 html { font-size: 100.01%; line-height: 1.5; color: #333; }
 body { font-family: Arial, sans-serif !important; font-size: 13px !important; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important; /*-webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden;*/ }
+body[ondragstart*=""] { overflow-y: scroll }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
 /* For Chinese Font */
@@ -48,8 +49,7 @@ td { vertical-align: top; }
 .float-right { float: right !important }
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1, h2, h3, h4, h5, h6, .subTitle { font-weight: 500; }
-h1 { font-size: 1.8em; line-height: 35px; margin: 15px 15px 10px 15px; }
-.rtl h1 { margin-right: 10px; }
+h1 { font-size: 1.8em; line-height: 35px; padding: 15px; margin: 0; }
 h2 { font-size: 164%; }
 h3 { font-size: 145%; }
 h4 { font-size: 118%; }
@@ -246,7 +246,7 @@ div.treeframebody { background-color: #ebebeb; -webkit-box-shadow: inset -2px 2p
 #treeRoot .fa-link { margin-right: 0; font-size: 12px }
 #treeRoot .lockedResource { cursor: pointer; }
 #floater { display: none; position: fixed; max-width: 340px; padding: 15px 15px 10px; top: 81px; left: 0; background: #fff; -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); z-index: 1000; }
-#floater.show { display: block }
+.open > #floater { display: block }
 #floater input, #floater select { box-sizing: border-box; width: 150px; margin-bottom: 5px; }
 .rtl #floater { right: 4px }
 .rootNode, .treeNode, .treeNodeHover, .treeNodeSelected, .emptyNode { border: 1px solid transparent; padding: 0 2px; margin-right: 2px; line-height: 16px; color: #000; cursor: pointer; }
@@ -320,7 +320,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 #mx_contextmenu #nameHolder, #contextmenu .menuHeader { color: #3697CD; font-size: 13px; padding: 9px 6px 7px 7px; line-height: 1.2; }
 #mx_contextmenu .menuLink, #contextmenu .menuLink { color: #333; padding: 5px 10px 5px 5px; line-height: 1.3; border: 1px solid #fff; }
 #mx_contextmenu .menuLink:hover, #contextmenu .menuLink:hover { background: #E6F2FF; border-color: #BACCDB; color: #333; }
-#mx_contextmenu .menuLink .fa, #mx_contextmenu .menuLink .fa-lg, #contextmenu .menuLink .fa, #contextmenu .menuLink .fa-lg { font-size: 14px; }
+#mx_contextmenu .menuLink .fa { font-size: 14px; width: 1.3em; text-align: center }
 /* -------------------------[ Settings Table ]--- */
 .settings { width: 600px; }
 .settings tr { width: 100% !important; }
@@ -369,7 +369,7 @@ a.hometblink, a.hometblink img { border: 0 !important; text-decoration: none !im
 .sectionBody .tab-page { padding: 20px 15px 15px !important; background-color: #fff; }
 .sectionBody .tab-page table { width: 100%; border-collapse: collapse }
 .tab-pane > .tab-page { display: none }
-.tab-pane > #tabGeneral.tab-page { display:  block }
+.tab-pane > #tabGeneral.tab-page { display: block }
 /* -------------------------[ New sortable table class ]--- */
 .sortabletable { width: 100%; border-collapse: collapse; }
 .sortabletable thead tr { color: #333; font-weight: 500; white-space: nowrap; background-color: #d2d2d2; text-align: left; }
@@ -393,15 +393,31 @@ fieldset.tab-page { border: 1px solid #e4e4e4 !important; }
 h2#edit_document_title { font-size: 15px; color: #f5f5f5; width: 100%; border-bottom: none; padding: 5px 10px; }
 fieldset#preview h2.tab { float: right; }
 /* -------------------------[ Action Buttons ]--- */
-#actions { background: none repeat scroll 0 0 rgba(230, 230, 230, 0.8); height: 48px; margin: 0 -1px 0 0; padding: 10px 5px 14px 10px; position: fixed; right: 16px; text-align: right; top: 1px; z-index: 100; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px; }
-select#stay { margin-top: -7px; padding: 6px 5px 6px 2px; width: auto !important; height: 32px; }
+#actions { background: none repeat scroll 0 0 rgba(230, 230, 230, 0.8); padding: 8px; position: fixed; top: 0; right: 15px; text-align: right; z-index: 100; -moz-border-radius: 0 0 5px 5px; -webkit-border-radius: 0 0 5px 5px; border-radius: 0 0 5px 5px; }
+#actions .actionButtons { float: left; min-height: 32px }
+#actions .actionButtons li { position: relative; float: left; margin-right: 3px }
+#actions .actionButtons li a, #actions .actionButtons .plus { float: left; padding: 0 10px !important; height: 32px; line-height: 30px; -webkit-user-select: none; user-select: none; }
+#actions .actionButtons li:last-child { margin: 0 }
+#actions .actionButtons .plus { overflow: hidden; margin: 0 0 0 -2px; width: 35px; border-radius: 0 3px 3px 0 !important; text-align: center; cursor: default; font: normal normal normal 0/30px FontAwesome }
+#actions .actionButtons .plus::before { content: "\f107"; font-size: 14px }
+#actions .actionButtons .show .plus::before { content: "\f106"; }
+#actions .actionButtons .dropdown-menu { display: none; position: absolute; z-index: -1; right: 0; top: 100%; width: 100%; margin-top: -2px; padding-top: 2px; text-align: left; background-color: #fff; border: 1px solid #32ab9a; border-top: none; border-radius: 0 0 3px 3px; overflow: hidden; }
+#actions .actionButtons .show > .dropdown-menu { display: block }
+#actions .actionButtons .dropdown-menu span { display: block; padding: 0 10px; height: 32px; line-height: 30px; border: none; border-top: 1px solid #f2f2f2; cursor: pointer; }
+#actions .actionButtons .dropdown-menu span:hover { background-color: #fbfbfb; }
+@media (max-width: 900px) {
+#actions .actionButtons li a, #actions .actionButtons .dropdown-menu span { font-size: 0 }
+#actions .actionButtons li a .fa, #actions .actionButtons .dropdown-menu span .fa { display: inline-block; font-size: 14px; line-height: 30px }
+#actions .actionButtons .dropdown-menu { width: 35px }
+}
+#actions select#stay { display: none }
 .rtl #actions { left: 10px; text-align: left; }
-ul.actionButtons { margin: 0; padding: 0; /* accommodate border on buttons - */ background: none; min-height: 40px; width: auto; white-space: nowrap; padding-top: 5px; }
-.actionButtons li { list-style: none; margin-right: 3px; padding: 0; float: left; }
+.actionButtons { margin: 0; padding: 0; background: none; width: auto; white-space: nowrap; }
+.actionButtons li { float: left; margin: 0; padding: 0; list-style: none; }
 .actionButtons li:before, .mmTagList li:before, .rTable li:before, .tab-pane ul li ul li:before, .dashboard li:before, div#idShowHideSocialBox.sectionBody > div.btn-group.ope > ul.dropdown-menu > li:before, .sectionBody .multitv .list li:before { display: none; content: ''; }
 .actionButtons img { vertical-align: top; margin-top: 1px; filter: alpha(opacity=30); -moz-opacity: 0.3; opacity: 0.3; }
 .actionButtons:hover img { filter: alpha(opacity=100); -moz-opacity: 1; opacity: 1; }
-.actionButtons a { border: 1px solid #BBB; border-radius: 3px 3px 3px 3px; color: #333; font-weight: 500; outline: medium none; padding: 7px 8px 7px 4px; text-decoration: none; vertical-align: top; white-space: nowrap; text-shadow: 0 1px 0 #FFF; -moz-box-shadow: 1px 1px 2px #ccc; -webkit-box-shadow: 1px 1px 2px #ccc; box-shadow: 1px 1px 2px #ccc; background: -moz-linear-gradient(#FFFFFF, #E0E0E0); background: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E0E0E0)); background: -o-linear-gradient(#FFFFFF, #E0E0E0); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFF, endColorstr=#E0E0E0);
+.actionButtons a, #actions .actionButtons .plus { display: inline-block; border: 1px solid #BBB; border-radius: 3px; color: #333; font-weight: 500; outline: medium none; padding: 7px 8px 7px 4px; text-decoration: none; vertical-align: baseline; white-space: nowrap; text-shadow: 0 1px 0 #FFF; -moz-box-shadow: 1px 1px 2px #ccc; -webkit-box-shadow: 1px 1px 2px #ccc; box-shadow: 1px 1px 2px #ccc; background: -moz-linear-gradient(#FFFFFF, #E0E0E0); background: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E0E0E0)); background: -o-linear-gradient(#FFFFFF, #E0E0E0); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFF, endColorstr=#E0E0E0);
 zoom: 1; }
 .actionButtons a:hover { border-color: #999; -moz-box-shadow: 1px 1px 2px #aaa; -webkit-box-shadow: 1px 1px 2px #aaa; box-shadow: 1px 1px 2px #aaa; -webkit-transition: all .3s ease; -moz-transition: all .3s ease; -o-transition: all .3s ease; transition: .3s ease; background: -moz-linear-gradient(#FFFFFF, #F5F5F5); background: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#F5F5F5)); background: -o-linear-gradient(#FFFFFF, #F5F5F5); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFF, endColorstr=#F5F5F5);
 zoom: 1; text-decoration: none !important; }
@@ -477,11 +493,12 @@ form#mutate select.tv_url_select { padding: 5px 3px; }
 /* ppb:
 * Style mootools tooltips
 */
-form#mutate .tooltip { float: right; opacity: 0.15; }
-form#mutate .tooltip:hover { opacity: 1; }
-.custom-tip { color: #333; width: 175px; z-index: 13000; border: 1px solid #cccccc; background: #fff; padding: 5px; }
-.custom-title { font-weight: 500; font-size: 1em; margin: 0; color: #fff; padding: 6px 6px 4px; background: #758CA2 url(images/misc/tab.gif); }
-.custom-text { font-size: 1em; padding: 4px 8px 8px; background: #fff; }
+.tooltip { cursor: help }
+.tooltip::after { position: absolute; z-index: 13000; opacity: 0; content: attr(data-tooltip); width: 200px; margin: 0 0 0 15px; padding: 13px; font-size: 13px; line-height: 1.3; font-family: sans-serif; color: #333; background-color: #fff; border: 1px solid #ccc; visibility: hidden; transition-duration: .3s; }
+.tooltip:hover::after { opacity: 1; visibility: visible; }
+.tooltip.fa-question-circle { opacity: 0.15; }
+.tooltip.fa-question-circle:hover { opacity: 1; }
+th > .tooltip, td > .tooltip { float: right; }
 /* ppb:
 * Some styling for legacy mode fieldsets
 */
@@ -493,7 +510,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .dp_container { position: relative; padding: 0; z-index: 500; }
 /* [ datepicker ] */
 .dp_container { padding: 0; position: relative; z-index: 500 }
-.dp_cal { position: absolute; top: 29px; width: 250px; padding: 0; }
+.dp_cal { position: absolute; top: 30px; width: 250px; padding: 0; }
 .dp_cal p { position: relative; margin: 10px; }
 .dp_cal select { font-size: 1em; margin: 2px 3px; width: auto !important }
 .dp_cal select option { padding: 1px 3px }
@@ -685,13 +702,13 @@ ul.elements_buttonbar .fa { font-size: 13px !important; padding: 1px 1px 0; }
 .resourceTable.flex ul.elements > li { overflow: hidden; /* fix for Firefox */ break-inside: avoid-column; -webkit-column-break-inside: avoid; -moz-column-break-inside: avoid; -o-column-break-inside: avoid; -ms-column-break-inside: avoid; column-break-inside: avoid; page-break-inside: avoid }
 .resourceTable.flex .elements_descr { display: block; margin-left: 1.5em; }
 /* action buttons */
-.actionButtons a { padding: 8px 10px; font-size: 13px; font-weight: 500; }
-.actionButtons a, .actionButtons li.primary a, .actionButtons a.primary, .actionButtons a.default { text-shadow: none; background: #fff; filter: none; color: #555; border-width: 1px; border-style: solid; border-color: #E4E4E4; border-radius: 3px !important; /*box-shadow: 0 0 0 1px #E4E4E4;*/ box-shadow: none; transition: none; }
+.actionButtons a { float: left; padding: 5px 10px; height: 32px; font-size: 13px; font-weight: 500; }
+.actionButtons a, .actionButtons li.primary a, .actionButtons a.primary, .actionButtons a.default, #actions .actionButtons .plus { text-shadow: none; background: #fff; filter: none; color: #555; border-width: 1px; border-style: solid; border-color: #E4E4E4; border-radius: 3px; /*box-shadow: 0 0 0 1px #E4E4E4;*/ box-shadow: none; transition: none; }
 .actionButtons a:hover { background: none; filter: none; background-color: #3697cd; box-shadow: none; border-color: #3697cd; color: #FFF !important; transition: none; }
 .actionButtons a:active { background-color: #3189ba; border-color: #3189ba; }
-.actionButtons li.primary a, .actionButtons a.primary { color: #fff; border-color: #32AB9A; background-color: #32AB9A; background-image: linear-gradient(#32AB9A, #00948E); }
-.actionButtons li.primary a:hover, .actionButtons a.primary:hover { background-color: #2b9385; background-image: linear-gradient(#2b9385, #007571); border-color: #2b9385; }
-.actionButtons li.primary a:active, .actionButtons a.primary:active { background: #32AB9A; border-color: #32AB9A; }
+.actionButtons li.primary a, .actionButtons a.primary, #actions #Button1 a, #actions .actionButtons .plus { color: #fff; border-color: #32AB9A; background-color: #32AB9A; background-image: linear-gradient(#32AB9A, #00948E); }
+.actionButtons li.primary a:hover, .actionButtons a.primary:hover, #actions #Button1 a:hover, #actions .actionButtons .plus:hover { background-color: #2b9385; background-image: linear-gradient(#2b9385, #007571); border-color: #2b9385; }
+.actionButtons li.primary a:active, .actionButtons a.primary:active, #actions #Button1 a:active, #actions .actionButtons .plus:active { background: #32AB9A; border-color: #32AB9A; }
 .actionButtons img { display: none; }
 #treePane .actionButtons img { display: inline; }
 .actionButtons--tableheader .fa { font-size: 14px; }
@@ -794,11 +811,11 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .btn-block + .btn-block { margin-top: 5px; }
 .border-bottom { border-bottom: 2px solid #3697CD !important; }
 /*responsive buttons*/
-.actionButtons .fa { display: none; font-size: 1em; line-height: 1em; vertical-align: initial }
+.actionButtons .fa { display: none; text-align: center; font-size: 1em; line-height: 1em; width: 1.1em; vertical-align: initial }
 .searchbar .actionButtons .fa, .actionButtons--eit .fa { display: inline-block; }
 .optionsTitle .fa { display: inline-block; }
 @media (max-width: 900px) {
-.actionButtons a { display: inline-block; padding: 6px 10px; margin-top: -7px }
+.actionButtons a { display: inline-block; padding: 6px 10px }
 .tab-page .actionButtons a { margin-top: 0 !important }
 .actionButtons a span { display: none; }
 .actionButtons a .fa { display: inline-block; }
@@ -816,3 +833,6 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .mce-container, .mce-container-body { box-sizing: border-box !important }
 /* codeMirror */
 .CodeMirror pre { word-break: break-all !important; }
+/* bootstrap */
+.dropdown-menu { display: none }
+.show > .dropdown-menu { display: block }

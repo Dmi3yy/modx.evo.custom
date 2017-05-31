@@ -159,12 +159,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 ?>
 	<script type="text/javascript">
 		/* <![CDATA[ */
-		window.addEventListener('DOMContentLoaded', function() {
-			var els = document.getElementsByClassName('tooltip');
-			new Tips(els, {
-				className: 'custom'
-			});
-		});
 
 		// save tree folder state
 		if(parent.tree) parent.tree.saveFolderState();
@@ -593,7 +587,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				</span>
 				<span class="pagetitle-text">
 				<?php if(isset($_REQUEST['id'])) {
-					echo iconv_substr($content['pagetitle'], 0, 50) . (iconv_strlen($content['pagetitle']) > 50 ? '...' : '') . ' <small>(' . $_REQUEST['id'] . ')</small>';
+					echo iconv_substr($content['pagetitle'], 0, 50, $modx_manager_charset) . (iconv_strlen($content['pagetitle'], $modx_manager_charset) > 50 ? '...' : '') . ' <small>(' . $_REQUEST['id'] . ')</small>';
 				} else {
 					echo $_lang['create_resource_title'];
 				} ?>
@@ -637,11 +631,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 			<div id="actions">
 				<ul class="actionButtons">
-					<li id="Button1" class="transition">
-						<a href="#" class="primary" onclick="documentDirty=false; form_save=true; document.mutate.save.click();">
-							<i class="<?php echo $_style["actions_save"] ?>"></i>
-							<span><?php echo $_lang['save']; ?></span>
-						</a>
+					<li id="Button1">
+						<a href="javascript:;" class="primary" onclick="documentDirty=false; form_save=true; document.mutate.save.click();">
+							<i class="<?php echo $_style["actions_save"] ?>"></i><?php echo $_lang['save']; ?></a>
 						<span class="plus"> + </span>
 						<select id="stay" name="stay">
 							<?php if($modx->hasPermission('new_document')) { ?>
@@ -653,25 +645,31 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					</li>
 					<?php if($modx->manager->action == '4' || $modx->manager->action == '72') { ?>
 						<li id="Button6" class="disabled">
-							<a href="#" onclick="duplicatedocument();"><i class="<?php echo $_style["actions_duplicate"] ?>"></i>
-								<span><?php echo $_lang['duplicate'] ?></span></a></li>
+							<a href="javascript:;" onclick="duplicatedocument();">
+								<i class="<?php echo $_style["actions_duplicate"] ?>"></i><?php echo $_lang['duplicate'] ?></a>
+						</li>
 						<li id="Button3" class="disabled">
-							<a href="#" onclick="deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>"></i>
-								<span><span><?php echo $_lang['delete'] ?></span></span></a></li>
+							<a href="javascript:;" onclick="deletedocument();">
+								<i class="<?php echo $_style["actions_delete"] ?>"></i><?php echo $_lang['delete'] ?></a>
+						</li>
 					<?php } else { ?>
 						<li id="Button6">
-							<a href="#" onclick="setLastClickedElement(0,0);duplicatedocument();"><i class="<?php echo $_style["actions_duplicate"] ?>"></i>
-								<span><?php echo $_lang['duplicate'] ?></span></a></li>
+							<a href="javascript:;" onclick="setLastClickedElement(0,0);duplicatedocument();">
+								<i class="<?php echo $_style["actions_duplicate"] ?>"></i><?php echo $_lang['duplicate'] ?></a>
+						</li>
 						<li id="Button3">
-							<a href="#" onclick="setLastClickedElement(0,0);deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>"></i>
-								<span><span><?php echo $_lang['delete'] ?></span></a></li>
+							<a href="javascript:;" onclick="setLastClickedElement(0,0);deletedocument();">
+								<i class="<?php echo $_style["actions_delete"] ?>"></i><?php echo $_lang['delete'] ?></a>
+						</li>
 					<?php } ?>
-					<li id="Button5" class="transition">
-						<a href="#" onclick="setLastClickedElement(0,0);documentDirty=false;<?php echo $id == 0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;r=1&amp;id=$id" . htmlspecialchars($add_path) . "';" ?>"><i class="<?php echo $_style["actions_cancel"] ?>"></i>
-							<span><span><?php echo $_lang['cancel'] ?></span></span></a></li>
+					<li id="Button5">
+						<a href="javascript:;" onclick="setLastClickedElement(0,0);documentDirty=false;<?php echo $id == 0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;r=1&amp;id=$id" . htmlspecialchars($add_path) . "';" ?>">
+							<i class="<?php echo $_style["actions_cancel"] ?>"></i><?php echo $_lang['cancel'] ?></a>
+					</li>
 					<li id="Button4">
-						<a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><i class="<?php echo $_style["actions_preview"] ?>"></i>
-							<span><?php echo $_lang['preview'] ?></span></a></li>
+						<a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');">
+							<i class="<?php echo $_style["actions_preview"] ?>"></i><?php echo $_lang['preview'] ?></a>
+					</li>
 				</ul>
 			</div>
 
@@ -700,7 +698,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['resource_title'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_title_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_title_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="pagetitle" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['pagetitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
@@ -710,7 +708,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['long_title'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_long_title_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_long_title_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="longtitle" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['longtitle'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
@@ -719,7 +717,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['resource_description'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_description_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_description_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="description" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['description'])) ?>" class="inputBox" onchange="documentDirty=true;" spellcheck="true" />
@@ -728,7 +726,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['resource_alias'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_alias_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_alias_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="alias" type="text" maxlength="100" value="<?php echo stripslashes($content['alias']) ?>" class="inputBox" onchange="documentDirty=true;" />
@@ -737,7 +735,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['link_attributes'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['link_attributes_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['link_attributes_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="link_attributes" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['link_attributes'])) ?>" class="inputBox" onchange="documentDirty=true;" />
@@ -748,7 +746,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 									<tr>
 										<td><span class="warning"><?php echo $_lang['weblink'] ?></span>
-											<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_weblink_help'] ?>"></i>
+											<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_weblink_help'] ?>"></i>
 										</td>
 										<td>
 											<i id="llock" class="<?php echo $_style["actions_chain"] ?>" onclick="enableLinkSelection(!allowLinkSelection);"></i>
@@ -761,7 +759,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td valign="top">
 										<span class="warning"><?php echo $_lang['resource_summary'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_summary_help'] ?>" spellcheck="true"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_summary_help'] ?>" spellcheck="true"></i>
 									</td>
 									<td valign="top">
 										<textarea id="introtext" name="introtext" class="inputBox" rows="3" cols="" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars(stripslashes($content['introtext'])) ?></textarea>
@@ -770,7 +768,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['page_data_template'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['page_data_template_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_template_help'] ?>"></i>
 									</td>
 									<td>
 										<select id="template" name="template" class="inputBox" onchange="templateWarning();">
@@ -812,7 +810,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['resource_opt_menu_title'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_opt_menu_title_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_menu_title_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="menutitle" type="text" maxlength="255" value="<?php echo $modx->htmlspecialchars(stripslashes($content['menutitle'])) ?>" class="inputBox" onchange="documentDirty=true;" />
@@ -821,7 +819,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['resource_opt_menu_index'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_opt_menu_index_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_menu_index_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="menuindex" type="text" maxlength="6" value="<?php echo $content['menuindex'] ?>" class="inputBox" onchange="documentDirty=true;" />
@@ -832,7 +830,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['resource_opt_show_menu'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_opt_show_menu_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_show_menu_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="hidemenucheck" type="checkbox" class="checkbox" <?php echo $content['hidemenu'] != 1 ? 'checked="checked"' : '' ?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?php echo ($content['hidemenu'] == 1) ? 1 : 0 ?>" />
@@ -841,7 +839,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td valign="top">
 										<span class="warning"><?php echo $_lang['resource_parent'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_parent_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_parent_help'] ?>"></i>
 									</td>
 									<td valign="top">
 										<?php
@@ -882,33 +880,34 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									</td>
 								</tr>
 								<?php
-								//								if($content['type'] == 'reference' || $modx->manager->action == '72') {
-								//									?>
-								<!--									<tr>-->
-								<!--										<td colspan="2">-->
-								<!--											<div class="split"></div>-->
-								<!--										</td>-->
-								<!--									</tr>-->
-								<!--									<tr>-->
-								<!--										<td>-->
-								<!--											<span class="warning">--><?php //echo $_lang['which_editor_title'] ?><!--</span></td>-->
-								<!--										<td>-->
-								<!--											<select id="which_editor" name="which_editor" onchange="changeRTE();">-->
-								<!--												--><?php
-								//												// invoke OnRichTextEditorRegister event
-								//												$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
-								//												if(is_array($evtOut)) {
-								//													for($i = 0; $i < count($evtOut); $i++) {
-								//														$editor = $evtOut[$i];
-								//														echo "\t\t\t", '<option value="', $editor, '"', ($modx->config['which_editor'] == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
-								//													}
-								//												}
-								//												?>
-								<!--											</select>-->
-								<!--										</td>-->
-								<!--									</tr>-->
-								<!--									--><?php
-								//								}
+								/*
+								if($content['type'] == 'reference' || $modx->manager->action == '72') {
+									?>
+									<tr>
+										<td colspan="2">
+											<div class="split"></div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<span class="warning"><?php echo $_lang['which_editor_title'] ?></span></td>
+										<td>
+											<select id="which_editor" name="which_editor" onchange="changeRTE();">
+												<?php
+												// invoke OnRichTextEditorRegister event
+												$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+												if(is_array($evtOut)) {
+													for($i = 0; $i < count($evtOut); $i++) {
+														$editor = $evtOut[$i];
+														echo "\t\t\t", '<option value="', $editor, '"', ($modx->config['which_editor'] == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
+													}
+												}
+												?>
+											</select>
+										</td>
+									</tr>
+									<?php
+								}*/
 								?>
 
 								<?php if($content['type'] == 'document' || $modx->manager->action == '4') { ?>
@@ -1061,7 +1060,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['resource_opt_published'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_opt_published_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_published_help'] ?>"></i>
 									</td>
 									<td>
 										<input <?php echo $mx_can_pub ?>name="publishedcheck" type="checkbox" class="checkbox" <?php echo (isset($content['published']) && $content['published'] == 1) || (!isset($content['published']) && $publish_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.published);" />
@@ -1071,7 +1070,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['page_data_publishdate'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['page_data_publishdate_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_publishdate_help'] ?>"></i>
 									</td>
 									<td>
 										<input type="text" id="pub_date" <?php echo $mx_can_pub ?>name="pub_date" class="DatePicker" value="<?php echo $content['pub_date'] == "0" || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date']) ?>" onblur="documentDirty=true;" />
@@ -1087,7 +1086,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['page_data_unpublishdate'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['page_data_unpublishdate_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_unpublishdate_help'] ?>"></i>
 									</td>
 									<td>
 										<input type="text" id="unpub_date" <?php echo $mx_can_pub ?>name="unpub_date" class="DatePicker" value="<?php echo $content['unpub_date'] == "0" || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date']) ?>" onblur="documentDirty=true;" />
@@ -1114,7 +1113,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									<tr>
 										<td>
 											<span class="warning"><?php echo $_lang['resource_type'] ?></span>
-											<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_type_message'] ?>"></i>
+											<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_type_message'] ?>"></i>
 										</td>
 										<td>
 											<select name="type" class="inputBox" onchange="documentDirty=true;">
@@ -1127,7 +1126,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									<tr>
 										<td>
 											<span class="warning"><?php echo $_lang['page_data_contentType'] ?></span>
-											<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['page_data_contentType_help'] ?>"></i>
+											<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_contentType_help'] ?>"></i>
 										</td>
 										<td>
 											<select name="contentType" class="inputBox" onchange="documentDirty=true;">
@@ -1147,7 +1146,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									<tr>
 										<td>
 											<span class="warning"><?php echo $_lang['resource_opt_contentdispo'] ?></span>
-											<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_opt_contentdispo_help'] ?>"></i>
+											<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_contentdispo_help'] ?>"></i>
 										</td>
 										<td>
 											<select name="content_dispo" class="inputBox" size="1" onchange="documentDirty=true;">
@@ -1184,7 +1183,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['resource_opt_folder'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_opt_folder_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_folder_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="isfoldercheck" type="checkbox" class="checkbox" <?php echo ($content['isfolder'] == 1 || $modx->manager->action == '85') ? "checked" : '' ?> onclick="changestate(document.mutate.isfolder);" />
@@ -1195,7 +1194,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['resource_opt_alvisibled'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_opt_alvisibled_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_alvisibled_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="alias_visible_check" type="checkbox" class="checkbox" <?php echo (!isset($content['alias_visible']) || $content['alias_visible'] == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.alias_visible);" /><input type="hidden" name="alias_visible" value="<?php echo (!isset($content['alias_visible']) || $content['alias_visible'] == 1) ? 1 : 0 ?>" />
@@ -1205,7 +1204,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['resource_opt_richtext'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_opt_richtext_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_richtext_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="richtextcheck" type="checkbox" class="checkbox" <?php echo $content['richtext'] == 0 && $modx->manager->action == '27' ? '' : "checked" ?> onclick="changestate(document.mutate.richtext);" />
@@ -1215,7 +1214,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['track_visitors_title'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_opt_trackvisit_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_trackvisit_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="donthitcheck" type="checkbox" class="checkbox" <?php echo ($content['donthit'] != 1) ? 'checked="checked"' : '' ?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?php echo ($content['donthit'] == 1) ? 1 : 0 ?>" onchange="documentDirty=true;" />
@@ -1224,7 +1223,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['page_data_searchable'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['page_data_searchable_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_searchable_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="searchablecheck" type="checkbox" class="checkbox" <?php echo (isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $search_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?php echo (isset($content['searchable']) && $content['searchable'] == 1) || (!isset($content['searchable']) && $search_default == 1) ? 1 : 0 ?>" onchange="documentDirty=true;" />
@@ -1233,7 +1232,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<tr>
 									<td>
 										<span class="warning"><?php echo $_lang['page_data_cacheable'] ?></span>
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['page_data_cacheable_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['page_data_cacheable_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="cacheablecheck" type="checkbox" class="checkbox" <?php echo (isset($content['cacheable']) && $content['cacheable'] == 1) || (!isset($content['cacheable']) && $cache_default == 1) ? "checked" : '' ?> onclick="changestate(document.mutate.cacheable);" />
@@ -1244,7 +1243,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 									<td>
 										<span class="warning"><?php echo $_lang['resource_opt_emptycache'] ?></span>
 										<input type="hidden" name="syncsite" value="1" />
-										<i class="<?php echo $_style["icons_tooltip"] ?>" title="<?php echo $_lang['resource_opt_emptycache_help'] ?>"></i>
+										<i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['resource_opt_emptycache_help'] ?>"></i>
 									</td>
 									<td>
 										<input name="syncsitecheck" type="checkbox" class="checkbox" checked="checked" onclick="changestate(document.mutate.syncsite);" />
