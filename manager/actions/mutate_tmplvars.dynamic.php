@@ -392,12 +392,12 @@ function decode(s){
     </td>
   </tr>
   <tr>
-	<th><?php echo $_lang['tmplvars_elements']; ?></th>
-	<td nowrap="nowrap"><textarea name="elements" maxlength="65535" class="inputBox textarea" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['elements']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
+	<th><?php echo $_lang['tmplvars_elements']; ?><i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['tmplvars_binding_msg'] ?>"></i></th>
+	<td nowrap="nowrap"><textarea name="elements" maxlength="65535" class="inputBox textarea" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['elements']);?></textarea></td>
   </tr>
   <tr>
-    <th><?php echo $_lang['tmplvars_default']; ?></th>
-    <td nowrap="nowrap"><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['default_text']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
+    <th><?php echo $_lang['tmplvars_default']; ?><i class="<?php echo $_style["icons_tooltip"] ?>" data-tooltip="<?php echo $_lang['tmplvars_binding_msg'] ?>"></i></th>
+    <td nowrap="nowrap"><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['default_text']);?></textarea></td>
   </tr>
   <tr>
     <th><?php echo $_lang['tmplvars_widget']; ?></th>
@@ -424,7 +424,7 @@ function decode(s){
     </td>
   </tr>
   <tr id="displayparamrow">
-    <th><?php echo $_lang['tmplvars_widget_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><img src="<?php echo $_style['icons_refresh']; ?>" alt="<?php echo $_lang['tmplvars_reset_params']; ?>"></a></div></th>
+	  <th><?php echo $_lang['tmplvars_widget_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><i class="tooltip <?php echo $_style['actions_refresh']; ?>" data-tooltip="<?php echo $_lang['tmplvars_reset_params']; ?>"></i></a></div></th>
     <td id="displayparams">&nbsp;</td>
   </tr>
   <tr>

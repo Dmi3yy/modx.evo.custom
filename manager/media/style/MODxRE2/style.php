@@ -125,33 +125,34 @@ $_style['files_unzip']              = 'fa fa-file-archive-o fa-fw fa-lg';
 $_style['files_edit']               = 'fa fa-pencil-square-o fa-fw fa-lg';
 
 //Action buttons 
-$_style['actions_save']               = 'fa fa-floppy-o fa-lg';
-$_style['actions_duplicate']          = 'fa fa-clone fa-fw fa-lg';
-$_style['actions_delete']             = 'fa fa-trash fa-fw fa-lg';
-$_style['actions_cancel']             = 'fa fa-times-circle fa-fw fa-lg';
-$_style['actions_preview']            = 'fa fa-eye fa-fw fa-lg';
-$_style['actions_run']                = 'fa fa-play fa-fw fa-lg';
-$_style['actions_new']                = 'fa fa-plus-circle fa-lg';
-$_style['actions_help']               = 'fa fa-question-circle fa-lg';
-$_style['actions_sort']               = 'fa fa-sort fa-fw fa-lg';
-$_style['actions_options']            = 'fa fa-check-square fa-fw fa-lg';
-$_style['actions_categories']         = 'fa fa-folder-open fa-fw fa-lg';
-$_style['actions_search']             = 'fa fa-search fa-fw fa-lg';
-$_style['actions_file']               = 'fa fa-file-o';
-$_style['actions_folder']             = 'fa fa-folder-o';
-$_style['actions_folder_open']        = 'fa fa-folder-open-o';
-$_style['actions_calendar']           = 'fa fa-calendar';
-$_style['actions_angle_up']           = 'fa fa-angle-up';
-$_style['actions_angle_down']         = 'fa fa-angle-down';
-$_style['actions_angle_left']         = 'fa fa-angle-left';
-$_style['actions_angle_right']        = 'fa fa-angle-right';
-$_style['actions_chain']              = 'fa fa-chain';
-$_style['actions_chain_broken']       = 'fa fa-chain-broken';
-$_style['actions_edit']               = 'fa fa-edit';
-$_style['actions_move']               = 'fa fa-arrows';
-$_style['actions_pencil']             = 'fa fa-pencil';
-$_style['actions_reply']              = 'fa fa-reply';
-$_style['actions_plus']               = 'fa fa-plus';
+$_style['actions_save']             = 'fa fa-floppy-o';
+$_style['actions_duplicate']        = 'fa fa-clone fa-fw';
+$_style['actions_delete']           = 'fa fa-trash fa-fw';
+$_style['actions_cancel']           = 'fa fa-times-circle fa-fw';
+$_style['actions_preview']          = 'fa fa-eye fa-fw';
+$_style['actions_run']              = 'fa fa-play fa-fw';
+$_style['actions_new']              = 'fa fa-plus-circle';
+$_style['actions_help']             = 'fa fa-question-circle';
+$_style['actions_sort']             = 'fa fa-sort fa-fw';
+$_style['actions_options']          = 'fa fa-check-square fa-fw';
+$_style['actions_categories']       = 'fa fa-folder-open fa-fw';
+$_style['actions_search']           = 'fa fa-search fa-fw';
+$_style['actions_file']             = 'fa fa-file-o';
+$_style['actions_folder']           = 'fa fa-folder-o';
+$_style['actions_folder_open']      = 'fa fa-folder-open-o';
+$_style['actions_calendar']         = 'fa fa-calendar';
+$_style['actions_angle_up']         = 'fa fa-angle-up';
+$_style['actions_angle_down']       = 'fa fa-angle-down';
+$_style['actions_angle_left']       = 'fa fa-angle-left';
+$_style['actions_angle_right']      = 'fa fa-angle-right';
+$_style['actions_chain']            = 'fa fa-chain';
+$_style['actions_chain_broken']     = 'fa fa-chain-broken';
+$_style['actions_edit']             = 'fa fa-edit';
+$_style['actions_move']             = 'fa fa-arrows';
+$_style['actions_pencil']           = 'fa fa-pencil';
+$_style['actions_reply']            = 'fa fa-reply';
+$_style['actions_plus']             = 'fa fa-plus';
+$_style['actions_refresh']          = 'fa fa-refresh';
 
 //for back compatibility 
 $_style['icons_save']               = $style_path.'icons/save.png';
@@ -161,7 +162,7 @@ $_style['icons_unzip']              = $style_path.'icons/download-alt.png';
 
 
 // Indicators
-$_style['icons_tooltip']            = $style_path.'icons/question-sign-trans.png';
+$_style['icons_tooltip']            = 'tooltip fa fa-question-circle'; // $style_path.'icons/question-sign-trans.png';
 $_style['icons_tooltip_over']       = $style_path.'icons/question-sign.png';
 $_style['icons_cal']                = $style_path.'icons/calendar.png';
 $_style['icons_cal_nodate']         = $style_path.'icons/calendar.png';

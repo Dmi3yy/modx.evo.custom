@@ -1,12 +1,11 @@
-'use strict';
-(function($, w, d, u) {
-	let _ = {
+(function($, w, d, m, u) {
+	'use strict';
+	var _ = {
 		frameset: 'frameset',
 		init: function() {
 			if(!localStorage.getItem('MODX_lastPositionSideBar')) {
 				localStorage.setItem('MODX_lastPositionSideBar', this.config.tree_width)
 			}
-			this.main.stopWork();
 			this.tree.init();
 			this.mainMenu.init();
 			this.resizer.init();
@@ -20,12 +19,12 @@
 			init: function() {
 				//console.log('modx.mainMenu.init()');
 				d.getElementById(this.id).onmouseover = function() {
-					let el = this.querySelector('.close');
+					var el = this.querySelector('.close');
 					if(el) el.classList.remove('close');
 					this.style.overflow = '';
 				};
 				d.getElementById(this.id).onclick = function(e) {
-					let t = e.target.closest('a');
+					var t = e.target.closest('a');
 					if(t !== null && t.href !== '' && t.href !== this.baseURI) {
 						this.querySelector('.active').classList.remove('active');
 						if(t.offsetParent.className.indexOf('dropdown-menu') === 0) {
@@ -37,8 +36,8 @@
 					}
 				};
 				modx.search.init();
-				let elms = d.querySelectorAll('#' + this.id + ' .nav > li > ul');
-				for(let i = 0; i < elms.length; i++) {
+				var elms = d.querySelectorAll('#' + this.id + ' .nav > li > ul');
+				for(var i = 0; i < elms.length; i++) {
 					elms[i].style.maxHeight = w.innerHeight - modx.config.menu_height + 'px'
 				}
 			}
@@ -55,7 +54,7 @@
 				this.result = d.getElementById(this.idResult);
 				this.result.style.width = this.searchResultWidth + 'px';
 				this.result.style.marginRight = -this.searchResultWidth + 'px';
-				let t = this,
+				var t = this,
 					el = d.getElementById(this.idInput),
 					r = d.createElement('i');
 				r.className = 'fa fa-refresh fa-spin fa-fw';
@@ -64,19 +63,19 @@
 					clearTimeout(t.timer);
 					if(el.value.length !== '' && el.value.length > 2) {
 						t.timer = setTimeout(function() {
-							let xhr = modx.XHR();
+							var xhr = modx.XHR();
 							xhr.open('GET', 'index.php?a=71&ajax=1&submitok=Search&searchid=' + el.value, true);
 							xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 							xhr.onload = function() {
 								if(this.status === 200) {
 									modx.animation.fadeOut(r, true);
-									let div = d.createElement('div');
+									var div = d.createElement('div');
 									div.innerHTML = this.responseText;
-									let o = div.getElementsByClassName(t.classResult)[0];
+									var o = div.getElementsByClassName(t.classResult)[0];
 									if(o) {
 										if(o.innerHTML !== '') {
-											let p = o.getElementsByTagName('A');
-											for(let i = 0; i < p.length; i++) {
+											var p = o.getElementsByTagName('A');
+											for(var i = 0; i < p.length; i++) {
 												p[i].target = 'main';
 												p[i].innerHTML += '<i onclick="modx.openWindow({title:\'' + p[i].innerText + '\',id:\'' + p[i].id + '\',url:\'' + p[i].href + '\'});return false;">' + modx.style.icons_external_link + '</i>'
 											}
@@ -86,9 +85,9 @@
 												if(e.target.tagName === 'I') {
 													return false
 												}
-												let a = e.target.closest('a');
+												var a = e.target.closest('a');
 												if(a !== null) {
-													let el = t.result.querySelector('.selected');
+													var el = t.result.querySelector('.selected');
 													if(el) el.className = '';
 													a.className = 'selected'
 												}
@@ -148,12 +147,54 @@
 		main: {
 			id: 'main',
 			idFrame: 'mainframe',
+			as: null,
 			init: function() {
-				modx.main.stopWork();
-				modx.main.scrollWork()
+				this.actions();
+				this.stopWork();
+				this.scrollWork();
+				m.onclick = modx.hideDropDown
+			},
+			actions: function() {
+				var a = m.document.getElementById('actions'),
+					b = m.document.getElementById('stay');
+				if(a !== null && b !== null) {
+					var c = a.querySelector('.plus'),
+						f = a.querySelector('#Button1 > a'),
+						g = [];
+					c.classList.add('dropdown-toggle');
+					g['stay1'] = '<i class="' + modx.style.actions_file + '"></i>';
+					g['stay2'] = '<i class="' + modx.style.actions_pencil + '"></i>';
+					g['stay3'] = '<i class="' + modx.style.actions_reply + '"></i>';
+					if(b.value) {
+						f.innerHTML += '<i class="' + modx.style.actions_plus + '"></i> + ' + g['stay' + b.value] + ' ' + b.children['stay' + b.value].innerText
+					}
+					var k = null,
+						l = b.children,
+						n = d.createElement('div');
+					n.className = 'dropdown-menu';
+					f.parentNode.classList.add('dropdown');
+					for(var i = 0; i < l.length; i++) {
+						if(!l[i].selected) {
+							k = d.createElement('SPAN');
+							k.dataset.id = i;
+							k.innerHTML = g[b.children[i].id] + ' ' + b.children[i].innerText;
+							k.onclick = function() {
+								var s = b.querySelector('option[selected=selected]');
+								if(s) s.selected = false;
+								b.children[this.dataset.id].selected = true;
+								f.click()
+							};
+							n.appendChild(k)
+						}
+					}
+					f.parentNode.appendChild(n);
+					c.onclick = function() {
+						this.parentNode.classList.toggle('show')
+					}
+				}
 			},
 			work: function() {
-				let el = d.getElementById('workText');
+				var el = d.getElementById('workText');
 				if(el) {
 					el.innerHTML = modx.style.icons_working + modx.lang.working;
 					el.style.display = 'block';
@@ -161,15 +202,14 @@
 				else setTimeout('modx.main.work()', 50)
 			},
 			stopWork: function() {
-				let el = d.getElementById('workText');
+				var el = d.getElementById('workText');
 				if(el) {
-					modx.animation.fadeOut(el);
-					w.main.onclick = modx.hideDropDown;
+					el.style.display = 'none';
 				}
 				else setTimeout('modx.main.stopWork()', 50)
 			},
 			scrollWork: function() {
-				let a = d.getElementById(modx.main.idFrame).contentWindow,
+				var a = d.getElementById(modx.main.idFrame).contentWindow,
 					b = localStorage.getItem('page_y'),
 					c = localStorage.getItem('page_url');
 				if(b === u) {
@@ -189,9 +229,9 @@
 				}
 			},
 			getQueryVariable: function(v, q) {
-				let vars = q.split('&');
-				for(let i = 0; i < vars.length; i++) {
-					let p = vars[i].split('=');
+				var vars = q.split('&');
+				for(var i = 0; i < vars.length; i++) {
+					var p = vars[i].split('=');
 					if(decodeURIComponent(p[0]) === v) {
 						return decodeURIComponent(p[1])
 					}
@@ -271,7 +311,7 @@
 				}
 			},
 			toggle: function() {
-				let p = parseInt(d.getElementById('tree').offsetWidth) !== 0 ? 0 : (localStorage.getItem('MODX_lastPositionSideBar') ? parseInt(localStorage.getItem('MODX_lastPositionSideBar')) : modx.config.tree_width);
+				var p = parseInt(d.getElementById('tree').offsetWidth) !== 0 ? 0 : (localStorage.getItem('MODX_lastPositionSideBar') ? parseInt(localStorage.getItem('MODX_lastPositionSideBar')) : modx.config.tree_width);
 				modx.resizer.setWidth(p)
 			},
 			setWidth: function(a) {
@@ -307,7 +347,7 @@
 			toggleNode: function(a, b, c, e, f) {
 				f = (!f || f === '0') ? '0' : '1';
 				this.rpcNode = a.parentNode.lastChild;
-				let rpcNodeText,
+				var rpcNodeText,
 					loadText = modx.lang.loading_doc_tree,
 					iconNodeToggle = d.getElementById("s" + c),
 					iconNode = d.getElementById("f" + c);
@@ -317,8 +357,8 @@
 					rpcNodeText = this.rpcNode.innerHTML;
 					modx.openedArray[c] = 1;
 					if(rpcNodeText === "" || rpcNodeText.indexOf(loadText) > 0) {
-						let folderState = this.getFolderState();
-						let el = d.getElementById('buildText');
+						var folderState = this.getFolderState();
+						var el = d.getElementById('buildText');
 						if(el) {
 							el.innerHTML = modx.style.tree_info + loadText;
 							el.style.display = 'block'
@@ -340,7 +380,7 @@
 				if(this.rpcNode !== null) {
 					this.rpcNode.innerHTML = typeof a === 'object' ? a.responseText : a;
 					this.rpcNode.loaded = true;
-					let el = d.getElementById('buildText');
+					var el = d.getElementById('buildText');
 					if(el) {
 						modx.animation.fadeOut(el)
 					}
@@ -360,16 +400,16 @@
 				if(tree.ca === "move") {
 					try {
 						this.setSelectedByContext(a);
-						w.main.setMoveValue(a, b)
+						m.setMoveValue(a, b)
 					} catch(oException) {
 						alert(modx.lang.unable_set_parent)
 					}
 				}
 				if(tree.ca === "open" || tree.ca === "") {
 					if(a === 0) {
-						w.main.location.href = "index.php?a=2"
+						m.location.href = "index.php?a=2"
 					} else {
-						let href = '';
+						var href = '';
 						modx.setLastClickedElement(7, a);
 						if(!isNaN(parseFloat(c)) && isFinite(c)) {
 							href = "index.php?a=" + c + "&r=1&id=" + a + (g === 0 ? this.getFolderState() : '')
@@ -390,17 +430,17 @@
 								modx.openWindow(href);
 								this.restoreTree()
 							} else {
-								w.main.location.href = href
+								m.location.href = href
 							}
 						}
 					}
-					let el = d.querySelector('#node' + a + '>.treeNode');
+					var el = d.querySelector('#node' + a + '>.treeNode');
 					modx.tree.setSelected(el)
 				}
 				if(tree.ca === "parent") {
 					try {
 						this.setSelectedByContext(a);
-						w.main.setParent(a, b)
+						m.setParent(a, b)
 					} catch(oException) {
 						alert(modx.lang.unable_set_parent)
 					}
@@ -408,31 +448,34 @@
 				if(tree.ca === "link") {
 					try {
 						this.setSelectedByContext(a);
-						w.main.setLink(a)
+						m.setLink(a)
 					} catch(oException) {
 						alert(modx.lang.unable_set_link)
 					}
 				}
 			},
 			showPopup: function(a, b, c, f, g, e) {
-				let node = d.getElementById('node' + a),
+				var node = d.getElementById('node' + a),
 					tree = d.getElementById('tree');
 
 				if(node.dataset.contextmenu) {
-					modx.hideDropDown();
+					e.target.dataset.toggle = '#contextmenu';
+					if(e.type === 'contextmenu') {
+						modx.hideDropDown();
+					}
 					this.ctx = d.createElement('div');
 					this.ctx.id = 'contextmenu';
 					this.ctx.className = 'dropdown-menu';
 					d.getElementById(modx.frameset).appendChild(this.ctx);
 					this.setSelectedByContext(a);
-					let dataJson = JSON.parse(node.dataset.contextmenu);
-					for(let key in dataJson) {
+					var dataJson = JSON.parse(node.dataset.contextmenu);
+					for(var key in dataJson) {
 						if(dataJson.hasOwnProperty(key)) {
-							let item = d.createElement('div');
-							for(let k in dataJson[key]) {
+							var item = d.createElement('div');
+							for(var k in dataJson[key]) {
 								if(dataJson[key].hasOwnProperty(k)) {
 									if(k.substring(0, 2) === 'on') {
-										let onEvent = dataJson[key][k];
+										var onEvent = dataJson[key][k];
 										item[k] = function() {
 											eval(onEvent)
 										}
@@ -447,9 +490,9 @@
 							this.ctx.appendChild(item)
 						}
 					}
-					let bodyHeight = tree.offsetHeight + tree.offsetTop;
-					let x = e.clientX > 0 ? e.clientX : e.pageX;
-					let y = e.clientY > 0 ? e.clientY : e.pageY;
+					var bodyHeight = tree.offsetHeight + tree.offsetTop;
+					var x = e.clientX > 0 ? e.clientX : e.pageX;
+					var y = e.clientY > 0 ? e.clientY : e.pageY;
 					if(y + this.ctx.offsetHeight / 2 > bodyHeight) {
 						y = bodyHeight - this.ctx.offsetHeight - 5
 					} else if(y - this.ctx.offsetHeight / 2 < tree.offsetTop) {
@@ -457,18 +500,20 @@
 					} else {
 						y = y - this.ctx.offsetHeight / 2
 					}
-					let el = e.target.closest('.treeNode');
+					var el = e.target.closest('.treeNode');
 					if(el === null) x += 50;
 					this.itemToChange = a;
 					this.selectedObjectName = b;
 					this.dopopup(this.ctx, x + 10, y);
-					this.ctx.classList.add('show');
-					e.stopPropagation()
+					this.ctx.classList.add('show')
 				} else {
-					let ctx = d.getElementById('mx_contextmenu');
-					modx.hideDropDown(ctx);
+					var ctx = d.getElementById('mx_contextmenu');
+					e.target.dataset.toggle = '#mx_contextmenu';
+					if(e.type === 'contextmenu') {
+						modx.hideDropDown();
+					}
 					this.setSelectedByContext(a);
-					let i4 = d.getElementById('item4'),
+					var i4 = d.getElementById('item4'),
 						i5 = d.getElementById('item5'),
 						i8 = d.getElementById('item8'),
 						i9 = d.getElementById('item9'),
@@ -495,9 +540,9 @@
 					}
 					if(g === 1) i11.style.display = 'block';
 					else i11.style.display = 'none';
-					let bodyHeight = tree.offsetHeight + tree.offsetTop;
-					let x = e.clientX > 0 ? e.clientX : e.pageX;
-					let y = e.clientY > 0 ? e.clientY : e.pageY;
+					var bodyHeight = tree.offsetHeight + tree.offsetTop;
+					var x = e.clientX > 0 ? e.clientX : e.pageX;
+					var y = e.clientY > 0 ? e.clientY : e.pageY;
 					if(y + ctx.offsetHeight / 2 > bodyHeight) {
 						y = bodyHeight - ctx.offsetHeight - 5
 					} else if(y - ctx.offsetHeight / 2 < tree.offsetTop) {
@@ -505,19 +550,18 @@
 					} else {
 						y = y - ctx.offsetHeight / 2
 					}
-					let el = e.target.closest('.treeNode');
+					var el = e.target.closest('.treeNode');
 					if(el === null) x += 50;
 					this.itemToChange = a;
 					this.selectedObjectName = b;
-					this.dopopup(ctx, x + 10, y);
-					e.stopPropagation()
+					this.dopopup(ctx, x + 10, y)
 				}
 			},
 			dopopup: function(el, a, b) {
 				if(this.selectedObjectName.length > 20) {
 					this.selectedObjectName = this.selectedObjectName.substr(0, 20) + "..."
 				}
-				let f = d.getElementById("nameHolder");
+				var f = d.getElementById("nameHolder");
 				el.style.left = a + (modx.config.textdir ? '-190' : '') + "px";
 				el.style.top = b + "px";
 				el.classList.add('show');
@@ -527,37 +571,37 @@
 				switch(a) {
 					case 1:
 						this.setActiveFromContextMenu(this.itemToChange);
-						w.main.location.href = "index.php?a=3&id=" + this.itemToChange;
+						m.location.href = "index.php?a=3&id=" + this.itemToChange;
 						break;
 					case 2:
 						this.setActiveFromContextMenu(this.itemToChange);
-						w.main.location.href = "index.php?a=27&r=1&id=" + this.itemToChange;
+						m.location.href = "index.php?a=27&r=1&id=" + this.itemToChange;
 						break;
 					case 3:
-						w.main.location.href = "index.php?a=4&pid=" + this.itemToChange;
+						m.location.href = "index.php?a=4&pid=" + this.itemToChange;
 						break;
 					case 4:
 						if(this.selectedObjectDeleted) {
 							alert("'" + this.selectedObjectName + "' " + modx.lang.already_deleted)
 						} else if(confirm("'" + this.selectedObjectName + "'\n\n" + modx.lang.confirm_delete_resource) === true) {
-							w.main.location.href = "index.php?a=6&id=" + this.itemToChange
+							m.location.href = "index.php?a=6&id=" + this.itemToChange
 						}
 						break;
 					case 5:
-						w.main.location.href = "index.php?a=51&id=" + this.itemToChange;
+						m.location.href = "index.php?a=51&id=" + this.itemToChange;
 						break;
 					case 6:
-						w.main.location.href = "index.php?a=72&pid=" + this.itemToChange;
+						m.location.href = "index.php?a=72&pid=" + this.itemToChange;
 						break;
 					case 7:
 						if(confirm(modx.lang.confirm_resource_duplicate) === true) {
-							w.main.location.href = "index.php?a=94&id=" + this.itemToChange
+							m.location.href = "index.php?a=94&id=" + this.itemToChange
 						}
 						break;
 					case 8:
 						if(this.selectedObjectDeleted) {
 							if(confirm("'" + this.selectedObjectName + "' " + modx.lang.confirm_undelete) === true) {
-								w.main.location.href = "index.php?a=63&id=" + this.itemToChange
+								m.location.href = "index.php?a=63&id=" + this.itemToChange
 							}
 						} else {
 							alert("'" + this.selectedObjectName + "'" + modx.lang.not_deleted)
@@ -565,20 +609,20 @@
 						break;
 					case 9:
 						if(confirm("'" + this.selectedObjectName + "' " + modx.lang.confirm_publish) === true) {
-							w.main.location.href = "index.php?a=61&id=" + this.itemToChange
+							m.location.href = "index.php?a=61&id=" + this.itemToChange
 						}
 						break;
 					case 10:
 						if(this.itemToChange !== modx.config.site_start) {
 							if(confirm("'" + this.selectedObjectName + "' " + modx.lang.confirm_unpublish) === true) {
-								w.main.location.href = "index.php?a=62&id=" + this.itemToChange
+								m.location.href = "index.php?a=62&id=" + this.itemToChange
 							}
 						} else {
 							alert('Document is linked to site_start variable and cannot be unpublished!')
 						}
 						break;
 					case 11:
-						w.main.location.href = "index.php?a=56&id=" + this.itemToChange;
+						m.location.href = "index.php?a=56&id=" + this.itemToChange;
 						break;
 					case 12:
 						w.open(this.selectedObjectUrl, 'previeWin');
@@ -588,21 +632,21 @@
 				}
 			},
 			setSelected: function(a) {
-				let el = d.querySelector('.treeNodeSelected');
+				var el = d.querySelector('.treeNodeSelected');
 				if(el) el.classList.remove('treeNodeSelected');
 				if(a) a.classList.add('treeNodeSelected')
 			},
 			setActiveFromContextMenu: function(a) {
-				let el = d.querySelector('#node' + a + '>.treeNode');
+				var el = d.querySelector('#node' + a + '>.treeNode');
 				if(el) this.setSelected(el)
 			},
 			setSelectedByContext: function(a) {
-				let el = d.querySelector('#tree .treeNodeSelectedByContext');
+				var el = d.querySelector('#tree .treeNodeSelectedByContext');
 				if(el) el.classList.remove('treeNodeSelectedByContext');
 				if(a) d.querySelector('#node' + a + '>.treeNode').classList.add('treeNodeSelectedByContext');
 			},
 			setItemToChange: function() {
-				let a = d.getElementById(modx.main.idFrame).contentWindow, b = a.location.search.substring(1);
+				var a = d.getElementById(modx.main.idFrame).contentWindow, b = a.location.search.substring(1);
 				if((parseInt(modx.main.getQueryVariable('a', b)) === 27 || parseInt(modx.main.getQueryVariable('a', b)) === 3) && modx.main.getQueryVariable('id', b)) {
 					this.itemToChange = parseInt(modx.main.getQueryVariable('id', b))
 				} else {
@@ -611,7 +655,7 @@
 			},
 			restoreTree: function() {
 				console.log('modx.tree.restoreTree()');
-				let el = d.getElementById('buildText');
+				var el = d.getElementById('buildText');
 				if(el) {
 					el.innerHTML = modx.style.tree_info + modx.lang.loading_doc_tree;
 					el.style.display = 'block'
@@ -624,7 +668,7 @@
 			},
 			expandTree: function() {
 				this.rpcNode = d.getElementById('treeRoot');
-				let el = d.getElementById('buildText');
+				var el = d.getElementById('buildText');
 				if(el) {
 					el.innerHTML = modx.style.tree_info + modx.lang.loading_doc_tree;
 					el.style.display = 'block'
@@ -636,7 +680,7 @@
 			},
 			collapseTree: function() {
 				this.rpcNode = d.getElementById('treeRoot');
-				let el = d.getElementById('buildText');
+				var el = d.getElementById('buildText');
 				if(el) {
 					el.innerHTML = modx.style.tree_info + modx.lang.loading_doc_tree;
 					el.style.display = 'block'
@@ -649,22 +693,22 @@
 			},
 			updateTree: function() {
 				this.rpcNode = d.getElementById('treeRoot');
-				let el = d.getElementById('buildText');
+				var el = d.getElementById('buildText');
 				if(el) {
 					el.innerHTML = modx.style.tree_info + modx.lang.loading_doc_tree;
 					el.style.display = 'block'
 				}
-				let a = d.sortFrm;
-				let b = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + a.dt.value + '&tree_sortby=' + a.sortby.value + '&tree_sortdir=' + a.sortdir.value + '&tree_nodename=' + a.nodename.value + '&id=' + this.itemToChange + '&showonlyfolders=' + a.showonlyfolders.value;
+				var a = d.sortFrm;
+				var b = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + a.dt.value + '&tree_sortby=' + a.sortby.value + '&tree_sortdir=' + a.sortdir.value + '&tree_nodename=' + a.nodename.value + '&id=' + this.itemToChange + '&showonlyfolders=' + a.showonlyfolders.value;
 				modx.get('index.php?' + b, function(r) {
 					modx.tree.rpcLoadData(r)
 				})
 			},
 			getFolderState: function() {
-				let a;
+				var a;
 				if(modx.openedArray !== [0]) {
 					a = "&opened=";
-					for(let key in modx.openedArray) {
+					for(var key in modx.openedArray) {
 						if(modx.openedArray[key]) {
 							a += key + "|"
 						}
@@ -679,21 +723,20 @@
 			},
 			showSorter: function(e) {
 				e = e || w.event;
-				let el = d.getElementById('floater');
+				var el = d.getElementById('floater');
+				e.target.dataset.toggle = '#floater';
 				el.classList.toggle('show');
 				el.onclick = function(e) {
 					e.stopPropagation()
-				};
-				modx.hideDropDown(el);
-				e.stopPropagation()
+				}
 			},
 			emptyTrash: function() {
 				if(confirm(modx.lang.confirm_empty_trash) === true) {
-					w.main.location.href = "index.php?a=64"
+					m.location.href = "index.php?a=64"
 				}
 			},
 			showBin: function(a) {
-				let el = d.getElementById('treeMenu_emptytrash');
+				var el = d.getElementById('treeMenu_emptytrash');
 				if(el) {
 					if(a) {
 						el.title = modx.lang.empty_recycle_bin;
@@ -711,7 +754,7 @@
 				}
 			},
 			unlockElement: function(a, b, c) {
-				let m = modx.lockedElementsTranslation.msg.replace('[+id+]', b).replace('[+element_type+]', modx.lockedElementsTranslation['type' + a]);
+				var m = modx.lockedElementsTranslation.msg.replace('[+id+]', b).replace('[+element_type+]', modx.lockedElementsTranslation['type' + a]);
 				if(confirm(m) === true) {
 					modx.get('index.php?a=67&type=' + a + '&id=' + b, function(r) {
 						if(parseInt(r) === 1) modx.animation.fadeOut(c, true);
@@ -724,11 +767,11 @@
 			reloadElementsInTree: function() {
 				modx.get('index.php?a=1&f=tree', function(r) {
 					savePositions();
-					let div = d.createElement('div');
+					var div = d.createElement('div');
 					div.innerHTML = r;
-					let tabs = div.getElementsByClassName('tab-page');
-					let el, p;
-					for(let i = 0; i < tabs.length; i++) {
+					var tabs = div.getElementsByClassName('tab-page');
+					var el, p;
+					for(var i = 0; i < tabs.length; i++) {
 						if(tabs[i].id !== 'tabDoc') {
 							el = tabs[i].getElementsByClassName('panel-group')[0];
 							el.style.display = 'none';
@@ -739,7 +782,7 @@
 						}
 					}
 					setRememberCollapsedCategories();
-					for(let i = 0; i < tabs.length; i++) {
+					for(var i = 0; i < tabs.length; i++) {
 						if(tabs[i].id !== 'tabDoc') {
 							el = d.getElementById(tabs[i].id).getElementsByClassName('panel-group')[1];
 							el.remove();
@@ -750,14 +793,14 @@
 					}
 					loadPositions();
 					initQuicksearch('tree_site_templates_search', 'tree_site_templates');
-					let at = d.querySelectorAll('#tree .accordion-toggle');
-					for(let i = 0; i < at.length; i++) {
+					var at = d.querySelectorAll('#tree .accordion-toggle');
+					for(var i = 0; i < at.length; i++) {
 						at[i].onclick = function(e) {
 							e.preventDefault();
-							let thisItemCollapsed = $(this).hasClass("collapsed");
+							var thisItemCollapsed = $(this).hasClass("collapsed");
 							if(e.shiftKey) {
-								let toggleItems = $(this).closest(".panel-group").find("> .panel .accordion-toggle");
-								let collapseItems = $(this).closest(".panel-group").find("> .panel > .panel-collapse");
+								var toggleItems = $(this).closest(".panel-group").find("> .panel .accordion-toggle");
+								var collapseItems = $(this).closest(".panel-group").find("> .panel > .panel-collapse");
 								if(thisItemCollapsed) {
 									toggleItems.removeClass("collapsed");
 									collapseItems.collapse("show")
@@ -766,14 +809,14 @@
 									collapseItems.collapse("hide")
 								}
 								toggleItems.each(function() {
-									let state = $(this).hasClass("collapsed") ? 1 : 0;
+									var state = $(this).hasClass("collapsed") ? 1 : 0;
 									setLastCollapsedCategory($(this).data("cattype"), $(this).data("catid"), state)
 								});
 								writeElementsInTreeParamsToStorage()
 							} else {
 								$(this).toggleClass("collapsed");
 								$($(this).attr("href")).collapse("toggle");
-								let state = thisItemCollapsed ? 0 : 1;
+								var state = thisItemCollapsed ? 0 : 1;
 								setLastCollapsedCategory($(this).data("cattype"), $(this).data("catid"), state);
 								writeElementsInTreeParamsToStorage()
 							}
@@ -787,11 +830,11 @@
 		},
 		removeLocks: function() {
 			if(confirm(modx.lang.confirm_remove_locks) === true) {
-				w.main.location.href = "index.php?a=67"
+				m.location.href = "index.php?a=67"
 			}
 		},
 		openCredits: function() {
-			w.main.location.href = "index.php?a=18";
+			m.location.href = "index.php?a=18";
 			setTimeout('modx.main.stopWork()', 2000)
 		},
 		keepMeAlive: function() {
@@ -806,7 +849,7 @@
 					this.post('index.php', {
 						updateMsgCount: true
 					}, function(r) {
-						let c = r.split(','),
+						var c = r.split(','),
 							el = d.getElementById('msgCounter');
 						if(c[0] > 0) {
 							if(el) {
@@ -850,7 +893,7 @@
 			}
 		},
 		getWindowDimension: function() {
-			let a = 0,
+			var a = 0,
 				b = 0,
 				c = d.documentElement,
 				e = d.body;
@@ -869,11 +912,8 @@
 				'height': b
 			}
 		},
-		hideDropDown: function(a) {
-			let elms = d.getElementsByClassName('dropdown-menu');
-			for(let i = 0; i < elms.length; i++) {
-				if(a === null || (a !== null && a !== elms[i])) elms[i].classList.remove('show')
-			}
+		hideDropDown: function() {
+			var e = e || w.event || m.event;
 			if(tree.ca === "open" || tree.ca === "") {
 				modx.tree.setSelectedByContext();
 			}
@@ -881,13 +921,39 @@
 				d.getElementById(modx.frameset).removeChild(modx.tree.ctx);
 				modx.tree.ctx = null
 			}
+			if(!e.target.matches('.dropdown-item')
+			//&& !(e && ("click" === e.type && /form|label|input|textarea|select/i.test(e.target.tagName)))
+			) {
+				var els = d.querySelectorAll('.dropdown'),
+					l = els.length,
+					n = null;
+				if(e.target.dataset.toggle) {
+					n = d.querySelector(e.target.dataset.toggle);
+				} else if(e.target.nodeName !== 'HTML' && e.target.parentNode.dataset && e.target.parentNode.dataset.toggle) {
+					n = d.querySelector(e.target.parentNode.dataset.toggle);
+				} else if(e.target && e.target.classList.contains('dropdown-toggle')) {
+					n = e.target.offsetParent
+				} else if(e.target.nodeName !== 'HTML' && e.target.parentNode && e.target.parentNode.classList.contains('dropdown-toggle')) {
+					n = e.target.parentNode.offsetParent
+				}
+				while(l--) {
+					if(n !== els[l])
+						els[l].classList.remove('show')
+				}
+				els = m.document.querySelectorAll('.dropdown');
+				l = els.length;
+				while(l--) {
+					if(n !== els[l])
+						els[l].classList.remove('show')
+				}
+			}
 		},
 		animation: {
 			fadeIn: function(a, b) {
 				a.style.opacity = 0;
 				a.style.display = b || "block";
 				(function fade() {
-					let val = parseFloat(a.style.opacity);
+					var val = parseFloat(a.style.opacity);
 					if(!((val += .05) >= 1)) {
 						a.style.opacity = val;
 						requestAnimationFrame(fade)
@@ -914,7 +980,7 @@
 			return ('XMLHttpRequest' in w) ? new XMLHttpRequest : new ActiveXObject('Microsoft.XMLHTTP');
 		},
 		get: function(a, b) {
-			let x = this.XHR();
+			var x = this.XHR();
 			x.open('GET', a, true);
 			x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 			x.onload = function() {
@@ -925,11 +991,11 @@
 			x.send()
 		},
 		post: function(a, b, c) {
-			let x = this.XHR(),
+			var x = this.XHR(),
 				f = '';
 			if(typeof b === 'function') c = b;
 			if(typeof b === 'object') {
-				let e = [],
+				var e = [],
 					i = 0,
 					k;
 				for(k in b) {
@@ -947,7 +1013,7 @@
 			x.send(f)
 		}
 	};
-	for(let o in _) modx[o] = _[o];
+	for(var o in _) modx[o] = _[o];
 	_ = '';
 	w.mainMenu = {};
 	w.mainMenu.stopWork = function() {
@@ -998,7 +1064,7 @@
 		console.log('tree.resizeTree() off')
 	};
 	w.onbeforeunload = function() {
-		let a = d.getElementById(modx.main.idFrame).contentWindow;
+		var a = d.getElementById(modx.main.idFrame).contentWindow;
 		if(parseInt(modx.main.getQueryVariable('a', a.location.search.substring(1))) === 27) {
 			modx.get('index.php?a=67&type=7&id=' + modx.main.getQueryVariable('id', a.location.search.substring(1)));
 		}
@@ -1006,16 +1072,20 @@
 	d.addEventListener('DOMContentLoaded', function() {
 		modx.init()
 	})
-})(typeof(jQuery) !== 'undefined' ? jQuery : '', window, document, undefined);
+})(jQuery, window, document, window.main, undefined);
 
 function setLastClickedElement(a, b) {
 	modx.setLastClickedElement(a, b)
 }
 
+function reloadElementsInTree() {
+	modx.tree.reloadElementsInTree()
+}
+
 (function() {
 	if(!Element.prototype.closest) {
 		Element.prototype.closest = function(a) {
-			let b = this, c, d;
+			var b = this, c, d;
 			['matches', 'webkitMatchesSelector', 'mozMatchesSelector', 'msMatchesSelector', 'oMatchesSelector'].some(function(fn) {
 				if(typeof document.body[fn] === 'function') {
 					c = fn;

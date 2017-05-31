@@ -156,6 +156,12 @@ $_style['actions_angle_left']       = 'fa fa-angle-left';
 $_style['actions_angle_right']      = 'fa fa-angle-right';
 $_style['actions_chain']            = 'fa fa-chain';
 $_style['actions_chain_broken']     = 'fa fa-chain-broken';
+$_style['actions_edit']             = 'fa fa-edit';
+$_style['actions_move']             = 'fa fa-arrows';
+$_style['actions_pencil']           = 'fa fa-pencil';
+$_style['actions_reply']            = 'fa fa-reply';
+$_style['actions_plus']             = 'fa fa-plus';
+$_style['actions_refresh']          = 'fa fa-refresh';
 
 //for back compatibility 
 
