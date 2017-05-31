@@ -441,6 +441,12 @@ tr {
 
 form label {
   cursor: pointer;
+  display: inline-block;
+  margin-bottom: .25em;
+}
+
+form label:not([for]) {
+  cursor: default;
 }
 
 fieldset {
@@ -2136,12 +2142,12 @@ form#mutate input.disabled {
   background-color: #f5f5f5 !important;
 }
 
-form#mutate select {
-  width: 308px;
-}
-
 form#mutate .inputBox {
   width: 93%;
+}
+
+form#mutate select, form#mutate select.inputBox {
+  width: 308px;
 }
 
 form#mutate select.inputBox {
@@ -2166,6 +2172,11 @@ form#mutate input[name="menuindex"].inputBox {
 
 form#mutate input[name="ta"].inputBox {
   width: 70%;
+  display: inline-block !important;
+}
+
+form#mutate input[name="ta"].inputBox + div {
+  display: none !important;
 }
 
 #tv_body input[type="text"],
@@ -2636,8 +2647,13 @@ li.breadcrumbs__li_current {
 .table,
 #documentPane #tv_body table,
 #documentPane [id*="table-"],
-#documentPane [id*="table-tv"] {
+#documentPane [id*="table-tv"],
+#documentPane .tab-page > table {
   width: 100%;
+}
+
+#documentPane .tab-page > table > tbody > tr:first-child > td:first-child, #documentPane .tab-page > table > tr:first-child > td:first-child {
+  width: 150px;
 }
 
 .table--edit {
@@ -3967,8 +3983,8 @@ fieldset[disabled] .btn-default.focus {
 .searchbar .actionButtons .fa {display:inline-block;}
 .optionsTitle .fa {display: inline-block;}
 @media (max-width: 900px) {
-	.actionButtons a {display: inline-block; padding: 6px 10px;margin-top:-7px}
+	.actionButtons a {display: inline-block; font-size: 0; padding: 6px 10px;margin-top:-7px}
     .tab-page .actionButtons a {margin-top:0!important}
 	.actionButtons a span { display: none;}
-	.actionButtons a .fa {display:inline-block;}
+	.actionButtons a .fa {display:inline-block; line-height: 19px; font-size: 14px}
 }

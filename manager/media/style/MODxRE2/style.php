@@ -85,6 +85,8 @@ $_style['tree_page_pdf_secure']     = $style_path.'tree/file-pdf-secure.png';
 $_style['tree_page_word_secure']    = $style_path.'tree/file-word-secure.png';
 $_style['tree_page_excel_secure']   = $style_path.'tree/file-excel-secure.png';
 
+$_style['tree_preview_resource']    = "<i class='fa fa-eye'></i>";//$style_path.'icons/eye.png';
+
 //View Resource data 
 $_style['icons_new_document']       = 'fa fa-file-o fa-lg';
 $_style['icons_new_weblink']        = 'fa fa-link fa-lg';
@@ -135,6 +137,21 @@ $_style['actions_sort']               = 'fa fa-sort fa-fw fa-lg';
 $_style['actions_options']            = 'fa fa-check-square fa-fw fa-lg';
 $_style['actions_categories']         = 'fa fa-folder-open fa-fw fa-lg';
 $_style['actions_search']             = 'fa fa-search fa-fw fa-lg';
+$_style['actions_file']               = 'fa fa-file-o';
+$_style['actions_folder']             = 'fa fa-folder-o';
+$_style['actions_folder_open']        = 'fa fa-folder-open-o';
+$_style['actions_calendar']           = 'fa fa-calendar';
+$_style['actions_angle_up']           = 'fa fa-angle-up';
+$_style['actions_angle_down']         = 'fa fa-angle-down';
+$_style['actions_angle_left']         = 'fa fa-angle-left';
+$_style['actions_angle_right']        = 'fa fa-angle-right';
+$_style['actions_chain']              = 'fa fa-chain';
+$_style['actions_chain_broken']       = 'fa fa-chain-broken';
+$_style['actions_edit']               = 'fa fa-edit';
+$_style['actions_move']               = 'fa fa-arrows';
+$_style['actions_pencil']             = 'fa fa-pencil';
+$_style['actions_reply']              = 'fa fa-reply';
+$_style['actions_plus']               = 'fa fa-plus';
 
 //for back compatibility 
 $_style['icons_save']               = $style_path.'icons/save.png';
