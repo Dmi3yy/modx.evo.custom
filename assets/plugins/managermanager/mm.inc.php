@@ -378,7 +378,8 @@ $j(function(){
 			// Misc tidying up
 			
 			// General tab table container is too narrow for receiving TVs -- make it a bit wider
-			$j("div#tabGeneral table").attr("width", "100%");
+			// MOD JSONeditor by kabachello
+			//$j("div#tabGeneral table").attr("width", "100%");
 			
 			// if template variables containers are empty, remove their section
 			if ($j("div.tmplvars :input").length == 0){

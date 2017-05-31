@@ -4139,6 +4139,11 @@ class DocumentParser {
                     $out = $_SESSION['webInternalKey'];
                     break;
                 }
+                // BOF manager login detection in frontend by kabachello
+                case ($this->isFrontend() && isset ($_SESSION['mgrValidated'])): {
+                	return $_SESSION['mgrInternalKey'];
+                }
+                // EOF manager login detection in frontend by kabachello
                 case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):{
                     $out = $_SESSION['mgrInternalKey'];
                     break;
@@ -4167,6 +4172,11 @@ class DocumentParser {
                     $out = $this->stripslashes($_SESSION['webShortname']);
                     break;
                 }
+                // BOF manager login detection in frontend by kabachello
+                case ($this->isFrontend() && isset ($_SESSION['mgrValidated'])): {
+                	return $_SESSION['mgrShortname'];
+                }
+                // EOF manager login detection in frontend by kabachello
                 case ($this->isBackend() && isset ($_SESSION['mgrValidated'])):{
                     $out = $this->stripslashes($_SESSION['mgrShortname']);
                     break;
@@ -4249,7 +4259,10 @@ class DocumentParser {
             $dg = $_SESSION['webDocgroups'];
             $dgn = isset($_SESSION['webDocgrpNames']) ? $_SESSION['webDocgrpNames'] : false;
         } else
-            if ($this->isBackend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
+        	// BOF manager login detection in frontend by kabachello
+        	if (isset ($_SESSION['mgrDocgroups']) && isset ($_SESSION['mgrValidated'])) {
+        	// EOF manager login detection in frontend by kabachello
+            // if ($this->isBackend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
                 $dg = $_SESSION['mgrDocgroups'];
                 $dgn = isset($_SESSION['mgrDocgrpNames']) ? $_SESSION['mgrDocgrpNames'] : false;
             } else {

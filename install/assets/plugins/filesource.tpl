@@ -5,10 +5,11 @@
  * Save snippet and plugins to file
  *
  * @category    plugin
- * @version     0.1
+ * @version     0.2
  * @author		By Carw, and Bumkaka
  * @internal    @properties 
  * @internal    @events OnSnipFormRender,OnBeforeSnipFormSave,OnSnipFormPrerender,OnPluginFormPrerender,OnPluginFormRender,OnBeforePluginFormSave
+ * @internal    @properties &allow_files_from_outside=Allow files outside of default folders;list;true,false;false
  * @internal    @modx_category Manager and Admin
  * @internal    @installset base
  */
