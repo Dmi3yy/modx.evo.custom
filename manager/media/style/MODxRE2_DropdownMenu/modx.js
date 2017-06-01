@@ -68,7 +68,7 @@
 							xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 							xhr.onload = function() {
 								if(this.status === 200) {
-									modx.animation.fadeOut(r, true);
+									r.parentNode.removeChild(r);
 									var div = d.createElement('div');
 									div.innerHTML = this.responseText;
 									var o = div.getElementsByClassName(t.classResult)[0];
@@ -382,7 +382,7 @@
 					this.rpcNode.loaded = true;
 					var el = d.getElementById('buildText');
 					if(el) {
-						modx.animation.fadeOut(el)
+						el.style.display = 'none'
 					}
 					if(this.rpcNode.id === 'treeRoot') {
 						el = d.getElementById('binFull');
@@ -461,7 +461,7 @@
 				if(node.dataset.contextmenu) {
 					e.target.dataset.toggle = '#contextmenu';
 					if(e.type === 'contextmenu') {
-						modx.hideDropDown();
+						modx.hideDropDown(e);
 					}
 					this.ctx = d.createElement('div');
 					this.ctx.id = 'contextmenu';
@@ -510,7 +510,7 @@
 					var ctx = d.getElementById('mx_contextmenu');
 					e.target.dataset.toggle = '#mx_contextmenu';
 					if(e.type === 'contextmenu') {
-						modx.hideDropDown();
+						modx.hideDropDown(e);
 					}
 					this.setSelectedByContext(a);
 					var i4 = d.getElementById('item4'),
@@ -757,7 +757,7 @@
 				var m = modx.lockedElementsTranslation.msg.replace('[+id+]', b).replace('[+element_type+]', modx.lockedElementsTranslation['type' + a]);
 				if(confirm(m) === true) {
 					modx.get('index.php?a=67&type=' + a + '&id=' + b, function(r) {
-						if(parseInt(r) === 1) modx.animation.fadeOut(c, true);
+						if(parseInt(r) === 1) c.parentNode.removeChild(c);
 						else alert(r)
 					})
 				}
@@ -854,10 +854,10 @@
 						if(c[0] > 0) {
 							if(el) {
 								el.innerHTML = c[0];
-								modx.animation.fadeIn(el)
+								el.style.display = 'block'
 							}
 						} else {
-							if(el) modx.animation.fadeOut(el)
+							if(el) el.style.display = 'none'
 						}
 						if(c[1] > 0) {
 							el = d.getElementById('newMail');
@@ -912,7 +912,7 @@
 				'height': b
 			}
 		},
-		hideDropDown: function() {
+		hideDropDown: function(e) {
 			var e = e || w.event || m.event;
 			if(tree.ca === "open" || tree.ca === "") {
 				modx.tree.setSelectedByContext();
@@ -946,34 +946,6 @@
 					if(n !== els[l])
 						els[l].classList.remove('show')
 				}
-			}
-		},
-		animation: {
-			fadeIn: function(a, b) {
-				a.style.opacity = 0;
-				a.style.display = b || "block";
-				(function fade() {
-					var val = parseFloat(a.style.opacity);
-					if(!((val += .05) >= 1)) {
-						a.style.opacity = val;
-						requestAnimationFrame(fade)
-					}
-				})()
-			},
-			fadeOut: function(a, b) {
-				a.style.opacity = 1;
-				(function fade() {
-					if((a.style.opacity -= .05) <= 0) {
-						a.style.display = '';
-						if(b && a.parentElement) {
-							a.parentElement.removeChild(a);
-							a.style.display = '';
-							a.style.opacity = 1
-						}
-					} else {
-						requestAnimationFrame(fade)
-					}
-				})()
 			}
 		},
 		XHR: function() {

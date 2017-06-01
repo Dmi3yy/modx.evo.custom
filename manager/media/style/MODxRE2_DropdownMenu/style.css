@@ -47,6 +47,7 @@ td { vertical-align: top; }
 .clearfix::after { content: ""; display: table; width: 100% }
 .float-left { float: left !important }
 .float-right { float: right !important }
+.fa { position: relative; }
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1, h2, h3, h4, h5, h6, .subTitle { font-weight: 500; }
 h1 { font-size: 1.8em; line-height: 35px; padding: 15px; margin: 0; }
@@ -239,7 +240,7 @@ div.treeframebody { background-color: #ebebeb; -webkit-box-shadow: inset -2px 2p
 #treeRoot span { display: inline-block }
 .rtl #treeRoot div img { margin: 0; }
 #treeRoot .fa { position: relative; margin-right: 5px; width: 14px; font-size: 14px; text-align: center; color: #80969c; }
-#treeRoot .fa > .fa-lock { position: absolute; left: 0; bottom: 0; text-align: left; color: rgba(0, 0, 0, 0.65); font-size: 0.7em; }
+#treeRoot .fa > .fa-lock, .fa > .fa-lock { position: absolute; left: 0; bottom: 0; text-align: left; color: rgba(0, 0, 0, 0.65); font-size: 0.7em; }
 #treeRoot .treeNodeToggle { position: absolute; left: -20px; top: 0; cursor: pointer }
 #treeRoot .fa-file, #treeRoot .fa-file-o, #treeRoot .fa-file-code, #treeRoot .fa-file-code-o { }
 #treeRoot .fa-folder, #treeRoot .fa-folder-open, #treeRoot .fa-folder-o, #treeRoot .fa-folder-open-o, #treeRoot .fa-exclamation-triangle { text-align: left }
