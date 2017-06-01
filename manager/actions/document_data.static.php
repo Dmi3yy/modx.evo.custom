@@ -151,11 +151,11 @@ if($numRecords > 0) {
 			default:
 				if($children[isfolder]) {
 					$isPrivate = ($children['privateweb'] || $children['privatemgr']) ? '1' : '0';
-					$icon = $isPrivate ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
+					$icon = $isPrivate ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
 				} else {
 					if($children['privateweb'] || $children['privatemgr']) {
-						if(isset($iconsPrivate[$children['contentType']])) {
-							$icon = $iconsPrivate[$children['contentType']];
+						if(isset($icons[$children['contentType']])) {
+							$icon = $icons[$children['contentType']];
 						} else {
 							$icon = $_style['tree_page_secure'];
 						}
