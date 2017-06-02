@@ -699,7 +699,7 @@ $_lang["plugin_priority_title"] = 'Kolejność wykonywania pluginów';
 $_lang["purge_plugin"] = 'Usuń przestarzałe wtyczki';
 $_lang["plugin_title"] = 'Stwórz/edytuj wtyczkę';
 $_lang["preview"] = 'Podgląd';
-$_lang["preview_msg"] = 'To jest podgląd ostatnio dokonanych zmian. Kliknij tutaj aby <a href="#" onclick="saveRefreshPreview();">zapisać i odświeżyć</a> bieżące zmiany';
+$_lang["preview_msg"] = 'To jest podgląd ostatnio dokonanych zmian. Kliknij tutaj aby <a href="javascript:;" onclick="saveRefreshPreview();">zapisać i odświeżyć</a> bieżące zmiany';
 $_lang["preview_resource"] = 'Podgląd dokumentu';
 $_lang["private"] = 'Prywatny';
 $_lang["public"] = 'Publiczny';

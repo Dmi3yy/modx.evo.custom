@@ -74,22 +74,17 @@
 									var o = div.getElementsByClassName(t.classResult)[0];
 									if(o) {
 										if(o.innerHTML !== '') {
-											var p = o.getElementsByTagName('A');
-											for(var i = 0; i < p.length; i++) {
-												p[i].target = 'main';
-												p[i].innerHTML += '<i onclick="modx.openWindow({title:\'' + p[i].innerText + '\',id:\'' + p[i].id + '\',url:\'' + p[i].href + '\'});return false;">' + modx.style.icons_external_link + '</i>'
-											}
 											t.result.innerHTML = o.outerHTML;
 											t.open();
 											t.result.onclick = function(e) {
 												if(e.target.tagName === 'I') {
+													modx.openWindow({title: e.target.parentNode.innerText, id: e.target.parentNode.id, url: e.target.parentNode.href});
 													return false
 												}
-												var a = e.target.closest('a');
-												if(a !== null) {
+												if(e.target.tagName === 'A') {
 													var el = t.result.querySelector('.selected');
 													if(el) el.className = '';
-													a.className = 'selected'
+													e.target.className = 'selected'
 												}
 											}
 										} else {
@@ -927,10 +922,11 @@
 				var els = d.querySelectorAll('.dropdown'),
 					l = els.length,
 					n = null;
+
 				if(e.target.dataset.toggle) {
 					n = d.querySelector(e.target.dataset.toggle);
-				} else if(e.target.nodeName !== 'HTML' && e.target.parentNode.dataset && e.target.parentNode.dataset.toggle) {
-					n = d.querySelector(e.target.parentNode.dataset.toggle);
+				} else if(e.target.parentNode.dataset && e.target.nodeName !== 'HTML' && e.target.parentNode.dataset.toggle) {
+					n = d.querySelector(e.target.parentNode.dataset.toggle)
 				} else if(e.target && e.target.classList.contains('dropdown-toggle')) {
 					n = e.target.offsetParent
 				} else if(e.target.nodeName !== 'HTML' && e.target.parentNode && e.target.parentNode.classList.contains('dropdown-toggle')) {
@@ -1007,7 +1003,11 @@
 			//console.log('mainMenu.startrefresh(' + a + ')');
 			modx.tree.restoreTree()
 		}
-		if(a === 9 || a === 10) {
+		if(a === 9) {
+			//console.log('mainMenu.startrefresh(' + a + ')');
+			modx.tree.restoreTree()
+		}
+		if(a === 10) {
 			//console.log('mainMenu.startrefresh(' + a + ')');
 			w.location.href = "../" + modx.MGR_DIR
 		}

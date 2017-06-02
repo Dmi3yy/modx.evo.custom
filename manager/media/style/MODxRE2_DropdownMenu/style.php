@@ -138,6 +138,8 @@ $_style['actions_save']             = 'fa fa-floppy-o';
 $_style['actions_duplicate']        = 'fa fa-clone';
 $_style['actions_delete']           = 'fa fa-trash';
 $_style['actions_cancel']           = 'fa fa-times-circle';
+$_style['actions_close']            = 'fa fa-times-circle';
+$_style['actions_add']              = 'fa fa-plus-circle';
 $_style['actions_preview']          = 'fa fa-eye';
 $_style['actions_run']              = 'fa fa-play';
 $_style['actions_new']              = 'fa fa-plus-circle';
@@ -150,6 +152,7 @@ $_style['actions_file']             = 'fa fa-file-o';
 $_style['actions_folder']           = 'fa fa-folder-o';
 $_style['actions_folder_open']      = 'fa fa-folder-open-o';
 $_style['actions_calendar']         = 'fa fa-calendar';
+$_style['actions_calendar_delete']  = 'fa fa-calendar-times-o';
 $_style['actions_angle_up']         = 'fa fa-angle-up';
 $_style['actions_angle_down']       = 'fa fa-angle-down';
 $_style['actions_angle_left']       = 'fa fa-angle-left';
@@ -162,6 +165,9 @@ $_style['actions_pencil']           = 'fa fa-pencil';
 $_style['actions_reply']            = 'fa fa-reply';
 $_style['actions_plus']             = 'fa fa-plus';
 $_style['actions_refresh']          = 'fa fa-refresh';
+$_style['actions_error']            = 'fa fa-times-circle';
+$_style['actions_info']             = 'fa fa-info-circle';
+$_style['actions_triangle']         = 'fa fa-exclamation-triangle';
 
 //for back compatibility 
 
@@ -172,18 +178,18 @@ $_style['icons_unzip']              = $style_path.'icons/download-alt.png';
 
 
 // Indicators
-$_style['icons_tooltip']            = 'tooltip fa fa-question-circle';
+$_style['icons_tooltip']            = 'fa fa-question-circle tooltip';
 $_style['icons_tooltip_over']       = $style_path.'icons/question-sign.png';
 $_style['icons_cal']                = $style_path.'icons/calendar.png';
 $_style['icons_cal_nodate']         = $style_path.'icons/calendar.png';
 $_style['icons_set_parent']         = $style_path.'icons/folder-open.png';
 
 //modules
-$_style['icons_modules']            = $style_path.'icons/modules.png';
+$_style['icons_modules']            = 'fa fa-cogs'; //$style_path.'icons/modules.png';
 $_style['icons_run']                = $style_path.'icons/play.png';
 
 //users and webusers
-$_style['icons_user']               = $style_path.'icons/user.png';
+$_style['icons_user']               = 'fa fa-user'; //$style_path.'icons/user.png';
 
 //Messages
 $_style['icons_message_unread']     = $style_path.'icons/email.png';
