@@ -153,11 +153,5 @@ if(!isset($modx->config['mgr_date_picker_path'])) {
 <body ondragstart="return false"<?php echo $modx_textdir ? ' class="rtl"' : '' ?>>
 
 <div id="preLoader">
-	<table width="100%" border="0" cellpadding="0">
-		<tr>
-			<td align="center">
-				<div class="preLoaderText"><?php echo $_style['ajax_loader']; ?></div>
-			</td>
-		</tr>
-	</table>
+	<div class="preLoaderText"><?php echo $_style['ajax_loader']; ?></div>
 </div>
