@@ -925,9 +925,12 @@
 
 				if(e.target.dataset.toggle) {
 					n = d.querySelector(e.target.dataset.toggle);
-				} else if(e.target.parentNode.dataset && e.target.nodeName !== 'HTML' && e.target.parentNode.dataset.toggle) {
-					n = d.querySelector(e.target.parentNode.dataset.toggle)
-				} else if(e.target && e.target.classList.contains('dropdown-toggle')) {
+				} else if(e.target.parentNode.dataset) {
+					if(e.target.parentNode.dataset.toggle) {
+						n = d.querySelector(e.target.parentNode.dataset.toggle)
+					}
+				}
+				if(e.target && e.target.classList.contains('dropdown-toggle')) {
 					n = e.target.offsetParent
 				} else if(e.target.nodeName !== 'HTML' && e.target.parentNode && e.target.parentNode.classList.contains('dropdown-toggle')) {
 					n = e.target.parentNode.offsetParent

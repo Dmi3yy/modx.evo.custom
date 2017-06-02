@@ -162,7 +162,7 @@ $header = '
 $header .= '</head>
 <body ondragstart="return false;">
 
-<h1>' . $_lang["template_tv_edit_title"] . '</h1>
+<h1 class="pagetitle">' . $_lang["template_tv_edit_title"] . '</h1>
 
 <div id="actions">
     <ul class="actionButtons">
