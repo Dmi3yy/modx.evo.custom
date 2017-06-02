@@ -16,7 +16,7 @@ $num_rows_unpub = $modx->db->getAffectedRows();
 
 ?>
 
-<h1 class="pagetitle"><?php echo $_lang['refresh_title']; ?></h1>
+<h1><?php echo $_lang['refresh_title']; ?></h1>
 
 <div class="section">
 	<div class="sectionBody">

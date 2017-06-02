@@ -9,13 +9,8 @@ if(!$modx->hasPermission('export_static')) {
 // figure out the base of the server, so we know where to get the documents in order to export them
 ?>
 
-<h1 class="pagetitle">
-  <span class="pagetitle-icon">
-    <i class="fa fa-download"></i>
-  </span>
-	<span class="pagetitle-text">
-    <?php echo $_lang['export_site_html']; ?>
-  </span>
+<h1>
+	<i class="fa fa-download"></i><?php echo $_lang['export_site_html']; ?>
 </h1>
 
 <div id="actions">
@@ -24,13 +19,12 @@ if(!$modx->hasPermission('export_static')) {
 	</ul>
 </div>
 
-<script type="text/javascript" src="media/script/tabpane.js"></script>
-<script type="text/javascript">
-	tpExport = new WebFXTabPane(document.getElementById("exportPane"));
-</script>
-
 <div class="sectionBody">
 	<div class="tab-pane" id="exportPane">
+		<script type="text/javascript">
+			tpExport = new WebFXTabPane(document.getElementById("exportPane"));
+		</script>
+
 		<div class="tab-page" id="tabMain">
 			<h2 class="tab"><?php echo $_lang['export_site'] ?></h2>
 			<script type="text/javascript">tpExport.addTabPage(document.getElementById("tabMain"));</script>

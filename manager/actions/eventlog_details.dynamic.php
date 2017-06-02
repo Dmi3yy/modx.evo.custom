@@ -16,7 +16,7 @@ $content = $modx->db->getRow($ds);
 
 ?>
 
-<h1 class="pagetitle"><?php echo $_lang['eventlog']; ?></h1>
+<h1><?php echo $_lang['eventlog']; ?></h1>
 
 <div id="actions">
 	<ul class="actionButtons">

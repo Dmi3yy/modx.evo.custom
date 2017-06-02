@@ -44,21 +44,18 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 	<style type="text/css">
 		table th { text-align: left; vertical-align: top; }
 	</style>
-	<script type="text/javascript" src="media/script/tabpane.js"></script>
+
 	<script type="text/javascript">
 		var displayStyle = '<?php echo $displayStyle; ?>';
 		var lang_chg = '<?php echo $_lang['confirm_setting_language_change']; ?>';
 	</script>
 	<script type="text/javascript" src="actions/mutate_settings/functions.js"></script>
 	<form name="settings" action="index.php?a=30" method="post">
-		<h1 class="pagetitle">
-			<span class="pagetitle-icon">
-				<i class="fa fa-sliders"></i>
-			</span>
-			<span class="pagetitle-text">
-				<?php echo $_lang['settings_title']; ?>
-			</span>
+
+		<h1>
+			<i class="fa fa-sliders"></i><?php echo $_lang['settings_title']; ?>
 		</h1>
+
 		<div id="actions">
 			<ul class="actionButtons">
 				<li id="Button1" class="transition">

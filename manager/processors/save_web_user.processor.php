@@ -162,13 +162,15 @@ switch($input['mode']) {
 
 			include_once "header.inc.php";
 			?>
-			<h1 class="pagetitle"><?php echo $_lang['web_user_title']; ?></h1>
+
+			<h1><?php echo $_lang['web_user_title']; ?></h1>
 
 			<div id="actions">
 				<ul class="actionButtons">
 					<li class="transition"><a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?></a></li>
 				</ul>
 			</div>
+
 			<div class="section">
 				<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
 				<div class="sectionBody">
@@ -297,13 +299,15 @@ switch($input['mode']) {
 
 			include_once "header.inc.php";
 			?>
-			<h1 class="pagetitle"><?php echo $_lang['web_user_title']; ?></h1>
+
+			<h1><?php echo $_lang['web_user_title']; ?></h1>
 
 			<div id="actions">
 				<ul class="actionButtons">
 					<li class="transition"><a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?></a></li>
 				</ul>
 			</div>
+
 			<div class="section">
 				<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
 				<div class="sectionBody">

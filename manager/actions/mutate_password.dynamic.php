@@ -7,7 +7,7 @@ if(!$modx->hasPermission('change_password')) {
 }
 ?>
 
-<h1 class="pagetitle"><?php echo $_lang['change_password'] ?></h1>
+<h1><?php echo $_lang['change_password'] ?></h1>
 
 <div id="actions">
 	<ul class="actionButtons">

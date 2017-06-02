@@ -116,13 +116,13 @@ require_once(MODX_MANAGER_PATH . 'includes/header.inc.php');
 	});
 </script>
 
-<h1 class="pagetitle"><?php echo $_lang['plugin_priority_title'] ?></h1>
+<h1><?php echo $_lang['plugin_priority_title'] ?></h1>
 
 <div id="actions"
-<ul class="actionButtons">
-	<li class="transition"><a href="javascript:;" onclick="save();"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['save'] ?></a></li>
-	<li class="transition"><a href="javascript:;" onclick="window.location.href='index.php?a=76';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php $_lang['cancel'] ?></a></li>
-</ul>
+	<ul class="actionButtons">
+		<li class="transition"><a href="javascript:;" onclick="save();"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['save'] ?></a></li>
+		<li class="transition"><a href="javascript:;" onclick="window.location.href='index.php?a=76';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php $_lang['cancel'] ?></a></li>
+	</ul>
 </div>
 
 <div class="section">

@@ -173,13 +173,15 @@ switch($input['mode']) {
 
 			include_once "header.inc.php";
 			?>
-			<h1 class="pagetitle"><?php echo $_lang['user_title']; ?></h1>
+
+			<h1><?php echo $_lang['user_title']; ?></h1>
 
 			<div id="actions">
 				<ul class="actionButtons">
 					<li class="transition"><a href="<?php echo $stayUrl ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['edit']; ?></a></li>
 				</ul>
 			</div>
+
 			<div class="section">
 				<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 				<div class="sectionBody">
@@ -311,13 +313,15 @@ switch($input['mode']) {
 
 			include_once "header.inc.php";
 			?>
-			<h1 class="pagetitle"><?php echo $_lang['user_title']; ?></h1>
+
+			<h1><?php echo $_lang['user_title']; ?></h1>
 
 			<div id="actions">
 				<ul class="actionButtons">
 					<li class="transition"><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl; ?>"><i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['edit']; ?></a></li>
 				</ul>
 			</div>
+
 			<div class="section">
 				<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 				<div class="sectionBody">

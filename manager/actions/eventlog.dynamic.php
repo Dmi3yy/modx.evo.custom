@@ -90,11 +90,8 @@ echo $cm->render();
 	<input type="hidden" name="listmode" value="<?php echo $listmode ?>" />
 	<input type="hidden" name="op" value="" />
 
-	<h1 class="pagetitle">
-		<span class="pagetitle-icon">
-			<i class="<?php echo $_style['actions_triangle'] ?>"></i>
-		</span>
-		<span class="pagetitle-text"><?php echo $_lang['eventlog_viewer']; ?></span>
+	<h1>
+		<i class="<?php echo $_style['actions_triangle'] ?>"></i><?php echo $_lang['eventlog_viewer']; ?>
 	</h1>
 
 	<div class="section">

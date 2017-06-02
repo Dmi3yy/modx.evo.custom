@@ -192,14 +192,10 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 	<input type="hidden" name="id" value="<?php echo $user ?>" />
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />
 
-	<h1 class="pagetitle">
-  <span class="pagetitle-icon">
-    <i class="fa fa fa-users"></i>
-  </span>
-		<span class="pagetitle-text">
-    <?php echo $_lang['web_user_title']; ?>
-  </span>
+	<h1>
+		<i class="fa fa fa-users"></i><?php echo $_lang['web_user_title']; ?>
 	</h1>
+
 	<div id="actions">
 		<ul class="actionButtons">
 			<li id="Button1" class="transition">
@@ -225,11 +221,11 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 	<!-- Tab Start -->
 	<div class="sectionBody">
 		<link type="text/css" rel="stylesheet" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css<?php echo "?$theme_refresher"; ?>" />
-		<script type="text/javascript" src="media/script/tabpane.js"></script>
 		<div class="tab-pane" id="webUserPane">
 			<script type="text/javascript">
 				tpUser = new WebFXTabPane(document.getElementById("webUserPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 			</script>
+
 			<div class="tab-page" id="tabGeneral">
 				<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
 				<script type="text/javascript">tpUser.addTabPage(document.getElementById("tabGeneral"));</script>

@@ -17,7 +17,9 @@ $limit = $modx->db->getRecordCount($rs);
 if($limit > 0) {
 	include "header.inc.php";
 	?>
-	<h1 class="pagetitle"><?php echo $_lang['manage_templates']; ?></h1>
+
+	<h1><?php echo $_lang['manage_templates']; ?></h1>
+
 	<div class="section">
 		<div class="sectionHeader"><?php echo $_lang['manage_templates']; ?></div>
 		<div class="sectionBody">

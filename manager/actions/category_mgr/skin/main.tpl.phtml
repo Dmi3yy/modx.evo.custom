@@ -1,16 +1,14 @@
 <link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="actions/category_mgr/skin/css/module.css" />
 <script type="text/javascript" src="actions/category_mgr/skin/js/mootips.js"></script>
-<script type="text/javascript" src="media/script/tabpane.js"></script>
 <?php if(!empty($view->js_output)) : ?>
 	<script type="text/javascript">
 		<?php echo $view->js_output; ?>
 	</script>
 <?php endif; ?>
 
-<h1 class="pagetitle">
-	<span class="pagetitle-icon"><i class="fa fa-folder-open"></i></span>
-	<span class="pagetitle-text"><?php echo $view->get('name'); ?></span>
+<h1>
+	<i class="fa fa-folder-open"></i><?php echo $view->get('name') ?>
 </h1>
 
 <div id="section-body-categories" class="sectionBody">

@@ -9,14 +9,10 @@ if(!$modx->hasPermission('edit_user')) {
 ?>
 <!-- User Roles -->
 
-<h1 class="pagetitle">
-  <span class="pagetitle-icon">
-    <i class="fa fa-legal"></i>
-  </span>
-	<span class="pagetitle-text">
-    <?php echo $_lang['role_management_title']; ?>
-  </span>
+<h1>
+	<i class="fa fa-legal"></i><?php echo $_lang['role_management_title']; ?>
 </h1>
+
 <div class="section">
 	<div class="sectionBody">
 		<p class="element-edit-message"><?php echo $_lang['role_management_msg']; ?></p>
