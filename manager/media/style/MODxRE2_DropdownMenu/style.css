@@ -113,7 +113,7 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 #tocText { display: none }
 @media (max-width: 998px) {
 #mainMenu #nav.nav > li > a > .fa { margin-right: 0; font-size: 17px; }
-#mainMenu #nav.nav > li > a { font-size: 0px; }
+#mainMenu #nav.nav > li > a { font-size: 0; }
 #mainMenu .account .username { display: none; }
 }
 /* search */
@@ -396,7 +396,7 @@ fieldset#preview h2.tab { float: right; }
 /* -------------------------[ Action Buttons ]--- */
 #actions { background: none repeat scroll 0 0 rgba(230, 230, 230, 0.8); padding: 8px; position: fixed; top: 0; right: 15px; text-align: right; z-index: 100; -moz-border-radius: 0 0 5px 5px; -webkit-border-radius: 0 0 5px 5px; border-radius: 0 0 5px 5px; }
 #actions .actionButtons { float: left; min-height: 32px }
-#actions .actionButtons li { position: relative; float: left; margin-right: 3px }
+#actions .actionButtons li { position: relative; float: left; margin-right: 3px; border: none }
 #actions .actionButtons li a, #actions .actionButtons .plus { float: left; padding: 0 10px !important; height: 32px; line-height: 30px; -webkit-user-select: none; user-select: none; }
 #actions .actionButtons li:last-child { margin: 0 }
 #actions .actionButtons .plus { overflow: hidden; margin: 0 0 0 -2px; width: 35px; border-radius: 0 3px 3px 0 !important; text-align: center; cursor: default; font: normal normal normal 0/30px FontAwesome }
@@ -495,15 +495,15 @@ form#mutate select.tv_url_select { padding: 5px 3px; }
 * Style mootools tooltips
 */
 .tooltip { cursor: help }
-.tooltip::after { position: absolute; z-index: 13000; opacity: 0; content: attr(data-tooltip); width: 200px; margin: 0 0 0 15px; padding: 13px; font-size: 13px; line-height: 1.3; font-family: sans-serif; color: #333; background-color: #fff; border: 1px solid #ccc; visibility: hidden; transition-duration: .3s; }
-.tooltip:hover::after { opacity: 1; visibility: visible; }
+.tooltip::after { position: absolute; z-index: 13000; opacity: 0; content: attr(data-tooltip); max-width: 200px; margin-left: 15px; padding: 12px 15px; font-size: 13px; line-height: 1.3; font-family: sans-serif; text-align: left; color: #333; background-color: #fff; border: 1px solid #ccc; visibility: hidden; transition-duration: .3s; transform: translate3d(15px, 0, 0); }
+.tooltip:hover::after { opacity: 1; visibility: visible; transform: translate3d(0, 0, 0); }
 .tooltip.fa-question-circle { opacity: 0.15; }
 .tooltip.fa-question-circle:hover { opacity: 1; }
-th > .tooltip, td > .tooltip { float: right; }
+th > .tooltip.fa-question-circle, td > .tooltip.fa-question-circle { float: right; }
 /* ppb:
 * Some styling for legacy mode fieldsets
 */
-fieldset.legacy { background: #fff; margin: 10px; padding: 10px; border: 1px solid #e4e4e4 !important; position: relative; margin-bottom: 35px; }
+fieldset.legacy { background: #fff; padding: 10px; margin: 10px 10px 35px; border: 1px solid #e4e4e4 !important; position: relative; }
 fieldset.legacy h2 { width: 100%; background: #f5f5f5; margin: -10px -10px 15px -10px; padding: 0 10px; border-bottom: 1px solid #e4e4e4 !important; }
 /* -------------------------[ date picker ]--- */
 input.DatePicker, #mutate input.DatePicker, #userPane input.DatePicker, #webUserPane input.DatePicker, input#datefrom.DatePicker, input#dateto.DatePicker { width: 150px; cursor: pointer; ime-mode: disabled; }
@@ -786,6 +786,10 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 #ManageFiles i.fa.FilesFolder { font-size: 19px !important; color: #80969c; margin-right: 4px; }
 #ManageFiles i.fa.FilesDeletedFolder { font-size: 19px !important; color: #e2e2e2; margin-right: 4px; }
 #ManageFiles i.fa.FilesPage { color: #80969c; margin-right: 4px; }
+#ManageFiles #imageviewer { display: none; margin-top: 10px }
+#ManageFiles #imageviewer img { display: inline-block; max-width: 100%; height: auto; border: 1px dashed #ccc !important }
+#ManageFiles #uploader { margin-top: 20px }
+#content.phptextarea { width: 100%; height: 400px }
 #FilesTable { border-collapse: collapse; }
 #FilesTable tr, #FilesTable td { padding: 2px !important; }
 #FilesTable td { border-bottom: 1px dotted #e2e2e2 !important; }

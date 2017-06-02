@@ -667,7 +667,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							<i class="<?php echo $_style["actions_cancel"] ?>"></i><?php echo $_lang['cancel'] ?></a>
 					</li>
 					<li id="Button4">
-						<a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');">
+						<a href="javascript:;" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');">
 							<i class="<?php echo $_style["actions_preview"] ?>"></i><?php echo $_lang['preview'] ?></a>
 					</li>
 				</ul>

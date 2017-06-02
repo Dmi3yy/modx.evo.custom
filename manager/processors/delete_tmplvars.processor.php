@@ -32,8 +32,8 @@ if(!$forced) {
 
 <div id="actions">
 	<ul class="actionButtons">
-		<li id="cmdDelete"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang["delete"]; ?></a></td>
-		<li id="cmdCancel" class="transition"><a href="index.php?a=301&id=<?php echo $id;?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang["cancel"]; ?></a></li>
+		<li id="cmdDelete"><a href="javascript:;" onclick="deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <?php echo $_lang["delete"]; ?></a></li>
+		<li id="cmdCancel"><a href="javascript:;" onclick="window.location.href='index.php?a=301&id=<?php echo $id;?>';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php echo $_lang["cancel"]; ?></a></li>
 	</ul>
 </div>
 
