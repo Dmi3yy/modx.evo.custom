@@ -24,7 +24,7 @@
 				<table border="0" cellpadding="5">
 					<tr>
 						<td colspan="2">
-							<h1 style="margin:0">[(site_name)]</h1>
+							<h1 class="pagetitle" style="margin:0">[(site_name)]</h1>
 							[%welcome_title%]
 						</td>
 					</tr>
