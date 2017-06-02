@@ -8,7 +8,6 @@
 		[+multiple_sessions_msg+]
 	</div>
 
-	<script type="text/javascript" src="media/script/tabpane.js"></script>
 	<div class="tab-pane" id="welcomePane" style="border:0">
 		<script type="text/javascript">
 			tpPane = new WebFXTabPane(document.getElementById("welcomePane"), false);
@@ -24,7 +23,7 @@
 				<table border="0" cellpadding="5">
 					<tr>
 						<td colspan="2">
-							<h1 class="pagetitle" style="margin:0">[(site_name)]</h1>
+							<h1>[(site_name)]</h1>
 							[%welcome_title%]
 						</td>
 					</tr>

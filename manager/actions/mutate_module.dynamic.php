@@ -403,7 +403,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		document.mutate.icon.value = url;
 	}
 </script>
-<script type="text/javascript" src="media/script/tabpane.js"></script>
+
 <link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css?<?php echo $theme_refresher ?>" />
 
 <form name="mutate" id="mutate" class="module" method="post" action="index.php?a=109">
@@ -423,14 +423,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	<input type="hidden" name="id" value="<?php echo $content['id'] ?>">
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
 
-	<h1 class="pagetitle">
-  <span class="pagetitle-icon">
-    <i class="fa fa-cogs"></i>
-  </span>
-		<span class="pagetitle-text">
-    <?php echo $_lang['module_title']; ?>
-  </span>
+	<h1>
+		<i class="fa fa-cogs"></i><?php echo $_lang['module_title']; ?>
 	</h1>
+
 	<div id="actions">
 		<ul class="actionButtons">
 			<li id="Button1" class="transition">

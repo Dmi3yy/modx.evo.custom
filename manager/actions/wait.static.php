@@ -10,7 +10,7 @@ $add_path = $sd . $sb . $pg;
 /**********************/
 ?>
 
-<h1 class="pagetitle"><?php echo $_lang['cleaningup']; ?></h1>
+<h1><?php echo $_lang['cleaningup']; ?></h1>
 
 <div class="section">
 	<div class="sectionBody">

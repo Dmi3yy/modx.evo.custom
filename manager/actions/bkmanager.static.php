@@ -134,12 +134,12 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 }
 
 ?>
-	<script type="text/javascript" src="media/script/tabpane.js"></script>
+
 	<script language="javascript">
 		function selectAll() {
 			var f = document.forms['frmdb'];
 			var c = f.elements['chk[]'];
-			for(i = 0; i < c.length; i++) {
+			for(var i = 0; i < c.length; i++) {
 				c[i].checked = f.chkselall.checked;
 			}
 		}
@@ -162,13 +162,9 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 		<?php echo isset($_REQUEST['r']) ? " doRefresh(" . $_REQUEST['r'] . ");" : "";?>
 
 	</script>
-	<h1 class="pagetitle">
-  <span class="pagetitle-icon">
-    <i class="fa fa-database"></i>
-  </span>
-		<span class="pagetitle-text">
-    <?php echo $_lang['bk_manager']; ?>
-  </span>
+
+	<h1>
+		<i class="fa fa-database"></i><?php echo $_lang['bk_manager']; ?>
 	</h1>
 
 	<div id="actions">
@@ -182,6 +178,7 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 			<script type="text/javascript">
 				tpDBM = new WebFXTabPane(document.getElementById('dbmPane'));
 			</script>
+
 			<div class="tab-page" id="tabBackup">
 				<h2 class="tab"><?php echo $_lang['backup'] ?></h2>
 				<script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabBackup'));</script>

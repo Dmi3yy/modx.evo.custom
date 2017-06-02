@@ -180,14 +180,11 @@ if($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 	<input type="hidden" name="rt" value="" />
 	<input type="hidden" name="newids" value="" />
 	<input type="hidden" name="id" value="<?php echo $content['id']; ?>" />
-	<h1 class="pagetitle">
-  <span class="pagetitle-icon">
-    <i class="fa fa-cogs"></i>
-  </span>
-		<span class="pagetitle-text">
-    <?php echo $_lang['module_resource_title']; ?>
-  </span>
+
+	<h1>
+		<i class="fa fa-cogs"></i><?php echo $_lang['module_resource_title']; ?>
 	</h1>
+
 	<div id="actions">
 		<ul class="actionButtons">
 			<li class="transition"><a href="index.php?a=106"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php echo $_lang['close']; ?></a>

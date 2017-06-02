@@ -418,13 +418,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		<input type="hidden" name="id" value="<?php echo $content['id']; ?>">
 		<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
 
-		<h1 class="pagetitle">
-      <span class="pagetitle-icon">
-        <i class="fa fa-plug"></i>
-      </span>
-			<span class="pagetitle-text">
-        <?php echo $_lang['plugin_title']; ?>
-      </span>
+		<h1>
+			<i class="fa fa-plug"></i><?php echo $_lang['plugin_title']; ?>
 		</h1>
 
 		<div id="actions">
@@ -453,7 +448,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 		<div class="sectionBody">
 
-			<script type="text/javascript" src="media/script/tabpane.js"></script>
 			<div class="tab-pane" id="pluginPane">
 				<script type="text/javascript">
 					tpSnippet = new WebFXTabPane(document.getElementById("pluginPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );

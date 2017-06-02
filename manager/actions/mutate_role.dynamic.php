@@ -70,7 +70,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		<input type="hidden" name="mode" value="<?php echo $modx->manager->action ?>">
 		<input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
 
-		<h1 class="pagetitle"><?php echo $_lang['role_title']; ?></h1>
+		<h1><?php echo $_lang['role_title']; ?></h1>
 
 		<div id="actions">
 			<ul class="actionButtons">

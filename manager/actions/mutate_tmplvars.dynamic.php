@@ -270,13 +270,8 @@ if(is_array($evtOut)) {
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
 	<input type="hidden" name="params" value="<?php echo $modx->htmlspecialchars($content['display_params']); ?>">
 
-	<h1 class="pagetitle">
-      <span class="pagetitle-icon">
-        <i class="fa fa-list-alt"></i>
-      </span>
-		<span class="pagetitle-text">
-        <?php echo $_lang['tmplvars_title']; ?>
-      </span>
+	<h1>
+		<i class="fa fa-list-alt"></i><?php echo $_lang['tmplvars_title']; ?>
 	</h1>
 
 	<div id="actions">
@@ -303,12 +298,12 @@ if(is_array($evtOut)) {
 		</ul>
 	</div>
 
-	<script type="text/javascript" src="media/script/tabpane.js"></script>
 	<div class="sectionBody">
 		<div class="tab-pane" id="tmplvarsPane">
 			<script type="text/javascript">
 				tpTmplvars = new WebFXTabPane(document.getElementById("tmplvarsPane"), false);
 			</script>
+
 			<div class="tab-page" id="tabGeneral">
 				<h2 class="tab"><?php echo $_lang['settings_general']; ?></h2>
 				<script type="text/javascript">tpTmplvars.addTabPage(document.getElementById("tabGeneral"));</script>

@@ -226,14 +226,10 @@ if($numRecords > 0) {
 	</script>
 	<script type="text/javascript" src="media/script/tablesort.js"></script>
 
-	<h1 class="pagetitle">
-        <span class="pagetitle-icon">
-			<i class="fa fa-info"></i>
-        </span>
-		<span class="pagetitle-text">
-			<?php echo iconv_substr($content['pagetitle'], 0, 50) . (iconv_strlen($content['pagetitle']) > 50 ? '...' : '') . ' <small>(' . $_REQUEST['id'] . ')</small>' ?>
-		</span>
+	<h1>
+		<i class="fa fa-info"></i><?php echo iconv_substr($content['pagetitle'], 0, 50) . (iconv_strlen($content['pagetitle']) > 50 ? '...' : '') . ' <small>(' . $_REQUEST['id'] . ')</small>' ?>
 	</h1>
+
 	<div id="actions">
 		<ul class="actionButtons">
 			<?php if($modx->hasPermission('new_document')) { ?>

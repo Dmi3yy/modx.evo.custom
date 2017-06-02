@@ -113,11 +113,8 @@ if(substr($webstart_path, 0, 1) == '/') {
 		.warning { color: #c00; }
 	</style>
 
-	<h1 class="pagetitle">
-		<span class="pagetitle-icon">
-			<i class="fa fa-folder-open-o"></i>
-		</span>
-		<span class="pagetitle-text"><?php echo $_lang['manage_files']; ?></span>
+	<h1>
+		<i class="fa fa-folder-open-o"></i><?php echo $_lang['manage_files']; ?>
 	</h1>
 
 	<div id="actions">

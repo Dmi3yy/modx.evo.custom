@@ -41,9 +41,8 @@ $rs = $modx->db->select('DISTINCT internalKey, username, action, itemid, itemnam
 $logs = $modx->db->makeArray($rs);
 
 ?>
-	<h1 class="pagetitle">
-		<span class="pagetitle-icon"><i class="fa fa-user-secret"></i></span>
-		<span class="pagetitle-text"><?php echo $_lang['mgrlog_view']; ?></span>
+	<h1>
+		<i class="fa fa-user-secret"></i><?php echo $_lang['mgrlog_view']; ?>
 	</h1>
 
 	<div class="section">

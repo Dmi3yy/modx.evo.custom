@@ -401,7 +401,7 @@ fieldset#settings_templvars .tv_date { width: 150px; }
 form#mutate select.tv_url_select { padding: 5px 3px; }
 /* ppb:* Style mootools tooltips*/
 .tooltip[class*="quest"] { cursor: help }
-.tooltip::after { position: absolute; z-index: 13000; opacity: 0; content: attr(data-tooltip); max-width: 200px; margin: 0 0 0 15px; padding: 13px; font-size: 13px; line-height: 1.3; font-family: sans-serif; text-align: left; color: #333; background-color: #fff; border: 1px solid #ccc; visibility: hidden; transition-duration: .3s; }
+.tooltip::after { position: absolute; z-index: 13000; opacity: 0; content: attr(data-tooltip); width: 200px; margin: 0 0 0 15px; padding: 13px; font-size: 13px; line-height: 1.3; font-family: sans-serif; text-align: left; color: #333; background-color: #fff; border: 1px solid #ccc; visibility: hidden; transition-duration: .3s; }
 .tooltip:hover::after { opacity: 1; visibility: visible; }
 .tooltip.fa-question-circle { opacity: 0.15; }
 .tooltip.fa-question-circle:hover { opacity: 1; }

@@ -385,6 +385,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	<input type="hidden" name="id" value="<?php echo $content['id'] ?>">
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
 
+	<h1 class="pagetitle">
+		<i class="fa fa-code"></i><?php echo $_lang['snippet_title']; ?>
+	</h1>
+
 	<div id="actions">
 		<ul class="actionButtons">
 			<li id="Button1" class="transition">
@@ -409,19 +413,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		</ul>
 	</div>
 
-	<h1 class="pagetitle">
-      <span class="pagetitle-icon">
-        <i class="fa fa-code"></i>
-      </span>
-		<span class="pagetitle-text">
-        <?php echo $_lang['snippet_title']; ?>
-      </span>
-	</h1>
-
 	<div class="sectionBody">
 
 		<link type="text/css" rel="stylesheet" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css<?php echo '?' . $theme_refresher ?>" />
-		<script type="text/javascript" src="media/script/tabpane.js"></script>
+
 		<div class="tab-pane" id="snipetPane">
 			<script type="text/javascript">
 				tpSnippet = new WebFXTabPane(document.getElementById("snipetPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );

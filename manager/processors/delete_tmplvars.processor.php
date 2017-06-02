@@ -26,7 +26,8 @@ if(!$forced) {
 				document.location.href = "index.php?id=<?php echo $id;?>&a=303&force=1";
 			}
 		</script>
-		<h1 class="pagetitle"><?php echo $_lang['tmplvars']; ?></h1>
+
+		<h1><?php echo $_lang['tmplvars']; ?></h1>
 
 		<div id="actions">
 			<ul class="actionButtons">

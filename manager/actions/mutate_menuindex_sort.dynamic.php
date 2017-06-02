@@ -158,13 +158,8 @@ $pagetitle = $id == 0 ? $site_name : $pagetitle;
 $header .= '</head>
 <body ondragstart="return false;">
 
-<h1 class="pagetitle">
-  <span class="pagetitle-icon">
-    <i class="fa fa-sort-numeric-asc"></i>
-  </span>
-  <span class="pagetitle-text">
-    ' . $_lang["sort_menuindex"] . '
-  </span>
+<h1>
+	<i class="fa fa-sort-numeric-asc"></i>' . $_lang["sort_menuindex"] . '
 </h1>
 
 <div id="actions">

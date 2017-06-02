@@ -115,13 +115,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	<input type="hidden" name="id" value="<?php echo $_REQUEST['id']; ?>" />
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>" />
 
-	<h1 class="pagetitle">
-      <span class="pagetitle-icon">
-        <i class="fa fa-th-large"></i>
-      </span>
-		<span class="pagetitle-text">
-        <?php echo $_lang['htmlsnippet_title']; ?>
-      </span>
+	<h1>
+		<i class="fa fa-th-large"></i><?php echo $_lang['htmlsnippet_title']; ?>
 	</h1>
 
 	<div id="actions">
@@ -150,12 +145,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		</ul>
 	</div>
 
-	<script type="text/javascript" src="media/script/tabpane.js"></script>
 	<div class="sectionBody">
 		<div class="tab-pane" id="chunkPane">
 			<script type="text/javascript">
 				tpChunk = new WebFXTabPane(document.getElementById("chunkPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 			</script>
+
 			<div class="tab-page" id="tabGeneral">
 				<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
 				<script type="text/javascript">tpChunk.addTabPage(document.getElementById("tabGeneral"));</script>
