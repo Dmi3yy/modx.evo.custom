@@ -457,7 +457,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	</div>
 	<!-- end #actions -->
 
-	<div class="sectionBody"><p><?php echo $_lang['module_msg'] ?></p>
+	<div class="sectionBody">
+		<p><?php echo $_lang['module_msg'] ?></p>
 
 		<div class="tab-pane" id="modulePane">
 			<script type="text/javascript">

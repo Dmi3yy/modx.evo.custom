@@ -13,7 +13,7 @@ $modx->invokeEvent('OnManagerPreFrameLoader', array('action' => $action));
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
 if(!isset($modx->config['manager_menu_height'])) {
-	$modx->config['manager_menu_height'] = 48;
+	$modx->config['manager_menu_height'] = 35;
 }
 
 if(!isset($modx->config['manager_tree_width'])) {
@@ -171,7 +171,7 @@ if($user['which_browser'] == 'default') {
 </head>
 <body class="<?php echo $body_class ?>">
 <div id="frameset">
-	<div id="mainMenu">
+	<div id="mainMenu" class="dropdown">
 		<div class="col float-left">
 			<input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id()); ?>" />
 			<?php include('mainmenu.php'); ?>
@@ -187,8 +187,8 @@ if($user['which_browser'] == 'default') {
 				<li id="searchform">
 					<form action="index.php?a=71#results" method="post" target="main">
 						<input type="hidden" value="Search" name="submitok" />
-						<label for="searchid">
-							<i class="fa fa-search fa-2x"></i>
+						<label for="searchid" class="label_searchid">
+							<i class="fa fa-search"></i>
 						</label>
 						<input type="text" id="searchid" name="searchid" size="25" class="form-control input-sm">
 						<div class="mask"></div>
@@ -201,7 +201,7 @@ if($user['which_browser'] == 'default') {
 				</li>
 				<?php if($modx->hasPermission('settings') || $modx->hasPermission('view_eventlog') || $modx->hasPermission('logs') || $modx->hasPermission('help')) { ?>
 					<li class="dropdown">
-						<a class="dropdown-toggle"><i class="fa fa-sliders fa-2x"></i></a>
+						<a href="javascript:;" class="dropdown-toggle" onclick="return false;"><i class="fa fa-sliders"></i></a>
 						<ul class="dropdown-menu">
 							<?php if($modx->hasPermission('settings')) { ?>
 								<li>
@@ -247,12 +247,12 @@ if($user['which_browser'] == 'default') {
 					</li>
 				<?php } ?>
 				<li class="dropdown account">
-					<a class="dropdown-toggle">
+					<a href="javascript:;" class="dropdown-toggle" onclick="return false;">
 						<div class="username"><?php echo $user['username'] ?></div>
 						<?php if($user['photo']) { ?>
 							<div class="icon photo" style="background-image: url(<?php echo MODX_SITE_URL . $user['photo'] ?>);"></div>
 						<?php } else { ?>
-							<div class="icon"><i class="fa fa-user-circle fa-2x"></i></div>
+							<div class="icon"><i class="fa fa-user-circle"></i></div>
 						<?php } ?>
 						<div id="msgCounter"></div>
 					</a>
@@ -275,7 +275,7 @@ if($user['which_browser'] == 'default') {
 						$version = stristr($modx->config['settings_version'], 'd') === FALSE ? 'MODX Evolution' : 'MODX EVO Custom';
 						?>
 						<?php
-						echo sprintf('<li><span title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
+						echo sprintf('<li><span class="dropdown-item" title="%s &ndash; %s" %s>' . $version . ' %s</span></li>', $site_name, $modx->getVersionData('full_appname'), $style, $modx->config['settings_version']);
 						?>
 					</ul>
 				</li>

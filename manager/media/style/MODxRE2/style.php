@@ -133,6 +133,7 @@ $_style['actions_close']            = 'fa fa-times-circle';
 $_style['actions_add']              = 'fa fa-plus-circle';
 $_style['actions_preview']          = 'fa fa-eye';
 $_style['actions_run']              = 'fa fa-play';
+$_style['actions_stop']             = 'fa fa-stop';
 $_style['actions_new']              = 'fa fa-plus-circle';
 $_style['actions_help']             = 'fa fa-question-circle';
 $_style['actions_sort']             = 'fa fa-sort';

@@ -3,11 +3,25 @@
 menu->Build('id','parent','name','link','alt','onclick','permission','target','divider 1/0','menuindex', 'class')
 */
 
+$sitemenu['bars'] = array(
+	'bars',
+	'main',
+	'<i class="fa fa-bars"></i>',
+	'javascript:;',
+	$_lang['home'],
+	'modx.resizer.toggle(); return false;',
+	' return false;',
+	'',
+	0,
+	10,
+	''
+);
+
 //mainMenu
 $sitemenu['site'] = array(
 	'site',
 	'main',
-	'<i class="fa fa-modx fa-lg"></i>' . $_lang['home'],
+	'<i class="fa fa-modx"></i>' . $_lang['home'],
 	'index.php?a=2',
 	$_lang['home'],
 	'',
@@ -22,8 +36,8 @@ if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet')
 	$sitemenu['elements'] = array(
 		'elements',
 		'main',
-		'<i class="fa fa-th fa-lg"></i>' . $_lang['elements'],
-		'',
+		'<i class="fa fa-th"></i>' . $_lang['elements'],
+		'javascript:;',
 		$_lang['elements'],
 		' return false;',
 		'',
@@ -38,8 +52,8 @@ if($modx->hasPermission('exec_module')) {
 	$sitemenu['modules'] = array(
 		'modules',
 		'main',
-		'<i class="fa fa-cogs fa-lg"></i>' . $_lang['modules'],
-		'',
+		'<i class="fa fa-cogs"></i>' . $_lang['modules'],
+		'javascript:;',
 		$_lang['modules'],
 		' return false;',
 		'',
@@ -54,8 +68,8 @@ if($modx->hasPermission('edit_user') || $modx->hasPermission('edit_web_user') ||
 	$sitemenu['users'] = array(
 		'users',
 		'main',
-		'<i class="fa fa-users fa-lg"></i>' . $_lang['users'],
-		'',
+		'<i class="fa fa-users"></i>' . $_lang['users'],
+		'javascript:;',
 		$_lang['users'],
 		' return false;',
 		'edit_user',
@@ -70,8 +84,8 @@ if($modx->hasPermission('bk_manager') || $modx->hasPermission('remove_locks') ||
 	$sitemenu['tools'] = array(
 		'tools',
 		'main',
-		'<i class="fa fa-wrench fa-lg"></i>' . $_lang['tools'],
-		'',
+		'<i class="fa fa-wrench"></i>' . $_lang['tools'],
+		'javascript:;',
 		$_lang['tools'],
 		' return false;',
 		'',

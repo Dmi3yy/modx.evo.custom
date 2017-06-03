@@ -757,7 +757,7 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .border-bottom { border-bottom: 2px solid #3697CD !important; }
 /*responsive buttons*/
 .actionButtons .fa { display: none; }
-.searchbar .actionButtons .fa { display: inline-block; }
+.sectionBody .actionButtons .fa { display: inline-block; }
 .optionsTitle .fa { display: inline-block; }
 @media (max-width: 900px) {
 .actionButtons a { display: inline-block; padding: 6px 10px; margin-top: -7px }
@@ -767,3 +767,8 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .actionButtons a .fa { display: inline-block; line-height: 19px; font-size: 14px }
 }
 .fa { font-size: 14px; width: 1.3em; text-align: center; vertical-align: baseline; }
+/* ElementsInTree */
+#treeHolder .filterElements-form--eit { width: calc(100% - 77px) }
+#treeHolder .actionButtons--eit { margin: 19px 0 0 !important; top: 0 !important }
+#treeHolder .actionButtons--eit li { margin: 0 0 0 5px !important; }
+
