@@ -27,8 +27,8 @@ $_PAGE['vs']['lm'] = $listmode;
 // context menu
 include_once MODX_MANAGER_PATH . "includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang["edit"], "js:menuAction(1)", $_style["icons_edit_document"], (!$modx->hasPermission('edit_user') ? 1 : 0));
-$cm->addItem($_lang["delete"], "js:menuAction(2)", $_style["icons_delete"], (!$modx->hasPermission('delete_user') ? 1 : 0));
+$cm->addItem($_lang["edit"], "js:menuAction(1)", $_style["actions_edit"], (!$modx->hasPermission('edit_user') ? 1 : 0));
+$cm->addItem($_lang["delete"], "js:menuAction(2)", $_style["actions_delete"], (!$modx->hasPermission('delete_user') ? 1 : 0));
 echo $cm->render();
 
 ?>

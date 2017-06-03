@@ -9,6 +9,7 @@
 			this.tree.init();
 			this.mainMenu.init();
 			this.resizer.init();
+			this.search.init();
 			this.setLastClickedElement(0, 0);
 			w.setInterval(this.keepMeAlive, 1000 * 60 * this.config.session_timeout);
 			w.onload = this.updateMail(true);
@@ -18,26 +19,36 @@
 			id: 'mainMenu',
 			init: function() {
 				//console.log('modx.mainMenu.init()');
-				d.getElementById(this.id).onmouseover = function() {
-					var el = this.querySelector('.close');
-					if(el) el.classList.remove('close');
-					this.style.overflow = '';
-				};
 				d.getElementById(this.id).onclick = function(e) {
 					var t = e.target.closest('a');
-					if(t !== null && t.href !== '' && t.href !== this.baseURI) {
-						this.querySelector('.active').classList.remove('active');
-						if(t.offsetParent.className.indexOf('dropdown-menu') === 0) {
-							t.offsetParent.offsetParent.classList.add('active')
-						} else {
-							t.offsetParent.classList.add('active')
+					if(t !== null) {
+						if(t.classList.contains('dropdown-toggle')) {
+							modx.hideDropDown(e);
+							this.classList.add('show');
+							e.stopPropagation()
 						}
-						this.style.overflow = 'hidden'
+						if(!e.defaultPrevented) {
+							var s = this.querySelector('.active');
+							if(s) s.classList.remove('active');
+							this.classList.remove('show');
+							if(t.offsetParent.className.indexOf('dropdown-menu') === 0) {
+								t.offsetParent.offsetParent.classList.add('active')
+							} else {
+								t.offsetParent.classList.add('active')
+							}
+						}
 					}
 				};
-				modx.search.init();
+
 				var elms = d.querySelectorAll('#' + this.id + ' .nav > li > ul');
 				for(var i = 0; i < elms.length; i++) {
+					elms[i].parentNode.onmouseover = function(e) {
+						for(var ii = 0; ii < elms.length; ii++) {
+							if(elms[ii].parentNode.classList.contains('hover'))
+								elms[ii].parentNode.classList.remove('hover')
+						}
+						this.classList.add('hover')
+					};
 					elms[i].style.maxHeight = w.innerHeight - modx.config.menu_height + 'px'
 				}
 			}
@@ -58,6 +69,7 @@
 					el = d.getElementById(this.idInput),
 					r = d.createElement('i');
 				r.className = 'fa fa-refresh fa-spin fa-fw';
+				el.parentNode.appendChild(r);
 				el.onkeyup = function(e) {
 					e.preventDefault();
 					clearTimeout(t.timer);
@@ -68,7 +80,7 @@
 							xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 							xhr.onload = function() {
 								if(this.status === 200) {
-									r.parentNode.removeChild(r);
+									r.style.display = 'none';
 									var div = d.createElement('div');
 									div.innerHTML = this.responseText;
 									var o = div.getElementsByClassName(t.classResult)[0];
@@ -81,10 +93,11 @@
 													modx.openWindow({title: e.target.parentNode.innerText, id: e.target.parentNode.id, url: e.target.parentNode.href});
 													return false
 												}
-												if(e.target.tagName === 'A') {
+												var p = (e.target.tagName === 'A' && e.target) || e.target.parentNode;
+												if(p.tagName === 'A') {
 													var el = t.result.querySelector('.selected');
 													if(el) el.className = '';
-													e.target.className = 'selected'
+													p.className = 'selected'
 												}
 											}
 										} else {
@@ -96,7 +109,7 @@
 								}
 							};
 							xhr.onloadstart = function() {
-								el.closest('form').appendChild(r)
+								r.style.display = 'block'
 							};
 							xhr.onerror = function() {
 								console.warn(this.status)
@@ -240,7 +253,7 @@
 			left: modx.config.tree_width,
 			id: 'resizer',
 			switcher: 'hideMenu',
-			background: '#bbb',
+			background: 'rgba(0, 0, 0, 0.1)',
 			mask: null,
 			init: function() {
 				modx.resizer.mask = d.createElement('div');
@@ -874,12 +887,12 @@
 					"url": a
 				}
 			}
-			if(a.width === u) a.width = parseInt(w.innerWidth * 0.9) + 'px';
-			if(a.height === u) a.height = parseInt(w.innerHeight * 0.8) + 'px';
-			if(a.left === u) a.left = parseInt(w.innerWidth * 0.05) + 'px';
-			if(a.top === u) a.top = parseInt(w.innerHeight * 0.1) + 'px';
-			if(a.title === u) a.title = Math.floor((Math.random() * 999999) + 1);
-			if(a.url !== u) {
+			if(!a.width) a.width = parseInt(w.innerWidth * 0.9) + 'px';
+			if(!a.height) a.height = parseInt(w.innerHeight * 0.8) + 'px';
+			if(!a.left) a.left = parseInt(w.innerWidth * 0.05) + 'px';
+			if(!a.top) a.top = parseInt(w.innerHeight * 0.1) + 'px';
+			if(!a.title) a.title = Math.floor((Math.random() * 999999) + 1);
+			if(a.url) {
 				if(this.plugins.EVOmodal === 1) {
 					top.EVO.modal.show(a)
 				} else {
@@ -908,7 +921,7 @@
 			}
 		},
 		hideDropDown: function(e) {
-			var e = e || w.event || m.event;
+			e = e || w.event || m.event;
 			if(tree.ca === "open" || tree.ca === "") {
 				modx.tree.setSelectedByContext();
 			}
@@ -916,25 +929,15 @@
 				d.getElementById(modx.frameset).removeChild(modx.tree.ctx);
 				modx.tree.ctx = null
 			}
-			if(!e.target.matches('.dropdown-item')
+			if(!(/dropdown\-item/.test(e.target.className))
 			//&& !(e && ("click" === e.type && /form|label|input|textarea|select/i.test(e.target.tagName)))
 			) {
 				var els = d.querySelectorAll('.dropdown'),
 					l = els.length,
-					n = null;
-
-				if(e.target.dataset.toggle) {
-					n = d.querySelector(e.target.dataset.toggle);
-				} else if(e.target.parentNode.dataset) {
-					if(e.target.parentNode.dataset.toggle) {
-						n = d.querySelector(e.target.parentNode.dataset.toggle)
-					}
-				}
-				if(e.target && e.target.classList.contains('dropdown-toggle')) {
-					n = e.target.offsetParent
-				} else if(e.target.nodeName !== 'HTML' && e.target.parentNode && e.target.parentNode.classList.contains('dropdown-toggle')) {
-					n = e.target.parentNode.offsetParent
-				}
+					n = null,
+					t = e.target || e.target.parentNode;
+				if(t.dataset.toggle) n = d.querySelector(t.dataset.toggle);
+				if(t.classList.contains('dropdown-toggle')) n = t.offsetParent;
 				while(l--) {
 					if(n !== els[l])
 						els[l].classList.remove('show')
