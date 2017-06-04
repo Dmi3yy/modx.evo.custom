@@ -104,7 +104,7 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 #mainMenu .account #msgCounter { display: none; position: absolute; z-index: 1; right: 15px; top: 5px; background-color: rgba(0, 0, 0, 0.5); line-height: 13px; font-size: 10px; padding: 2px 5px; border-radius: 7px; }
 #mainMenu .account #msgCounter::before { position: absolute; z-index: -1; left: 2px; top: 2px; right: 2px; bottom: 2px; background-color: #e91e4f; border-radius: 6px; content: "" }
 #mainMenu .account #newMail { display: none }
-#mainMenu .nav > li > ul { display: none; position: absolute; left: auto; top: 100%; right: auto; min-width: 15rem; max-height: 400px; max-height: -webkit-calc(100vh - 35px); max-height: calc(100vh - 35px); margin: 0; padding: 0; overflow: auto; background-color: #fff; border-radius: 0; box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2) }
+#mainMenu .nav > li > ul { display: none; position: absolute; left: auto; top: 100%; right: auto; min-width: 15rem; max-height: 400px; max-height: -webkit-calc(100vh - 35px) !important; max-height: calc(100vh - 35px) !important; margin: 0; padding: 0; overflow: auto; background-color: #fff; border-radius: 0; box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2) }
 #mainMenu .nav > li.hover > ul { display: block }
 #mainMenu .nav > li > ul a, #mainMenu .nav > li > ul span { display: block; position: relative; padding: 0 20px 0 10px; margin-top: -1px; line-height: 33px; text-decoration: none; border-top: 1px solid rgba(0, 0, 0, 0.05); border-bottom: 1px solid rgba(0, 0, 0, 0); color: #39545e }
 #mainMenu .nav > li > ul a:hover { color: #fff; background-color: #1976D2; border-bottom-color: rgba(0, 0, 0, 0.05); }
@@ -572,7 +572,7 @@ li.breadcrumbs__li_current { font-size: 12px; font-weight: 500; }
 /* end breadcrumbs */
 /* table styles*/
 .table, #documentPane #tv_body table, #documentPane [id*="table-"], #documentPane [id*="table-tv"] { width: 100%; }
-#documentPane .tab-page > table > tr > td:first-child, #documentPane .tab-page > table > tbody > tr > td:first-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:first-child { width: 200px }
+#documentPane .tab-page > table > tr > td:first-child, #documentPane .tab-page > table > tbody > tr > td:first-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > th:first-child, #chunkPane .tab-page > table > tbody > tr > td:first-child, #chunkPane .tab-page > table > tbody > tr > th:first-child, #snipetPane .tab-page > table > tbody > tr > td:first-child, #snipetPane .tab-page > table > tbody > tr > th:first-child, #pluginPane .tab-page > table > tbody > tr > td:first-child, #pluginPane .tab-page > table > tbody > tr > th:first-child, #modulePane .tab-page > table > tbody > tr > td:first-child, #modulePane .tab-page > table > tbody > tr > th:first-child, #docManagerPane .tab-page #dates > table > tbody > tr > td:first-child { width: 200px }
 #documentPane .tab-page > table > tr > td:last-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:last-child { width: inherit !important }
 .table--edit { margin-bottom: 15px; }
 .table th, .table td { text-align: left; vertical-align: middle; }
