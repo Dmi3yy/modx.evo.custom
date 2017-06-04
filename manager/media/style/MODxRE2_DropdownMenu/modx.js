@@ -42,14 +42,13 @@
 
 				var elms = d.querySelectorAll('#' + this.id + ' .nav > li > ul');
 				for(var i = 0; i < elms.length; i++) {
-					elms[i].parentNode.onmouseover = function(e) {
+					elms[i].parentNode.onmouseover = function() {
 						for(var ii = 0; ii < elms.length; ii++) {
 							if(elms[ii].parentNode.classList.contains('hover'))
 								elms[ii].parentNode.classList.remove('hover')
 						}
 						this.classList.add('hover')
-					};
-					elms[i].style.maxHeight = w.innerHeight - modx.config.menu_height + 'px'
+					}
 				}
 			}
 		},
