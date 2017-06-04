@@ -163,12 +163,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		// save tree folder state
 		if(parent.tree) parent.tree.saveFolderState();
 
-		function changestate(element) {
-			var currval = eval(element).value;
-			if(currval === 1) {
-				eval(element).value = 0;
+		function changestate(el) {
+			if(parseInt(el.value) === 1) {
+				el.value = 0;
 			} else {
-				eval(element).value = 1;
+				el.value = 1;
 			}
 			documentDirty = true;
 		}
