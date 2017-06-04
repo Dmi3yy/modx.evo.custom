@@ -4,7 +4,7 @@
 html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }
 html { font-size: 100.01%; line-height: 1.5; color: #333; }
-body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; height: 100%; color: #333; background: #eeeeee; }
+body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.5; height: 100%; color: #333; background: #eeeeee; }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
 /* For Chinese Font */
