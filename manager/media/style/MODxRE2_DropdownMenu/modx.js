@@ -58,12 +58,9 @@
 			idInput: 'searchid',
 			classResult: 'ajaxSearchResults',
 			classMask: 'mask',
-			searchResultWidth: '400',
 			timer: 0,
 			init: function() {
 				this.result = d.getElementById(this.idResult);
-				this.result.style.width = this.searchResultWidth + 'px';
-				this.result.style.marginRight = -this.searchResultWidth + 'px';
 				var t = this,
 					el = d.getElementById(this.idInput),
 					r = d.createElement('i');
@@ -156,7 +153,7 @@
 			idFrame: 'mainframe',
 			as: null,
 			init: function() {
-				//this.stopWork();
+				this.stopWork();
 				this.scrollWork();
 				m.onclick = modx.hideDropDown
 			},

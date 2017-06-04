@@ -4,7 +4,7 @@
 html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }
 html { font-size: 100.01%; line-height: 1.5; color: #333; }
-body { font-family: Arial, sans-serif !important; font-size: 13px !important; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important; /*-webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden;*/ }
+body { font-family: Arial, sans-serif !important; font-size: 13px !important; line-height: 1.5; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important; /*-webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden;*/ }
 body[ondragstart*=""] { overflow-y: scroll }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
@@ -28,7 +28,7 @@ html[lang="th"] body { font-family: "Sukhumvit Set", "Helvetica Neue", Helvetica
 html[lang="fa"] body { font-family: Tahoma, Arial, sans-serif; }
 * { -moz-osx-font-smoothing: grayscale; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box }
 *::-ms-clear { display: none; }
-img, a img { border: 0 !important; text-decoration: none; padding: 0; margin: 0; }
+img, a img { border: 0 !important; text-decoration: none; padding: 0; margin: 0; vertical-align: middle; max-width: 100% }
 h1, h2, h3, h4, h5, h6, p, pre, blockquote, ul, ol, dl, address { margin: 0 0 .5em; padding: 0; font-weight: normal; }
 li, dd, blockquote { margin: 0 0 0 1em; }
 .rtl li, .rtl dd, .rtl blockquote { margin: 0 1em 0 0; }
@@ -51,7 +51,7 @@ td { vertical-align: top; }
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1, h2, h3, h4, h5, h6, .subTitle { font-weight: 500; }
 h1 { font-size: 1.8em; line-height: 35px; padding: 15px; margin: 0; }
-h1 .fa { color: #3697CD; margin-right: 5px }
+h1 .fa { font-size: 0.8em; color: #3697CD; margin-right: 5px }
 h1 small { margin-left: 5px }
 h2 { font-size: 164%; }
 h3 { font-size: 145%; }
@@ -85,17 +85,17 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 #mainMenu.show { overflow: visible }
 #mainMenu .float-left .dropdown-menu { left: 0 }
 #mainMenu .float-right .dropdown-menu { right: 0 }
-#mainMenu .divider, #mainMenu #nav > li > a .fa { display: none }
+#mainMenu .divider, #mainMenu #nav > li > a .fa, #mainMenu .caret { display: none }
 #mainMenu #nav > li > a .fa.fa-bars { display: inline-block; margin: 0 }
 #mainMenu .nav { margin: 0; padding: 0; list-style: none }
 #mainMenu .nav > li { position: relative; float: left; list-style: none }
 #mainMenu .nav > li > a .fa { margin-right: 0.85rem; vertical-align: top; line-height: inherit; font-size: 17px; width: 1.2em; text-align: center }
 #mainMenu .float-right .nav > li > a .fa { margin: 0 }
-#mainMenu .nav > li > a, #searchform .label_searchid { position: relative; z-index: 2; float: left; overflow: hidden; padding: 0 15px; height: 35px; line-height: 35px; text-decoration: none; white-space: nowrap; color: #bbb; }
+#mainMenu .nav > li > a, #mainMenu .nav > li > a:focus, #searchform .label_searchid { position: relative; z-index: 2; float: left; overflow: hidden; padding: 0 15px; height: 35px; line-height: 35px; text-decoration: none; white-space: nowrap; color: #bbb; background-color: rgba(0, 0, 0, 0); }
 #mainMenu.show .nav > li.dropdown.hover > a { color: #333; background-color: #fff }
 #mainMenu.show + #tree::before, #mainMenu.show + #tree + #main::before { content: ""; position: absolute; z-index: 9999; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, .1) }
 #mainMenu .nav > li.active > a { color: #fff; background-color: rgba(255, 255, 255, 0.07) }
-#mainMenu .nav > li:hover > a, #searchform .label_searchid:hover, #mainMenu .nav #bars a:hover { color: #f3f3f3 }
+#mainMenu .nav > li:hover > a, #searchform .label_searchid:hover, #mainMenu .nav #bars a:hover { background-color: rgba(0, 0, 0, 0); color: #f3f3f3 }
 #mainMenu .nav > li li a { white-space: nowrap; color: #39545e }
 #mainMenu .nav > li li a:hover, #mainMenu .nav > li.active:hover > a { color: #fff }
 #mainMenu .account .username { display: inline-block; margin-right: 0.833rem }
@@ -104,7 +104,7 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 #mainMenu .account #msgCounter { display: none; position: absolute; z-index: 1; right: 15px; top: 5px; background-color: rgba(0, 0, 0, 0.5); line-height: 13px; font-size: 10px; padding: 2px 5px; border-radius: 7px; }
 #mainMenu .account #msgCounter::before { position: absolute; z-index: -1; left: 2px; top: 2px; right: 2px; bottom: 2px; background-color: #e91e4f; border-radius: 6px; content: "" }
 #mainMenu .account #newMail { display: none }
-#mainMenu .nav > li > ul { display: none; position: absolute; left: auto; top: 100%; right: auto; min-width: 15rem; max-height: 400px; max-height: -webkit-calc(100vh - 35px) !important; max-height: calc(100vh - 35px) !important; margin: 0; padding: 0; overflow: auto; background-color: #fff; border-radius: 0; box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2) }
+#mainMenu .nav > li > ul { display: none; position: absolute; z-index: 1; left: auto; top: 100%; right: auto; min-width: 15rem; max-height: 400px; max-height: -webkit-calc(100vh - 35px) !important; max-height: calc(100vh - 35px) !important; margin: 0; padding: 0; overflow: auto; font-size: 13px; border: none; background-color: #fff; border-radius: 0; box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2) }
 #mainMenu .nav > li.hover > ul { display: block }
 #mainMenu .nav > li > ul a, #mainMenu .nav > li > ul span { display: block; position: relative; padding: 0 20px 0 10px; margin-top: -1px; line-height: 33px; text-decoration: none; border-top: 1px solid rgba(0, 0, 0, 0.05); border-bottom: 1px solid rgba(0, 0, 0, 0); color: #39545e }
 #mainMenu .nav > li > ul a:hover { color: #fff; background-color: #1976D2; border-bottom-color: rgba(0, 0, 0, 0.05); }
@@ -130,8 +130,8 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 #searchform input[type=text]:focus + .mask { opacity: 0.7; visibility: visible; }
 #searchform .fa-search { position: relative; z-index: 1 }
 #searchform .fa-refresh { position: absolute; z-index: 9; display: none; top: 10px; right: 10px; font-size: 14px }
-#frameset #searchresult { position: absolute; z-index: 99; overflow: auto; top: 35px; right: -1px; bottom: 0; width: 0; margin-right: -100%; background-color: #fff; border-left: 1px solid rgba(0, 0, 0, 0.1); transition: 0.25s ease 0.5s; transition-delay: 0.3s; }
-#frameset #searchresult.open, #frameset #searchresult:hover { margin-right: 0 !important; box-shadow: 0 0 60px rgba(0, 0, 0, 0.15); transition: 0.5s ease 0.5s; -webkit-transition-delay: 0s; transition-delay: 0s }
+#frameset #searchresult { position: absolute; z-index: 99; overflow: auto; top: 35px; right: -400px; bottom: 0; width: 400px; background-color: #fff; border-left: 1px solid rgba(0, 0, 0, 0.1); transition: 0.25s ease 0.5s; transition-delay: 0.3s; }
+#frameset #searchresult.open, #frameset #searchresult:hover { right: 0; box-shadow: 0 0 60px rgba(0, 0, 0, 0.15); transition: 0.5s ease 0.5s; -webkit-transition-delay: 0s; transition-delay: 0s }
 #frameset #searchresult .ajaxSearchResults ul, #frameset #searchresult .ajaxSearchResults li { margin: 0; padding: 0; list-style: none }
 #frameset #searchresult .ajaxSearchResults b { background-color: #ddd }
 #frameset #searchresult .ajaxSearchResults b, #frameset #searchresult .ajaxSearchResults strong, #frameset #searchresult .ajaxSearchResults a { display: block; color: #333; padding: 5px 10px; margin-top: -1px; border-top: 1px solid rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.03); box-sizing: border-box }
@@ -209,9 +209,6 @@ input.submit { display: block !important; float: none !important; margin: 20px 0
 .section .sectionBody { margin: 0 15px 15px; padding: 15px; background-color: #fff; border: 1px solid #CCCCCC; }
 .rtl .sectionBody, .layerVisible { direction: rtl; position: inherit; }
 .showHideVisible, .layerVisible { margin: 0 10px 4px; }
-.sectionHeader { padding: 5px 9px 5px 15px; background: -moz-linear-gradient(#f5f5f5, #DDDDDD); background: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#DDDDDD)); background: -o-linear-gradient(#f5f5f5, #DDDDDD); filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#f5f5f5, endColorstr=#DDDDDD);
-zoom: 1; -moz-box-shadow: 0 1px 0 #fff inset; -webkit-box-shadow: 0 1px 0 #fff inset; box-shadow: 0 1px 0 #fff inset; }
-.rtl .sectionHeader { direction: rtl; padding: 5px 18px 5px 3px; }
 .comment { font-size: 11px; color: #999; padding: 4px 0; }
 thead, .fancyrow { color: #333; height: 18px !important; background-color: #E4E4E4; }
 thead td { color: #333; border-top: 1px solid #fff; }
@@ -336,21 +333,25 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .rtl .settings th { text-align: right; }
 .filelist td { border-bottom: 1px solid #C2C3CF; }
 /* -------------------------[ Tabs ]--- */
-.dynamic-tab-pane-control.tab-pane { position: relative; width: 100%; }
-.rtl .dynamic-tab-pane-control.tab-pane { direction: rtl; }
-.rtl .dynamic-tab-pane-control .tab-row .tab { margin: 3px 5px 1px -3px; float: right; padding: 2px 15px 3px; }
-.dynamic-tab-pane-control .tab-row .tab.hover { text-decoration: none; background: none repeat scroll 0 0 #749c2f; background: -moz-linear-gradient(#749c2f, #4b7109); background: -webkit-gradient(linear, 0 0, 0 100%, from(#749c2f), to(#4b7109)); background: -o-linear-gradient(#749c2f, #4b7109); }
-.dynamic-tab-pane-control .tab-row .tab.selected { color: #333; border-width: 1px; border-bottom-style: solid; border-color: #ffcc72 #AAA #FFF #AAA; border-radius: 0; border-width: 1px 1px 0; background: #fff }
-.dynamic-tab-pane-control .tab-row .tab.selected span { color: #111; background-color: #fff; text-shadow: none; }
-.dynamic-tab-pane-control .tab-row .tab span { color: #fff; text-decoration: none; }
-.dynamic-tab-pane-control .tab-row .tab .alert { color: #ffcc72; }
-.dynamic-tab-pane-control .tab-row .tab.selected .alert { color: #ccc; }
-.dynamic-tab-pane-control .tab-page { clear: both; background: #fff; position: relative; top: -2px; padding: 20px 15px 14px !important; }
-.rtl .dynamic-tab-pane-control .tab-page { position: inherit; /* critical adjustment for IE ul li Proper RTL demonstration */ }
-.dynamic-tab-pane-control .tab-row { position: relative; z-index: 1; white-space: nowrap; }
-.dynamic-tab-pane-control .tab-row .fa { margin-right: 3px; font-size: 14px; }
-.dynamic-tab-pane-control ul { padding-left: 5px; padding-right: 10px; padding-bottom: 10px; }
-.dynamic-tab-pane-control li { padding-left: 2px; padding-right: 5px; }
+.tab-row .tab span, .tab-row .tab.hover { text-decoration: none }
+.tab-pane { position: relative; width: 100%; margin-top: 0 }
+.tab-row .tab.selected { color: #333; border-radius: 0 }
+.tab-row .tab.selected span { background-color: #fff; text-shadow: none }
+.tab-row { position: relative; z-index: 1; white-space: nowrap }
+.tab-row .tab, .tab-row .tab span { color: #3697CD; font-size: 13px }
+.tab-row .tab { position: relative; float: left; margin: 3px 2px 1px 0; padding: 0 12px; line-height: 35px; height: 35px; border: none; text-shadow: none; background: 0 0; cursor: pointer }
+.tab-row .tab.hover { background: 0 0; filter: none }
+.tab-row .tab.selected span, .tab-row .tab.selected.hover span { color: #3697CD }
+.tab-row .tab.selected, .tab-row .tab.selected.hover { background: #fff; filter: none; box-shadow: 0 -3px 0 #3697cd, -1px 0 0 transparent }
+.tab-row .tab:after, .tab-row .tab:before { position: absolute; content: ''; left: 0; display: block; right: 0 }
+.tab-row .tab.selected.hover:after, .tab-row .tab.selected:after { border-radius: 3px; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1); top: -3px; bottom: 1px; z-index: -1 }
+.tab-row .tab.selected:before { background: #FFF; top: 90%; bottom: -4px }
+.tab-row .tab.hover, .tab-row .tab.hover span { color: #2b749d }
+.tab-row .tab .fa { margin-right: 3px; font-size: 14px }
+.tab-page { clear: both; background-color: #fff; position: relative; top: -2px; padding: 20px 15px 15px; border: 0; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1) }
+.sectionHeader { padding: 7px 12px; background-color: #F2F2F2 }
+.tab-page .sectionBody { padding: 12px; }
+.tab-page table { width: 100%; border-collapse: collapse }
 /* -------------------------[ Tree buttons ]--- */
 .treeButton { display: block; cursor: pointer; color: #3d5764 !important; border: 1px solid transparent; border-radius: 2px; padding: 0 3px; line-height: 23px; white-space: nowrap; text-align: center; vertical-align: middle; }
 .treeButton:hover:not(.disabled) { border-color: #6e7a86; background-color: #fff; background-color: rgba(255, 255, 255, .5); cursor: pointer }
@@ -371,12 +372,6 @@ a.hometblink, a.hometblink img { border: 0 !important; text-decoration: none !im
 .rtl .wm_button { text-align: right; margin: 0 20px 2px 5px; }
 /* -------------------------[ Welcome Page ]--- */
 #mainActionPages { background: #f5f5f5; }
-.tab-page { border: 1px solid #AAA; border-radius: 0 0 5px 5px; margin-bottom: 2em; }
-.tab-page img { vertical-align: middle; max-width: 100% }
-.sectionBody .tab-page { padding: 20px 15px 15px !important; background-color: #fff; }
-.sectionBody .tab-page table { width: 100%; border-collapse: collapse }
-.tab-pane > .tab-page { /*display: none*/ }
-.tab-pane > #tabGeneral.tab-page { display: block }
 /* -------------------------[ New sortable table class ]--- */
 .sortabletable { width: 100%; border-collapse: collapse; }
 .sortabletable thead tr { color: #333; font-weight: 500; white-space: nowrap; background-color: #d2d2d2; text-align: left; }
@@ -501,12 +496,12 @@ form#mutate select.tv_url_select { padding: 5px 3px; }
 /* ppb:
 * Style mootools tooltips
 */
-.tooltip { cursor: help }
-.tooltip::after { position: absolute; z-index: 13000; opacity: 0; content: attr(data-tooltip); width: 200px; margin-left: 15px; padding: 12px 15px; font-size: 13px; line-height: 1.3; font-family: sans-serif; text-align: left; color: #333; background-color: #fff; border: 1px solid #ccc; visibility: hidden; transition-duration: .3s; transform: translate3d(15px, 0, 0); }
-.tooltip:hover::after { opacity: 1; visibility: visible; transform: translate3d(0, 0, 0); }
-.tooltip.fa-question-circle { opacity: 0.15; }
-.tooltip.fa-question-circle:hover { opacity: 1; }
-th > .tooltip.fa-question-circle, td > .tooltip.fa-question-circle { float: right; }
+[data-tooltip] { cursor: help }
+[data-tooltip]::after { position: absolute; z-index: 13000; opacity: 0; content: attr(data-tooltip); width: 200px; margin-left: 15px; padding: 12px 15px; font-size: 13px; line-height: 1.3; font-family: sans-serif; text-align: left; color: #333; background-color: #fff; border: 1px solid #ccc; visibility: hidden; transition-duration: .3s; transform: translate3d(15px, 0, 0); }
+[data-tooltip]:hover::after { opacity: 1; visibility: visible; transform: translate3d(0, 0, 0); }
+[data-tooltip].fa-question-circle { opacity: 0.15; }
+[data-tooltip].fa-question-circle:hover { opacity: 1; }
+th > [data-tooltip].fa-question-circle, td > [data-tooltip].fa-question-circle { float: right; }
 /* ppb:
 * Some styling for legacy mode fieldsets
 */
@@ -593,22 +588,6 @@ form input[type="text"], form input[type="password"], form input[type="number"],
  */
 /* nav */
 .alert-warning { color: #3697cd; }
-/* tab panes */
-.dynamic-tab-pane-control.tab-pane { margin-top: 10px; }
-.sectionBody > .dynamic-tab-pane-control.tab-pane, #treePane.dynamic-tab-pane-control.tab-pane { margin-top: 0; }
-.dynamic-tab-pane-control .tab-row .tab, .dynamic-tab-pane-control .tab-row .tab span { color: #3697CD; font-size: 13px; }
-.dynamic-tab-pane-control .tab-row .tab { position: relative; float: left; margin: 3px 2px 1px 0; padding: 0 12px; line-height: 35px; height: 35px; border: none; text-shadow: none; background: none; cursor: pointer; }
-.dynamic-tab-pane-control .tab-row .tab.hover { background: transparent; filter: none; }
-.dynamic-tab-pane-control .tab-row .tab.selected span, .dynamic-tab-pane-control .tab-row .tab.selected.hover span { color: #3697CD; }
-.dynamic-tab-pane-control .tab-row .tab.selected, .dynamic-tab-pane-control .tab-row .tab.selected.hover { border-style: solid; border-color: #3697CD #fff #fff #fff; border-width: 0; background: #fff; filter: none; box-shadow: 0 -3px 0 #3697cd, -1px 0 0 transparent; }
-.dynamic-tab-pane-control .tab-row .tab:before, .dynamic-tab-pane-control .tab-row .tab:after { position: absolute; content: ''; left: 0; display: block; right: 0; }
-.dynamic-tab-pane-control .tab-row .tab.selected:after, .dynamic-tab-pane-control .tab-row .tab.selected.hover:after { border-radius: 3px; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1); top: -3px; bottom: 1px; z-index: -1; }
-.dynamic-tab-pane-control .tab-row .tab.selected:before { background: #FFF; top: 90%; bottom: -4px; }
-.dynamic-tab-pane-control .tab-row .tab.hover, .dynamic-tab-pane-control .tab-row .tab.hover span { color: #2b749d; }
-.tab-page, .dynamic-tab-pane-control .tab-page { border: 0 none; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1); }
-.sectionHeader { padding: 7px 12px; background: #F2F2F2; }
-.tab-page .sectionHeader { margin: 10px 3px 0; }
-.tab-page .sectionBody, .tab-page .section .sectionBody, .sectionBody .sectionBody { padding: 12px; background: #F9F9F9 !important; }
 .no-events { pointer-events: none; }
 /* Context Menu */
 .nu-context-menu { background-clip: padding-box; background-color: #fff; border: 1px solid rgba(0, 0, 0, 0.10); border-top: 3px solid #3697CD; border-radius: 2px; box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15); box-sizing: border-box; display: block; height: 0; opacity: 0; overflow: hidden; position: absolute; width: 0; z-index: 9999; }
