@@ -3,7 +3,7 @@
 /* for IE7 */
 html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }
-html { font-size: 100.01%; line-height: 1.5; color: #333; }
+html { font-size: 13px; line-height: 1.5; color: #333; }
 body { font-family: Arial, sans-serif !important; font-size: 13px !important; line-height: 1.5; color: #333; background: #F2F2F2 !important; -webkit-font-smoothing: subpixel-antialiased !important; /*-webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden;*/ }
 body[ondragstart*=""] { overflow-y: scroll }
 /* For Arabic Font */
@@ -36,7 +36,7 @@ li, dd, blockquote { margin: 0 0 0 1em; }
 .ab2 { padding-bottom: 20px; }
 td { vertical-align: top; }
 /* -------------------------[ Miscellaneous conveniences ]--- */
-.clearfix, .cls { clear: both; height: 0 !important; margin: 0; overflow: hidden; }
+.cls { clear: both; height: 0 !important; margin: 0; overflow: hidden; }
 .clear { clear: both; }
 .fail { color: #900; font-weight: 500; }
 .warning { color: #111; font-weight: 500; }
@@ -85,7 +85,7 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 #mainMenu.show { overflow: visible }
 #mainMenu .float-left .dropdown-menu { left: 0 }
 #mainMenu .float-right .dropdown-menu { right: 0 }
-#mainMenu .divider, #mainMenu #nav > li > a .fa, #mainMenu .caret { display: none }
+#mainMenu .divider, #mainMenu #nav > li > a .fa, #mainMenu .caret, #mainMenu .dropdown-toggle::after { display: none }
 #mainMenu #nav > li > a .fa.fa-bars { display: inline-block; margin: 0 }
 #mainMenu .nav { margin: 0; padding: 0; list-style: none }
 #mainMenu .nav > li { position: relative; float: left; list-style: none }
@@ -403,7 +403,7 @@ fieldset#preview h2.tab { float: right; }
 #actions .actionButtons .plus { overflow: hidden; margin: 0 0 0 -2px; width: 35px; border-radius: 0 3px 3px 0 !important; text-align: center; cursor: default; font: normal normal normal 0/30px FontAwesome }
 #actions .actionButtons .plus::before { content: "\f107"; font-size: 14px }
 #actions .actionButtons .show .plus::before { content: "\f106"; }
-#actions .actionButtons .dropdown-menu { display: none; position: absolute; z-index: -1; right: 0; top: 100%; width: 100%; margin-top: -2px; padding-top: 2px; text-align: left; background-color: #fff; border: 1px solid #32ab9a; border-top: none; border-radius: 0 0 3px 3px; overflow: hidden; }
+#actions .actionButtons .dropdown-menu { display: none; position: absolute; z-index: -1; left: auto; right: 0; top: 100%; width: 100%; min-width: 35px; margin: -2px 0 0; padding: 2px 0 0; text-align: left; background-color: #fff; border: 1px solid #32ab9a; border-top: none; border-radius: 0 0 3px 3px; overflow: hidden; }
 #actions .actionButtons .show > .dropdown-menu { display: block }
 #actions .actionButtons .dropdown-menu span { display: block; padding: 0 10px; height: 32px; line-height: 30px; border: none; border-top: 1px solid #f2f2f2; cursor: pointer; }
 #actions .actionButtons .dropdown-menu span:hover { background-color: #fbfbfb; }
@@ -721,7 +721,7 @@ input[type="email"]:focus, input[type="password"]:focus, input[type="search"]:fo
 .widget-wrapper { border: 1px solid #ccc; }
 .widget-wrapper .widget-title { border: 1px solid #ccc; border-width: 0 0 1px 0; }
 .widget-stage .label, .widget-stage .label-info { background-color: transparent; color: inherit; font-size: 12px; }
-.widget-stage .btn { background-color: transparent !important; color: #3d5764 !important; border-color: #ccc !important; }
+.widget-stage .btn { background-color: transparent !important; color: #3d5764 !important; border-color: #ccc !important; padding: 1px 4px; }
 .widget-stage .btn:hover { border-color: #3697CD !important; }
 .widget-stage .btn .fa { font-size: 13px }
 #modxrecent_widget table { margin-bottom: 0; }
@@ -824,6 +824,7 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .ElementsInTree #treeHolder #treePane .tab-page .panel-group { overflow: visible !important; max-height: none !important; box-sizing: border-box !important }
 /* gridster */
 .gs-w:hover .gs-resize-handle, .resizing .gs-resize-handle { right: 7px; bottom: 0 }
+.widget-controls .btn-group .btn { width: 28px }
 /* MCE */
 .mce-container, .mce-container-body { box-sizing: border-box !important }
 /* codeMirror */
