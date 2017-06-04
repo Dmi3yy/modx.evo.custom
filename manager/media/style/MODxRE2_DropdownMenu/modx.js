@@ -157,49 +157,9 @@
 			idFrame: 'mainframe',
 			as: null,
 			init: function() {
-				this.actions();
-				this.stopWork();
+				//this.stopWork();
 				this.scrollWork();
 				m.onclick = modx.hideDropDown
-			},
-			actions: function() {
-				var a = m.document.getElementById('actions'),
-					b = m.document.getElementById('stay');
-				if(a !== null && b !== null) {
-					var c = a.querySelector('.plus'),
-						f = a.querySelector('#Button1 > a'),
-						g = [];
-					c.classList.add('dropdown-toggle');
-					g['stay1'] = '<i class="' + modx.style.actions_file + '"></i>';
-					g['stay2'] = '<i class="' + modx.style.actions_pencil + '"></i>';
-					g['stay3'] = '<i class="' + modx.style.actions_reply + '"></i>';
-					if(b.value) {
-						f.innerHTML += '<i class="' + modx.style.actions_plus + '"></i> + ' + g['stay' + b.value] + ' ' + b.children['stay' + b.value].innerText
-					}
-					var k = null,
-						l = b.children,
-						n = d.createElement('div');
-					n.className = 'dropdown-menu';
-					f.parentNode.classList.add('dropdown');
-					for(var i = 0; i < l.length; i++) {
-						if(!l[i].selected) {
-							k = d.createElement('SPAN');
-							k.dataset.id = i;
-							k.innerHTML = g[b.children[i].id] + ' ' + b.children[i].innerText;
-							k.onclick = function() {
-								var s = b.querySelector('option[selected=selected]');
-								if(s) s.selected = false;
-								b.children[this.dataset.id].selected = true;
-								f.click()
-							};
-							n.appendChild(k)
-						}
-					}
-					f.parentNode.appendChild(n);
-					c.onclick = function() {
-						this.parentNode.classList.toggle('show')
-					}
-				}
 			},
 			work: function() {
 				var el = d.getElementById('workText');
@@ -210,6 +170,7 @@
 				else setTimeout('modx.main.work()', 50)
 			},
 			stopWork: function() {
+				modx.tree.setSelectedByContext();
 				var el = d.getElementById('workText');
 				if(el) {
 					el.style.display = 'none';
@@ -352,9 +313,11 @@
 			init: function() {
 				this.restoreTree()
 			},
-			toggleNode: function(a, b, c, e, f) {
-				f = (!f || f === '0') ? '0' : '1';
-				this.rpcNode = a.parentNode.lastChild;
+			toggleNode: function(a, b, c, f, g) {
+				if(w.event.ctrlKey) return;
+				g = (!g || g === '0') ? '0' : '1';
+				w.event.stopPropagation();
+				this.rpcNode = a.parentNode.parentNode.lastChild;
 				var rpcNodeText,
 					loadText = modx.lang.loading_doc_tree,
 					iconNodeToggle = d.getElementById("s" + c),
@@ -371,7 +334,7 @@
 							el.innerHTML = modx.style.tree_info + loadText;
 							el.style.display = 'block'
 						}
-						modx.get('index.php?a=1&f=nodes&indent=' + b + '&parent=' + c + '&expandAll=' + e + folderState, function(r) {
+						modx.get('index.php?a=1&f=nodes&indent=' + b + '&parent=' + c + '&expandAll=' + f + folderState, function(r) {
 							modx.tree.rpcLoadData(r)
 						})
 					}
@@ -405,6 +368,7 @@
 				}
 			},
 			treeAction: function(e, a, b, c, f, g) {
+				if(w.event.ctrlKey) return;
 				if(tree.ca === "move") {
 					try {
 						this.setSelectedByContext(a);
@@ -424,14 +388,12 @@
 						} else {
 							href = c;
 						}
-
 						if(g === 2) {
 							if(f !== 1) {
 								href = '';
 							}
 							d.getElementById('s' + a).onclick()
 						}
-
 						if(href) {
 							if(e.shiftKey) {
 								w.getSelection().removeAllRanges();
@@ -442,7 +404,7 @@
 							}
 						}
 					}
-					var el = d.querySelector('#node' + a + '>.treeNode');
+					var el = d.querySelector('#node' + a + '>.node');
 					modx.tree.setSelected(el)
 				}
 				if(tree.ca === "parent") {
@@ -463,14 +425,16 @@
 				}
 			},
 			showPopup: function(a, b, c, f, g, e) {
+				if(e.ctrlKey) return;
+				e.preventDefault();
 				var node = d.getElementById('node' + a),
 					tree = d.getElementById('tree');
 
 				if(node.dataset.contextmenu) {
 					e.target.dataset.toggle = '#contextmenu';
-					if(e.type === 'contextmenu') {
+					//if(e.type === 'contextmenu') {
 						modx.hideDropDown(e);
-					}
+					//}
 					this.ctx = d.createElement('div');
 					this.ctx.id = 'contextmenu';
 					this.ctx.className = 'dropdown-menu';
@@ -508,7 +472,7 @@
 					} else {
 						y = y - this.ctx.offsetHeight / 2
 					}
-					var el = e.target.closest('.treeNode');
+					var el = e.target.closest('.node');
 					if(el === null) x += 50;
 					this.itemToChange = a;
 					this.selectedObjectName = b;
@@ -517,9 +481,9 @@
 				} else {
 					var ctx = d.getElementById('mx_contextmenu');
 					e.target.dataset.toggle = '#mx_contextmenu';
-					if(e.type === 'contextmenu') {
+					//if(e.type === 'contextmenu') {
 						modx.hideDropDown(e);
-					}
+					//}
 					this.setSelectedByContext(a);
 					var i4 = d.getElementById('item4'),
 						i5 = d.getElementById('item5'),
@@ -558,12 +522,13 @@
 					} else {
 						y = y - ctx.offsetHeight / 2
 					}
-					var el = e.target.closest('.treeNode');
+					var el = e.target.closest('.node');
 					if(el === null) x += 50;
 					this.itemToChange = a;
 					this.selectedObjectName = b;
 					this.dopopup(ctx, x + 10, y)
 				}
+				e.stopPropagation()
 			},
 			dopopup: function(el, a, b) {
 				if(this.selectedObjectName.length > 20) {
@@ -573,7 +538,7 @@
 				el.style.left = a + (modx.config.textdir ? '-190' : '') + "px";
 				el.style.top = b + "px";
 				el.classList.add('show');
-				f.innerHTML = this.selectedObjectName
+				f.innerHTML = this.selectedObjectName;
 			},
 			menuHandler: function(a) {
 				switch(a) {
@@ -596,6 +561,7 @@
 						}
 						break;
 					case 5:
+						this.setActiveFromContextMenu(this.itemToChange);
 						m.location.href = "index.php?a=51&id=" + this.itemToChange;
 						break;
 					case 6:
@@ -640,18 +606,18 @@
 				}
 			},
 			setSelected: function(a) {
-				var el = d.querySelector('.treeNodeSelected');
-				if(el) el.classList.remove('treeNodeSelected');
-				if(a) a.classList.add('treeNodeSelected')
+				var el = d.querySelector('#treeRoot .current');
+				if(el) el.classList.remove('current');
+				if(a) a.classList.add('current')
 			},
 			setActiveFromContextMenu: function(a) {
-				var el = d.querySelector('#node' + a + '>.treeNode');
+				var el = d.querySelector('#node' + a + '>.node');
 				if(el) this.setSelected(el)
 			},
 			setSelectedByContext: function(a) {
-				var el = d.querySelector('#tree .treeNodeSelectedByContext');
-				if(el) el.classList.remove('treeNodeSelectedByContext');
-				if(a) d.querySelector('#node' + a + '>.treeNode').classList.add('treeNodeSelectedByContext');
+				var el = d.querySelector('#treeRoot .selected');
+				if(el) el.classList.remove('selected');
+				if(a) d.querySelector('#node' + a + '>.node').classList.add('selected');
 			},
 			setItemToChange: function() {
 				var a = d.getElementById(modx.main.idFrame).contentWindow, b = a.location.search.substring(1);
