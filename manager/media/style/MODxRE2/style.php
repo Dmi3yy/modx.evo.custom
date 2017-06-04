@@ -169,7 +169,7 @@ $_style['icons_unzip']              = $style_path.'icons/download-alt.png';
 
 
 // Indicators
-$_style['icons_tooltip']            = 'fa fa-question-circle tooltip'; // $style_path.'icons/question-sign-trans.png';
+$_style['icons_tooltip']            = 'fa fa-question-circle'; // $style_path.'icons/question-sign-trans.png';
 $_style['icons_tooltip_over']       = $style_path.'icons/question-sign.png';
 $_style['icons_cal']                = $style_path.'icons/calendar.png';
 $_style['icons_cal_nodate']         = $style_path.'icons/calendar.png';

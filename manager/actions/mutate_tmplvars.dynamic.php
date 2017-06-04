@@ -424,7 +424,7 @@ if(is_array($evtOut)) {
 					</tr>
 					<tr id="displayparamrow">
 						<th><?php echo $_lang['tmplvars_widget_prop']; ?>
-							<div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><i class="tooltip <?php echo $_style['actions_refresh']; ?>" data-tooltip="<?php echo $_lang['tmplvars_reset_params']; ?>"></i></a></div>
+							<div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><i class="<?php echo $_style['actions_refresh']; ?>" data-tooltip="<?php echo $_lang['tmplvars_reset_params']; ?>"></i></a></div>
 						</th>
 						<td id="displayparams">&nbsp;</td>
 					</tr>
