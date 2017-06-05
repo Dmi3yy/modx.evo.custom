@@ -44,8 +44,8 @@ if(!isset($modx->config['mgr_date_picker_path'])) {
 				echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
 			}
 			?>
-
 			<? if($modx->config['manager_theme'] == 'MODxRE2_DropdownMenu') { ?>
+
 			var actionButtons = document.getElementById('actions'),
 				actionSelect = document.getElementById('stay');
 			if(actionButtons !== null && actionSelect !== null) {
@@ -84,6 +84,7 @@ if(!isset($modx->config['mgr_date_picker_path'])) {
 				}
 			}
 			<?php } ?>
+
 		}
 
 		function reset_path(elementName) {
@@ -191,7 +192,7 @@ if(!isset($modx->config['mgr_date_picker_path'])) {
 		/* ]]> */
 	</script>
 </head>
-<body ondragstart="return false"<?php echo $modx_textdir ? ' class="rtl"' : '' ?>>
+<body <?php echo $modx_textdir ? ' class="rtl"' : '' ?>>
 
 <div id="preLoader">
 	<div class="preLoaderText"><?php echo $_style['ajax_loader']; ?></div>
