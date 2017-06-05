@@ -582,7 +582,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 			<h1>
 				<i class="fa fa-pencil-square-o"></i><?php if(isset($_REQUEST['id'])) {
-					echo iconv_substr($content['pagetitle'], 0, 50, $modx_manager_charset) . (iconv_strlen($content['pagetitle'], $modx_manager_charset) > 50 ? '...' : '') . '<small>(' . $_REQUEST['id'] . ')</small>';
+					echo iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . '<small>(' . $_REQUEST['id'] . ')</small>';
 				} else {
 					echo $_lang['create_resource_title'];
 				} ?>

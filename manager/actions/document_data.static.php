@@ -227,7 +227,7 @@ if($numRecords > 0) {
 	<script type="text/javascript" src="media/script/tablesort.js"></script>
 
 	<h1>
-		<i class="fa fa-info"></i><?php echo iconv_substr($content['pagetitle'], 0, 50) . (iconv_strlen($content['pagetitle']) > 50 ? '...' : '') . ' <small>(' . $_REQUEST['id'] . ')</small>' ?>
+		<i class="fa fa-info"></i><?php echo iconv_substr($content['pagetitle'], 0, 50, $modx->config['modx_charset']) . (iconv_strlen($content['pagetitle'], $modx->config['modx_charset']) > 50 ? '...' : '') . ' <small>(' . $_REQUEST['id'] . ')</small>' ?>
 	</h1>
 
 	<div id="actions">
