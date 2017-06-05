@@ -1,4 +1,3 @@
-<link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" href="media/script/gridster/jquery.gridster.css" />
 <link rel="stylesheet" href="media/style/[(manager_theme)]/dashboard/css/dashboard.css" />
 

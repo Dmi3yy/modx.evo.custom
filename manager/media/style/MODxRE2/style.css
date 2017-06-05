@@ -3,7 +3,7 @@
 /* for IE7 */
 html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }
-html { font-size: 100.01%; line-height: 1.5; color: #333; }
+html { font-size: 13px; line-height: 1.5; color: #333; }
 body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.5; height: 100%; color: #333; background: #eeeeee; }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
@@ -33,7 +33,7 @@ li, dd, blockquote { margin: 0 0 0 1em; }
 .ab2 { padding-bottom: 20px; }
 td, table tr td[valign=top] { vertical-align: top; }
 /* -------------------------[ Miscellaneous conveniences ]--- */
-.clearfix, .cls { clear: both; height: 0 !important; margin: 0; font-size: 1px; overflow: hidden; }
+.cls { clear: both; height: 0 !important; margin: 0; font-size: 1px; overflow: hidden; }
 .clear { clear: both; }
 .fail { color: #900; font-weight: 500; }
 .warning { color: #111; font-weight: 500; }
@@ -43,7 +43,7 @@ td, table tr td[valign=top] { vertical-align: top; }
 .inline { display: inline; }
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1, h2, h3, h4, h5, h6, .subTitle { font-weight: 500; }
-h1 { font-size: 1.8em; line-height: 35px; margin: 15px 15px 10px 15px; }
+h1 { font-size: 1.8em; line-height: 35px; margin: 0; padding: 15px 15px 10px 15px; }
 h1 .fa { color: #3697CD; margin-right: 5px }
 h1 small { margin-left: 5px }
 .rtl h1 { margin-right: 10px; }
@@ -599,7 +599,7 @@ ul.resourceTable .category_name { float: none; display: block; clear: both; marg
 /* Manager Elements Buttons bar*/
 ul.elements_buttonbar { list-style: none; margin: 0; padding: 0; display: table; table-layout: fixed; }
 ul.elements_buttonbar li { display: table-cell; padding: 0 !important; width: 2em; }
-ul.elements_buttonbar li a { display: block; width: 2em; padding: 3px 4px; margin: 1px; }
+ul.elements_buttonbar li a { display: block; padding: 3px 4px; margin: 1px; }
 ul.elements_buttonbar .fa { font-size: 13px !important; padding: 1px 1px 0; }
 /* Manage elements views-form */
 .switchForm { display: block; width: 100%; float: left; clear: left; margin: 7px 0 7px -4px; padding: 5px; background-color: #fff; border: 1px solid #E4E4E4; border-radius: 3px; }
@@ -673,8 +673,9 @@ input[type="email"]:focus, input[type="password"]:focus, input[type="search"]:fo
 .widget-wrapper { border: 1px solid #ccc; }
 .widget-wrapper .widget-title { border: 1px solid #ccc; border-width: 0 0 1px 0; }
 .widget-stage .label, .widget-stage .label-info { background-color: transparent; color: inherit; }
-.widget-stage .btn { background-color: transparent !important; color: #3d5764 !important; border-color: #ccc !important; }
+.widget-stage .btn { background-color: transparent !important; color: #3d5764 !important; border-color: #ccc !important; padding: 1px 4px; }
 .widget-stage .btn:hover { border-color: #3697CD !important; }
+.widget-controls .btn-group .btn { width: 28px }
 #modxrecent_widget table { margin-bottom: 0; }
 #modxrecent_widget .table-condensed > tbody > tr > td { padding: 2px 3px; }
 #modxrecent_widget table ul { margin: 0; padding: 0; }
@@ -771,4 +772,6 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 #treeHolder .filterElements-form--eit { width: calc(100% - 77px) }
 #treeHolder .actionButtons--eit { margin: 19px 0 0 !important; top: 0 !important }
 #treeHolder .actionButtons--eit li { margin: 0 0 0 5px !important; }
+/* custom-tips */
+.custom-tip { background: #fff; padding: 14px; border: 1px solid rgba(0, 0, 0, 0.15); }
 
