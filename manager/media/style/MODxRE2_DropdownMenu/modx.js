@@ -87,7 +87,7 @@
 										sub.classList.add('show')
 									} else {
 										var el = this;
-										modx.post('/' + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', href + '&parent=' + el.id, function(r) {
+										modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', href + '&parent=' + el.id, function(r) {
 											if(r) {
 												var ul = d.createElement('ul');
 												el.parentNode.parentNode.appendChild(ul);
