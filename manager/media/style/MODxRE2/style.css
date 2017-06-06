@@ -41,6 +41,7 @@ td, table tr td[valign=top] { vertical-align: top; }
 .contentPad { height: 20px !important; clear: both; }
 .hide, .skip, .printonly { display: none; }
 .inline { display: inline; }
+.container { width: 100% }
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1, h2, h3, h4, h5, h6, .subTitle { font-weight: 500; }
 h1 { font-size: 1.8em; line-height: 35px; margin: 0; padding: 15px 15px 10px 15px; }
