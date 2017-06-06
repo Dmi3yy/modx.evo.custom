@@ -89,6 +89,7 @@ if($user['which_browser'] == 'default') {
 		// GLOBAL variable modx
 		var modx = {
 			MGR_DIR: "<?php echo MGR_DIR ?>",
+			MODX_SITE_URL: "<?php echo MODX_SITE_URL ?>",
 			user: {
 				username: "<?php echo $user['username'] ?>"
 			},
