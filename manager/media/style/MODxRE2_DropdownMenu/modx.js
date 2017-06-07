@@ -29,55 +29,48 @@
 							e.stopPropagation()
 						}
 						if(!e.defaultPrevented) {
-							els = this.querySelectorAll('.active');
-							for(i = 0; i < els.length; i++) {
-								els[i].classList.remove('active')
-							}
+							els = this.querySelectorAll('.nav > li.active');
+							for(i = 0; i < els.length; i++) els[i].classList.remove('active');
 							this.classList.remove('show');
-							if(t.offsetParent.classList.contains('dropdown-menu')) {
-								t.offsetParent.offsetParent.classList.add('active')
+							if(t.parentNode.classList.contains('dropdown-menu')) {
+								t.parentNode.parentNode.classList.add('active')
 							} else {
-								t.offsetParent.classList.add('active');
-								if(t.parentNode.parentNode.id) {
-									els = d.querySelectorAll('#' + this.id + ' .nav li');
-									for(i = 0; i < els.length; i++) {
-										els[i].classList.remove('selected', 'active')
-									}
-									if(t.parentNode.parentNode.parentNode.classList.contains('dropdown')) {
-										t.parentNode.parentNode.parentNode.classList.add('active')
-									}
+								t.parentNode.classList.add('active');
+								if(t.parentNode.parentNode.classList.contains('dropdown-menu')) {
+									els = d.querySelectorAll('#' + modx.mainMenu.id + ' .nav li.selected');
+									for(i = 0; i < els.length; i++) els[i].classList.remove('selected');
 									t.parentNode.classList.add('selected', 'hover');
-									d.getElementById(t.parentNode.parentNode.id.replace('parent_', '')).classList.add('selected')
+									if(t.parentNode.parentNode.parentNode.classList.contains('dropdown'))
+										t.parentNode.parentNode.parentNode.classList.add('active');
+									if(t.parentNode.parentNode.id)
+										d.getElementById(t.parentNode.parentNode.id.replace('parent_', '')).classList.add('selected')
 								}
 							}
 						}
 					}
 				};
-				els = d.querySelectorAll('#' + modx.mainMenu.id + ' .dropdown-toggle');
+				els = d.querySelectorAll('#' + modx.mainMenu.id + ' .nav > li');
 				for(i = 0; i < els.length; i++) {
 					els[i].onmouseover = function() {
-						els = d.querySelectorAll('#' + modx.mainMenu.id + ' .dropdown-toggle');
-						for(ii = 0; ii < els.length; ii++) {
-							if(els[ii].parentNode.classList.contains('hover'))
-								els[ii].parentNode.classList.remove('hover')
-						}
-						this.parentNode.classList.add('hover')
+						els = d.querySelectorAll('#' + modx.mainMenu.id + ' .nav > li.hover');
+						for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
+						this.classList.add('hover')
 					}
 				}
 				els = d.querySelectorAll('#' + modx.mainMenu.id + ' .nav > li li');
 				for(i = 0; i < els.length; i++) {
-					els[i].onmouseover = function(e) {
+					els[i].onmouseover = function() {
 						els = d.querySelectorAll('#' + modx.mainMenu.id + ' .nav > li li');
 						for(ii = 0; ii < els.length; ii++) {
-							if(els[ii].classList.contains('hover'))
-								els[ii].classList.remove('hover')
+							els[ii].classList.remove('hover')
 						}
 						this.classList.add('hover');
 						els = d.querySelectorAll('#' + modx.mainMenu.id + ' .nav .sub-menu');
 						for(ii = 0; ii < els.length; ii++) {
-							if(els[ii].classList.contains('show') && els[ii].id !== 'parent_' + this.id)
+							if(els[ii].id !== 'parent_' + this.id)
 								els[ii].classList.remove('show')
 						}
+						this.parentNode.classList.add('hover')
 					}
 				}
 			},
@@ -99,15 +92,12 @@
 								ul.innerHTML = r;
 								ul.style.left = parent.parentNode.offsetWidth + 'px';
 								ul.id = 'parent_' + parent.id;
-								ul.className = 'sub-menu show';
+								ul.className = 'sub-menu dropdown-menu show';
 								var els = ul.querySelectorAll('li');
 								for(var ii = 0; ii < els.length; ii++) {
 									els[ii].onmouseover = function() {
-										for(var iii = 0; iii < els.length; iii++) {
-											if(els[iii].classList.contains('hover'))
-												els[iii].classList.remove('hover')
-										}
-										this.classList.add('hover');
+										for(var iii = 0; iii < els.length; iii++) els[iii].classList.remove('hover');
+										this.classList.add('hover')
 									}
 								}
 							}
@@ -375,20 +365,19 @@
 			init: function() {
 				this.restoreTree()
 			},
-			toggleNode: function(a, b, c, f, g) {
-				if(w.event.ctrlKey) return;
-				g = (!g || g === '0') ? '0' : '1';
-				w.event.stopPropagation();
-				this.rpcNode = a.parentNode.parentNode.lastChild;
+			toggleNode: function(e, a, b, c) {
+				if(e.ctrlKey) return;
+				e.stopPropagation();
+				this.rpcNode = e.currentTarget.parentNode.parentNode.lastChild;
 				var rpcNodeText,
 					loadText = modx.lang.loading_doc_tree,
-					iconNodeToggle = d.getElementById("s" + c),
-					iconNode = d.getElementById("f" + c);
+					iconNodeToggle = d.getElementById("s" + b),
+					iconNode = d.getElementById("f" + b);
 				if(this.rpcNode.innerHTML === '') {
 					iconNodeToggle.innerHTML = iconNodeToggle.dataset.iconCollapsed;
 					iconNode.innerHTML = iconNode.dataset.iconFolderOpen;
 					rpcNodeText = this.rpcNode.innerHTML;
-					modx.openedArray[c] = 1;
+					modx.openedArray[b] = 1;
 					if(rpcNodeText === "" || rpcNodeText.indexOf(loadText) > 0) {
 						var folderState = this.getFolderState();
 						var el = d.getElementById('buildText');
@@ -396,7 +385,7 @@
 							el.innerHTML = modx.style.tree_info + loadText;
 							el.style.display = 'block'
 						}
-						modx.get('index.php?a=1&f=nodes&indent=' + b + '&parent=' + c + '&expandAll=' + f + folderState, function(r) {
+						modx.get('index.php?a=1&f=nodes&indent=' + a + '&parent=' + b + '&expandAll=' + c + folderState, function(r) {
 							modx.tree.rpcLoadData(r)
 						})
 					}
@@ -404,7 +393,7 @@
 				} else {
 					iconNodeToggle.innerHTML = iconNodeToggle.dataset.iconExpanded;
 					iconNode.innerHTML = iconNode.dataset.iconFolderClose;
-					delete modx.openedArray[c];
+					delete modx.openedArray[b];
 					modx.animation.slideUp(this.rpcNode, 80, function() {
 						this.innerHTML = '';
 					});
@@ -437,7 +426,7 @@
 				}
 			},
 			treeAction: function(e, a, b, c, f, g) {
-				if(w.event.ctrlKey) return;
+				if(e.ctrlKey) return;
 				if(tree.ca === "move") {
 					try {
 						this.setSelectedByContext(a);
