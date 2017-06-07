@@ -260,7 +260,7 @@ box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1); }
 #treeRoot .indent { float: left; height: 1em; width: 1.5em }
 #treeRoot .empty { color: #aaa; cursor: default; }
 #treeRoot .toggle { position: relative; vertical-align: top; cursor: pointer }
-#treeRoot .toggle .fa { position: absolute; top: -0.1em; left: -1.1em; font-size: 1.4em }
+#treeRoot .toggle .fa { position: absolute; top: -0.15em; left: -1.1em; font-size: 1.4em }
 #treeRoot .fa { position: relative; margin-right: 1px; width: 1em; font-size: 1.1em; text-align: center }
 #treeRoot .fa > .fa-lock, .fa > .fa-lock { position: absolute; left: 0; bottom: 0; text-align: left; color: rgba(0, 0, 0, 0.65); font-size: 0.7em; }
 #treeRoot .fa-file, #treeRoot .fa-file-o, #treeRoot .fa-file-code, #treeRoot .fa-file-code-o { }

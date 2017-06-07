@@ -574,7 +574,7 @@ function getTplFolderNode() {
         class="toggle"
         data-icon-expanded="[+tree_plusnode+]"
         data-icon-collapsed="[+tree_minusnode+]"
-        onclick="modx.tree.toggleNode(this,[+indent+],[+id+],[+expandAll+],[+isPrivate+]); return false;"
+        onclick="modx.tree.toggleNode(event,[+indent+],[+id+],[+expandAll+]); return false;"
         oncontextmenu="this.onclick(event); return false;"
         >[+icon_node_toggle+]</span><span
         id="f[+id+]"
