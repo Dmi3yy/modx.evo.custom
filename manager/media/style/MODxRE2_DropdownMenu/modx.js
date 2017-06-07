@@ -1028,16 +1028,14 @@
 					else if(typeof b === 'function') c = b, b = this.duration;
 					else b = this.duration;
 					var h = a.offsetHeight;
-					a.style.overflow = 'hidden';
+					a.style.cssText = 'overflow: hidden;';
 					var div = d.createElement('div');
-					div.style.minHeight = 0;
-					div.style.height = 'auto';
+					div.setAttribute('style', 'margin-top: 0; position: relative; min-height: 0; height: auto;');
 					div.innerHTML = a.innerHTML;
 					a.innerHTML = div.outerHTML;
 					var callback = function() {
 						a.innerHTML = a.firstChild.innerHTML;
-						a.style.overflow = '';
-						a.style.marginTop = '';
+						a.style.cssText = '';
 						if(c) c.call(a)
 					};
 					b += (h / 1000) * b;
@@ -1056,22 +1054,15 @@
 					else if(typeof b === 'function') c = b, b = this.duration;
 					else b = this.duration;
 					var h = a.offsetHeight;
-					a.style.overflow = 'hidden';
-					a.style.position = 'absolute';
+					a.style.cssText = 'overflow: hidden; min-height: 0; height: 0;';
 					var div = d.createElement('div');
-					div.style.marginTop = -h + 'px';
-					div.style.position = 'relative';
-					div.style.minHeight = 0;
-					div.style.height = 'auto';
+					div.setAttribute('style', 'margin-top: -' + h + 'px; position: relative; min-height: 0; height: auto;');
 					div.innerHTML = a.innerHTML;
 					a.innerHTML = div.outerHTML;
-					a.style.position = 'relative';
+					a.style.height = '';
 					var callback = function() {
 						a.innerHTML = a.firstChild.innerHTML;
-						a.style.overflow = '';
-						a.style.marginTop = '';
-						a.style.position = '';
-						a.style.visibility = '';
+						a.style.cssText = '';
 						if(c) c.call(a)
 					};
 					b += (h / 1000) * b;
