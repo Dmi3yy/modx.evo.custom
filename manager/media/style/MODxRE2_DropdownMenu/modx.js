@@ -19,6 +19,7 @@
 			id: 'mainMenu',
 			init: function() {
 				//console.log('modx.mainMenu.init()');
+				var els, i, ii;
 				d.getElementById(this.id).onclick = function(e) {
 					var t = e.target.closest('a');
 					if(t !== null) {
@@ -28,17 +29,19 @@
 							e.stopPropagation()
 						}
 						if(!e.defaultPrevented) {
-							var s = this.querySelector('.active');
-							if(s) s.classList.remove('active');
+							els = this.querySelectorAll('.active');
+							for(i = 0; i < els.length; i++) {
+								els[i].classList.remove('active')
+							}
 							this.classList.remove('show');
-							if(t.offsetParent.className.indexOf('dropdown-menu') === 0) {
+							if(t.offsetParent.classList.contains('dropdown-menu')) {
 								t.offsetParent.offsetParent.classList.add('active')
 							} else {
 								t.offsetParent.classList.add('active');
 								if(t.parentNode.parentNode.id) {
-									var elms = d.querySelectorAll('#' + this.id + ' .nav li');
-									for(var i = 0; i < elms.length; i++) {
-										elms[i].classList.remove('selected', 'active')
+									els = d.querySelectorAll('#' + this.id + ' .nav li');
+									for(i = 0; i < els.length; i++) {
+										els[i].classList.remove('selected', 'active')
 									}
 									if(t.parentNode.parentNode.parentNode.classList.contains('dropdown')) {
 										t.parentNode.parentNode.parentNode.classList.add('active')
@@ -50,7 +53,6 @@
 						}
 					}
 				};
-				var els, i, ii;
 				els = d.querySelectorAll('#' + modx.mainMenu.id + ' .dropdown-toggle');
 				for(i = 0; i < els.length; i++) {
 					els[i].onmouseover = function() {
@@ -967,20 +969,18 @@
 			//&& !(e && ("click" === e.type && /form|label|input|textarea|select/i.test(e.target.tagName)))
 			) {
 				var els = d.querySelectorAll('.dropdown'),
-					l = els.length,
 					n = null,
 					t = e.target || e.target.parentNode;
 				if(t.dataset.toggle) n = d.querySelector(t.dataset.toggle);
 				if(t.classList.contains('dropdown-toggle')) n = t.offsetParent;
-				while(l--) {
-					if(n !== els[l])
-						els[l].classList.remove('show')
+				for(var i = 0; i < els.length; i++) {
+					if(n !== els[i])
+						els[i].classList.remove('show')
 				}
 				els = m.document.querySelectorAll('.dropdown');
-				l = els.length;
-				while(l--) {
-					if(n !== els[l])
-						els[l].classList.remove('show')
+				for(var i = 0; i < els.length; i++) {
+					if(n !== els[i])
+						els[i].classList.remove('show')
 				}
 			}
 		},
@@ -1055,8 +1055,7 @@
 					this.animate(a.firstChild, 'marginTop', 'px', 0, -h, b, callback)
 				} else if(typeof a === 'string') {
 					var els = d.querySelectorAll(a);
-					var i = els.length;
-					while(i--) {
+					for(var i = 0; i < els.length; i++) {
 						modx.animation.slideUp(els[i], b, c)
 					}
 				}
@@ -1090,8 +1089,7 @@
 					this.animate(a.firstChild, 'marginTop', 'px', -h, 0, b, callback)
 				} else if(typeof a === 'string') {
 					var els = d.querySelectorAll(a);
-					var i = els.length;
-					while(i--) {
+					for(var i = 0; i < els.length; i++) {
 						modx.animation.slideDown(els[i], b, c)
 					}
 				}
