@@ -236,21 +236,21 @@ a img { border: 0; }
 .row1, .row2, .row3 { background-color: #fff; color: #333; }
 .row2 { background-color: #fff; }
 .row3 { background-color: #f5f5f5; }
-.treeframebody { height: 100%; border-right: 1px solid #E1E4E8; background-color: #ebebeb; -webkit-box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1);
+.treeframebody { height: 100%; border-right: 1px solid #cfd2d6; background-color: #ebebeb; -webkit-box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1);
 box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1); }
-#treeMenu { overflow: hidden; padding: 2px; height: 30px; background-color: #dfdfdf; border-bottom: 1px solid #E1E4E8 }
-#treeMenu .treeButton { display: inline-block; cursor: pointer; color: #3d5764; border: 1px solid transparent; border-radius: 2px; padding: 0 3px; line-height: 23px; white-space: nowrap; text-align: center; vertical-align: middle; }
+#treeMenu { overflow: hidden; padding: 0 0.1em; height: 2.3em; background-color: #dfdfdf; border-bottom: 1px solid #cfd2d6 }
+#treeMenu .treeButton { display: inline-block; cursor: pointer; color: #3d5764; border: 1px solid transparent; border-radius: 2px; margin: 1px 0; padding: 0 0.2em; line-height: 2em; white-space: nowrap; text-align: center; vertical-align: middle; }
 #treeMenu .treeButton:hover:not(.disabled) { border-color: #6e7a86; background-color: #fff; background-color: rgba(255, 255, 255, .5); cursor: pointer }
 #treeMenu .treeButton:not(.disabled):active { background-color: #d5d5d5 }
-#treeMenu .treeButton .fa { width: 1.2em; font-size: 14px; }
+#treeMenu .treeButton .fa { width: 1.2em; font-size: 1.1em; }
 #treeMenu .treeButton.disabled { color: #777; opacity: 0.5 }
 #treeHolder { position: relative; z-index: 1; cursor: default; overflow: auto; height: 100%; max-height: calc(100% - 30px); white-space: nowrap }
-#treeHolder .rootNode { padding: 5px 10px; cursor: pointer; }
-#treeRoot a { display: block; text-decoration: none; padding: 1px 0 1px 30px; color: #39515d; font-size: 1em; cursor: default }
+#treeHolder .rootNode { padding: 0.2em 0.5em; cursor: pointer; }
+#treeRoot a { display: block; text-decoration: none; padding: 1px 0 1px 2.2em; color: #39515d; font-size: 1em; cursor: default }
 #treeRoot a:hover, #treeRoot a.current { background-color: rgba(33, 150, 243, 0.1) }
-#treeRoot a small { margin: 0 10px 0 3px }
+#treeRoot a small { margin: 0 0.8em 0 0.2em }
 #treeRoot a.selected { background-color: rgba(0, 0, 0, 0.1); }
-#treeRoot a .title { padding: 0 4px }
+#treeRoot a .title { padding: 0 0.2em }
 #treeRoot a .title { color: #068ada; }
 #treeRoot a.deleted .title { color: #A52A2A; text-decoration: line-through; }
 #treeRoot a.unpublished .title { color: #B68282; font-style: italic; }
@@ -260,24 +260,27 @@ box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1); }
 #treeRoot .indent { float: left; height: 1em; width: 1.5em }
 #treeRoot .empty { color: #aaa; cursor: default; }
 #treeRoot .toggle { position: relative; vertical-align: top; cursor: pointer }
-#treeRoot .toggle .fa { position: absolute; top: 0; left: -20px; font-size: 1.4em }
-#treeRoot .fa { position: relative; margin-right: 1px; width: 1em; font-size: 1em; text-align: center }
+#treeRoot .toggle .fa { position: absolute; top: -0.1em; left: -1.1em; font-size: 1.4em }
+#treeRoot .fa { position: relative; margin-right: 1px; width: 1em; font-size: 1.1em; text-align: center }
 #treeRoot .fa > .fa-lock, .fa > .fa-lock { position: absolute; left: 0; bottom: 0; text-align: left; color: rgba(0, 0, 0, 0.65); font-size: 0.7em; }
 #treeRoot .fa-file, #treeRoot .fa-file-o, #treeRoot .fa-file-code, #treeRoot .fa-file-code-o { }
 #treeRoot .fa-folder, #treeRoot .fa-folder-open, #treeRoot .fa-folder-o, #treeRoot .fa-folder-open-o, #treeRoot .fa-exclamation-triangle { text-align: left }
-#treeRoot .fa-link { margin-right: 0; font-size: 12px }
+#treeRoot .fa-link { margin-right: 0; font-size: 0.8em }
 #treeRoot #binFull { display: none }
 /* treeRoot dark */
-/*#treeMenu { background-color: #1d2023	; border-bottom: 1px solid rgba(0, 0, 0, 0.22); }
-#treeMenu .treeButton { color: #bbb; border: none; border-radius: 0; line-height: 28px }
+/*#treeMenu { background-color: #1d2023; border-bottom: 1px solid rgba(0, 0, 0, 0.22); }
+#treeMenu .treeButton { color: #bbb; border: none; border-radius: 0; line-height: 2.1em }
 #treeMenu .treeButton:hover:not(.disabled) { background-color: #2d3033; }
 #tree .treeframebody { background-color: #181f27 }
 #treeHolder .rootNode { color: #f3f3f3; }
 #treeRoot a { color: #b3b3b3; }
 #treeRoot a:hover, #treeRoot a.current { background-color: rgba(255, 255, 255, 0.15); }
+#treeRoot a.selected { background-color: rgba(0, 142, 255, 0.19); }
 #treeRoot a .title { color: #7cb2dc; }
 #treeRoot a.hidemenu .title { color: #a2a2a2; }
-#treeRoot a.selected { background-color: rgba(0, 142, 255, 0.19); }*/
+#treeRoot a.unpublished .title { color: #d0726b }
+#treeRoot .fa { color: #bcbec0; }
+#treeRoot .fa > .fa-lock, .fa > .fa-lock { color: #FFC107; -webkit-text-stroke: 1px rgba(0, 0, 0, 0.39); }*/
 /* */
 #floater { display: none; position: fixed; max-width: 340px; padding: 15px 15px 10px; top: 65px; left: 0; background: #fff; -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); z-index: 1000; }
 .open > #floater { display: block }
@@ -376,7 +379,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .tab-pane > .tab-page { display: none }
 .tab-pane > .tab-page:first-child { display: block }
 .tab-page .sectionBody { padding: 12px; }
-.tab-page table { width: 100%; border-collapse: collapse }
+.tab-page > table { width: 100%; border-collapse: collapse }
 /* -------------------------[ Welcome Page ]--- */
 a.hometblink, a.hometblink img { border: 0 !important; text-decoration: none !important; }
 .wm_header { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dotted #bbb; }
@@ -786,8 +789,6 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 .c-roleslist-item { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #ddd; }
 .c-roleslist-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom-width: 0; }
 .c-roleslist-item--admin { font-style: italic; }
-/* codemirror */
-.CodeMirror pre { font-size: 12px !important; }
 /*Manage Files*/
 #ManageFiles i.fa, #ManageFiles span.fa { color: #39515d; }
 #ManageFiles i.fa.FilesTopFolder { color: #80969c; font-size: 19px !important; }
@@ -851,3 +852,5 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 /* bootstrap */
 .dropdown-menu { display: none }
 .show > .dropdown-menu { display: block }
+/* SimpleGallery */
+#SimpleGallery .pagination { display: block }

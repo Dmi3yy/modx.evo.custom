@@ -121,7 +121,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					'lasthit_df' => $rowLock['lasthit_df']
 				));
 				if($modx->hasPermission('remove_locks')) {
-					$lockedByUser = ' <a onclick="modx.tree.unlockElement(7, ' . $row['id'] . ', this);return false;" title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</a>';
+					$lockedByUser = ' <span onclick="modx.tree.unlockElement(7, ' . $row['id'] . ', this);return false;" title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
 				} else {
 					$lockedByUser = ' <span title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
 				}
