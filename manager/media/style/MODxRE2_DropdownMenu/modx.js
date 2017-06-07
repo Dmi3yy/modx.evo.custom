@@ -366,9 +366,10 @@
 				this.restoreTree()
 			},
 			toggleNode: function(e, a, b, c) {
+				e = e || w.event;
 				if(e.ctrlKey) return;
 				e.stopPropagation();
-				this.rpcNode = e.currentTarget.parentNode.parentNode.lastChild;
+				this.rpcNode = d.getElementById('node' + b).lastChild;
 				var rpcNodeText,
 					loadText = modx.lang.loading_doc_tree,
 					iconNodeToggle = d.getElementById("s" + b),
@@ -450,7 +451,7 @@
 							if(f !== 1) {
 								href = '';
 							}
-							d.getElementById('s' + a).onclick()
+							d.getElementById('s' + a).onclick(e)
 						}
 						if(href) {
 							if(e.shiftKey) {

@@ -347,7 +347,7 @@ if($user['which_browser'] == 'default') {
 			<div>
 				<ul class="actionButtons">
 					<li>
-						<a href="javascript://" onclick="modx.tree.updateTree();modx.tree.showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
+						<a href="javascript:;" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
 					</li>
 				</ul>
 			</div>
