@@ -1015,6 +1015,7 @@
 			x.send(f)
 		},
 		animation: {
+			timers: [],
 			duration: 300,
 			fadeIn: function(a, b, c) {
 
@@ -1029,18 +1030,12 @@
 					else if(typeof b === 'function') c = b, b = this.duration;
 					else b = this.duration;
 					var h = a.offsetHeight;
-					a.style.cssText = 'overflow: hidden;';
-					var div = d.createElement('div');
-					div.setAttribute('style', 'margin-top: 0; position: relative; min-height: 0; height: auto;');
-					div.innerHTML = a.innerHTML;
-					a.innerHTML = div.outerHTML;
-					var callback = function() {
-						a.innerHTML = a.firstChild.innerHTML;
-						a.style.cssText = '';
-						if(c) c.call(a)
-					};
+					a.style.overflow = 'hidden';
 					b += (h / 1000) * b;
-					this.animate(a.firstChild, 'marginTop', 'px', 0, -h, b, callback)
+					var k = function() {
+						return c ? c.call(a) : ''
+					};
+					this.animate(a.firstChild, 'marginTop', 'px', 0, -h, b, k)
 				} else if(typeof a === 'string') {
 					var els = d.querySelectorAll(a);
 					for(var i = 0; i < els.length; i++) {
@@ -1052,22 +1047,16 @@
 				if(!a) return;
 				if(a.tagName) {
 					if(typeof parseInt(b) === 'number' && parseInt(b) >= 0) b = parseInt(b);
-					else if(typeof b === 'function') c = b, b = this.duration;
+					else if(typeof b === 'function') (c = b, b = this.duration);
 					else b = this.duration;
 					var h = a.offsetHeight;
-					a.style.cssText = 'overflow: hidden; min-height: 0; height: 0;';
-					var div = d.createElement('div');
-					div.setAttribute('style', 'margin-top: -' + h + 'px; position: relative; min-height: 0; height: auto;');
-					div.innerHTML = a.innerHTML;
-					a.innerHTML = div.outerHTML;
-					a.style.height = '';
-					var callback = function() {
-						a.innerHTML = a.firstChild.innerHTML;
-						a.style.cssText = '';
-						if(c) c.call(a)
-					};
+					a.style.overflow = 'hidden';
+					a.firstChild.style.marginTop = -h + 'px';
 					b += (h / 1000) * b;
-					this.animate(a.firstChild, 'marginTop', 'px', -h, 0, b, callback)
+					var k = function k() {
+						return c ? c.call(a) : '';
+					};
+					this.animate(a.firstChild, 'marginTop', 'px', -h, 0, b, k)
 				} else if(typeof a === 'string') {
 					var els = d.querySelectorAll(a);
 					for(var i = 0; i < els.length; i++) {
@@ -1075,18 +1064,14 @@
 					}
 				}
 			},
-			animate: function(a, b, c, d, e, f, callback) {
+			animate: function(a, b, c, d, e, f, k) {
 				if(!a) return;
-				var g = Date.now(),
-					h = setInterval(function() {
-						var i = Math.min(1, (Date.now() - g) / f);
-						a.style[b] = (d + i * (e - d)) + c;
-						if(i === 1) {
-							clearInterval(h);
-							return callback(a);
-						}
-					}, 1);
-				a.style[b] = d + c
+				var g = Date.now();
+				this.timers[g] = setInterval(function() {
+					var i = Math.min(1, (Date.now() - g) / f);
+					a.style[b] = (d + i * (e - d)) + c;
+					1 === i ? (clearInterval(modx.animation.timers[g]), delete modx.animation.timers[g], k()) : ''
+				}, 13)
 			}
 		}
 	};
