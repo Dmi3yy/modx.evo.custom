@@ -1015,7 +1015,6 @@
 			x.send(f)
 		},
 		animation: {
-			timers: [],
 			duration: 300,
 			fadeIn: function(a, b, c) {
 
@@ -1032,10 +1031,9 @@
 					var h = a.offsetHeight;
 					a.style.overflow = 'hidden';
 					b += (h / 1000) * b;
-					var k = function() {
+					this.animate(a.firstChild, 'marginTop', 'px', 0, -h, b, function() {
 						return c ? c.call(a) : ''
-					};
-					this.animate(a.firstChild, 'marginTop', 'px', 0, -h, b, k)
+					}, 'slide')
 				} else if(typeof a === 'string') {
 					var els = d.querySelectorAll(a);
 					for(var i = 0; i < els.length; i++) {
@@ -1053,10 +1051,9 @@
 					a.style.overflow = 'hidden';
 					a.firstChild.style.marginTop = -h + 'px';
 					b += (h / 1000) * b;
-					var k = function k() {
+					this.animate(a.firstChild, 'marginTop', 'px', -h, 0, b, (function() {
 						return c ? c.call(a) : '';
-					};
-					this.animate(a.firstChild, 'marginTop', 'px', -h, 0, b, k)
+					}), 'slide')
 				} else if(typeof a === 'string') {
 					var els = d.querySelectorAll(a);
 					for(var i = 0; i < els.length; i++) {
@@ -1064,14 +1061,15 @@
 					}
 				}
 			},
-			animate: function(a, b, c, d, e, f, k) {
+			animate: function(a, b, c, d, e, f, k, l) {
 				if(!a) return;
 				var g = Date.now();
-				this.timers[g] = setInterval(function() {
+				clearInterval((!a.timers ? (a.timers = [], a.timers[l] = 0) : a.timers[l]));
+				a.timers[l] = setInterval(function() {
 					var i = Math.min(1, (Date.now() - g) / f);
 					a.style[b] = (d + i * (e - d)) + c;
-					1 === i ? (clearInterval(modx.animation.timers[g]), delete modx.animation.timers[g], k()) : ''
-				}, 13)
+					1 === i ? (clearInterval(a.timers[l]), k()) : ''
+				})
 			}
 		}
 	};
