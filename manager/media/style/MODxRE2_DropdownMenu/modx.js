@@ -211,9 +211,10 @@
 							parent = el.parentNode.firstChild.innerText.replace(/[\[|\]|{|}|\*|\+|?|\!|&|=|`]/g, ''),
 							name = el.innerText.replace(/[\[|\]|{|}|\*|\+|?|\!|&|=|`]/g, ''),
 							cls = el.className.replace(/cm-modx/, '');
-						if(parent && name) {
+						 if(parent && name) {
 							e.preventDefault();
 							modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
+								a: 'modxTagHelper',
 								parent: parent,
 								name: name,
 								class: cls
