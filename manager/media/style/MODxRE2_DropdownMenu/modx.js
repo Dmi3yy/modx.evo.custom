@@ -206,16 +206,16 @@
 				w.main.oncontextmenu = function(e) {
 					if(e.ctrlKey) return;
 					var el = e.target;
-					if(/modx/.test(el.className)) {
+					if(/modxTv|modxPlaceholder|modxChunk|modxSnippet|modxSnippetNoCache/.test(el.className)) {
 						var id = Date.now(),
-							parent = el.parentNode.firstChild.innerText.replace(/[\[|\]|{|}|\*|\+|?|\!|&|=|`]/g, ''),
+							//parent = el.parentNode.firstChild.innerText.replace(/[\[|\]|{|}|\*|\+|?|\!|&|=|`]/g, ''),
 							name = el.innerText.replace(/[\[|\]|{|}|\*|\+|?|\!|&|=|`]/g, ''),
 							cls = el.className.replace(/cm-modx/, '');
 						 if(parent && name) {
 							e.preventDefault();
 							modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
 								a: 'modxTagHelper',
-								parent: parent,
+								//parent: parent,
 								name: name,
 								class: cls
 							}, function(r) {
@@ -226,7 +226,7 @@
 									modx.tree.showPopup(id, '', '', '', '', e)
 								}
 							});
-							console.log("parent: " + parent + ", name: " + name + ", class: " + cls);
+							//console.log("parent: " + parent + ", name: " + name + ", class: " + cls);
 						}
 					}
 				}
