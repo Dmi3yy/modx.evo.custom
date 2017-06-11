@@ -206,12 +206,11 @@
 				w.main.oncontextmenu = function(e) {
 					if(e.ctrlKey) return;
 					var el = e.target;
-					if(/modx/.test(el.className) && !(/matchingbracket/.test(el.className))) {
+					if(/modx/.test(el.className)) {
 						var id = Date.now(),
 							parent = el.parentNode.firstChild.innerText.replace(/[\[|\]|{|}|\*|\+|?|\!|&|=|`]/g, ''),
 							name = el.innerText.replace(/[\[|\]|{|}|\*|\+|?|\!|&|=|`]/g, ''),
 							cls = el.className.replace(/cm-modx/, '');
-						el.id = 'node' + id;
 						if(parent && name) {
 							e.preventDefault();
 							modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
@@ -220,6 +219,7 @@
 								class: cls
 							}, function(r) {
 								if(r) {
+									el.id = 'node' + id;
 									el.dataset.contextmenu = r;
 									/*'{"header2":{"innerText":"' + el.parentNode.firstChild.innerText + '"}"header1":{"innerText":"' + el.innerText + '\"},"item1":{"innerHTML":"<i class=\'fa fa-eye fa-fw\'><\/i> Title","title":"Title","id":"item1","onclick":"alert(1)"}}';*/
 									modx.tree.showPopup(id, '', '', '', '', e)
