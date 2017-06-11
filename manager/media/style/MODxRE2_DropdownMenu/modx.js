@@ -199,7 +199,10 @@
 			init: function() {
 				this.stopWork();
 				this.scrollWork();
-				w.main.onclick = modx.hideDropDown;
+				this.contextmenu();
+				w.main.onclick = modx.hideDropDown
+			},
+			contextmenu: function() {
 				w.main.oncontextmenu = function(e) {
 					if(e.ctrlKey) return;
 					var el = e.target;
