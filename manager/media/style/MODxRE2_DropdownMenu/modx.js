@@ -299,6 +299,7 @@
 					d.body.appendChild(modx.resizer.mask);
 					d.onmousemove = modx.resizer.onMouseMove;
 					d.body.focus();
+					d.body.classList.add('resizer_move');
 					d.onselectstart = function() {
 						return false
 					};
@@ -338,6 +339,7 @@
 					modx.resizer.dragElement.style.background = '';
 					modx.resizer.dragElement.ondragstart = null;
 					modx.resizer.dragElement = null;
+					d.body.classList.remove('resizer_move');
 					d.body.removeChild(modx.resizer.mask);
 					d.onmousemove = null;
 					d.onselectstart = null
@@ -376,6 +378,46 @@
 			selectedObjectUrl: '',
 			init: function() {
 				this.restoreTree()
+			},
+			draggable: function() {
+				var els = d.querySelectorAll('#treeRoot a');
+				for(var i = 0; i < els.length; i++) {
+					els[i].onmousedown = this.onmousedown;
+					els[i].onmouseup = this.onmouseup;
+					els[i].ondragover = this.ondragover;
+					els[i].ondragleave = this.ondragleave;
+					els[i].ondrop = this.ondrop;
+				}
+			},
+			onmousedown: function(e) {
+				if(e.ctrlKey) {
+					this.draggable = false;
+					return;
+				} else {
+					this.draggable = true
+				}
+				this.ondragstart = modx.tree.ondragstart;
+			},
+			ondragstart: function(e) {
+				e.dataTransfer.setData("id", this.parentNode.id);
+			},
+			onmouseup: function(e) {
+				this.draggable = false
+			},
+			ondragover: function(e) {
+				e.preventDefault();
+				this.classList.add('dragover')
+			},
+			ondragleave: function(e) {
+				this.classList.remove('dragover')
+			},
+			ondrop: function(e) {
+				e.preventDefault();
+				var id = e.dataTransfer.getData("id");
+				var el = document.getElementById(id);
+				var parent = this.nextSibling ? this.parentNode.lastChild : this.parentNode;
+				parent.appendChild(el);
+				this.classList.remove('dragover')
 			},
 			toggleTheme: function(e) {
 				if(e.currentTarget.classList.contains('rotate180')) {
@@ -731,7 +773,8 @@
 				this.setItemToChange();
 				this.rpcNode = d.getElementById('treeRoot');
 				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2&id=' + this.itemToChange, function(r) {
-					modx.tree.rpcLoadData(r)
+					modx.tree.rpcLoadData(r);
+					//modx.tree.draggable()
 				})
 			},
 			expandTree: function() {
