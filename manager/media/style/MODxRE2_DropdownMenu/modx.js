@@ -223,7 +223,7 @@
 									modx.tree.showPopup(id, '', '', '', '', e)
 								}
 							});
-							console.log("name: " + name + ", class: " + type);
+							console.log("name: " + name + ", type: " + type);
 						}
 					}
 				}
@@ -501,113 +501,116 @@
 				e.preventDefault();
 				var node = e.view.document.getElementById('node' + a),
 					tree = d.getElementById('tree');
-
-				if(node.dataset.contextmenu) {
-					e.target.dataset.toggle = '#contextmenu';
-					//if(e.type === 'contextmenu') {
-					modx.hideDropDown(e);
-					//}
-					this.ctx = d.createElement('div');
-					this.ctx.id = 'contextmenu';
-					this.ctx.className = 'dropdown-menu';
-					d.getElementById(modx.frameset).appendChild(this.ctx);
-					this.setSelectedByContext(a);
-					var dataJson = JSON.parse(node.dataset.contextmenu);
-					for(var key in dataJson) {
-						if(dataJson.hasOwnProperty(key)) {
-							var item = d.createElement('div');
-							for(var k in dataJson[key]) {
-								if(dataJson[key].hasOwnProperty(k)) {
-									if(k.substring(0, 2) === 'on') {
-										var onEvent = dataJson[key][k];
-										item[k] = function() {
-											eval(onEvent)
+				if(node) {
+					if(node.dataset.contextmenu) {
+						e.target.dataset.toggle = '#contextmenu';
+						//if(e.type === 'contextmenu') {
+						modx.hideDropDown(e);
+						//}
+						this.ctx = d.createElement('div');
+						this.ctx.id = 'contextmenu';
+						this.ctx.className = 'dropdown-menu';
+						d.getElementById(modx.frameset).appendChild(this.ctx);
+						this.setSelectedByContext(a);
+						var dataJson = JSON.parse(node.dataset.contextmenu);
+						for(var key in dataJson) {
+							if(dataJson.hasOwnProperty(key)) {
+								var item = d.createElement('div');
+								for(var k in dataJson[key]) {
+									if(dataJson[key].hasOwnProperty(k)) {
+										if(k.substring(0, 2) === 'on') {
+											var onEvent = dataJson[key][k];
+											item[k] = function(onEvent) {
+												return function() {
+													eval(onEvent)
+												}
+											}(onEvent)
+										} else {
+											item[k] = dataJson[key][k]
 										}
-									} else {
-										item[k] = dataJson[key][k]
 									}
 								}
+								if(key.indexOf('header') === 0) item.className += ' menuHeader';
+								if(key.indexOf('item') === 0) item.className += ' menuLink';
+								if(key.indexOf('seperator') === 0 || key.indexOf('separator') === 0) item.className += ' seperator separator';
+								this.ctx.appendChild(item)
 							}
-							if(key.indexOf('header') === 0) item.className += ' menuHeader';
-							if(key.indexOf('item') === 0) item.className += ' menuLink';
-							if(key.indexOf('seperator') === 0 || key.indexOf('separator') === 0) item.className += ' seperator separator';
-							this.ctx.appendChild(item)
 						}
-					}
-					var bodyHeight = tree.offsetHeight - modx.config.menu_height;
-					var x = e.clientX > 0 ? e.clientX : e.pageX;
-					var y = e.clientY > 0 ? e.clientY : e.pageY;
-					if(e.view.name === "main") {
-						x += tree.offsetWidth
-					} else {
-						if(e.target.parentNode.parentNode.classList.contains('node')) {
-							x += 50;
-						}
-					}
-					if(x > e.view.innerWidth) {
-						x = e.view.innerWidth - this.ctx.offsetWidth;
-					}
-					if(y + this.ctx.offsetHeight / 2 > bodyHeight) {
-						y = bodyHeight - this.ctx.offsetHeight - 5
-					} else if(y - this.ctx.offsetHeight / 2 < tree.offsetTop) {
-						y = tree.offsetTop + 5
-					} else {
-						y = y - this.ctx.offsetHeight / 2
-					}
-					this.itemToChange = a;
-					this.selectedObjectName = b;
-					this.dopopup(this.ctx, x + 10, y);
-					this.ctx.classList.add('show')
-				} else {
-					var ctx = d.getElementById('mx_contextmenu');
-					e.target.dataset.toggle = '#mx_contextmenu';
-					//if(e.type === 'contextmenu') {
-					modx.hideDropDown(e);
-					//}
-					this.setSelectedByContext(a);
-					var i4 = d.getElementById('item4'),
-						i5 = d.getElementById('item5'),
-						i8 = d.getElementById('item8'),
-						i9 = d.getElementById('item9'),
-						i10 = d.getElementById('item10'),
-						i11 = d.getElementById('item11');
-					if(modx.permission.publish_document === 1) {
-						i9.style.display = 'block';
-						i10.style.display = 'block';
-						if(c === 1) i9.style.display = 'none';
-						else i10.style.display = 'none'
-					} else {
-						i5.style.display = 'none'
-					}
-					if(modx.permission.delete_document === 1) {
-						i4.style.display = 'block';
-						i8.style.display = 'block';
-						if(f === 1) {
-							i4.style.display = 'none';
-							i9.style.display = 'none';
-							i10.style.display = 'none'
+						var bodyHeight = tree.offsetHeight - modx.config.menu_height;
+						var x = e.clientX > 0 ? e.clientX : e.pageX;
+						var y = e.clientY > 0 ? e.clientY : e.pageY;
+						if(e.view.name === "main") {
+							x += tree.offsetWidth
 						} else {
-							i8.style.display = 'none'
+							if(e.target.parentNode.parentNode.classList.contains('node')) {
+								x += 50;
+							}
 						}
-					}
-					if(g === 1) i11.style.display = 'block';
-					else i11.style.display = 'none';
-					var bodyHeight = tree.offsetHeight + tree.offsetTop;
-					var x = e.clientX > 0 ? e.clientX : e.pageX;
-					var y = e.clientY > 0 ? e.clientY : e.pageY;
-					if(y + ctx.offsetHeight / 2 > bodyHeight) {
-						y = bodyHeight - ctx.offsetHeight - 5
-					} else if(y - ctx.offsetHeight / 2 < tree.offsetTop) {
-						y = tree.offsetTop + 5
+						if(x > e.view.innerWidth) {
+							x = e.view.innerWidth - this.ctx.offsetWidth;
+						}
+						if(y + this.ctx.offsetHeight / 2 > bodyHeight) {
+							y = bodyHeight - this.ctx.offsetHeight - 5
+						} else if(y - this.ctx.offsetHeight / 2 < tree.offsetTop) {
+							y = tree.offsetTop + 5
+						} else {
+							y = y - this.ctx.offsetHeight / 2
+						}
+						this.itemToChange = a;
+						this.selectedObjectName = b;
+						this.dopopup(this.ctx, x + 10, y);
+						this.ctx.classList.add('show')
 					} else {
-						y = y - ctx.offsetHeight / 2
+						var ctx = d.getElementById('mx_contextmenu');
+						e.target.dataset.toggle = '#mx_contextmenu';
+						//if(e.type === 'contextmenu') {
+						modx.hideDropDown(e);
+						//}
+						this.setSelectedByContext(a);
+						var i4 = d.getElementById('item4'),
+							i5 = d.getElementById('item5'),
+							i8 = d.getElementById('item8'),
+							i9 = d.getElementById('item9'),
+							i10 = d.getElementById('item10'),
+							i11 = d.getElementById('item11');
+						if(modx.permission.publish_document === 1) {
+							i9.style.display = 'block';
+							i10.style.display = 'block';
+							if(c === 1) i9.style.display = 'none';
+							else i10.style.display = 'none'
+						} else {
+							i5.style.display = 'none'
+						}
+						if(modx.permission.delete_document === 1) {
+							i4.style.display = 'block';
+							i8.style.display = 'block';
+							if(f === 1) {
+								i4.style.display = 'none';
+								i9.style.display = 'none';
+								i10.style.display = 'none'
+							} else {
+								i8.style.display = 'none'
+							}
+						}
+						if(g === 1) i11.style.display = 'block';
+						else i11.style.display = 'none';
+						var bodyHeight = tree.offsetHeight + tree.offsetTop;
+						var x = e.clientX > 0 ? e.clientX : e.pageX;
+						var y = e.clientY > 0 ? e.clientY : e.pageY;
+						if(y + ctx.offsetHeight / 2 > bodyHeight) {
+							y = bodyHeight - ctx.offsetHeight - 5
+						} else if(y - ctx.offsetHeight / 2 < tree.offsetTop) {
+							y = tree.offsetTop + 5
+						} else {
+							y = y - ctx.offsetHeight / 2
+						}
+						if(e.target.parentNode.parentNode.classList.contains('node')) x += 50;
+						this.itemToChange = a;
+						this.selectedObjectName = b;
+						this.dopopup(ctx, x + 10, y)
 					}
-					if(e.target.parentNode.parentNode.classList.contains('node')) x += 50;
-					this.itemToChange = a;
-					this.selectedObjectName = b;
-					this.dopopup(ctx, x + 10, y)
+					e.stopPropagation()
 				}
-				e.stopPropagation()
 			},
 			dopopup: function(el, a, b) {
 				if(this.selectedObjectName.length > 20) {

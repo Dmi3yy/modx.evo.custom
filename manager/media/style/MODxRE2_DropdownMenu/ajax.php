@@ -136,32 +136,38 @@ if(isset($action)) {
 						WHERE name="' . $name . '"
 						LIMIT 1');
 
-						$row = $modx->db->getRow($sql);
+						if($modx->db->getRecordCount($sql)) {
+							$row = $modx->db->getRow($sql);
+							$contextmenu = array(
+								'header1' => array(
+									'innerText' => $row['name']
+								),
+								'item1' => array(
+									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+									'id' => 'item1',
+									'onclick' => "window.main.location.href='index.php?a=22&id=" . $row['id'] . "'"
+								),
+								'seperator1' => '',
+								'item2' => array(
+									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description'],
+									'id' => 'item1',
+								),
+//								'item3' => array(
+//									'innerHTML' => '<i class="fa fa-book"></i> ' . $_lang["documentation"],
+//									'id' => 'item2',
+//									'onclick' => "alert(2)"
+//								)
+							);
+						} else {
+							$contextmenu = array(
+								'item1' => array(
+									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['add'],
+									'id' => 'item1',
+									'onclick' => "window.main.location.href='index.php?a=23'"
+								)
+							);
+						}
 
-						$contextmenu = array(
-							'header1' => array(
-								'innerText' => $name
-							),
-							'item1' => array(
-								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
-								'title' => 'Редактировать',
-								'id' => 'item1',
-								'onclick' => "window.loaction.href='index.php?a=22&id='" . $row['id'] . "'",
-							),
-							'seperator1' => '',
-							'item2' => array(
-								'innerHTML' => '<i class="fa fa-info"></i> <strong>2.0.5</strong> Completely template-driven and highly flexible menu builder',
-								'title' => 'Описание',
-								'id' => 'item1',
-								'onclick' => "alert(1)",
-							),
-							'item3' => array(
-								'innerHTML' => '<i class="fa fa-book"></i> Документация',
-								'title' => 'Документация',
-								'id' => 'item2',
-								'onclick' => "alert(1)",
-							),
-						);
 						break;
 					}
 					case 'Attribute' : {
@@ -226,7 +232,7 @@ if(isset($action)) {
 						break;
 					}
 				}
-				echo json_encode($contextmenu);
+				echo json_encode($contextmenu, JSON_UNESCAPED_UNICODE);
 				break;
 			}
 		}
