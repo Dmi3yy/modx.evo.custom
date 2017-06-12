@@ -145,90 +145,118 @@ if(isset($action)) {
 								'item1' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
 									'id' => 'item1',
-									'onclick' => "window.main.location.href='index.php?a=22&id=" . $row['id'] . "'"
+									'onclick' => "modx.openWindow({url: 'index.php?a=22&id=" . $row['id'] . "'})"
 								),
+
+								//
 								'seperator1' => '',
 								'item2' => array(
 									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description'],
 									'id' => 'item1',
-								),
-//								'item3' => array(
-//									'innerHTML' => '<i class="fa fa-book"></i> ' . $_lang["documentation"],
-//									'id' => 'item2',
-//									'onclick' => "alert(2)"
-//								)
+								)
 							);
 						} else {
 							$contextmenu = array(
+								'header1' => array(
+									'innerText' => $name
+								),
 								'item1' => array(
-									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['add'],
+									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_snippet'],
 									'id' => 'item1',
-									'onclick' => "window.main.location.href='index.php?a=23'"
+									'onclick' => "modx.openWindow({url: 'index.php?a=23&name=".$name."'})"
+
 								)
 							);
 						}
 
 						break;
 					}
-					case 'Attribute' : {
-						$contextmenu = array(
-							'header1' => array(
-								'innerText' => $name
-							),
-							'item1' => array(
-								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Параметр сниппета',
-								'title' => 'Редактировать',
-								'id' => 'item1',
-								'onclick' => "alert(1)",
-							),
-						);
-						break;
-					}
 					case 'AttributeValue':
 					case 'Chunk' : {
-						$contextmenu = array(
-							'header1' => array(
-								'innerText' => 'Чанк'
-								//$name,
-							),
-							'item1' => array(
-								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
-								'title' => 'Редактировать',
-								'id' => 'item1',
-								'onclick' => "alert(1)",
-							),
-						);
+
+						$sql = $modx->db->query('SELECT *
+						FROM ' . $modx->getFullTableName('site_htmlsnippets') . '
+						WHERE name="' . $name . '"
+						LIMIT 1');
+
+						if($modx->db->getRecordCount($sql)) {
+							$row = $modx->db->getRow($sql);
+							$contextmenu = array(
+								'header1' => array(
+									'innerText' => $row['name']
+								),
+								'item1' => array(
+									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+									'id' => 'item1',
+									'onclick' => "modx.openWindow({url: 'index.php?a=78&id=" . $row['id'] . "'})"
+								),
+
+								//
+								'seperator1' => '',
+								'item2' => array(
+									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description'],
+									'id' => 'item1',
+								)
+							);
+						} else {
+							$contextmenu = array(
+								'header1' => array(
+									'innerText' => $name
+								),
+								'item1' => array(
+									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_htmlsnippet'],
+									'id' => 'item1',
+									'onclick' => "modx.openWindow({url: 'index.php?a=77&name=".$name."'})"
+
+								)
+							);
+						}
+
 						break;
 					}
 					case 'Placeholder' :
 					case 'Tv' : {
-						$contextmenu = array(
-							'header1' => array(
-								'innerText' => 'ТВ'
-								//$name,
-							),
-							'item1' => array(
-								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
-								'title' => 'Редактировать',
-								'id' => 'item1',
-								'onclick' => "alert(1)",
-							),
-						);
-						break;
-					}
-					case 'Config' : {
-						$contextmenu = array(
-							'header1' => array(
-								'innerText' => 'Системый параметр'
-								//$name,
-							),
-							'item1' => array(
-								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
-								'title' => 'Редактировать',
-								'id' => 'item1',
-								'onclick' => "alert(1)",
-							),
-						);
+						$default_field = array('type','contentType','pagetitle','longtitle','description','alias','link_attributes','published','pub_date','unpub_date','parent','isfolder','introtext','content','richtext','template','menuindex','searchable','cacheable','createdon','createdby','editedon','editedby','deleted','deletedon','deletedby','publishedon','publishedby','menutitle','donthit','haskeywords','hasmetatags','privateweb','privatemgr','content_dispo','hidemenu','alias_visible');
+						if (in_array($name, $default_field)) return;
+
+						$sql = $modx->db->query('SELECT *
+						FROM ' . $modx->getFullTableName('site_tmplvars') . '
+						WHERE name="' . $name . '"
+						LIMIT 1');
+
+						if($modx->db->getRecordCount($sql)) {
+							$row = $modx->db->getRow($sql);
+							$contextmenu = array(
+								'header1' => array(
+									'innerText' => $row['name']
+								),
+								'item1' => array(
+									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+									'id' => 'item1',
+									'onclick' => "modx.openWindow({url: 'index.php?a=301&id=" . $row['id'] . "'})"
+								),
+
+								//
+								'seperator1' => '',
+								'item2' => array(
+									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description'],
+									'id' => 'item1',
+								)
+							);
+						} else {
+							$contextmenu = array(
+								'header1' => array(
+									'innerText' => $name
+								),
+								'item1' => array(
+									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_tmplvars'],
+									'id' => 'item1',
+									'onclick' => "modx.openWindow({url: 'index.php?a=300&name=".$name."'})"
+
+								)
+							);
+						}
+
 						break;
 					}
 				}
