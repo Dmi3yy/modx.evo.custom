@@ -147,8 +147,6 @@ if(isset($action)) {
 									'id' => 'item1',
 									'onclick' => "modx.openWindow({url: 'index.php?a=22&id=" . $row['id'] . "'})"
 								),
-
-								//
 								'seperator1' => '',
 								'item2' => array(
 									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description'],
@@ -163,8 +161,7 @@ if(isset($action)) {
 								'item1' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_snippet'],
 									'id' => 'item1',
-									'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=".$name."'})"
-
+									'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=" . $name . "'})"
 								)
 							);
 						}
@@ -190,8 +187,6 @@ if(isset($action)) {
 									'id' => 'item1',
 									'onclick' => "modx.openWindow({url: 'index.php?a=78&id=" . $row['id'] . "'})"
 								),
-
-								//
 								'seperator1' => '',
 								'item2' => array(
 									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description'],
@@ -206,8 +201,7 @@ if(isset($action)) {
 								'item1' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_htmlsnippet'],
 									'id' => 'item1',
-									'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=".$name."'})"
-
+									'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
 								)
 							);
 						}
@@ -216,8 +210,49 @@ if(isset($action)) {
 					}
 					case 'Placeholder' :
 					case 'Tv' : {
-						$default_field = array('type','contentType','pagetitle','longtitle','description','alias','link_attributes','published','pub_date','unpub_date','parent','isfolder','introtext','content','richtext','template','menuindex','searchable','cacheable','createdon','createdby','editedon','editedby','deleted','deletedon','deletedby','publishedon','publishedby','menutitle','donthit','haskeywords','hasmetatags','privateweb','privatemgr','content_dispo','hidemenu','alias_visible');
-						if (in_array($name, $default_field)) return;
+						$default_field = array(
+							'type',
+							'contentType',
+							'pagetitle',
+							'longtitle',
+							'description',
+							'alias',
+							'link_attributes',
+							'published',
+							'pub_date',
+							'unpub_date',
+							'parent',
+							'isfolder',
+							'introtext',
+							'content',
+							'richtext',
+							'template',
+							'menuindex',
+							'searchable',
+							'cacheable',
+							'createdon',
+							'createdby',
+							'editedon',
+							'editedby',
+							'deleted',
+							'deletedon',
+							'deletedby',
+							'publishedon',
+							'publishedby',
+							'menutitle',
+							'donthit',
+							'haskeywords',
+							'hasmetatags',
+							'privateweb',
+							'privatemgr',
+							'content_dispo',
+							'hidemenu',
+							'alias_visible'
+						);
+
+						if(in_array($name, $default_field)) {
+							return;
+						}
 
 						$sql = $modx->db->query('SELECT *
 						FROM ' . $modx->getFullTableName('site_tmplvars') . '
@@ -235,8 +270,6 @@ if(isset($action)) {
 									'id' => 'item1',
 									'onclick' => "modx.openWindow({url: 'index.php?a=301&id=" . $row['id'] . "'})"
 								),
-
-								//
 								'seperator1' => '',
 								'item2' => array(
 									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description'],
@@ -251,8 +284,7 @@ if(isset($action)) {
 								'item1' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_tmplvars'],
 									'id' => 'item1',
-									'onclick' => "modx.openWindow({url: 'index.php?a=300&itemname=".$name."'})"
-
+									'onclick' => "modx.openWindow({url: 'index.php?a=300&itemname=" . $name . "'})"
 								)
 							);
 						}
