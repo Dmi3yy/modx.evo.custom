@@ -163,7 +163,7 @@ if(isset($action)) {
 								'item1' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_snippet'],
 									'id' => 'item1',
-									'onclick' => "modx.openWindow({url: 'index.php?a=23&name=".$name."'})"
+									'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=".$name."'})"
 
 								)
 							);
@@ -206,7 +206,7 @@ if(isset($action)) {
 								'item1' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_htmlsnippet'],
 									'id' => 'item1',
-									'onclick' => "modx.openWindow({url: 'index.php?a=77&name=".$name."'})"
+									'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=".$name."'})"
 
 								)
 							);
@@ -251,7 +251,7 @@ if(isset($action)) {
 								'item1' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_tmplvars'],
 									'id' => 'item1',
-									'onclick' => "modx.openWindow({url: 'index.php?a=300&name=".$name."'})"
+									'onclick' => "modx.openWindow({url: 'index.php?a=300&itemname=".$name."'})"
 
 								)
 							);
