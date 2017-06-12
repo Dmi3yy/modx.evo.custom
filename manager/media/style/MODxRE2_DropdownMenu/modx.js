@@ -208,25 +208,22 @@
 					var el = e.target;
 					if(/modxTv|modxPlaceholder|modxChunk|modxSnippet|modxSnippetNoCache/.test(el.className)) {
 						var id = Date.now(),
-							//parent = el.parentNode.firstChild.innerText.replace(/[\[|\]|{|}|\*|\+|?|\!|&|=|`]/g, ''),
 							name = el.innerText.replace(/[\[|\]|{|}|\*|\+|?|\!|&|=|`]/g, ''),
-							cls = el.className.replace(/cm-modx/, '');
-						 if(parent && name) {
+							type = el.className.replace(/cm-modx/, '');
+						if(name) {
 							e.preventDefault();
 							modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
 								a: 'modxTagHelper',
-								//parent: parent,
 								name: name,
-								class: cls
+								type: type
 							}, function(r) {
 								if(r) {
 									el.id = 'node' + id;
 									el.dataset.contextmenu = r;
-									/*'{"header2":{"innerText":"' + el.parentNode.firstChild.innerText + '"}"header1":{"innerText":"' + el.innerText + '\"},"item1":{"innerHTML":"<i class=\'fa fa-eye fa-fw\'><\/i> Title","title":"Title","id":"item1","onclick":"alert(1)"}}';*/
 									modx.tree.showPopup(id, '', '', '', '', e)
 								}
 							});
-							//console.log("parent: " + parent + ", name: " + name + ", class: " + cls);
+							console.log("name: " + name + ", class: " + type);
 						}
 					}
 				}

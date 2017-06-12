@@ -123,100 +123,112 @@ if(isset($action)) {
 		}
 
 		case 'modxTagHelper': {
-			switch($_REQUEST['class']) {
-				case 'Snippet': 
-				case 'SnippetNoCache': {
-					$contextmenu = array(
-                        'header1' => array(
-                                'innerText' => $_REQUEST['name']
-                        ),
-                        'item1' => array(
-                                'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
-                                'title' => 'Редактировать',
-                                'id' => 'item1',
-                                'onclick' => "alert(1)",
-                        ),
-                        'seperator1' => '',
-                        'item2' => array(
-                                'innerHTML' => '<i class="fa fa-info"></i> <strong>2.0.5</strong> Completely template-driven and highly flexible menu builder',
-                                'title' => 'Описание',
-                                'id' => 'item1',
-                                'onclick' => "alert(1)",
-                        ),
-                        'item3' => array(
-                                'innerHTML' => '<i class="fa fa-book"></i> Документация',
-                                'title' => 'Документация',
-                                'id' => 'item2',
-                                'onclick' => "alert(1)",
-                        ),  
-                    );
-					break;
+			$name = isset($_REQUEST['name']) ? $_REQUEST['name'] : false;
+			$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : false;
+
+			if($name && $type) {
+				switch($type) {
+					case 'Snippet':
+					case 'SnippetNoCache': {
+
+						$sql = $modx->db->query('SELECT *
+						FROM ' . $modx->getFullTableName('site_snippets') . '
+						WHERE name="' . $name . '"
+						LIMIT 1');
+
+						$row = $modx->db->getRow($sql);
+
+						$contextmenu = array(
+							'header1' => array(
+								'innerText' => $name
+							),
+							'item1' => array(
+								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
+								'title' => 'Редактировать',
+								'id' => 'item1',
+								'onclick' => "window.loaction.href='index.php?a=22&id='" . $row['id'] . "'",
+							),
+							'seperator1' => '',
+							'item2' => array(
+								'innerHTML' => '<i class="fa fa-info"></i> <strong>2.0.5</strong> Completely template-driven and highly flexible menu builder',
+								'title' => 'Описание',
+								'id' => 'item1',
+								'onclick' => "alert(1)",
+							),
+							'item3' => array(
+								'innerHTML' => '<i class="fa fa-book"></i> Документация',
+								'title' => 'Документация',
+								'id' => 'item2',
+								'onclick' => "alert(1)",
+							),
+						);
+						break;
+					}
+					case 'Attribute' : {
+						$contextmenu = array(
+							'header1' => array(
+								'innerText' => $name
+							),
+							'item1' => array(
+								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Параметр сниппета',
+								'title' => 'Редактировать',
+								'id' => 'item1',
+								'onclick' => "alert(1)",
+							),
+						);
+						break;
+					}
+					case 'AttributeValue':
+					case 'Chunk' : {
+						$contextmenu = array(
+							'header1' => array(
+								'innerText' => 'Чанк'
+								//$name,
+							),
+							'item1' => array(
+								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
+								'title' => 'Редактировать',
+								'id' => 'item1',
+								'onclick' => "alert(1)",
+							),
+						);
+						break;
+					}
+					case 'Placeholder' :
+					case 'Tv' : {
+						$contextmenu = array(
+							'header1' => array(
+								'innerText' => 'ТВ'
+								//$name,
+							),
+							'item1' => array(
+								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
+								'title' => 'Редактировать',
+								'id' => 'item1',
+								'onclick' => "alert(1)",
+							),
+						);
+						break;
+					}
+					case 'Config' : {
+						$contextmenu = array(
+							'header1' => array(
+								'innerText' => 'Системый параметр'
+								//$name,
+							),
+							'item1' => array(
+								'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
+								'title' => 'Редактировать',
+								'id' => 'item1',
+								'onclick' => "alert(1)",
+							),
+						);
+						break;
+					}
 				}
-				case 'Attribute' : {
-					$contextmenu = array(
-                        'header1' => array(
-                                'innerText' => $_REQUEST['name']
-                        ),
-                        'item1' => array(
-                                'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Параметр сниппета',
-                                'title' => 'Редактировать',
-                                'id' => 'item1',
-                                'onclick' => "alert(1)",
-                        ),
-                        
-                    );
-					break;
-				}
-				case 'AttributeValue': 
-				case 'Chunk' : {
-					$contextmenu = array(
-                        'header1' => array(
-                                'innerText' => 'Чанк'//$_REQUEST['name'],
-                        ),
-                        'item1' => array(
-                                'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
-                                'title' => 'Редактировать',
-                                'id' => 'item1',
-                                'onclick' => "alert(1)",
-                        ),
-                        
-                    );
-					break;
-				}
-				case 'Placeholder' :
-				case 'Tv' : {
-					$contextmenu = array(
-                        'header1' => array(
-                                'innerText' => 'ТВ'//$_REQUEST['name'],
-                        ),
-                        'item1' => array(
-                                'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
-                                'title' => 'Редактировать',
-                                'id' => 'item1',
-                                'onclick' => "alert(1)",
-                        ),
-                        
-                    );
-					break;
-				}
-				case 'Config' : {
-					$contextmenu = array(
-                        'header1' => array(
-                                'innerText' => 'Системый параметр'//$_REQUEST['name'],
-                        ),
-                        'item1' => array(
-                                'innerHTML' => '<i class="fa fa-pencil-square-o"></i> Редактировать',
-                                'title' => 'Редактировать',
-                                'id' => 'item1',
-                                'onclick' => "alert(1)",
-                        ),
-                        
-                    );
-					break;
-				}
+				echo json_encode($contextmenu);
+				break;
 			}
-			echo json_encode($contextmenu);
-			break;
 		}
 	}
 }
