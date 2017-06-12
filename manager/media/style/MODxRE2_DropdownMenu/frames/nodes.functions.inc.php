@@ -17,10 +17,13 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 	global $modx_textdir;
 
 	// setup spacer
-	$spacer = '';
+	$level = 0;
+	$spacer = '<span class="indent">';
 	for($i = 2; $i <= $indent; $i++) {
-		$spacer .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		$spacer .= '<i></i>';
+		$level++;
 	}
+	$spacer .= '</span>';
 
 	// manage order-by
 	if(!isset($_SESSION['tree_sortby']) && !isset($_SESSION['tree_sortdir'])) {
@@ -113,7 +116,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					'element_type' => $_lang["lock_element_type_7"],
 					'lasthit_df' => $rowLock['lasthit_df']
 				));
-				$lockedByUser = ' <span title="' . $title . '" class="editResource">' . $_style['tree_preview_resource'] . '</span>';
+				$lockedByUser = '<span title="' . $title . '" class="editResource">' . $_style['tree_preview_resource'] . '</span>';
 			} else {
 				$title = $modx->parseText($_lang["lock_element_locked_by"], array(
 					'element_type' => $_lang["lock_element_type_7"],
@@ -121,9 +124,9 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 					'lasthit_df' => $rowLock['lasthit_df']
 				));
 				if($modx->hasPermission('remove_locks')) {
-					$lockedByUser = ' <span onclick="modx.tree.unlockElement(7, ' . $row['id'] . ', this);return false;" title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
+					$lockedByUser = '<span onclick="modx.tree.unlockElement(7, ' . $row['id'] . ', this);return false;" title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
 				} else {
-					$lockedByUser = ' <span title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
+					$lockedByUser = '<span title="' . $title . '" class="lockedResource">' . $_style['icons_secured'] . '</span>';
 				}
 			}
 		}
@@ -184,7 +187,8 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			'tree_minusnode' => $_style['tree_minusnode'],
 			'tree_plusnode' => $_style['tree_plusnode'],
 			'spacer' => $spacer,
-			'subMenuState' => ''
+			'subMenuState' => '',
+			'level' => $level
 		);
 
 		$ph = $data;
@@ -555,7 +559,8 @@ function getTplSingleNode() {
 	return '<div id="node[+id+]"[+contextmenu+]><a class="[+treeNodeClass+]"
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\');"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
-        oncontextmenu="document.getElementById(\'p[+id+]\').onclick(event);">[+spacer+]<span
+        oncontextmenu="document.getElementById(\'p[+id+]\').onclick(event);"
+        data-level="[+level+]">[+spacer+]<span
         id="p[+id+]"
         onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
         oncontextmenu="this.onclick(event);return false;"
@@ -569,7 +574,8 @@ function getTplFolderNode() {
 	return '<div id="node[+id+]"[+contextmenu+]><a class="[+treeNodeClass+]"
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\',[+showChildren+],[+openFolder+]);"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
-        oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);">[+spacer+]<span
+        oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);"
+        data-level="[+level+]">[+spacer+]<span
         id="s[+id+]"
         class="toggle"
         data-icon-expanded="[+tree_plusnode+]"
