@@ -597,11 +597,12 @@ input[type="email"]:focus, input[type="password"]:focus, input[type="search"]:fo
 .widget-wrapper { border: 1px solid #ccc; }
 .widget-wrapper .widget-title { border: 1px solid #ccc; border-width: 0 0 1px 0; }
 .widget-stage .label, .widget-stage .label-info { background-color: transparent; color: inherit; font-size: 12px; }
-.widget-stage .btn { background-color: transparent !important; color: #3d5764 !important; border-color: #ccc !important; padding: 1px 4px; }
+.widget-stage .btn { background-color: rgba(0, 0, 0, 0) !important; color: #3d5764 !important; border-color: #ccc !important; padding: 0 .25em; line-height: 2em; height: 1.8em; }
 .widget-stage .btn:hover { border-color: #1377c5 !important; }
 .widget-stage .btn .fa { font-size: 13px }
 #modxrecent_widget table { margin-bottom: 0; }
 #modxrecent_widget .table-condensed > tbody > tr > td { padding: 2px 3px; }
+#modxrecent_widget .table-condensed > tbody > tr > td.hiddenRow { padding: 0; border: none }
 #modxrecent_widget table ul { margin: 0; padding: 0; }
 #modxrecent_widget table li { padding: 3px 5px; }
 #modxrecent_widget table li:last-child { border-bottom-width: 0; padding-bottom: 0; }

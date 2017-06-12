@@ -266,7 +266,7 @@ box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1); }
 #treeRoot .toggle:hover { background-color: rgba(255, 255, 255, 0.5); }
 #treeRoot .toggle .fa { margin: 0; width: auto; }
 #treeRoot .fa { position: relative; margin-right: 1px; width: 1em; font-size: 1.1em; text-align: center }
-#treeRoot .fa > .fa-lock, .fa > .fa-lock { position: absolute; left: 0; bottom: 0; text-align: left; color: rgba(0, 0, 0, 0.65); font-size: 0.7em; }
+#treeRoot .fa > .fa-lock, .fa > .fa-lock { position: absolute; left: 0; bottom: 0; text-align: left; font-size: 0.7em; color: #FFC107; -webkit-text-stroke: 1px rgba(0, 0, 0, 0.39); text-stroke: 1px rgba(0, 0, 0, 0.39); }
 #treeRoot .fa-file, #treeRoot .fa-file-o, #treeRoot .fa-file-code, #treeRoot .fa-file-code-o { }
 #treeRoot .fa-folder, #treeRoot .fa-folder-open, #treeRoot .fa-folder-o, #treeRoot .fa-folder-open-o, #treeRoot .fa-exclamation-triangle { margin-top: 0.1em; text-align: left }
 #treeRoot .fa-link { margin-right: 0; font-size: 0.8em }
@@ -287,7 +287,7 @@ box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1); }
 .dark #treeRoot a.unpublished .title { color: #d0726b }
 .dark #treeRoot .toggle:hover { background-color: rgba(255, 255, 255, 0.19); }
 .dark #treeRoot .fa { color: #bcbec0; }
-.dark #treeRoot .fa > .fa-lock, .fa > .fa-lock { color: #FFC107; -webkit-text-stroke: 1px rgba(0, 0, 0, 0.39); text-stroke: 1px rgba(0, 0, 0, 0.39); }
+.dark #treeRoot .fa > .fa-lock, .fa > .fa-lock { color: #FFC107; }
 /* */
 #floater { display: none; position: fixed; max-width: 340px; padding: 15px 15px 10px; top: 65px; left: 0; background: #fff; -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); z-index: 1000; }
 .open > #floater { display: block }
