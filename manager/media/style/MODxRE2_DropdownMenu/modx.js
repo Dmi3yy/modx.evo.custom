@@ -205,9 +205,9 @@
 				w.main.oncontextmenu = function(e) {
 					if(e.ctrlKey) return;
 					var el = e.target;
-					if(/modxTv|modxPlaceholder|modxChunk|modxSnippet|modxSnippetNoCache/.test(el.className)) {
+					if(/modxTv|modxPlaceholder|modxAttributeValue|modxChunk|modxSnippet|modxSnippetNoCache/.test(el.className)) {
 						var id = Date.now(),
-							name = el.innerText.replace(/[\[|\]|{|}|\*|\+|?|\!|&|=|`]/g, ''),
+							name = el.innerText.replace(/[\[|\]|{|}|\*||\#|\+|?|\!|&|=|`]/g, ''),
 							type = el.className.replace(/cm-modx/, '');
 						if(name) {
 							e.preventDefault();
