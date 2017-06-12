@@ -212,12 +212,12 @@ if(is_array($evtOut)) {
 }
 
 $widgets['welcome'] = array(
-		'menuindex' =>'10',
-		'id' => 'welcome',
-		'cols' => 'col-sm-6',
-		'icon' => 'fa-home',
-		'title' => '[%welcome_title%]',
-		'body' => '<div class="wm_buttons">
+	'menuindex' => '10',
+	'id' => 'welcome',
+	'cols' => 'col-sm-6',
+	'icon' => 'fa-home',
+	'title' => '[%welcome_title%]',
+	'body' => '<div class="wm_buttons">
 							<!--@IF:[[#hasPermission?key=new_user]] OR [[#hasPermission?key=edit_user]]-->
 							<span class="wm_button" style="border:0">
 								<a class="hometblink" href="index.php?a=75"><i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i><br />
@@ -281,39 +281,39 @@ $widgets['welcome'] = array(
 								<!--@ENDIF-->
 							</table>
 						</div>'
-	);
+);
 $widgets['onlineinfo'] = array(
-		'menuindex' =>'20',
-		'id' => 'onlineinfo',
-		'cols' => 'col-sm-6',
-		'icon' => 'fa-user',
-		'title' => '[%onlineusers_title%]',
-		'body' => '<div class="userstable">[+OnlineInfo+]</div>'
-	);
+	'menuindex' => '20',
+	'id' => 'onlineinfo',
+	'cols' => 'col-sm-6',
+	'icon' => 'fa-user',
+	'title' => '[%onlineusers_title%]',
+	'body' => '<div class="userstable">[+OnlineInfo+]</div>'
+);
 $widgets['recentinfo'] = array(
-		'menuindex' =>'30',
-		'id' => 'modxrecent_widget',
-		'cols' => 'col-sm-12',
-		'icon' => 'fa-pencil-square-o',
-		'title' => '[%activity_title%]',
-		'body' => '<div class="widget-stage">[+RecentInfo+]</div>'
-	);
+	'menuindex' => '30',
+	'id' => 'modxrecent_widget',
+	'cols' => 'col-sm-12',
+	'icon' => 'fa-pencil-square-o',
+	'title' => '[%activity_title%]',
+	'body' => '<div class="widget-stage">[+RecentInfo+]</div>'
+);
 $widgets['news'] = array(
-		'menuindex' =>'40',
-		'id' => 'news',
-		'cols' => 'col-sm-6',
-		'icon' => 'fa-rss',
-		'title' => '[%modx_news_title%]',
-		'body' => '<div style="max-height:200px;overflow-y: scroll;">[+modx_news_content+]</div>'
-	);
+	'menuindex' => '40',
+	'id' => 'news',
+	'cols' => 'col-sm-6',
+	'icon' => 'fa-rss',
+	'title' => '[%modx_news_title%]',
+	'body' => '<div style="max-height:200px;overflow-y: scroll;">[+modx_news_content+]</div>'
+);
 $widgets['security'] = array(
-		'menuindex' =>'50',
-		'id' => 'security',
-		'cols' => 'col-sm-6',
-		'icon' => 'fa-exclamation-triangle',
-		'title' => '[%security_notices_title%]',
-		'body' => '<div style="max-height:200px;overflow-y: scroll;">[+modx_security_notices_content+]</div>'
-	);
+	'menuindex' => '50',
+	'id' => 'security',
+	'cols' => 'col-sm-6',
+	'icon' => 'fa-exclamation-triangle',
+	'title' => '[%security_notices_title%]',
+	'body' => '<div style="max-height:200px;overflow-y: scroll;">[+modx_security_notices_content+]</div>'
+);
 
 // invoke OnManagerWelcomeHome event
 $sitewidgets = $modx->invokeEvent("OnManagerWelcomeHome", array('widgets' => $widgets));
@@ -323,14 +323,14 @@ if(is_array($sitewidgets)) {
 }
 
 usort($widgets, function ($a, $b) {
-    return $a['menuindex'] - $b['menuindex'];
+	return $a['menuindex'] - $b['menuindex'];
 });
 
 $tpl = getTplWidget();
 $output = '';
-foreach($widgets as $widget){
-	$output .= $modx->parseText($tpl, $widget); 
-} 
+foreach($widgets as $widget) {
+	$output .= $modx->parseText($tpl, $widget);
+}
 $ph['widgets'] = $output;
 
 // invoke event OnManagerWelcomeRender
@@ -407,7 +407,7 @@ function getTplWidget() { // recent document info
 				</div>
 			</div>
 		</div>';
-}	
+}
 
 function getRecentInfo() { // recent document info
 	global $modx;
@@ -482,7 +482,7 @@ function getRecentInfoList() {
 			if($ph['deleted'] == 0) {
 				$delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" class="btn btn-xs btn-danger"  title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]"><i class="fa fa-trash fa-fw"></i></a> ';
 			} else {
-				$delete_btn = '<a onclick="return confirm(\'[%["confirm_undelete%]\')" class="btn btn-xs btn-success"  title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
+				$delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" class="btn btn-xs btn-success"  title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
 			}
 			$ph['delete_btn'] = str_replace('[+id+]', $docid, $delete_btn);
 		} else {
@@ -570,6 +570,14 @@ function getStartUpScript() {
             });
             myAjax.request();
         }
+        
+		(function($) {
+			$('[data-toggle="collapse"]').click(function(el) {
+				if($(this).data('target')) {
+					$($(this).data('target')).slideToggle(150)
+				}
+			});
+		})(jQuery);
 
         </script>
 JS;
