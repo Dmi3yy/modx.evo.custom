@@ -48,6 +48,10 @@ if(!$MODX_positionSideBar) {
 
 if(isset($modx->pluginCache['ElementsInTree'])) {
 	$body_class .= ' ElementsInTree';
+} else {
+	if(!empty($_COOKIE['MODX_themeColor'])) {
+		$body_class .= ' ' . $_COOKIE['MODX_themeColor'];
+	}
 }
 
 $unlockTranslations = array(
@@ -166,7 +170,8 @@ if($user['which_browser'] == 'default') {
 				for(var c in a) a[c] = a[c];
 			},
 			extended: function(a) {
-				for(var b in a) this[b] = a[b]; delete a[b]
+				for(var b in a) this[b] = a[b];
+				delete a[b]
 			},
 			openedArray: [],
 			lockedElementsTranslation: <?php echo json_encode($unlockTranslations) . "\n" ?>

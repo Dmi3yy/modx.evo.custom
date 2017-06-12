@@ -4,7 +4,7 @@
 html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }
 html { font-size: 13px; line-height: 1.5; color: #333; }
-body { font-family: Arial, sans-serif !important; font-size: 13px !important; line-height: 1.5; color: #333; background: #f2f2f2 !important; -webkit-font-smoothing: subpixel-antialiased !important; /*-webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden;*/ }
+body { font-family: Arial, sans-serif !important; font-size: 13px !important; line-height: 1.5; color: #333; background: #FAFAFA !important; -webkit-font-smoothing: subpixel-antialiased !important; /*-webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden;*/ }
 body[ondragstart*=""] { overflow-y: scroll }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
@@ -50,6 +50,7 @@ td { vertical-align: top; }
 .fa { position: relative; }
 .container { width: 100% }
 .tab-pane.row, .sectionBody.container { margin-left: 0; margin-right: 0 }
+.rotate180 { -webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); }
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1, h2, h3, h4, h5, h6, .subTitle { font-weight: 500; }
 h1 { font-size: 1.8em; line-height: 35px; padding: 15px; margin: 0; }
@@ -77,7 +78,7 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 .gridster > * { -webkit-transition: height .4s, width .4s !important; -moz-transition: height .4s !important; -o-transition: height .4s !important; -ms-transition: height .4s !important; transition: height .4s !important; }
 .fa { font-size: 14px; width: 1.2em; text-align: center; vertical-align: baseline }
 /* frameSet*/
-#tree, #main { position: absolute; background-color: #f2f2f2 !important }
+#tree, #main { position: absolute; background-color: #FAFAFA !important }
 #main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
 #tree { z-index: 1; width: 320px; top: 35px; left: 0; bottom: 0; overflow: hidden; }
 #main { z-index: 2; top: 35px; left: 320px; right: 0; bottom: 0; }
@@ -236,51 +237,52 @@ a img { border: 0; }
 .row1, .row2, .row3 { background-color: #fff; color: #333; }
 .row2 { background-color: #fff; }
 .row3 { background-color: #f5f5f5; }
-.treeframebody { height: 100%; border-right: 1px solid #cfd2d6; background-color: #ebebeb; -webkit-box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1);
+.treeframebody { height: 100%; border-right: 1px solid #cfd2d6; -webkit-box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1);
 box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1); }
 #treeMenu { overflow: hidden; padding: 0 0.1em; height: 2.3em; background-color: #dfdfdf; border-bottom: 1px solid #cfd2d6 }
-#treeMenu .treeButton { display: inline-block; cursor: pointer; color: #3d5764; border: 1px solid transparent; border-radius: 2px; margin: 1px 0; padding: 0 0.2em; line-height: 2em; white-space: nowrap; text-align: center; vertical-align: middle; }
-#treeMenu .treeButton:hover:not(.disabled) { border-color: #6e7a86; background-color: #fff; background-color: rgba(255, 255, 255, .5); cursor: pointer }
+#treeMenu .treeButton { display: inline-block; cursor: pointer; color: #3d5764; padding: 0 0.3em; height: 2.3em; line-height: 2.5em; white-space: nowrap; text-align: center; vertical-align: middle; }
+#treeMenu .treeButton:hover:not(.disabled) { border-color: #6e7a86; background-color: rgba(255, 255, 255, .5); cursor: pointer }
 #treeMenu .treeButton:not(.disabled):active { background-color: #d5d5d5 }
-#treeMenu .treeButton .fa { width: 1.2em; font-size: 1.1em; }
+#treeMenu .treeButton .fa { width: 1.2em; height: 1.2em; line-height: 1.2em; font-size: 1em; }
 #treeMenu .treeButton.disabled { color: #777; opacity: 0.5 }
 #treeHolder { position: relative; z-index: 1; cursor: default; overflow: auto; height: 100%; max-height: calc(100% - 30px); white-space: nowrap }
 #treeHolder .rootNode { padding: 0.2em 0.5em; cursor: pointer; }
-#treeRoot a { display: block; text-decoration: none; padding: 1px 0 1px 2.2em; color: #39515d; font-size: 1em; cursor: default }
+#treeRoot a { position: relative; display: block; text-decoration: none; padding: 1px 0 1px 2.2em; font-size: 1em; color: #333; cursor: default }
 #treeRoot a:hover, #treeRoot a.current { background-color: rgba(33, 150, 243, 0.1) }
 #treeRoot a small { margin: 0 0.8em 0 0.2em }
 #treeRoot a.selected { background-color: rgba(0, 0, 0, 0.1); }
-#treeRoot a .title { padding: 0 0.2em }
-#treeRoot a .title { color: #068ada; }
+#treeRoot a .title { padding: 0 0.2em; color: #1377c5; }
 #treeRoot a.deleted .title { color: #A52A2A; text-decoration: line-through; }
 #treeRoot a.unpublished .title { color: #B68282; font-style: italic; }
-#treeRoot a.hidemenu .title { color: #39515d; }
+#treeRoot a.hidemenu * { color: #616161; }
 #treeRoot a.protected .title { color: #aaa; }
 #treeRoot a .lockedResource { cursor: pointer; }
 #treeRoot .indent { float: left; height: 1em; width: 1.5em }
 #treeRoot .empty { color: #aaa; cursor: default; }
-#treeRoot .toggle { position: relative; vertical-align: top; cursor: pointer }
-#treeRoot .toggle .fa { position: absolute; top: -0.15em; left: -1.1em; font-size: 1.4em }
+#treeRoot .toggle { display: inline-block; position: relative; margin: 1px 0.3em 1px -1.5em; width: 1.3em; height: 1.3em; text-align: center; vertical-align: top; cursor: pointer; border-radius: 50px }
+#treeRoot .toggle:hover { background-color: rgba(255, 255, 255, 0.5); }
+#treeRoot .toggle .fa { margin: 0; width: auto; }
 #treeRoot .fa { position: relative; margin-right: 1px; width: 1em; font-size: 1.1em; text-align: center }
 #treeRoot .fa > .fa-lock, .fa > .fa-lock { position: absolute; left: 0; bottom: 0; text-align: left; color: rgba(0, 0, 0, 0.65); font-size: 0.7em; }
 #treeRoot .fa-file, #treeRoot .fa-file-o, #treeRoot .fa-file-code, #treeRoot .fa-file-code-o { }
-#treeRoot .fa-folder, #treeRoot .fa-folder-open, #treeRoot .fa-folder-o, #treeRoot .fa-folder-open-o, #treeRoot .fa-exclamation-triangle { text-align: left }
+#treeRoot .fa-folder, #treeRoot .fa-folder-open, #treeRoot .fa-folder-o, #treeRoot .fa-folder-open-o, #treeRoot .fa-exclamation-triangle { margin-top: 0.1em; text-align: left }
 #treeRoot .fa-link { margin-right: 0; font-size: 0.8em }
 #treeRoot #binFull { display: none }
 /* treeRoot dark */
-/*#treeMenu { background-color: #1d2023; border-bottom: 1px solid rgba(0, 0, 0, 0.22); }
-#treeMenu .treeButton { color: #bbb; border: none; border-radius: 0; line-height: 2.1em }
-#treeMenu .treeButton:hover:not(.disabled) { background-color: #2d3033; }
-#tree .treeframebody { background-color: #181f27 }
-#treeHolder .rootNode { color: #f3f3f3; }
-#treeRoot a { color: #b3b3b3; }
-#treeRoot a:hover, #treeRoot a.current { background-color: rgba(255, 255, 255, 0.15); }
-#treeRoot a.selected { background-color: rgba(0, 142, 255, 0.19); }
-#treeRoot a .title { color: #7cb2dc; }
-#treeRoot a.hidemenu .title { color: #a2a2a2; }
-#treeRoot a.unpublished .title { color: #d0726b }
-#treeRoot .fa { color: #bcbec0; }
-#treeRoot .fa > .fa-lock, .fa > .fa-lock { color: #FFC107; -webkit-text-stroke: 1px rgba(0, 0, 0, 0.39); }*/
+.dark #treeMenu { background-color: #1d2023; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+.dark #treeMenu .treeButton { color: #bbb; }
+.dark #treeMenu .treeButton:hover:not(.disabled) { background-color: #2d3033; }
+.dark #tree .treeframebody { background-color: #181f27 }
+.dark #treeHolder .rootNode { color: #f3f3f3; }
+.dark #treeRoot a { color: #b3b3b3; }
+.dark #treeRoot a:hover, .dark #treeRoot a.current { background-color: rgba(255, 255, 255, 0.15); }
+.dark #treeRoot a.selected { background-color: rgba(0, 142, 255, 0.19); }
+.dark #treeRoot a .title { color: #7cb2dc; }
+.dark #treeRoot a.hidemenu .title { color: #a2a2a2; }
+.dark #treeRoot a.unpublished .title { color: #d0726b }
+.dark #treeRoot .toggle:hover { background-color: rgba(255, 255, 255, 0.19); }
+.dark #treeRoot .fa { color: #bcbec0; }
+.dark #treeRoot .fa > .fa-lock, .fa > .fa-lock { color: #FFC107; -webkit-text-stroke: 1px rgba(0, 0, 0, 0.39); text-stroke: 1px rgba(0, 0, 0, 0.39); }
 /* */
 #floater { display: none; position: fixed; max-width: 340px; padding: 15px 15px 10px; top: 65px; left: 0; background: #fff; -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2); z-index: 1000; }
 .open > #floater { display: block }
@@ -422,20 +424,23 @@ fieldset#preview h2.tab { float: right; }
 #actions .actionButtons li { position: relative; float: left; margin-right: 3px; border: none }
 #actions .actionButtons li a, #actions .actionButtons .plus { float: left; padding: 0 10px !important; height: 32px; line-height: 30px; -webkit-user-select: none; user-select: none; }
 #actions .actionButtons li:last-child { margin: 0 }
-#actions .actionButtons .plus { overflow: hidden; margin: 0 0 0 -2px; width: 35px; border-radius: 0 3px 3px 0 !important; text-align: center; cursor: default; font: normal normal normal 0/30px FontAwesome }
+#actions #Button1 a { width: 100%; text-align: left; }
+#actions .actionButtons .plus { overflow: hidden; float: right; margin: -32px 0 0 0; width: 35px; border-radius: 0 3px 3px 0 !important; text-align: center; cursor: default; font: normal normal normal 0/30px FontAwesome }
 #actions .actionButtons .plus::before { content: "\f107"; font-size: 14px }
 #actions .actionButtons .show .plus::before { content: "\f106"; }
 #actions .actionButtons .dropdown-menu { display: none; position: absolute; z-index: -1; left: auto; right: 0; top: 100%; width: 100%; min-width: 35px; margin: -2px 0 0; padding: 2px 0 0; text-align: left; background-color: #fff; border: 1px solid #32ab9a; border-top: none; border-radius: 0 0 3px 3px; overflow: hidden; }
 #actions .actionButtons .show > .dropdown-menu { display: block }
 #actions .actionButtons .dropdown-menu span { display: block; padding: 0 10px; height: 32px; line-height: 30px; border: none; border-top: 1px solid #f2f2f2; cursor: pointer; }
 #actions .actionButtons .dropdown-menu span:hover { background-color: #fbfbfb; }
+#actions select#stay { display: block; position: relative; z-index: -1; clear: both; width: auto; height: 0; padding: 0 10px; margin: -100% 0 -32px 0; font-size: 1em; opacity: 0; visibility: hidden; }
 @media (max-width: 900px) {
 #actions .actionButtons li a, #actions .actionButtons .dropdown-menu span { font-size: 0 }
 #actions .actionButtons li a .fa, #actions .actionButtons .dropdown-menu span .fa { display: inline-block; font-size: 14px; line-height: 30px }
 #actions .actionButtons .dropdown-menu { width: 35px }
-}
-#actions select#stay { width: auto }
+#actions #Button1 a { margin: 0; width: auto }
+#actions .actionButtons .plus { margin: 0 0 0 -2px }
 #actions select#stay { display: none }
+}
 .rtl #actions { left: 10px; text-align: left; }
 .actionButtons { margin: 0; padding: 0; background: none; width: auto; white-space: nowrap; }
 .actionButtons li { float: left; margin: 0; padding: 0; list-style: none; }
@@ -798,8 +803,8 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 #ManageFiles #imageviewer { display: none; margin-top: 10px }
 #ManageFiles #imageviewer img { display: inline-block; max-width: 100%; height: auto; border: 1px dashed #ccc !important }
 #ManageFiles #uploader { margin-top: 20px }
-#ManageFiles tr.editRow td { background-color:#F2DEDE !important; }
-#ManageFiles tr.viewRow td { background-color:#DFF0D8 !important; }
+#ManageFiles tr.editRow td { background-color: #F2DEDE !important; }
+#ManageFiles tr.viewRow td { background-color: #DFF0D8 !important; }
 #content.phptextarea { width: 100%; height: 400px }
 #FilesTable { border-collapse: collapse; }
 #FilesTable tr, #FilesTable td { padding: 2px !important; }

@@ -19,8 +19,7 @@
 			id: 'mainMenu',
 			init: function() {
 				//console.log('modx.mainMenu.init()');
-				var mm = d.getElementById('mainMenu'),
-					el, els, i, ii;
+				var mm = d.getElementById('mainMenu'), el, els, i, ii;
 				mm.onclick = function(e) {
 					el = e.target.closest('a');
 					if(el) {
@@ -377,6 +376,17 @@
 			selectedObjectUrl: '',
 			init: function() {
 				this.restoreTree()
+			},
+			toggleTheme: function(e) {
+				if(e.currentTarget.classList.contains('rotate180')) {
+					e.currentTarget.classList.remove('rotate180');
+					d.body.classList.remove('dark');
+					d.cookie = 'MODX_themeColor='
+				} else {
+					e.currentTarget.classList.add('rotate180');
+					d.body.classList.add('dark');
+					d.cookie = 'MODX_themeColor=dark'
+				}
 			},
 			toggleNode: function(e, a, b, c) {
 				e = e || w.event;
