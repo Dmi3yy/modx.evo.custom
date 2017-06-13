@@ -277,7 +277,7 @@ fieldset#preview h2.tab { float: right; }
 #actions .actionButtons .plus { overflow: hidden; float: right; margin: -32px 0 0 0; width: 35px; border-radius: 0 3px 3px 0 !important; text-align: center; cursor: default; font: normal normal normal 0/30px FontAwesome }
 #actions .actionButtons .plus::before { content: "\f107"; font-size: 14px }
 #actions .actionButtons .show .plus::before { content: "\f106"; }
-#actions .actionButtons .dropdown-menu { display: none; position: absolute; z-index: -1; left: auto; right: 0; top: 100%; width: 100%; min-width: 35px; margin: -2px 0 0; padding: 2px 0 0; text-align: left; background-color: #fff; border: 1px solid #32ab9a; border-top: none; border-radius: 0 0 3px 3px; overflow: hidden; }
+#actions .actionButtons .dropdown-menu { display: none; position: absolute; z-index: -1; left: auto; right: 0; top: 100%; width: 100%; min-width: 35px; margin: -2px 0 0; padding: 2px 0 0; text-align: left; font-size: 1em; background-color: #fff; border: 1px solid #32ab9a; border-top: none; border-radius: 0 0 3px 3px; overflow: hidden; }
 #actions .actionButtons .show > .dropdown-menu { display: block }
 #actions .actionButtons .dropdown-menu span { display: block; padding: 0 10px; height: 32px; line-height: 30px; border: none; border-top: 1px solid #f2f2f2; cursor: pointer; }
 #actions .actionButtons .dropdown-menu span:hover { background-color: #fbfbfb; }
@@ -698,6 +698,7 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .mce-container, .mce-container-body { box-sizing: border-box !important }
 /* codeMirror */
 .CodeMirror pre { word-break: break-all !important; }
+.CodeMirror > div:first-child > textarea { opacity: 0 }
 /* bootstrap */
 .dropdown-menu { display: none }
 .show > .dropdown-menu { display: block }
