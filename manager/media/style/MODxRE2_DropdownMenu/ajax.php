@@ -211,6 +211,7 @@ if(isset($action)) {
 					case 'Placeholder' :
 					case 'Tv' : {
 						$default_field = array(
+							'id',
 							'type',
 							'contentType',
 							'pagetitle',
