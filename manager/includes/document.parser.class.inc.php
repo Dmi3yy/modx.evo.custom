@@ -2056,8 +2056,8 @@ class DocumentParser {
             $source = $this->ignoreCommentedTagsContent($source);
             $source = $this->mergeConditionalTagsContent($source);
             
-            $source = $this->mergeDocumentContent($source);
             $source = $this->mergeSettingsContent($source);
+            $source = $this->mergeDocumentContent($source);
             $source = $this->mergeChunkContent($source);
             $source = $this->mergeDocumentMETATags($source);
             $source = $this->evalSnippets($source);
