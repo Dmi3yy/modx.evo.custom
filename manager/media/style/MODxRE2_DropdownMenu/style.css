@@ -100,7 +100,7 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 #mainMenu .nav > li.active > a, #mainMenu .nav > li.active.hover > a { color: #fff; background-color: rgba(255, 255, 255, 0.07) }
 #mainMenu .nav > li:hover, #mainMenu .nav > li.hover > a, #searchform .label_searchid:hover, #mainMenu .nav #bars a:hover { background-color: rgba(0, 0, 0, 0); color: #f3f3f3 }
 #mainMenu .nav > li li a { white-space: nowrap; color: #39545e }
-#mainMenu .nav > li li a:hover, #mainMenu .nav > li.active:hover > a { color: #fff }
+#mainMenu .nav > li li a.hover, #mainMenu .nav > li.active.hover > a { color: #fff }
 #mainMenu .account .username { display: inline-block; margin-right: 0.833rem }
 #mainMenu .account .icon { float: right; border-radius: 50%; overflow: hidden; width: 30px; height: 30px; margin: 2px -2px 0 0; line-height: 30px; text-align: center; vertical-align: middle; background: no-repeat 50% 50%; background-size: cover; }
 #mainMenu .account .icon .fa { width: 30px; height: 30px; }
@@ -112,12 +112,13 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 #mainMenu .nav > li > ul.sub-menu { display: none; left: 15rem; /*opacity: 0; visibility: hidden; transition: all .2s; */ }
 #mainMenu .nav > li > ul.sub-menu.show { display: none !important }
 #mainMenu .nav > li.hover > ul.sub-menu.show { display: block !important; /* opacity: 1; visibility: visible;*/ }
-#mainMenu .nav > li > ul a, #mainMenu .nav > li > ul span { display: block; position: relative; padding: 0 20px 0 10px; margin-top: -1px; line-height: 33px; text-decoration: none; border-top: 1px solid rgba(0, 0, 0, 0.05); border-bottom: 1px solid rgba(0, 0, 0, 0); color: #39545e }
-#mainMenu .nav > li > ul a:hover, #mainMenu .nav > li > ul > li.hover > a { color: #fff; background-color: #1976D2; border-bottom-color: rgba(0, 0, 0, 0.05); }
+#mainMenu .nav > li > ul a, #mainMenu .nav > li > ul span { display: block; position: relative; padding: 0 2.1em 0 0.875em; margin-top: -1px; line-height: 33px; text-decoration: none; border-top: 1px solid rgba(0, 0, 0, 0.05); border-bottom: 1px solid rgba(0, 0, 0, 0); color: #39545e }
+#mainMenu .nav > li > ul > li.toggle-dropdown > a::after { content: "\f105"; position: absolute; top: 0.6em; right: 0.6em; font: normal normal normal 1.2em/1 FontAwesome; }
+#mainMenu .nav > li > ul > li.hover > a { color: #fff; background-color: #1976D2; border-bottom-color: rgba(0, 0, 0, 0.05); }
 #mainMenu .nav > li > ul a .fa { margin-right: 0.833rem; width: 1.25rem; text-align: center; }
 #mainMenu .nav > li > ul span { text-align: center; font-size: 11px; color: #999; border-bottom-color: rgba(0, 0, 0, 0); }
 #mainMenu .nav > li > ul > li.selected a::before { content: ''; position: absolute; right: 3px; top: 3px; width: 6px; height: 6px; background-color: #FFC107; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%; }
-#mainMenu .nav a small { vertical-align: 2px }
+#mainMenu .nav a small { display: inline-block; margin-bottom: -2px }
 #statusbar { position: absolute; overflow: hidden; padding: 0 10px; height: 35px; line-height: 35px; font-size: 11px; white-space: nowrap; }
 #statusbar .fa { font-size: 11px }
 #statusbar #buildText, #statusbar #workText { display: none }

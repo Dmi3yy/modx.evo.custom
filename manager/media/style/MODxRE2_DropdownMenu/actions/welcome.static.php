@@ -572,7 +572,7 @@ function getStartUpScript() {
         }
         
 		(function($) {
-			$('[data-toggle="collapse"]').click(function(el) {
+			$('[data-toggle="collapse"]').click(function() {
 				if($(this).data('target')) {
 					$($(this).data('target')).slideToggle(150)
 				}
