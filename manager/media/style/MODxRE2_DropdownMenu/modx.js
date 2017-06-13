@@ -560,7 +560,7 @@
 				if(e.ctrlKey) return;
 				e.preventDefault();
 				var	tree = d.getElementById('tree'),
-					node = e.view.document.body.getElementById('node' + a);
+					node = e.view.document.getElementById('node' + a);
 				if(node) {
 					if(node.dataset.contextmenu) {
 						e.target.dataset.toggle = '#contextmenu';
