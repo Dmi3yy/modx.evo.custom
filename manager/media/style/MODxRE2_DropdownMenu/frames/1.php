@@ -314,7 +314,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 		<?php include('tree.php'); ?>
 	</div>
 	<div id="main">
-		<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="modx.main.init()"></iframe>
+		<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="modx.main.init();window.location.hash = this.contentWindow.location.search;"></iframe>
 	</div>
 	<div id="resizer">
 		<a id="hideMenu">
@@ -452,6 +452,11 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 				title: randomNum
 			})
 		};
+
+		if(window.location.hash) {
+	    	var url = 'index.php' + window.location.hash.substring(1); 
+	    	window.open(url, "main");
+		}
 	</script>
 
 	<?php
