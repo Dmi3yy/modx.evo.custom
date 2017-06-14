@@ -6,6 +6,9 @@
 			if(!localStorage.getItem('MODX_lastPositionSideBar')) {
 				localStorage.setItem('MODX_lastPositionSideBar', this.config.tree_width)
 			}
+			if(w.location.hash) {
+				w.open('index.php' + w.location.hash.substring(1), "main");
+			}
 			this.tree.init();
 			this.mainMenu.init();
 			this.resizer.init();
@@ -200,7 +203,8 @@
 				this.stopWork();
 				this.scrollWork();
 				this.contextmenu();
-				w.main.onclick = modx.hideDropDown
+				w.main.onclick = modx.hideDropDown;
+				w.location.hash = w.main.frameElement.contentWindow.location.search;
 			},
 			contextmenu: function() {
 				w.main.oncontextmenu = function(e) {
