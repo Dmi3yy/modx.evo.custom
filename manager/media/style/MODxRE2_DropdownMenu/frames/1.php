@@ -108,7 +108,7 @@ if($user['which_browser'] == 'default') {
 				theme: "<?php echo $modx->config['manager_theme'] ?>",
 				which_browser: "<?php echo $user['which_browser'] ?>",
 				layout: <?php echo (int) $manager_layout ?>,
-				textdir: "<?php echo $modx_textdir ?>",
+				textdir: "<?php echo $modx_textdir ?>"
 			},
 			lang: {
 				already_deleted: "<?php echo $_lang['already_deleted'] ?>",
@@ -161,10 +161,12 @@ if($user['which_browser'] == 'default') {
 				edit_template: <?php echo $modx->hasPermission('edit_template') ? 1 : 0 ?>,
 				new_document: <?php echo $modx->hasPermission('new_document') ? 1 : 0 ?>,
 				publish_document: <?php echo $modx->hasPermission('publish_document') ? 1 : 0 ?>
+
 			},
 			plugins: {
 				ElementsInTree: <?php echo isset($modx->pluginCache['ElementsInTree']) ? 1 : 0 ?>,
 				EVOmodal: <?php echo isset($modx->pluginCache['EVO.modal']) ? 1 : 0 ?>
+
 			},
 			extend: function(a, b) {
 				for(var c in a) a[c] = a[c];
@@ -174,7 +176,7 @@ if($user['which_browser'] == 'default') {
 				delete a[b]
 			},
 			openedArray: [],
-			lockedElementsTranslation: <?php echo json_encode($unlockTranslations) . "\n" ?>
+			lockedElementsTranslation: <?php echo json_encode($unlockTranslations, JSON_UNESCAPED_UNICODE) . "\n" ?>
 		};
 		<?php
 		$opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));

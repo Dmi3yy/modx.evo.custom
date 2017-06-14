@@ -297,5 +297,46 @@ if(isset($action)) {
 				break;
 			}
 		}
+
+		case 'movedocument' : {
+			$id = !empty($_REQUEST['id']) ? (int) $_REQUEST['id'] : '';
+			$parent = isset($_REQUEST['parent']) ? (int) $_REQUEST['parent'] : 0;
+			$menuindex = isset($_REQUEST['menuindex']) ? (int) $_REQUEST['menuindex'] : 0;
+
+			// set parent
+			if($id && $parent >= 0) {
+				// находим старого родителя
+				$parentOld = $modx->db->getValue($modx->db->select('parent', $modx->getFullTableName('site_content'), 'id=' . $id));
+
+				// устанавливаем нового родителя
+				$modx->db->update(array(
+					'parent' => $parent
+				), $modx->getFullTableName('site_content'), 'id=' . $id);
+				// устанавливаем родителю isfolder = 1
+				$modx->db->update(array(
+					'isfolder' => 1
+				), $modx->getFullTableName('site_content'), 'id=' . $parent);
+
+				if($parent != $parentOld) {
+					// проверяем остались ли дочерние ресурсы у родителя и меняем значение isfolder
+					if($modx->db->getRecordCount($modx->db->select('id', $modx->getFullTableName('site_content'), 'parent=' . $parentOld))) {
+						$modx->db->update(array(
+							'isfolder' => 1
+						), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
+					} else {
+						$modx->db->update(array(
+							'isfolder' => 0
+						), $modx->getFullTableName('site_content'), 'id=' . $parentOld);
+					}
+				}
+			}
+
+			// set menuindex
+			if($menuindex >= 0) {
+
+			}
+
+			break;
+		}
 	}
 }
