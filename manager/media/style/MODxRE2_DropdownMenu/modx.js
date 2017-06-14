@@ -382,6 +382,7 @@
 			selectedObject: 0,
 			selectedObjectDeleted: 0,
 			selectedObjectUrl: '',
+			drag: false,
 			init: function() {
 				this.restoreTree()
 			},
@@ -409,44 +410,55 @@
 			ondragstart: function(e) {
 				e.dataTransfer.effectAllowed = "all";
 				e.dataTransfer.dropEffect = "all";
-				e.dataTransfer.setData("text", this.id);
+				e.dataTransfer.setData("text", this.id.substr(4));
 			},
 			ondragenter: function(e) {
+				if(d.getElementById(modx.tree.itemToChange) === (this.parentNode.closest('#' + modx.tree.itemToChange) || this.parentNode)) {
+					this.parentNode.className = '';
+					e.dataTransfer.effectAllowed = "none";
+					e.dataTransfer.dropEffect = "none";
+					modx.tree.drag = false;
+				} else {
+					this.parentNode.className = 'dragenter';
+					e.dataTransfer.effectAllowed = "copy";
+					e.dataTransfer.dropEffect = "copy";
+					modx.tree.drag = true;
+				}
 				e.preventDefault();
 			},
 			ondragover: function(e) {
-				e.preventDefault()
-				if(this.parentNode.closest('#' + modx.tree.itemToChange) || this.parentNode === d.getElementById(modx.tree.itemToChange)) {
-					e.dataTransfer.effectAllowed = "none";
-					e.dataTransfer.dropEffect = "none";
-					this.parentNode.classList.remove('dragenter');
-					this.parentNode.classList.remove('dragafter');
-					this.parentNode.classList.remove('dragbefore')
-				} else {
-					this.parentNode.classList.add('dragover');
+				if(modx.tree.drag) {
 					var a = e.clientY;
 					var b = parseInt(this.getBoundingClientRect().top);
 					var c = (a - b);
-					if(c > this.offsetHeight / 3 && c < this.offsetHeight / 1.51) {
-						e.dataTransfer.effectAllowed = "copy";
-						e.dataTransfer.dropEffect = "copy";
-						this.parentNode.classList.add('dragenter');
-						this.parentNode.classList.remove('dragafter');
-						this.parentNode.classList.remove('dragbefore')
-					} else {
+					if(c > this.offsetHeight / 1.51) {
+						//this.parentNode.className = 'dragafter';
+						this.parentNode.classList.add('dragafter');
+						this.parentNode.classList.remove('dragbefore');
+						this.parentNode.classList.remove('dragenter');
 						e.dataTransfer.effectAllowed = "link";
 						e.dataTransfer.dropEffect = "link";
-						if(c < this.offsetHeight / 3) {
-							this.parentNode.classList.add('dragbefore');
-							this.parentNode.classList.remove('dragafter');
-							this.parentNode.classList.remove('dragenter')
-						} else {
-							this.parentNode.classList.add('dragafter');
-							this.parentNode.classList.remove('dragbefore');
-							this.parentNode.classList.remove('dragenter')
-						}
+					} else if(c < this.offsetHeight / 3) {
+						//this.parentNode.className = 'dragbefore';
+						this.parentNode.classList.add('dragbefore');
+						this.parentNode.classList.remove('dragafter');
+						this.parentNode.classList.remove('dragenter');
+						e.dataTransfer.effectAllowed = "link";
+						e.dataTransfer.dropEffect = "link";
+					} else {
+						//this.parentNode.className = 'dragenter';
+						this.parentNode.classList.add('dragenter');
+						this.parentNode.classList.remove('dragafter');
+						this.parentNode.classList.remove('dragbefore');
+						e.dataTransfer.effectAllowed = "copy";
+						e.dataTransfer.dropEffect = "copy";
 					}
+				} else {
+					e.dataTransfer.effectAllowed = "none";
+					e.dataTransfer.dropEffect = "none";
+					modx.tree.drag = false;
 				}
+				e.preventDefault()
 			},
 			ondragleave: function(e) {
 				this.parentNode.className = '';
@@ -455,70 +467,73 @@
 			},
 			ondrop: function(e) {
 				var el = d.getElementById(modx.tree.itemToChange),
+					els = null,
 					id = modx.tree.itemToChange.substr(4),
 					parent = 0,
-					menuindex = 0,
+					menuindex = [],
 					level = 0,
-					indent = el.firstChild.querySelector('.indent');
+					indent = el.firstChild.querySelector('.indent'),
+					i = 0;
 				indent.innerHTML = '';
 				if(this.parentNode.classList.contains('dragenter')) {
 					parent = parseInt(this.parentNode.id.substr(4));
 					level = parseInt(this.dataset.level) + 1;
-					for(var i = 0; i < level; i++) indent.innerHTML += '<i></i>';
-					el.firstChild.dataset.level = level;
+					for(i = 0; i < level; i++) indent.innerHTML += '<i></i>';
 					if(this.nextSibling) {
 						if(this.nextSibling.innerHTML) {
 							this.nextSibling.appendChild(el)
 						} else {
 							el.parentNode.removeChild(el)
 						}
+						els = this.parentNode.lastChild.children;
+						for(i = 0; i < els.length; i++) menuindex[i] = els[i].id.substr(4);
 					} else {
-						var div = d.createElement('div');
-						this.parentNode.appendChild(div);
-						div.appendChild(el);
+						el.parentNode.removeChild(el);
+						d.getElementById('p' + parent).innerHTML = (parseInt(this.dataset.private) ? modx.style.tree_folder_secure : modx.style.tree_folder)
 					}
 					modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
 						a: 'movedocument',
 						id: id,
-						parent: parent
+						parent: parent,
+						menuindex: menuindex
 					}, function() {
 						modx.tree.restoreTree()
-					})
-					console.log('id: ' + id + ', parent: ' + parent);
+					});
+					//console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
 				}
 				if(this.parentNode.classList.contains('dragafter')) {
 					parent = this.parentNode.parentNode.parentNode.id ? parseInt(this.parentNode.parentNode.parentNode.id.substr(4)) : 0;
 					level = parseInt(this.dataset.level);
-					for(var i = 0; i < level; i++) indent.innerHTML += '<i></i>';
-					el.firstChild.dataset.level = level;
+					for(i = 0; i < level; i++) indent.innerHTML += '<i></i>';
 					this.parentNode.parentNode.insertBefore(el, this.parentNode.nextSibling);
-					menuindex = 0;
+					els = this.parentNode.parentNode.children;
+					for(i = 0; i < els.length; i++) menuindex[i] = els[i].id.substr(4);
 					modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
 						a: 'movedocument',
 						id: id,
 						parent: parent,
-						menuindex: 0
+						menuindex: menuindex
 					}, function() {
 						modx.tree.restoreTree()
-					})
-					console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
+					});
+					//console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
 				}
 				if(this.parentNode.classList.contains('dragbefore')) {
 					parent = this.parentNode.parentNode.parentNode.id ? parseInt(this.parentNode.parentNode.parentNode.id.substr(4)) : 0;
 					level = parseInt(this.dataset.level);
-					for(var i = 0; i < level; i++) indent.innerHTML += '<i></i>';
-					el.firstChild.dataset.level = level;
+					for(i = 0; i < level; i++) indent.innerHTML += '<i></i>';
 					this.parentNode.parentNode.insertBefore(el, this.parentNode);
-					menuindex = 0;
+					els = this.parentNode.parentNode.children;
+					for(i = 0; i < els.length; i++) menuindex[i] = els[i].id.substr(4);
 					modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
 						a: 'movedocument',
 						id: id,
 						parent: parent,
-						menuindex: 0
+						menuindex: menuindex
 					}, function() {
 						modx.tree.restoreTree()
-					})
-					console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
+					});
+					//console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
 				}
 				el.removeAttribute('draggable');
 				this.parentNode.className = '';
@@ -561,7 +576,7 @@
 						}
 						modx.get('index.php?a=1&f=nodes&indent=' + a + '&parent=' + b + '&expandAll=' + c + folderState, function(r) {
 							modx.tree.rpcLoadData(r);
-							//modx.tree.draggable()
+							modx.tree.draggable()
 						})
 					}
 					this.saveFolderState()
@@ -883,7 +898,7 @@
 				this.rpcNode = d.getElementById('treeRoot');
 				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2&id=' + this.itemToChange, function(r) {
 					modx.tree.rpcLoadData(r);
-					//modx.tree.draggable()
+					modx.tree.draggable()
 				})
 			},
 			expandTree: function() {
@@ -896,6 +911,7 @@
 				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=1&id=' + this.itemToChange, function(r) {
 					modx.tree.rpcLoadData(r);
 					modx.tree.saveFolderState();
+					modx.tree.draggable()
 				})
 			},
 			collapseTree: function() {
@@ -908,7 +924,8 @@
 				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=0&id=' + this.itemToChange, function(r) {
 					modx.openedArray = [];
 					modx.tree.saveFolderState();
-					modx.tree.rpcLoadData(r)
+					modx.tree.rpcLoadData(r);
+					modx.tree.draggable()
 				})
 			},
 			updateTree: function() {
@@ -921,7 +938,8 @@
 				var a = d.sortFrm;
 				var b = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + a.dt.value + '&tree_sortby=' + a.sortby.value + '&tree_sortdir=' + a.sortdir.value + '&tree_nodename=' + a.nodename.value + '&id=' + this.itemToChange + '&showonlyfolders=' + a.showonlyfolders.value;
 				modx.get('index.php?' + b, function(r) {
-					modx.tree.rpcLoadData(r)
+					modx.tree.rpcLoadData(r);
+					modx.tree.draggable()
 				})
 			},
 			getFolderState: function() {
