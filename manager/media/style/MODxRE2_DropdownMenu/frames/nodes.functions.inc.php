@@ -560,7 +560,9 @@ function getTplSingleNode() {
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\');"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         oncontextmenu="document.getElementById(\'p[+id+]\').onclick(event);"
-        data-level="[+level+]">[+spacer+]<span
+        data-level="[+level+]"
+        data-menuindex="[+menuindex+]"
+        data-parent="[+parent+]">[+spacer+]<span
         id="p[+id+]"
         onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
         oncontextmenu="this.onclick(event);return false;"
@@ -575,7 +577,9 @@ function getTplFolderNode() {
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\',[+showChildren+],[+openFolder+]);"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);"
-        data-level="[+level+]">[+spacer+]<span
+        data-level="[+level+]"
+        data-menuindex="[+menuindex+]"
+        data-parent="[+parent+]">[+spacer+]<span
         id="s[+id+]"
         class="toggle"
         data-icon-expanded="[+tree_plusnode+]"

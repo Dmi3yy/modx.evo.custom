@@ -109,7 +109,7 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 #mainMenu .account #newMail { display: none }
 #mainMenu .nav > li > ul { display: none; position: absolute; z-index: 1; left: auto; top: 100%; right: auto; min-width: 15rem; max-height: 400px; max-height: -webkit-calc(100vh - 35px) !important; max-height: calc(100vh - 35px) !important; margin: 0; padding: 0; overflow: auto; font-size: 1em; border: none; background-color: #fff; border-radius: 0; box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2) }
 #mainMenu .nav > li.hover > ul { display: block }
-#mainMenu .nav > li > ul.sub-menu { display: none; left: 15rem; /*opacity: 0; visibility: hidden; transition: all .2s; */ }
+#mainMenu .nav > li > ul.sub-menu { display: none; left: 15rem; margin-left: -0.1em; /*opacity: 0; visibility: hidden; transition: all .2s; */ }
 #mainMenu .nav > li > ul.sub-menu.show { display: none !important }
 #mainMenu .nav > li.hover > ul.sub-menu.show { display: block !important; /* opacity: 1; visibility: visible;*/ }
 #mainMenu .nav > li > ul a, #mainMenu .nav > li > ul span { display: block; position: relative; padding: 0 2.1em 0 0.875em; margin-top: -1px; line-height: 33px; text-decoration: none; border-top: 1px solid rgba(0, 0, 0, 0.05); border-bottom: 1px solid rgba(0, 0, 0, 0); color: #39545e }
@@ -249,11 +249,12 @@ box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1); }
 #treeMenu .treeButton.disabled { color: #777; opacity: 0.5 }
 #treeHolder { position: relative; z-index: 1; cursor: default; overflow: auto; height: 100%; max-height: calc(100% - 30px); white-space: nowrap }
 #treeHolder .rootNode { padding: 0.2em 0.5em; cursor: pointer; }
-#treeRoot a { position: relative; display: block; text-decoration: none; padding: 1px 0 1px 2.2em; font-size: 1em; color: #333; cursor: default }
+#treeRoot a { position: relative; display: block; clear: both; text-decoration: none; padding: 0.1em 0 0.1em 2.2em; font-size: 1em; color: #333; cursor: default }
 #treeRoot a:hover, #treeRoot a.current { background-color: rgba(33, 150, 243, 0.1) }
 #treeRoot a small { margin: 0 0.8em 0 0.2em }
-#treeRoot a.selected { background-color: rgba(0, 0, 0, 0.1); }
-#treeRoot a.dragover::after { content: ''; display: block; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background-color: rgba(0, 0, 0, 0.1) }
+#treeRoot a.selected, #treeRoot .dragenter > a { background-color: rgba(0, 0, 0, 0.1); }
+#treeRoot .dragafter > a .indent::after, #treeRoot .dragbefore > a .indent::before { content: "\f0da"; display: block; position: absolute; right: 0.1em; bottom: -0.5em; height: 1em; font: normal normal normal 1em/1em FontAwesome; }
+#treeRoot .dragbefore > a .indent::before { bottom: auto; top: -0.5em; }
 #treeRoot a .title { padding: 0 0.2em; color: #1377c5; }
 #treeRoot a.deleted .title { color: #A52A2A; text-decoration: line-through; }
 #treeRoot a.unpublished .title { color: #B68282; font-style: italic; }
@@ -261,7 +262,8 @@ box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1); }
 #treeRoot a.protected .title { color: #aaa; }
 #treeRoot a .lockedResource { cursor: pointer; }
 #treeRoot a .editResource { margin-left: 0.2em }
-#treeRoot .indent i { float: left; height: 1.3em; width: 1.5em }
+#treeRoot .indent { position: relative; float: left; height: 1.5em; }
+#treeRoot .indent i { float: left; height: 1.2em; width: 1.5em }
 #treeRoot .empty { color: #aaa; cursor: default; }
 #treeRoot .toggle { display: inline-block; position: relative; margin: 1px 0.3em 1px -1.5em; width: 1.3em; height: 1.3em; line-height: 1.4em; text-align: center; vertical-align: top; cursor: pointer; border-radius: 50px }
 #treeRoot .toggle:hover { background-color: rgba(255, 255, 255, 0.5); }
@@ -280,8 +282,8 @@ box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1); }
 .dark #treeHolder .rootNode { color: #f3f3f3; }
 .dark #treeRoot a { color: #b3b3b3; }
 .dark #treeRoot a:hover, .dark #treeRoot a.current { background-color: rgba(255, 255, 255, 0.15); }
-.dark #treeRoot a.selected { background-color: rgba(0, 142, 255, 0.19); }
-.dark #treeRoot a.dragover::after { background-color: rgba(255, 255, 255, 0.15); }
+.dark #treeRoot a.selected, #treeRoot .dragenter > a { background-color: rgba(0, 142, 255, 0.19); }
+.dark #treeRoot .dragafter > a::after, .dark #treeRoot .dragbefore > a::before { background-color: rgba(255, 255, 255, 0.25); }
 .dark #treeRoot a .title { color: #7cb2dc; }
 .dark #treeRoot a.hidemenu .title { color: #a2a2a2; }
 .dark #treeRoot a.deleted .title { color: #A52A2A; }

@@ -389,7 +389,8 @@
 				var els = d.querySelectorAll('#treeRoot a');
 				for(var i = 0; i < els.length; i++) {
 					els[i].onmousedown = this.onmousedown;
-					els[i].onmouseup = this.onmouseup;
+					els[i].ondragstart = this.ondragstart;
+					els[i].ondragenter = this.ondragenter;
 					els[i].ondragover = this.ondragover;
 					els[i].ondragleave = this.ondragleave;
 					els[i].ondrop = this.ondrop;
@@ -397,33 +398,132 @@
 			},
 			onmousedown: function(e) {
 				if(e.ctrlKey) {
-					this.draggable = false;
+					this.parentNode.removeAttribute('draggable');
 					return;
 				} else {
-					this.draggable = true
+					this.parentNode.draggable = true
 				}
-				this.ondragstart = modx.tree.ondragstart;
+				modx.tree.itemToChange = this.parentNode.id;
+				this.parentNode.ondragstart = modx.tree.ondragstart
 			},
 			ondragstart: function(e) {
-				e.dataTransfer.setData("id", this.parentNode.id);
+				e.dataTransfer.effectAllowed = "all";
+				e.dataTransfer.dropEffect = "all";
+				e.dataTransfer.setData("text", this.id);
 			},
-			onmouseup: function(e) {
-				this.draggable = false
+			ondragenter: function(e) {
+				e.preventDefault();
 			},
 			ondragover: function(e) {
-				e.preventDefault();
-				this.classList.add('dragover')
+				e.preventDefault()
+				if(this.parentNode.closest('#' + modx.tree.itemToChange) || this.parentNode === d.getElementById(modx.tree.itemToChange)) {
+					e.dataTransfer.effectAllowed = "none";
+					e.dataTransfer.dropEffect = "none";
+					this.parentNode.classList.remove('dragenter');
+					this.parentNode.classList.remove('dragafter');
+					this.parentNode.classList.remove('dragbefore')
+				} else {
+					this.parentNode.classList.add('dragover');
+					var a = e.clientY;
+					var b = parseInt(this.getBoundingClientRect().top);
+					var c = (a - b);
+					if(c > this.offsetHeight / 3 && c < this.offsetHeight / 1.51) {
+						e.dataTransfer.effectAllowed = "copy";
+						e.dataTransfer.dropEffect = "copy";
+						this.parentNode.classList.add('dragenter');
+						this.parentNode.classList.remove('dragafter');
+						this.parentNode.classList.remove('dragbefore')
+					} else {
+						e.dataTransfer.effectAllowed = "link";
+						e.dataTransfer.dropEffect = "link";
+						if(c < this.offsetHeight / 3) {
+							this.parentNode.classList.add('dragbefore');
+							this.parentNode.classList.remove('dragafter');
+							this.parentNode.classList.remove('dragenter')
+						} else {
+							this.parentNode.classList.add('dragafter');
+							this.parentNode.classList.remove('dragbefore');
+							this.parentNode.classList.remove('dragenter')
+						}
+					}
+				}
 			},
 			ondragleave: function(e) {
-				this.classList.remove('dragover')
+				this.parentNode.className = '';
+				this.parentNode.removeAttribute('draggable');
+				e.preventDefault()
 			},
 			ondrop: function(e) {
+				var el = d.getElementById(modx.tree.itemToChange),
+					id = modx.tree.itemToChange.substr(4),
+					parent = 0,
+					menuindex = 0,
+					level = 0,
+					indent = el.firstChild.querySelector('.indent');
+				indent.innerHTML = '';
+				if(this.parentNode.classList.contains('dragenter')) {
+					parent = parseInt(this.parentNode.id.substr(4));
+					level = parseInt(this.dataset.level) + 1;
+					for(var i = 0; i < level; i++) indent.innerHTML += '<i></i>';
+					el.firstChild.dataset.level = level;
+					if(this.nextSibling) {
+						if(this.nextSibling.innerHTML) {
+							this.nextSibling.appendChild(el)
+						} else {
+							el.parentNode.removeChild(el)
+						}
+					} else {
+						var div = d.createElement('div');
+						this.parentNode.appendChild(div);
+						div.appendChild(el);
+					}
+					modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
+						a: 'movedocument',
+						id: id,
+						parent: parent
+					}, function() {
+						modx.tree.restoreTree()
+					})
+					console.log('id: ' + id + ', parent: ' + parent);
+				}
+				if(this.parentNode.classList.contains('dragafter')) {
+					parent = this.parentNode.parentNode.parentNode.id ? parseInt(this.parentNode.parentNode.parentNode.id.substr(4)) : 0;
+					level = parseInt(this.dataset.level);
+					for(var i = 0; i < level; i++) indent.innerHTML += '<i></i>';
+					el.firstChild.dataset.level = level;
+					this.parentNode.parentNode.insertBefore(el, this.parentNode.nextSibling);
+					menuindex = 0;
+					modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
+						a: 'movedocument',
+						id: id,
+						parent: parent,
+						menuindex: 0
+					}, function() {
+						modx.tree.restoreTree()
+					})
+					console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
+				}
+				if(this.parentNode.classList.contains('dragbefore')) {
+					parent = this.parentNode.parentNode.parentNode.id ? parseInt(this.parentNode.parentNode.parentNode.id.substr(4)) : 0;
+					level = parseInt(this.dataset.level);
+					for(var i = 0; i < level; i++) indent.innerHTML += '<i></i>';
+					el.firstChild.dataset.level = level;
+					this.parentNode.parentNode.insertBefore(el, this.parentNode);
+					menuindex = 0;
+					modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
+						a: 'movedocument',
+						id: id,
+						parent: parent,
+						menuindex: 0
+					}, function() {
+						modx.tree.restoreTree()
+					})
+					console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
+				}
+				el.removeAttribute('draggable');
+				this.parentNode.className = '';
+				this.parentNode.removeAttribute('draggable');
 				e.preventDefault();
-				var id = e.dataTransfer.getData("id");
-				var el = document.getElementById(id);
-				var parent = this.nextSibling ? this.parentNode.lastChild : this.parentNode;
-				parent.appendChild(el);
-				this.classList.remove('dragover')
 			},
 			toggleTheme: function(e) {
 				if(e.currentTarget.classList.contains('rotate180')) {
@@ -460,7 +560,8 @@
 							el.style.display = 'block'
 						}
 						modx.get('index.php?a=1&f=nodes&indent=' + a + '&parent=' + b + '&expandAll=' + c + folderState, function(r) {
-							modx.tree.rpcLoadData(r)
+							modx.tree.rpcLoadData(r);
+							//modx.tree.draggable()
 						})
 					}
 					this.saveFolderState()
@@ -559,7 +660,7 @@
 			showPopup: function(a, b, c, f, g, e) {
 				if(e.ctrlKey) return;
 				e.preventDefault();
-				var	tree = d.getElementById('tree'),
+				var tree = d.getElementById('tree'),
 					node = e.view.document.getElementById('node' + a);
 				if(node) {
 					if(node.dataset.contextmenu) {
