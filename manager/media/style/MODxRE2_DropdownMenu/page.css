@@ -24,8 +24,8 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 #tree, #main { position: absolute; background-color: #FAFAFA !important; }
 #tree { z-index: 1; width: 320px; top: 35px; left: 0; bottom: 0; overflow: hidden; }
 #main { z-index: 2; top: 35px; left: 320px; right: 0; bottom: 0; }
-#main iframe { overflow-y: scroll; }
-#main iframe, #mask_resizer { position: absolute; width: 100%; height: 100%; }
+#main iframe { overflow-y: scroll; width: 100%; height: 100%; }
+#mask_resizer { position: absolute; width: 100%; height: 100%; }
 /* mainMenu */
 #mainMenu { position: relative; overflow: hidden; height: 35px; width: 100%; background-color: #1d2023; color: #8b9298; font-size: 13px; box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25); z-index: 100; }
 #mainMenu.show { overflow: visible }

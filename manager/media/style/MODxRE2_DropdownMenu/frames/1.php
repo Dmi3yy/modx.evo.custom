@@ -79,6 +79,8 @@ if($user['which_browser'] == 'default') {
 	$user['which_browser'] = $modx->config['which_browser'];
 }
 
+$jQuery = '';
+
 if(isset($modx->pluginCache['ElementsInTree'])) {
 	$jQuery = '<script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>';
 }
@@ -88,12 +90,12 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 <head>
 	<title><?php echo $site_name ?>- (MODX CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
-	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<script>
-		if(window.innerWidth < 600) {
-			document.getElementsByName('viewport')[0]['content'] = 'initial-scale=0.64, maximum-scale=0.64, user-scalable=no';
-		}
-	</script>
+	<!--	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<script>
+			if(window.innerWidth < 600) {
+				document.getElementsByName('viewport')[0]['content'] = 'initial-scale=0.64, maximum-scale=0.64, user-scalable=no';
+			}
+		</script>-->
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/page.css" />
 	<style>
