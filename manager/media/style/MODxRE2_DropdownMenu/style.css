@@ -265,7 +265,7 @@ box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1); }
 #treeRoot .indent { position: relative; float: left; height: 1.5em; }
 #treeRoot .indent i { float: left; height: 1.2em; width: 1.5em }
 #treeRoot .empty { color: #aaa; cursor: default; }
-#treeRoot .toggle { display: inline-block; position: relative; margin: 1px 0.3em 1px -1.5em; width: 1.3em; height: 1.3em; line-height: 1.4em; text-align: center; vertical-align: top; cursor: pointer; border-radius: 50px }
+#treeRoot .toggle { display: inline-block; position: relative; margin: 1px 0.2em 1px -1.5em; width: 1.3em; height: 1.3em; line-height: 1.4em; text-align: center; vertical-align: top; cursor: pointer; border-radius: 50px }
 #treeRoot .toggle:hover { background-color: rgba(255, 255, 255, 0.5); }
 #treeRoot .toggle .fa { margin: 0; width: auto; }
 #treeRoot .fa { position: relative; margin-right: 1px; width: 1em; font-size: 1.1em; text-align: center }
@@ -300,7 +300,7 @@ box-shadow: inset -2px 2px 6px 0 rgba(0, 0, 0, 0.1); }
 .notInMenuNode { color: #39515d; text-decoration: none; }
 #treeSplitter { width: 10px; height: 100%; position: absolute; right: -10px; }
 .rtl #treeSplitter { left: -10px; }
-.deleted { color: #A52A2A; text-decoration: line-through; }
+.deleted, a.deleted, .deleted > a { color: #A52A2A; text-decoration: line-through; }
 label.disabled { color: #aaa; }
 .disabledPlugin a { color: #B68282; font-style: italic; }
 /* -------------------------[ grid style ]--- */
