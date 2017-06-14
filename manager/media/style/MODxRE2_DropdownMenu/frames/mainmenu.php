@@ -433,8 +433,11 @@ $menu = unserialize($menu[0]);
 if(is_array($menu)) {
 	$sitemenu = $menu;
 }
-
-include_once(MODX_MANAGER_PATH . 'includes/menu.class.inc.php');
+if(file_exists(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/includes/menu.class.inc.php')) {
+	include_once(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/includes/menu.class.inc.php');
+} else {
+	include_once(MODX_MANAGER_PATH . 'includes/menu.class.inc.php');
+}
 $menu = new EVOmenu();
 $menu->Build($sitemenu, array(
 	'outerClass' => 'nav',

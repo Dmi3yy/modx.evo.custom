@@ -76,7 +76,7 @@ if(isset($action)) {
 
 				if($modx->db->getRecordCount($sql)) {
 					while($row = $modx->db->getRow($sql)) {
-						echo '<li><a href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+						echo '<li class="' . ($row['disabled'] ? 'deleted' : '') . '"><a href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
 					}
 				}
 			}
@@ -301,7 +301,7 @@ if(isset($action)) {
 		case 'movedocument' : {
 			$id = !empty($_REQUEST['id']) ? (int) $_REQUEST['id'] : '';
 			$parent = isset($_REQUEST['parent']) ? (int) $_REQUEST['parent'] : 0;
-			$menuindex = isset($_REQUEST['menuindex']) ? (int) $_REQUEST['menuindex'] : 0;
+			$menuindex = isset($_REQUEST['menuindex']) ? $_REQUEST['menuindex'] : 0;
 
 			// set parent
 			if($id && $parent >= 0) {
@@ -332,8 +332,13 @@ if(isset($action)) {
 			}
 
 			// set menuindex
-			if($menuindex >= 0) {
-
+			if(!empty($menuindex)) {
+				$menuindex = explode(',', $menuindex);
+				foreach($menuindex as $key => $value) {
+					$modx->db->query('UPDATE ' . $modx->getFullTableName('site_content') . ' SET menuindex=' . $key . ' WHERE id =' . $value);
+				}
+			} else {
+				// TODO: max(*) menuindex
 			}
 
 			break;

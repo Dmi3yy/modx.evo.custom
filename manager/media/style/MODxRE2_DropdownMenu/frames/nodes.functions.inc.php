@@ -188,7 +188,8 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			'tree_plusnode' => $_style['tree_plusnode'],
 			'spacer' => $spacer,
 			'subMenuState' => '',
-			'level' => $level
+			'level' => $level,
+			'isPrivate' => 0
 		);
 
 		$ph = $data;
@@ -218,6 +219,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						} else {
 							$icon = $_style['tree_page_secure'];
 						}
+						$ph['isPrivate'] = 1;
 					} elseif(isset($icons[$row['contentType']])) {
 						$icon = $icons[$row['contentType']];
 					} else {
@@ -249,7 +251,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 
 		} else {
 			$tpl = getTplFolderNode();
-			$ph['isPrivate'] = ($row['privateweb'] == 1 || $row['privatemgr'] == 1) ? '1' : '0';
+			$ph['isPrivate'] = ($row['privateweb'] || $row['privatemgr']) ? '1' : '0';
 			$ph['icon_folder_open'] = $ph['isPrivate'] ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
 			$ph['icon_folder_close'] = $ph['isPrivate'] ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
 
@@ -560,9 +562,8 @@ function getTplSingleNode() {
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\');"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         oncontextmenu="document.getElementById(\'p[+id+]\').onclick(event);"
-        data-level="[+level+]"
-        data-menuindex="[+menuindex+]"
-        data-parent="[+parent+]">[+spacer+]<span
+        data-private="[+isPrivate+]"
+        data-level="[+level+]">[+spacer+]<span
         id="p[+id+]"
         onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
         oncontextmenu="this.onclick(event);return false;"
@@ -577,9 +578,8 @@ function getTplFolderNode() {
         onclick="modx.tree.treeAction(event,[+id+],\'[+nodetitle_esc+]\',\'[+tree_page_click+]\',[+showChildren+],[+openFolder+]);"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\'; modx.tree.selectedObjectDeleted=[+deleted+]; modx.tree.selectedObjectUrl=\'[+url+]\';"
         oncontextmenu="document.getElementById(\'f[+id+]\').onclick(event);"
-        data-level="[+level+]"
-        data-menuindex="[+menuindex+]"
-        data-parent="[+parent+]">[+spacer+]<span
+        data-private="[+isPrivate+]"
+        data-level="[+level+]">[+spacer+]<span
         id="s[+id+]"
         class="toggle"
         data-icon-expanded="[+tree_plusnode+]"
