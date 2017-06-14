@@ -5,6 +5,10 @@ if(IN_MANAGER_MODE != "true") {
 }
 header("X-XSS-Protection: 0");
 
+//function json_encode($value, $options) {
+//
+//}
+
 $_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 1') !== false) ? 'legacy_IE' : 'modern';
 
 // invoke OnManagerPreFrameLoader
@@ -74,22 +78,30 @@ $user = $modx->getUserInfo($modx->getLoginUserID());
 if($user['which_browser'] == 'default') {
 	$user['which_browser'] = $modx->config['which_browser'];
 }
+
+if(isset($modx->pluginCache['ElementsInTree'])) {
+	$jQuery = '<script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>';
+}
 ?>
 <!DOCTYPE html>
 <html <?php echo (isset($modx_textdir) && $modx_textdir ? 'dir="rtl" lang="' : 'lang="') . $mxla . '" xml:lang="' . $mxla . '"'; ?>>
 <head>
 	<title><?php echo $site_name ?>- (MODX CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<script>
+		if(window.innerWidth < 600) {
+			document.getElementsByName('viewport')[0]['content'] = 'initial-scale=0.64, maximum-scale=0.64, user-scalable=no';
+		}
+	</script>
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
-	<link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/page.css" />
 	<style>
 		#tree { width: <?php echo $MODX_positionSideBar ?>px }
 		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>px }
 	</style>
-	<script src="media/script/jquery/jquery.min.js" type="text/javascript"></script>
+	<?php echo $jQuery ?>
 	<script type="text/javascript">
-
 		// GLOBAL variable modx
 		var modx = {
 			MGR_DIR: "<?php echo MGR_DIR ?>",
@@ -176,7 +188,7 @@ if($user['which_browser'] == 'default') {
 				delete a[b]
 			},
 			openedArray: [],
-			lockedElementsTranslation: <?php echo json_encode($unlockTranslations, JSON_UNESCAPED_UNICODE) . "\n" ?>
+			lockedElementsTranslation: <?php echo json_encode($unlockTranslations, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE) . "\n" ?>
 		};
 		<?php
 		$opened = array_filter(array_map('intval', explode('|', $_SESSION['openedArray'])));

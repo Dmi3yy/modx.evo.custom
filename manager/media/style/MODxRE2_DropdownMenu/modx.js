@@ -19,7 +19,7 @@
 			id: 'mainMenu',
 			init: function() {
 				//console.log('modx.mainMenu.init()');
-				var mm = d.getElementById('mainMenu'), el, els, i, ii, timer;
+				var mm = d.getElementById('mainMenu'), el, els, i, ii;
 				mm.onclick = function(e) {
 					el = e.target.closest('a');
 					if(el) {
@@ -54,44 +54,40 @@
 				for(i = 0; i < els.length; i++) {
 					els[i].onmouseenter = function(e) {
 						var self = this;
-						clearTimeout(timer);
-						timer = setTimeout(function() {
-							els = mm.querySelectorAll('.nav > li li.hover');
-							for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
-							els = mm.querySelectorAll('.nav .sub-menu.show');
-							for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('show');
-							self.classList.add('hover');
-							if(self.classList.contains('toggle-dropdown')) {
-								el = self.parentNode.parentNode.children['parent_' + self.id];
-								if(el) {
-									el.classList.add('show')
-								} else {
-									var href = self.firstChild.href && self.firstChild.target === 'main' ? '&' + self.firstChild.href.split('?')[1] : '';
-									modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', href + '&parent=' + self.id, function(r) {
-										if(r) {
-											var ul = d.createElement('ul');
-											ul.innerHTML = r;
-											ul.className = 'sub-menu dropdown-menu';
-											self.parentNode.parentNode.appendChild(ul);
-											ul.style.left = self.offsetWidth + 'px';
-											ul.id = 'parent_' + self.id;
-											els = ul.querySelectorAll('li');
-											for(ii = 0; ii < els.length; ii++) {
-												els[ii].onmouseenter = function() {
-													els = ul.querySelectorAll('li.hover');
-													for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
-													this.classList.add('hover');
-													self.classList.add('hover');
-													clearTimeout(timer);
-													e.stopPropagation()
-												}
+						els = mm.querySelectorAll('.nav > li li.hover');
+						for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
+						els = mm.querySelectorAll('.nav .sub-menu.show');
+						for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('show');
+						self.classList.add('hover');
+						if(self.classList.contains('toggle-dropdown')) {
+							el = self.parentNode.parentNode.children['parent_' + self.id];
+							if(el) {
+								el.classList.add('show')
+							} else {
+								var href = self.firstChild.href && self.firstChild.target === 'main' ? '&' + self.firstChild.href.split('?')[1] : '';
+								modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', href + '&parent=' + self.id, function(r) {
+									if(r) {
+										var ul = d.createElement('ul');
+										ul.innerHTML = r;
+										ul.className = 'sub-menu dropdown-menu';
+										self.parentNode.parentNode.appendChild(ul);
+										ul.style.left = self.offsetWidth + 'px';
+										ul.id = 'parent_' + self.id;
+										els = ul.querySelectorAll('li');
+										for(ii = 0; ii < els.length; ii++) {
+											els[ii].onmouseenter = function() {
+												els = ul.querySelectorAll('li.hover');
+												for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
+												this.classList.add('hover');
+												self.classList.add('hover');
+												e.stopPropagation()
 											}
-											ul.classList.add('show')
 										}
-									})
-								}
+										ul.classList.add('show')
+									}
+								})
 							}
-						}, 100)
+						}
 					}
 				}
 			}
@@ -671,6 +667,7 @@
 						alert(modx.lang.unable_set_link)
 					}
 				}
+				e.preventDefault();
 			},
 			showPopup: function(a, b, c, f, g, e) {
 				if(e.ctrlKey) return;
@@ -734,8 +731,7 @@
 						}
 						this.itemToChange = a;
 						this.selectedObjectName = b;
-						this.dopopup(this.ctx, x + 10, y);
-						this.ctx.classList.add('show')
+						this.dopopup(this.ctx, x + 10, y)
 					} else {
 						var ctx = d.getElementById('mx_contextmenu');
 						e.target.dataset.toggle = '#mx_contextmenu';
@@ -789,14 +785,16 @@
 				}
 			},
 			dopopup: function(el, a, b) {
-				if(this.selectedObjectName.length > 20) {
-					this.selectedObjectName = this.selectedObjectName.substr(0, 20) + "..."
+				if(this.selectedObjectName.length > 30) {
+					this.selectedObjectName = this.selectedObjectName.substr(0, 30) + "..."
 				}
 				var f = d.getElementById("nameHolder");
+				f.innerHTML = this.selectedObjectName;
 				el.style.left = a + (modx.config.textdir ? '-190' : '') + "px";
 				el.style.top = b + "px";
-				el.classList.add('show');
-				f.innerHTML = this.selectedObjectName;
+				setTimeout(function() {
+					el.classList.add('show')
+				}, 150)
 			},
 			menuHandler: function(a) {
 				switch(a) {
@@ -857,7 +855,7 @@
 						w.main.location.href = "index.php?a=56&id=" + this.itemToChange;
 						break;
 					case 12:
-						w.open(this.selectedObjectUrl, 'previeWin');
+						w.open(d.getElementById('node' + this.itemToChange).firstChild.dataset.href, 'previeWin');
 						break;
 					default:
 						alert('Unknown operation command.')
@@ -1339,7 +1337,7 @@
 		modx.init()
 	})
 })
-(jQuery, window, document, undefined);
+(typeof jQuery !== 'undefined' ? jQuery : '', window, document, undefined);
 
 function setLastClickedElement(a, b) {
 	modx.setLastClickedElement(a, b)
