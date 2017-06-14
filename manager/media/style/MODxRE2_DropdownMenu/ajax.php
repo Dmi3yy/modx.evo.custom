@@ -139,28 +139,27 @@ if(isset($action)) {
 						if($modx->db->getRecordCount($sql)) {
 							$row = $modx->db->getRow($sql);
 							$contextmenu = array(
-								'header1' => array(
+								'header' => array(
 									'innerText' => $row['name']
 								),
-								'item1' => array(
+								'item' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-									'id' => 'item1',
 									'onclick' => "modx.openWindow({url: 'index.php?a=22&id=" . $row['id'] . "'})"
-								),
-								'seperator1' => '',
-								'item2' => array(
-									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description'],
-									'id' => 'item1',
 								)
 							);
+							if(!empty($row['description'])) {
+								$contextmenu['seperator'] = '';
+								$contextmenu['description'] = array(
+									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+								);
+							}
 						} else {
 							$contextmenu = array(
-								'header1' => array(
+								'header' => array(
 									'innerText' => $name
 								),
-								'item1' => array(
+								'item' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_snippet'],
-									'id' => 'item1',
 									'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=" . $name . "'})"
 								)
 							);
@@ -179,28 +178,27 @@ if(isset($action)) {
 						if($modx->db->getRecordCount($sql)) {
 							$row = $modx->db->getRow($sql);
 							$contextmenu = array(
-								'header1' => array(
+								'header' => array(
 									'innerText' => $row['name']
 								),
-								'item1' => array(
+								'item' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-									'id' => 'item1',
 									'onclick' => "modx.openWindow({url: 'index.php?a=78&id=" . $row['id'] . "'})"
-								),
-								'seperator1' => '',
-								'item2' => array(
-									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description'],
-									'id' => 'item1',
 								)
 							);
+							if(!empty($row['description'])) {
+								$contextmenu['seperator'] = '';
+								$contextmenu['description'] = array(
+									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+								);
+							}
 						} else {
 							$contextmenu = array(
-								'header1' => array(
+								'header' => array(
 									'innerText' => $name
 								),
-								'item1' => array(
+								'item' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_htmlsnippet'],
-									'id' => 'item1',
 									'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
 								)
 							);
@@ -263,28 +261,27 @@ if(isset($action)) {
 						if($modx->db->getRecordCount($sql)) {
 							$row = $modx->db->getRow($sql);
 							$contextmenu = array(
-								'header1' => array(
+								'header' => array(
 									'innerText' => $row['name']
 								),
-								'item1' => array(
+								'item' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
-									'id' => 'item1',
 									'onclick' => "modx.openWindow({url: 'index.php?a=301&id=" . $row['id'] . "'})"
-								),
-								'seperator1' => '',
-								'item2' => array(
-									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description'],
-									'id' => 'item1',
 								)
 							);
+							if(!empty($row['description'])) {
+								$contextmenu['seperator'] = '';
+								$contextmenu['description'] = array(
+									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+								);
+							}
 						} else {
 							$contextmenu = array(
-								'header1' => array(
+								'header' => array(
 									'innerText' => $name
 								),
-								'item1' => array(
+								'item' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_tmplvars'],
-									'id' => 'item1',
 									'onclick' => "modx.openWindow({url: 'index.php?a=300&itemname=" . $name . "'})"
 								)
 							);
@@ -293,7 +290,7 @@ if(isset($action)) {
 						break;
 					}
 				}
-				echo json_encode($contextmenu, JSON_UNESCAPED_UNICODE);
+				echo json_encode($contextmenu, JSON_FORCE_OBJECT|JSON_UNESCAPED_UNICODE);
 				break;
 			}
 		}
