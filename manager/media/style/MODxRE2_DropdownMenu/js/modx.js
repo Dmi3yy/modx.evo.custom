@@ -396,7 +396,7 @@
 				this.restoreTree()
 			},
 			draggable: function() {
-				var els = d.querySelectorAll('#treeRoot a');
+				var els = d.querySelectorAll('#treeRoot a:not(.empty)');
 				for(var i = 0; i < els.length; i++) {
 					els[i].onmousedown = this.onmousedown;
 					els[i].ondragstart = this.ondragstart;
