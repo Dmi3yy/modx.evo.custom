@@ -11,7 +11,7 @@ box-shadow: inset -0.15rem 0.15rem 0.45rem 0 rgba(0, 0, 0, 0.1); }
 #treeHolder .rootNode { padding: 0.2em 0.5em; cursor: pointer; }
 #treeRoot { float: left; width: 100% }
 #treeRoot a { position: relative; display: block; clear: both; text-decoration: none; padding: 0.1em 0 0.1em 2.2em; font-size: 1em; color: #333; cursor: default }
-#treeRoot a:hover, #treeRoot a.current { background-color: rgba(33, 150, 243, 0.1) }
+#treeRoot a:hover:not(.empty), #treeRoot a.current { background-color: rgba(33, 150, 243, 0.1) }
 #treeRoot a small { margin: 0 0.8em 0 0.2em }
 #treeRoot a.selected, #treeRoot .dragenter > a { background-color: rgba(0, 0, 0, 0.1); }
 #treeRoot .dragafter > a .indent::after, #treeRoot .dragbefore > a .indent::before { content: "\f0da"; display: block; position: absolute; right: 0.1em; bottom: -0.5em; height: 1em; font: normal normal normal 1em/1em FontAwesome; }
@@ -42,7 +42,7 @@ box-shadow: inset -0.15rem 0.15rem 0.45rem 0 rgba(0, 0, 0, 0.1); }
 .dark #tree .treeframebody { background-color: #1d2023 }
 .dark #treeHolder .rootNode { color: #f3f3f3; }
 .dark #treeRoot a { color: #b3b3b3; }
-.dark #treeRoot a:hover, .dark #treeRoot a.current { background-color: rgba(255, 255, 255, 0.15); }
+.dark #treeRoot a:hover:not(.empty), .dark #treeRoot a.current { background-color: rgba(255, 255, 255, 0.15); }
 .dark #treeRoot a.selected, #treeRoot .dragenter > a { background-color: rgba(0, 142, 255, 0.19); }
 .dark #treeRoot .dragafter > a::after, .dark #treeRoot .dragbefore > a::before { background-color: rgba(255, 255, 255, 0.25); }
 .dark #treeRoot a .title { color: #7cb2dc; }
