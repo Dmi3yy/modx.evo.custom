@@ -1,3 +1,5 @@
+/* bandload */
+#bandload { display: none; position: fixed; z-index: 101; left: 0; top: 0; width: 100%; height: 2px; background-color: #1976D2; -webkit-transition-duration: 0.5s; transition-duration: 0.5s; }
 /* #mainMenu */
 #mainMenu { background-color: #1d2023; color: #8b9298; -webkit-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); }
 #mainMenu.show { overflow: visible }
@@ -55,7 +57,7 @@
 #mainMenu #searchform .fa-refresh { position: absolute; z-index: 9; display: none; top: 0.6rem; right: 0.8rem; line-height: 1em }
 /* #searchresult */
 #searchresult { position: absolute; z-index: 99; overflow: auto; top: 2.2rem; right: -30rem; bottom: 0; width: 30rem; max-width: 100%; background-color: #fff; border-left: 1px solid rgba(0, 0, 0, 0.1); opacity: 0; visibility: hidden; -webkit-transition: 0.25s ease 0.5s; transition: 0.25s ease 0.5s; -webkit-transition-delay: 0.3s; transition-delay: 0.3s; }
-#searchresult.open { right: 0; box-shadow: 0 0 4.5rem rgba(0, 0, 0, 0.15); opacity: 1; visibility: visible; -webkit-transition: 0.5s ease 0.5s;  transition: 0.5s ease 0.5s; -webkit-transition-delay: 0s; transition-delay: 0s }
+#searchresult.open { right: 0; box-shadow: 0 0 4.5rem rgba(0, 0, 0, 0.15); opacity: 1; visibility: visible; -webkit-transition: 0.5s ease 0.5s; transition: 0.5s ease 0.5s; -webkit-transition-delay: 0s; transition-delay: 0s }
 #searchresult .ajaxSearchResults ul, #searchresult .ajaxSearchResults li { margin: 0; padding: 0; list-style: none }
 #searchresult .ajaxSearchResults b, #searchresult .ajaxSearchResults strong, #searchresult .ajaxSearchResults a { position: relative; z-index: 0; display: block; color: #333; padding: 0.25rem 1rem; margin-top: -1px; border-top: 1px solid rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.03); box-sizing: border-box }
 #searchresult .ajaxSearchResults b { z-index: 1; background-color: #ddd }
@@ -82,4 +84,3 @@
 #mainMenu .nav > li > a .icon { margin-left: 0; width: auto }
 }
 /* dark */
-#mainMenu { border-bottom: 1px solid rgba(255, 255, 255, 0.1); }

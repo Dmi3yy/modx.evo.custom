@@ -567,6 +567,7 @@ function getTplSingleNode() {
         data-private="[+isPrivate+]"
         data-level="[+level+]">[+spacer+]<span
         id="p[+id+]"
+        class="icon"
         onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"
         oncontextmenu="this.onclick(event);return false;"
         onmousedown="modx.tree.itemToChange=[+id+]; modx.tree.selectedObjectName=\'[+nodetitle_esc+]\';"
@@ -592,6 +593,7 @@ function getTplFolderNode() {
         oncontextmenu="this.onclick(event); return false;"
         >[+icon_node_toggle+]</span><span
         id="f[+id+]"
+        class="icon"
         data-icon-folder-open="[+icon_folder_open+]"
         data-icon-folder-close="[+icon_folder_close+]"
         onclick="modx.tree.showPopup([+id+],\'[+nodetitle_esc+]\',[+published+],[+deleted+],[+isfolder+],event);return false;"

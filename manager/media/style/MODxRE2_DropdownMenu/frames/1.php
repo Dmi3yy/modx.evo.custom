@@ -193,6 +193,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 <body class="<?php echo $body_class ?>">
 <input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id()); ?>" />
 <div id="frameset">
+	<div id="bandload"></div>
 	<div id="mainMenu" class="dropdown">
 		<div class="container">
 			<div class="row">

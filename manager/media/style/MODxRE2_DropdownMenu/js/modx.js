@@ -25,7 +25,7 @@
 			id: 'mainMenu',
 			init: function() {
 				//console.log('modx.mainMenu.init()');
-				var mm = d.getElementById('mainMenu'), el, els, i, ii, timer;
+				var mm = d.getElementById('mainMenu'), el, els, i, ii;
 				mm.onclick = function(e) {
 					el = e.target.closest('a');
 					if(el) {
@@ -61,8 +61,6 @@
 					els[i].onmouseover = function(e) {
 						var self = this;
 						// :TODO сделать обновляемые элементы
-						// clearTimeout(timer);
-						// timer = setTimeout(function() {
 						els = mm.querySelectorAll('.nav > li li.hover');
 						for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
 						els = mm.querySelectorAll('.nav .sub-menu.show');
@@ -85,7 +83,6 @@
 										els = ul.querySelectorAll('li');
 										for(ii = 0; ii < els.length; ii++) {
 											els[ii].onmouseover = function() {
-												// clearTimeout(timer);
 												els = self.parentNode.parentNode.querySelectorAll('li.hover');
 												for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
 												this.classList.add('hover');
@@ -98,7 +95,6 @@
 								})
 							}
 						}
-						// }, 50)
 					}
 				}
 			}
