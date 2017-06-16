@@ -1,7 +1,7 @@
 /**
  * header
  * 
- * шапка
+ * sample header scripts
  * 
  * @category	chunk
  * @version 	1.0

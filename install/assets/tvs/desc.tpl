@@ -1,11 +1,11 @@
 ﻿/**
  * desc
  *
- * Мета дескрипшин
+ * Meta description
  *
  * @category        tv
  * @name            desc
- * @internal        @caption Мета дескрипшин
+ * @internal        @caption Meta description
  * @internal        @input_type textarea
  * @internal        @input_options
  * @internal        @input_default [*introtext*]

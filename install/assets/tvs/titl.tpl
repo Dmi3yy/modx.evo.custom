@@ -1,11 +1,11 @@
 ﻿/**
  * titl
  *
- * Мета тайтл
+ * Meta title
  *
  * @category        tv
  * @name            titl
- * @internal        @caption Мета тайтл
+ * @internal        @caption Meta title
  * @internal        @input_type text
  * @internal        @input_options
  * @internal        @input_default [*pagetitle*] - [(site_name)]
