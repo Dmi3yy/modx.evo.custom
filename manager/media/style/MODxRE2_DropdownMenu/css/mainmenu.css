@@ -50,7 +50,7 @@
 }
 @media (max-width: 480px) {
 #mainMenu .nav > li > a .username { display: none }
-#mainMenu .nav > li > a .icon { margin-left: 0 }
+#mainMenu .nav > li > a .icon { margin-left: 0; width: auto }
 }
 #mainMenu .account #msgCounter { display: none; position: absolute; z-index: 1; right: 0.4rem; top: 0.4rem; width: 0.4rem; height: 0.4rem; background-color: #FFC107; font-size: 0; border-radius: 50%;; }
 #mainMenu .account #newMail { display: none }
