@@ -36,6 +36,9 @@
 #mainMenu .nav > li > ul > li.disabled > a { opacity: 0.5; }
 #mainMenu .nav > li > ul > li.locked > a { font-style: italic }
 #mainMenu .nav > li > ul > li > a small { line-height: 1em }
+@media (min-width: 1020px) {
+#mainMenu #nav > li > a > .fa { font-size: 1.2rem }
+}
 @media (max-width: 1020px) {
 #mainMenu .nav > li > a, #mainMenu .nav .label_searchid { padding: 0 0.75rem; }
 }
@@ -47,6 +50,7 @@
 }
 @media (max-width: 480px) {
 #mainMenu .nav > li > a .username { display: none }
+#mainMenu .nav > li > a .icon { margin-left: 0 }
 }
 #mainMenu .account #msgCounter { display: none; position: absolute; z-index: 1; right: 0.4rem; top: 0.4rem; width: 0.4rem; height: 0.4rem; background-color: #FFC107; font-size: 0; border-radius: 50%;; }
 #mainMenu .account #newMail { display: none }
