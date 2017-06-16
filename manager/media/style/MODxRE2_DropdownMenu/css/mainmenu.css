@@ -30,7 +30,7 @@
 #mainMenu .nav > li > ul > li.hover > a { color: #fff; background-color: #1976D2; }
 #mainMenu .nav > li > ul > li:first-child > a { border: none }
 #mainMenu .nav > li > ul > li > span { padding: 0 1em; text-align: center; font-size: 0.875em; color: #aaa; }
-#mainMenu .nav > li > ul > li > a > .fa { margin-right: 0.25em }
+#mainMenu .nav > li > ul > li > a > .fa { margin-right: 0.25em; font-size: 1em }
 #mainMenu .nav > li > ul > li.selected a::before { content: ''; position: absolute; right: 0.25em; top: 0.25em; width: 0.5em; height: 0.5em; background-color: #FFC107; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%; }
 #mainMenu .nav > li > ul > li.toggle-dropdown > a::after { content: "\f105"; position: absolute; top: 0.6em; right: 0.6em; font: normal normal normal 1.2em/1 FontAwesome; }
 #mainMenu .nav > li > ul > li.disabled > a { opacity: 0.5; }
