@@ -889,10 +889,10 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('friendly_urls','1'),
 ('friendly_alias_urls','1'),
 ('use_alias_path','1'),
+('cache_type','2'),
 ('failed_login_attempts','3'),
 ('blocked_minutes','60'),
 ('use_captcha','0'),
-('captcha_words','0,1,2,3,4,5,6,7,8,9'),
 ('emailsender','{ADMINEMAIL}'),
 ('use_editor','1'),
 ('use_browser','1'),
@@ -914,7 +914,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('remember_last_tab', '1'),
 ('enable_bindings', '1'),
 ('seostrict', '1'),
-('cache_type', '2'),
+
 ('theme_refresher','');
 
 REPLACE INTO `{PREFIX}user_roles` 
