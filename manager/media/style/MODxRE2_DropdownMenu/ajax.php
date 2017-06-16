@@ -172,7 +172,6 @@ if(isset($action)) {
 
 						break;
 					}
-					case 'AttributeValue':
 					case 'Chunk' : {
 
 						$sql = $modx->db->query('SELECT *
@@ -207,6 +206,72 @@ if(isset($action)) {
 									'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
 								)
 							);
+						}
+
+						break;
+					}
+					case 'AttributeValue': {
+						$sql = $modx->db->query('SELECT *
+						FROM ' . $modx->getFullTableName('site_htmlsnippets') . '
+						WHERE name="' . $name . '"
+						LIMIT 1');
+
+						if($modx->db->getRecordCount($sql)) {
+							$row = $modx->db->getRow($sql);
+							$contextmenu = array(
+								'header' => array(
+									'innerText' => $row['name']
+								),
+								'item' => array(
+									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+									'onclick' => "modx.openWindow({url: 'index.php?a=78&id=" . $row['id'] . "'})"
+								)
+							);
+							if(!empty($row['description'])) {
+								$contextmenu['seperator'] = '';
+								$contextmenu['description'] = array(
+									'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+								);
+							}
+						} else {
+
+							$sql = $modx->db->query('SELECT *
+							FROM ' . $modx->getFullTableName('site_snippets') . '
+							WHERE name="' . $name . '"
+							LIMIT 1');
+
+							if($modx->db->getRecordCount($sql)) {
+								$row = $modx->db->getRow($sql);
+								$contextmenu = array(
+									'header' => array(
+										'innerText' => $row['name']
+									),
+									'item' => array(
+										'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
+										'onclick' => "modx.openWindow({url: 'index.php?a=22&id=" . $row['id'] . "'})"
+									)
+								);
+								if(!empty($row['description'])) {
+									$contextmenu['seperator'] = '';
+									$contextmenu['description'] = array(
+										'innerHTML' => '<i class="fa fa-info"></i> ' . $row['description']
+									);
+								}
+							} else {
+								$contextmenu = array(
+									'header' => array(
+										'innerText' => $name
+									),
+									'item' => array(
+										'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_htmlsnippet'],
+										'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
+									),
+									'item2' => array(
+										'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_snippet'],
+										'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=" . $name . "'})"
+									)
+								);
+							}
 						}
 
 						break;
