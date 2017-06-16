@@ -90,8 +90,8 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 <head>
 	<title><?php echo $site_name ?>- (MODX CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
-	<!--	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-		<script>
+	<meta name="viewport" content="initial-scale=0.9, maximum-scale=0.9, user-scalable=no" />
+	<!--			<script>
 			if(window.innerWidth < 600) {
 				document.getElementsByName('viewport')[0]['content'] = 'initial-scale=0.64, maximum-scale=0.64, user-scalable=no';
 			}
@@ -378,7 +378,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 					<input type="checkbox" name="showonlyfolders" value="<?php echo($_SESSION['tree_show_only_folders'] ? 1 : '') ?>" onclick="this.value = this.value ? '' : 1;" <?php echo($_SESSION['tree_show_only_folders'] ? ' checked="checked"' : '') ?> /> <?php echo $_lang['view_child_resources_in_container'] ?></label>
 			</div>
 			<div class="text-center">
-				<a href="javascript:;" class="btn btn-primary" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
+				<a href="javascript:;" class="btn btn-primary btn-sm" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
 			</div>
 		</form>
 	</div>
