@@ -722,6 +722,7 @@ top: -10px!important;
 
 .dark .multitv .list li.element a.copy, .multitv .list li.element a.remove{
   background: #F9F9F9!important;
+
 }
 .dark .multitv .list li.element{
 	background: #FEFEFE!important;
@@ -730,3 +731,20 @@ top: -10px!important;
 .dark .split{background: #e3e3e3;}
 .dark hr{background: transparent;}
 
+.dark .content-blocks .block{
+	background: #FEFEFE;
+	border: 1px solid #e3e3e3;
+}
+.dark .content-blocks .block .fields-group{
+	border: 1px dashed #e2e2e2;
+}
+.dark .content-blocks input[type="text"], 
+.dark .content-blocks input[type="password"], 
+.dark .content-blocks input[type="number"], 
+.dark .content-blocks textarea{
+	background-color: #FBFBFB !important;
+	border-color: #dbdbdb !important;
+}
+.dark .content-blocks .controls{
+	background: transparent!important;
+}
