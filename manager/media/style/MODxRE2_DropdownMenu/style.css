@@ -1,5 +1,3 @@
-/* -------------------------[ Neutralize styles, fonts and viewport ]--- */
-* html { overflow-x: hidden; overflow-y: auto; }
 /* for IE7 */
 html, body, form, fieldset, img { margin: 0; padding: 0; }
 img { border: none; }

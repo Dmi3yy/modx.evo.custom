@@ -7,7 +7,7 @@
 				localStorage.setItem('MODX_lastPositionSideBar', this.config.tree_width)
 			}
 			if(w.location.hash) {
-				w.open('index.php' + w.location.hash.substring(1), "main");
+				w.main.frameElement.contentWindow.location = 'index.php' + w.location.hash.substring(1)
 			}
 			this.tree.init();
 			this.mainMenu.init();
@@ -15,14 +15,16 @@
 			this.search.init();
 			this.setLastClickedElement(0, 0);
 			w.setInterval(this.keepMeAlive, 1000 * 60 * this.config.session_timeout);
-			w.onload = this.updateMail(true);
+			if(modx.config.mail_check_timeperiod > 0) {
+				setTimeout('modx.updateMail(true)', 1000 * modx.config.mail_check_timeperiod)
+			}
 			d.onclick = this.hideDropDown
 		},
 		mainMenu: {
 			id: 'mainMenu',
 			init: function() {
 				//console.log('modx.mainMenu.init()');
-				var mm = d.getElementById('mainMenu'), el, els, i, ii;
+				var mm = d.getElementById('mainMenu'), el, els, i, ii, timer;
 				mm.onclick = function(e) {
 					el = e.target.closest('a');
 					if(el) {
@@ -57,6 +59,9 @@
 				for(i = 0; i < els.length; i++) {
 					els[i].onmouseenter = function(e) {
 						var self = this;
+						// :TODO сделать обновляемые элементы
+						// clearTimeout(timer);
+						// timer = setTimeout(function() {
 						els = mm.querySelectorAll('.nav > li li.hover');
 						for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
 						els = mm.querySelectorAll('.nav .sub-menu.show');
@@ -79,7 +84,8 @@
 										els = ul.querySelectorAll('li');
 										for(ii = 0; ii < els.length; ii++) {
 											els[ii].onmouseenter = function() {
-												els = ul.querySelectorAll('li.hover');
+												// clearTimeout(timer);
+												els = self.parentNode.parentNode.querySelectorAll('li.hover');
 												for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
 												this.classList.add('hover');
 												self.classList.add('hover');
@@ -91,6 +97,7 @@
 								})
 							}
 						}
+						// }, 50)
 					}
 				}
 			}
@@ -199,7 +206,9 @@
 			id: 'main',
 			idFrame: 'mainframe',
 			as: null,
-			init: function() {
+			onbeforeonload: function() {
+			},
+			onload: function() {
 				this.stopWork();
 				this.scrollWork();
 				this.contextmenu();
@@ -290,7 +299,7 @@
 				modx.resizer.mask = d.createElement('div');
 				modx.resizer.mask.id = 'mask_resizer';
 				modx.resizer.mask.style.zIndex = modx.resizer.oldZIndex;
-				d.getElementById(modx.resizer.switcher).onclick = modx.resizer.toggle;
+				//d.getElementById(modx.resizer.switcher).onclick = modx.resizer.toggle;
 				d.getElementById(modx.resizer.id).onmousedown = modx.resizer.onMouseDown;
 				d.getElementById(modx.resizer.id).onmouseup = modx.resizer.mask.onmouseup = modx.resizer.onMouseUp
 			},
@@ -471,10 +480,12 @@
 					id = modx.tree.itemToChange.substr(4),
 					parent = 0,
 					menuindex = [],
+					index = 0,
 					level = 0,
 					indent = el.firstChild.querySelector('.indent'),
 					i = 0;
 				indent.innerHTML = '';
+				el.removeAttribute('draggable');
 				if(this.parentNode.classList.contains('dragenter')) {
 					parent = parseInt(this.parentNode.id.substr(4));
 					level = parseInt(this.dataset.level) + 1;
@@ -499,6 +510,10 @@
 					}, function() {
 						modx.tree.restoreTree()
 					});
+					// :TODO проверка на открытый документ
+					// index = menuindex.indexOf(id);
+					// el = w.main.document.querySelector('#documentPane input[name=menuindex]');
+					// if(el && index > 0) el.value = index;
 					//console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
 				}
 				if(this.parentNode.classList.contains('dragafter')) {
@@ -516,6 +531,10 @@
 					}, function() {
 						modx.tree.restoreTree()
 					});
+					// :TODO проверка на открытый документ
+					// index = menuindex.indexOf(id);
+					// el = w.main.document.querySelector('#documentPane input[name=menuindex]');
+					// if(el && index > 0) el.value = index;
 					//console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
 				}
 				if(this.parentNode.classList.contains('dragbefore')) {
@@ -533,10 +552,13 @@
 					}, function() {
 						modx.tree.restoreTree()
 					});
+					// :TODO проверка на открытый документ
+					// index = menuindex.indexOf(id);
+					// el = w.main.document.querySelector('#documentPane input[name=menuindex]');
+					// if(el && index > 0) el.value = index;
 					//console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
 				}
-				el.removeAttribute('draggable');
-				this.parentNode.className = '';
+				this.parentNode.removeAttribute('class');
 				this.parentNode.removeAttribute('draggable');
 				e.preventDefault();
 			},
@@ -585,7 +607,7 @@
 					iconNode.innerHTML = iconNode.dataset.iconFolderClose;
 					delete modx.openedArray[b];
 					modx.animation.slideUp(this.rpcNode, 80, function() {
-						this.innerHTML = '';
+						this.innerHTML = ''
 					});
 					this.saveFolderState()
 				}
@@ -595,7 +617,7 @@
 					this.rpcNode.innerHTML = typeof a === 'object' ? a.responseText : a;
 					this.rpcNode.loaded = true;
 					if(this.rpcNode.id !== 'treeRoot') {
-						modx.animation.slideDown(this.rpcNode, 80);
+						modx.animation.slideDown(this.rpcNode, 80)
 					}
 					var el = d.getElementById('buildText');
 					if(el) {
@@ -609,7 +631,7 @@
 					el = d.getElementById('mx_loginbox');
 					if(el) {
 						modx.animation.slideUp(this.rpcNode, 80, function() {
-							this.innerHTML = '';
+							this.innerHTML = ''
 						});
 						w.location = 'index.php'
 					}
@@ -1238,6 +1260,7 @@
 					a.style.overflow = 'hidden';
 					b += (h / 1000) * b;
 					this.animate(a.firstChild, 'marginTop', 'px', 0, -h, b, function() {
+						a.removeAttribute('style');
 						return c ? c.call(a) : ''
 					}, 'slide')
 				} else if(typeof a === 'string') {
@@ -1258,6 +1281,7 @@
 					a.firstChild.style.marginTop = -h + 'px';
 					b += (h / 1000) * b;
 					this.animate(a.firstChild, 'marginTop', 'px', -h, 0, b, (function() {
+						a.removeAttribute('style');
 						return c ? c.call(a) : '';
 					}), 'slide')
 				} else if(typeof a === 'string') {
