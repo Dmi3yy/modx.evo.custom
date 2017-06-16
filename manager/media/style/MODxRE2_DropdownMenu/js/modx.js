@@ -50,7 +50,7 @@
 				};
 				els = mm.querySelectorAll('.nav > li');
 				for(i = 0; i < els.length; i++) {
-					els[i].onmouseenter = function() {
+					els[i].onmouseover = function() {
 						els = mm.querySelectorAll('.nav > li.hover');
 						for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
 						this.classList.add('hover')
@@ -58,7 +58,7 @@
 				}
 				els = mm.querySelectorAll('.nav > li > ul > li');
 				for(i = 0; i < els.length; i++) {
-					els[i].onmouseenter = function(e) {
+					els[i].onmouseover = function(e) {
 						var self = this;
 						// :TODO сделать обновляемые элементы
 						// clearTimeout(timer);
@@ -84,7 +84,7 @@
 										ul.id = 'parent_' + self.id;
 										els = ul.querySelectorAll('li');
 										for(ii = 0; ii < els.length; ii++) {
-											els[ii].onmouseenter = function() {
+											els[ii].onmouseover = function() {
 												// clearTimeout(timer);
 												els = self.parentNode.parentNode.querySelectorAll('li.hover');
 												for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
@@ -184,10 +184,10 @@
 				el.onmouseenter = function() {
 					t.open()
 				};
-				this.result.onmouseenter = function() {
+				this.result.onmouseover = function() {
 					t.open()
 				};
-				this.result.onmouseleave = function() {
+				this.result.onmouseout = function() {
 					t.close()
 				};
 				d.getElementById(this.id).getElementsByClassName(this.classMask)[0].onmouseenter = function() {

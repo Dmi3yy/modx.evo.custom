@@ -145,7 +145,7 @@ if(isset($action)) {
 							$row = $modx->db->getRow($sql);
 							$contextmenu = array(
 								'header' => array(
-									'innerText' => $row['name']
+									'innerHTML' => '<i class="fa fa-code"></i> ' . $row['name']
 								),
 								'item' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -161,10 +161,10 @@ if(isset($action)) {
 						} else {
 							$contextmenu = array(
 								'header' => array(
-									'innerText' => $name
+									'innerHTML' => '<i class="fa fa-code"></i> ' . $name
 								),
 								'item' => array(
-									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_snippet'],
+									'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
 									'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=" . $name . "'})"
 								)
 							);
@@ -183,7 +183,7 @@ if(isset($action)) {
 							$row = $modx->db->getRow($sql);
 							$contextmenu = array(
 								'header' => array(
-									'innerText' => $row['name']
+									'innerHTML' => '<i class="fa fa-th-large"></i> ' . $row['name']
 								),
 								'item' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -199,10 +199,10 @@ if(isset($action)) {
 						} else {
 							$contextmenu = array(
 								'header' => array(
-									'innerText' => $name
+									'innerHTML' => '<i class="fa fa-th-large"></i> ' . $name
 								),
 								'item' => array(
-									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_htmlsnippet'],
+									'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
 									'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
 								)
 							);
@@ -244,7 +244,7 @@ if(isset($action)) {
 								$row = $modx->db->getRow($sql);
 								$contextmenu = array(
 									'header' => array(
-										'innerText' => $row['name']
+										'innerHTML' => '<i class="fa fa-code"></i> ' . $row['name']
 									),
 									'item' => array(
 										'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -260,14 +260,14 @@ if(isset($action)) {
 							} else {
 								$contextmenu = array(
 									'header' => array(
-										'innerText' => $name
+										'innerHTML' => '<i class="fa fa-code"></i> ' . $name
 									),
 									'item' => array(
-										'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_htmlsnippet'],
+										'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_htmlsnippet'],
 										'onclick' => "modx.openWindow({url: 'index.php?a=77&itemname=" . $name . "'})"
 									),
 									'item2' => array(
-										'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_snippet'],
+										'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_snippet'],
 										'onclick' => "modx.openWindow({url: 'index.php?a=23&itemname=" . $name . "'})"
 									)
 								);
@@ -332,7 +332,7 @@ if(isset($action)) {
 							$row = $modx->db->getRow($sql);
 							$contextmenu = array(
 								'header' => array(
-									'innerText' => $row['name']
+									'innerHTML' => '<i class="fa fa-list-alt"></i> ' . $row['name']
 								),
 								'item' => array(
 									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['edit'],
@@ -348,10 +348,10 @@ if(isset($action)) {
 						} else {
 							$contextmenu = array(
 								'header' => array(
-									'innerText' => $name
+									'innerHTML' => '<i class="fa fa-list-alt"></i> ' . $name
 								),
 								'item' => array(
-									'innerHTML' => '<i class="fa fa-pencil-square-o"></i> ' . $_lang['new_tmplvars'],
+									'innerHTML' => '<i class="fa fa-plus"></i> ' . $_lang['new_tmplvars'],
 									'onclick' => "modx.openWindow({url: 'index.php?a=300&itemname=" . $name . "'})"
 								)
 							);
