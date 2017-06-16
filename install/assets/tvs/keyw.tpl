@@ -1,11 +1,11 @@
 ﻿/**
  * keyw
  *
- * Ключевые слова
+ * Meta keywords
  *
  * @category        tv
  * @name            keyw
- * @internal        @caption Ключевые слова
+ * @internal        @caption Meta keywords
  * @internal        @input_type text
  * @internal        @input_options
  * @internal        @input_default [*pagetitle*]
