@@ -36,22 +36,6 @@
 #mainMenu .nav > li > ul > li.disabled > a { opacity: 0.5; }
 #mainMenu .nav > li > ul > li.locked > a { font-style: italic }
 #mainMenu .nav > li > ul > li > a small { line-height: 1em }
-@media (min-width: 1020px) {
-#mainMenu #nav > li > a > .fa { font-size: 1.2rem }
-}
-@media (max-width: 1020px) {
-#mainMenu .nav > li > a, #mainMenu .nav .label_searchid { padding: 0 0.75rem; }
-}
-@media (max-width: 840px) {
-#mainMenu #nav > li > a { font-size: 0; }
-#mainMenu .nav > li > a, #mainMenu .nav .label_searchid { padding: 0 0.5rem; }
-#mainMenu #nav > li > a > .fa { display: inline-block; margin-right: 0; }
-#statusbar { display: none }
-}
-@media (max-width: 480px) {
-#mainMenu .nav > li > a .username { display: none }
-#mainMenu .nav > li > a .icon { margin-left: 0; width: auto }
-}
 #mainMenu .account #msgCounter { display: none; position: absolute; z-index: 1; right: 0.4rem; top: 0.4rem; width: 0.4rem; height: 0.4rem; background-color: #FFC107; font-size: 0; border-radius: 50%;; }
 #mainMenu .account #newMail { display: none }
 /* statusbar */
@@ -71,7 +55,7 @@
 #mainMenu #searchform .fa-refresh { position: absolute; z-index: 9; display: none; top: 0.6rem; right: 0.8rem; line-height: 1em }
 /* #searchresult */
 #searchresult { position: absolute; z-index: 99; overflow: auto; top: 2.2rem; right: -30rem; bottom: 0; width: 30rem; max-width: 100%; background-color: #fff; border-left: 1px solid rgba(0, 0, 0, 0.1); opacity: 0; visibility: hidden; transition: 0.25s ease 0.5s; transition-delay: 0.3s; }
-#searchresult.open, #searchresult:hover { right: 0; box-shadow: 0 0 4.5rem rgba(0, 0, 0, 0.15); opacity: 1; visibility: visible; transition: 0.5s ease 0.5s; -webkit-transition-delay: 0s; transition-delay: 0s }
+#searchresult.open { right: 0; box-shadow: 0 0 4.5rem rgba(0, 0, 0, 0.15); opacity: 1; visibility: visible; transition: 0.5s ease 0.5s; -webkit-transition-delay: 0s; transition-delay: 0s }
 #searchresult .ajaxSearchResults ul, #searchresult .ajaxSearchResults li { margin: 0; padding: 0; list-style: none }
 #searchresult .ajaxSearchResults b, #searchresult .ajaxSearchResults strong, #searchresult .ajaxSearchResults a { position: relative; z-index: 0; display: block; color: #333; padding: 0.25rem 1rem; margin-top: -1px; border-top: 1px solid rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.03); box-sizing: border-box }
 #searchresult .ajaxSearchResults b { z-index: 1; background-color: #ddd }
@@ -81,3 +65,19 @@
 #searchresult .ajaxSearchResults a.selected { z-index: 1; background-color: #1976D2; color: #fff; font-weight: 700; }
 #searchresult .ajaxSearchResults a .text-danger { color: #333; font-weight: 700 }
 #searchresult .ajaxSearchResults a.selected .text-danger { color: #FFC107; text-shadow: 0 0 1px rgba(0, 0, 0, 0.5); }
+@media (min-width: 1020px) {
+#mainMenu #nav > li > a > .fa { font-size: 1.2rem }
+}
+@media (max-width: 1020px) {
+#mainMenu .nav > li > a, #mainMenu .nav .label_searchid { padding: 0 0.75rem; }
+}
+@media (max-width: 840px) {
+#mainMenu #nav > li > a { font-size: 0; }
+#mainMenu .nav > li > a, #mainMenu .nav .label_searchid { padding: 0 0.5rem; }
+#mainMenu #nav > li > a > .fa { display: inline-block; margin-right: 0; }
+#statusbar { display: none }
+}
+@media (max-width: 480px) {
+#mainMenu .nav > li > a .username, #searchresult .ajaxSearchResults a > i { display: none }
+#mainMenu .nav > li > a .icon { margin-left: 0; width: auto }
+}
