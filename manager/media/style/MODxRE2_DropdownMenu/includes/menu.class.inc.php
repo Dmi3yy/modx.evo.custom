@@ -79,9 +79,6 @@ class EVOmenu {
 				}
 
 				$output .= $modx->parseText($itemTpl, $ph);
-				if($value[8] == 1) {
-					$output .= '<li class="divider"></li>';
-				}
 			}
 
 			$ph = array();

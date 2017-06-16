@@ -27,6 +27,7 @@ if(isset($action)) {
 			if(isset($_REQUEST['tab'])) {
 				$sql = '';
 				$a = '';
+				$role = $_SESSION['mgrRole'];
 
 				if($_REQUEST['tab'] == 0) {
 					$a = 16;
@@ -39,9 +40,11 @@ if(isset($action)) {
 
 				} else if($_REQUEST['tab'] == 1) {
 					$a = 301;
-					$sql = $modx->db->query('SELECT t1.*
+					$sql = $modx->db->query('SELECT t1.*, IF(t2.templateid,0,1) AS disabled
 					FROM ' . $modx->getFullTableName('site_tmplvars') . ' AS t1
+					LEFT JOIN ' . $modx->getFullTableName('site_tmplvar_templates') . ' AS t2 ON t1.id=t2.tmplvarid
 					#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
+					GROUP BY t1.id
 					ORDER BY t1.name ASC');
 
 					echo '<li><a href="index.php?a=300" target="main"><i class="fa fa-plus"></i>' . $_lang['new_tmplvars'] . '</a></li>';
@@ -76,7 +79,9 @@ if(isset($action)) {
 
 				if($modx->db->getRecordCount($sql)) {
 					while($row = $modx->db->getRow($sql)) {
-						echo '<li class="' . ($row['disabled'] ? 'deleted' : '') . '"><a href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+						if($row['locked'] && $role != 1) continue;
+
+						echo '<li class="' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
 					}
 				}
 			}
