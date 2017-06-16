@@ -864,7 +864,7 @@
 						}
 						break;
 					case 8:
-						if(this.selectedObjectDeleted) {
+						if(d.getElementById('node' + this.itemToChange).firstChild.dataset.deleted) {
 							if(confirm("'" + this.selectedObjectName + "' " + modx.lang.confirm_undelete) === true) {
 								w.main.location.href = "index.php?a=63&id=" + this.itemToChange
 							}
