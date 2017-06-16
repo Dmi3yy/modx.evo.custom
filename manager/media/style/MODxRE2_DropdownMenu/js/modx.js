@@ -2,6 +2,7 @@
 	'use strict';
 	modx.extended({
 		frameset: 'frameset',
+		minWidth: 480,
 		init: function() {
 			if(!localStorage.getItem('MODX_lastPositionSideBar')) {
 				localStorage.setItem('MODX_lastPositionSideBar', this.config.tree_width)
@@ -147,7 +148,8 @@
 												if(p.tagName === 'A') {
 													var el = t.result.querySelector('.selected');
 													if(el) el.className = '';
-													p.className = 'selected'
+													p.className = 'selected';
+													if(w.innerWidth < modx.minWidth) t.close()
 												}
 											}
 										} else {
@@ -176,13 +178,19 @@
 				el.onclick = function() {
 					t.open()
 				};
-				el.onblur = function() {
-					t.close()
-				};
-				el.onmouseover = function() {
+				// el.onblur = function() {
+				// 	t.close()
+				// };
+				el.onmouseenter = function() {
 					t.open()
 				};
-				d.getElementById(this.id).getElementsByClassName(this.classMask)[0].onmouseover = function() {
+				this.result.onmouseenter = function() {
+					t.open()
+				};
+				this.result.onmouseleave = function() {
+					t.close()
+				};
+				d.getElementById(this.id).getElementsByClassName(this.classMask)[0].onmouseenter = function() {
 					t.open()
 				};
 				d.getElementById(this.id).getElementsByClassName(this.classMask)[0].onmouseout = function() {
@@ -670,7 +678,8 @@
 								modx.openWindow(href);
 								this.restoreTree()
 							} else {
-								w.main.location.href = href
+								w.main.location.href = href;
+								if(w.innerWidth < modx.minWidth) modx.resizer.toggle()
 							}
 						}
 					}
