@@ -239,7 +239,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 				$ph['contextmenu'] = ' data-contextmenu="' . _htmlentities($ph['contextmenu']) . '"';
 			}
 
-			if(!$_SESSION['tree_show_only_folders']) {
+			if($_SESSION['tree_show_only_folders']) {
 				if($row['parent'] == 0) {
 					$node = $modx->parseText($tpl, $ph);
 				} else {
@@ -255,7 +255,7 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 			$ph['icon_folder_open'] = $ph['isPrivate'] ? $_style['tree_folderopen_secure'] : $_style['tree_folderopen_new'];
 			$ph['icon_folder_close'] = $ph['isPrivate'] ? $_style['tree_folder_secure'] : $_style['tree_folder_new'];
 
-			if(!$_SESSION['tree_show_only_folders']) {
+			if($_SESSION['tree_show_only_folders']) {
 				$checkFolders = checkIsFolder($row['id'], 1) ? 1 : 0; // folders
 				$checkDocs = checkIsFolder($row['id'], 0) ? 1 : 0; // no folders
 				$ph['tree_page_click'] = 3;

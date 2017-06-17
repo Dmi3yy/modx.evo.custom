@@ -1296,20 +1296,17 @@
 		setTimeout('modx.tree.restoreTree()', 50)
 	};
 	w.mainMenu.startrefresh = function(a) {
+		console.log('mainMenu.startrefresh(' + a + ')');
 		if(a === 1) {
-			//console.log('mainMenu.startrefresh(' + a + ')');
 			modx.tree.restoreTree()
 		}
 		if(a === 2) {
-			//console.log('mainMenu.startrefresh(' + a + ')');
 			modx.tree.restoreTree()
 		}
 		if(a === 9) {
-			//console.log('mainMenu.startrefresh(' + a + ')');
 			modx.tree.restoreTree()
 		}
 		if(a === 10) {
-			//console.log('mainMenu.startrefresh(' + a + ')');
 			w.location.href = "../" + modx.MGR_DIR
 		}
 	};

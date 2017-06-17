@@ -12,7 +12,7 @@ box-shadow: inset -0.15rem 0.15rem 0.45rem 0 rgba(0, 0, 0, 0.1); }
 #treeMenu .treeButton.disabled { color: #777; opacity: 0.5 }
 #treeHolder { position: relative; z-index: 1; cursor: default; overflow: auto; height: 100%; max-height: calc(100% - 30px); white-space: nowrap }
 #treeHolder .rootNode { padding: 0.2em 0.5em; cursor: pointer; }
-#treeRoot { float: left; width: 100% }
+#treeRoot { float: left; width: 100%; color: #333; }
 #treeRoot a { position: relative; display: block; clear: both; text-decoration: none; padding: 0.1em 0 0.1em 2.2em; font-size: 1em; color: #333; cursor: default; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
 #treeRoot a:hover:not(.empty), #treeRoot a.current { background-color: rgba(33, 150, 243, 0.1) }
 #treeRoot a small { margin: 0 0.8em 0 0.2em }
@@ -46,6 +46,7 @@ box-shadow: inset -0.15rem 0.15rem 0.45rem 0 rgba(0, 0, 0, 0.1); }
 .dark #treeMenu .treeButton:hover:not(.disabled) { background-color: #2d3033; color: #fff }
 .dark #tree .treeframebody { border-right: 1px solid rgba(255, 255, 255, 0.1); background-color: #1d2023 }
 .dark #treeHolder .rootNode { color: #C5C5C5; }
+.dark #treeRoot { color: #b3b3b3; }
 .dark #treeRoot a { color: #b3b3b3; }
 .dark #treeRoot a:hover:not(.empty), .dark #treeRoot a.current { background-color: rgba(255, 255, 255, 0.15); }
 .dark #treeRoot a.selected, #treeRoot .dragenter > a { background-color: rgba(0, 142, 255, 0.19); }

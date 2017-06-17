@@ -28,7 +28,7 @@ if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwar
 }
 
 if(!isset($_SESSION['tree_show_only_folders'])) {
-	$_SESSION['tree_show_only_folders'] = 1;
+	$_SESSION['tree_show_only_folders'] = 0;
 }
 
 $body_class = '';
@@ -369,7 +369,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 			</div>
 			<div class="form-group">
 				<label>
-					<input type="checkbox" name="showonlyfolders" value="<?php echo($_SESSION['tree_show_only_folders'] ? 1 : '') ?>" onclick="this.value = this.value ? '' : 1;" <?php echo($_SESSION['tree_show_only_folders'] ? ' checked="checked"' : '') ?> /> <?php echo $_lang['view_child_resources_in_container'] ?></label>
+					<input type="checkbox" name="showonlyfolders" value="<?php echo($_SESSION['tree_show_only_folders'] ? 1 : '') ?>" onclick="this.value = (this.value ? '' : 1);" <?php echo($_SESSION['tree_show_only_folders'] ? '' : ' checked="checked"') ?> /> <?php echo $_lang['view_child_resources_in_container'] ?></label>
 			</div>
 			<div class="text-center">
 				<a href="javascript:;" class="btn btn-primary btn-sm" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
