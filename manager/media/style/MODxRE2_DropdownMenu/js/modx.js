@@ -238,7 +238,7 @@
 								if(r) {
 									el.id = 'node' + id;
 									el.dataset.contextmenu = r;
-									modx.tree.showPopup(id, '', '', '', '', e)
+									modx.tree.showPopup(e, id, name)
 								}
 							});
 							console.log("name: " + name + ", type: " + type);
@@ -571,38 +571,39 @@
 					d.cookie = 'MODX_themeColor=dark'
 				}
 			},
-			toggleNode: function(e, a, b, c) {
+			toggleNode: function(e, id) {
 				e = e || w.event;
 				if(e.ctrlKey) return;
 				e.stopPropagation();
-				this.rpcNode = d.getElementById('node' + b).lastChild;
-				var rpcNodeText,
-					loadText = modx.lang.loading_doc_tree,
-					iconNodeToggle = d.getElementById("s" + b),
-					iconNode = d.getElementById("f" + b);
+				var el = d.getElementById('node' + id).firstChild;
+				this.rpcNode = el.nextSibling;
+				var toggle = el.querySelector('.toggle'),
+					icon = el.querySelector('.icon');
 				if(this.rpcNode.innerHTML === '') {
-					iconNodeToggle.innerHTML = iconNodeToggle.dataset.iconCollapsed;
-					iconNode.innerHTML = iconNode.dataset.iconFolderOpen;
-					rpcNodeText = this.rpcNode.innerHTML;
-					modx.openedArray[b] = 1;
+					if(toggle) toggle.innerHTML = el.dataset.iconCollapsed;
+					icon.innerHTML = el.dataset.iconFolderOpen;
+					var rpcNodeText = this.rpcNode.innerHTML,
+						loadText = modx.lang.loading_doc_tree;
+					modx.openedArray[id] = 1;
 					if(rpcNodeText === "" || rpcNodeText.indexOf(loadText) > 0) {
 						var folderState = this.getFolderState();
 						d.getElementById('treeloader').classList.add('show');
-						modx.get('index.php?a=1&f=nodes&indent=' + a + '&parent=' + b + '&expandAll=' + c + folderState, function(r) {
+						modx.get('index.php?a=1&f=nodes&indent=' + el.dataset.indent + '&parent=' + id + '&expandAll=' + el.dataset.expandall + folderState, function(r) {
 							modx.tree.rpcLoadData(r);
 							modx.tree.draggable()
 						})
 					}
 					this.saveFolderState()
 				} else {
-					iconNodeToggle.innerHTML = iconNodeToggle.dataset.iconExpanded;
-					iconNode.innerHTML = iconNode.dataset.iconFolderClose;
-					delete modx.openedArray[b];
+					if(toggle) toggle.innerHTML = el.dataset.iconExpanded;
+					icon.innerHTML = el.dataset.iconFolderClose;
+					delete modx.openedArray[id];
 					modx.animation.slideUp(this.rpcNode, 80, function() {
 						this.innerHTML = ''
 					});
 					this.saveFolderState()
 				}
+				e.preventDefault()
 			},
 			rpcLoadData: function(a) {
 				if(this.rpcNode !== null) {
@@ -627,32 +628,36 @@
 					}
 				}
 			},
-			treeAction: function(e, a, b, c, f, g) {
+			treeAction: function(e, id) {
 				if(e.ctrlKey) return;
+				var el = d.getElementById('node' + id).firstChild,
+					treepageclick = parseInt(el.dataset.treepageclick),
+					showchildren = parseInt(el.dataset.showchildren),
+					openfolder = parseInt(el.dataset.openfolder);
 				if(tree.ca === "move") {
 					try {
-						this.setSelectedByContext(a);
-						w.main.setMoveValue(a, b)
+						this.setSelectedByContext(id);
+						w.main.setMoveValue(id, el.dataset.titleEsc)
 					} catch(oException) {
 						alert(modx.lang.unable_set_parent)
 					}
 				}
 				if(tree.ca === "open" || tree.ca === "") {
-					if(a === 0) {
+					if(id === 0) {
 						w.main.location.href = "index.php?a=2"
 					} else {
 						var href = '';
-						modx.setLastClickedElement(7, a);
-						if(!isNaN(parseFloat(c)) && isFinite(c)) {
-							href = "index.php?a=" + c + "&r=1&id=" + a + (g === 0 ? this.getFolderState() : '')
+						modx.setLastClickedElement(7, id);
+						if(!isNaN(treepageclick) && isFinite(treepageclick)) {
+							href = "index.php?a=" + treepageclick + "&r=1&id=" + id + (openfolder === 0 ? this.getFolderState() : '')
 						} else {
-							href = c;
+							href = treepageclick;
 						}
-						if(g === 2) {
-							if(f !== 1) {
+						if(openfolder === 2) {
+							if(showchildren !== 1) {
 								href = '';
 							}
-							d.getElementById('s' + a).onclick(e)
+							this.toggleNode(e, id)
 						}
 						if(href) {
 							if(e.shiftKey) {
@@ -665,44 +670,42 @@
 							}
 						}
 					}
-					var el = d.querySelector('#node' + a + '>.node');
+					var el = d.querySelector('#node' + id + '>.node');
 					modx.tree.setSelected(el)
 				}
 				if(tree.ca === "parent") {
 					try {
-						this.setSelectedByContext(a);
-						w.main.setParent(a, b)
+						this.setSelectedByContext(id);
+						w.main.setParent(id, el.dataset.titleEsc)
 					} catch(oException) {
 						alert(modx.lang.unable_set_parent)
 					}
 				}
 				if(tree.ca === "link") {
 					try {
-						this.setSelectedByContext(a);
-						w.main.setLink(a)
+						this.setSelectedByContext(id);
+						w.main.setLink(id)
 					} catch(oException) {
 						alert(modx.lang.unable_set_link)
 					}
 				}
 				e.preventDefault();
 			},
-			showPopup: function(a, b, c, f, g, e) {
+			showPopup: function(e, id, titleEsc) {
 				if(e.ctrlKey) return;
 				e.preventDefault();
 				var tree = d.getElementById('tree'),
-					node = e.view.document.getElementById('node' + a);
-				if(node) {
-					if(node.dataset.contextmenu) {
+					el = e.currentTarget || e.target;
+				if(el) {
+					if(el.dataset.contextmenu) {
 						e.target.dataset.toggle = '#contextmenu';
-						//if(e.type === 'contextmenu') {
 						modx.hideDropDown(e);
-						//}
 						this.ctx = d.createElement('div');
 						this.ctx.id = 'contextmenu';
 						this.ctx.className = 'dropdown-menu';
 						d.getElementById(modx.frameset).appendChild(this.ctx);
-						this.setSelectedByContext(a);
-						var dataJson = JSON.parse(node.dataset.contextmenu);
+						this.setSelectedByContext(id);
+						var dataJson = JSON.parse(el.dataset.contextmenu);
 						for(var key in dataJson) {
 							if(dataJson.hasOwnProperty(key)) {
 								var item = d.createElement('div');
@@ -746,16 +749,15 @@
 						} else {
 							y = y - this.ctx.offsetHeight / 2
 						}
-						this.itemToChange = a;
-						this.selectedObjectName = b;
+						this.itemToChange = id;
+						this.selectedObjectName = titleEsc;
 						this.dopopup(this.ctx, x + 10, y)
 					} else {
+						el = el.firstChild;
 						var ctx = d.getElementById('mx_contextmenu');
 						e.target.dataset.toggle = '#mx_contextmenu';
-						//if(e.type === 'contextmenu') {
 						modx.hideDropDown(e);
-						//}
-						this.setSelectedByContext(a);
+						this.setSelectedByContext(id);
 						var i4 = d.getElementById('item4'),
 							i5 = d.getElementById('item5'),
 							i8 = d.getElementById('item8'),
@@ -765,7 +767,7 @@
 						if(modx.permission.publish_document === 1) {
 							i9.style.display = 'block';
 							i10.style.display = 'block';
-							if(c === 1) i9.style.display = 'none';
+							if(parseInt(el.dataset.published) === 1) i9.style.display = 'none';
 							else i10.style.display = 'none'
 						} else {
 							i5.style.display = 'none'
@@ -773,7 +775,7 @@
 						if(modx.permission.delete_document === 1) {
 							i4.style.display = 'block';
 							i8.style.display = 'block';
-							if(f === 1) {
+							if(parseInt(el.dataset.deleted) === 1) {
 								i4.style.display = 'none';
 								i9.style.display = 'none';
 								i10.style.display = 'none'
@@ -781,7 +783,7 @@
 								i8.style.display = 'none'
 							}
 						}
-						if(g === 1) i11.style.display = 'block';
+						if(parseInt(el.dataset.isfolder) === 1) i11.style.display = 'block';
 						else i11.style.display = 'none';
 						var bodyHeight = tree.offsetHeight + tree.offsetTop;
 						var x = e.clientX > 0 ? e.clientX : e.pageX;
@@ -794,8 +796,8 @@
 							y = y - ctx.offsetHeight / 2
 						}
 						if(e.target.parentNode.parentNode.classList.contains('node')) x += 50;
-						this.itemToChange = a;
-						this.selectedObjectName = b;
+						this.itemToChange = id;
+						this.selectedObjectName = titleEsc;
 						this.dopopup(ctx, x + 10, y)
 					}
 					e.stopPropagation()
