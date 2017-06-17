@@ -1,7 +1,7 @@
 Сайт сборки: http://modx.com.ua
 
 Актуальная версия: https://github.com/dmi3yy/modx.evo.custom/releases
-1.2.1-d9.1.6b  (18.06.2017)
+1.2.1-d9.1.6  (18.06.2017)
 =======================================================
 - refactor MODxRE_dropdownmenu theme.  x4 faster works (http://take.ms/Wwgbq)
 - refactor wait.static - now save documents, setting faster more then 1sec (only in new theme)
