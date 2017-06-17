@@ -1,6 +1,29 @@
 Сайт сборки: http://modx.com.ua
 
 Актуальная версия: https://github.com/dmi3yy/modx.evo.custom/releases
+1.2.1-d9.1.6b  (18.06.2017)
+=======================================================
+- refactor MODxRE_dropdownmenu theme.  x4 faster works (http://take.ms/Wwgbq)
+- refactor wait.static - now save documents, setting faster more then 1sec (only in new theme)
+- remember url for work in manager now with reload not redirect to welcom page (only in new theme)
+- Dark mode for new theme, swith by button in tree  (http://take.ms/99K0D)
+- new Dashboard, now all change with plugin, and no more style in code inside plugin (https://gist.github.com/dmi3yy/d065729c3c37eb3f17eab247ae1dd10d) (only in new theme)
+- delete alterTitle (Preparations for merging into Evolution CMS)
+- delete .htaccess (autocreate if not, when save settings) (Preparations for merging into Evolution CMS)
+- rename robots.txt to sample_robots.txt (Preparations for merging into Evolution CMS)
+- rename some fields into ENG (Preparations for merging into Evolution CMS)
+- contextMenu for elements in Codemirror (http://take.ms/opW8t) (only in new theme)
+- Drag&Drop documents in Tree (only in new theme)
+- fix for normal work: [*placeholder[(system_variabnle)]*]
+- DropDown 3 Level in Top menu (http://take.ms/Dm9qZ)
+- [F] fix save assignedTv in Template
+- KcFinder. png background fix
+- Update TinyMce to 4.6.3
+- phpthumb: fix default quality of image to 85 for best in googlepagespeed
+- update Doclister (редирект с doc.html?page=1 на doc.html)
+
+
+
 1.2.1-d9.1.5  (22.05.2017)
 =======================================================
 - refactor onManagerNodePrerender (now can full castomize tree, only for MODxRE_dropdownMenu)
