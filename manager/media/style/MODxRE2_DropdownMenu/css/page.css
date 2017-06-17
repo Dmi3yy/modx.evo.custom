@@ -30,5 +30,12 @@
 70% { color: #5EA5D5 }
 100% { color: #5DB54D; transform: rotate(359deg) }
 }
+@-webkit-keyframes modx-color {
+0% { color: #5DB54D; -webkit-transform: rotate(0deg); }
+20% { color: #5EA5D5 }
+50% { color: #EC633D; }
+70% { color: #5EA5D5 }
+100% { color: #5DB54D; -webkit-transform: rotate(359deg) }
+}
 /* dark */
 /*.dark #mainloader { background-color: rgba(0, 0, 0, 0.15); }*/
