@@ -250,7 +250,7 @@ fieldset#preview h2.tab { float: right; }
 #actions .actionButtons .show .plus::before { content: "\f106"; }
 #actions .actionButtons .dropdown-menu { display: none; position: absolute; z-index: -1; left: auto; right: 0; top: 100%; width: 100%; min-width: 35px; margin: -2px 0 0; padding: 2px 0 0; text-align: left; font-size: 1em; background-color: #fff; border: 1px solid #32ab9a; border-top: none; border-radius: 0 0 3px 3px; overflow: hidden; }
 #actions .actionButtons .show > .dropdown-menu { display: block }
-#actions .actionButtons .dropdown-menu span { display: block; padding: 0 10px; height: 32px; line-height: 30px; color: #333; border: none; border-top: 1px solid #f2f2f2; cursor: pointer; }
+#actions .actionButtons .dropdown-menu span { display: block; padding: 0 10px; height: 32px; line-height: 30px; border: none; border-top: 1px solid #f2f2f2; cursor: pointer; }
 #actions .actionButtons .dropdown-menu span:hover { background-color: #fbfbfb; }
 #actions select#stay { display: block; position: relative; z-index: -1; clear: both; width: auto; height: 0; padding: 0 10px; margin: -100% 0 -32px 0; font-size: 1em; opacity: 0; visibility: hidden; }
 @media (max-width: 900px) {
