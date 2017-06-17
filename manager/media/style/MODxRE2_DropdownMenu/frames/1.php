@@ -198,10 +198,6 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 			<div class="row">
 				<div class="cell">
 					<?php include('mainmenu.php'); ?>
-					<div id="statusbar">
-						<div id="buildText"></div>
-						<div id="workText"></div>
-					</div>
 				</div>
 				<div class="cell">
 					<ul id="settings" class="nav">
@@ -310,6 +306,13 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 	</div>
 	<div id="main">
 		<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="modx.main.onload()"></iframe>
+		<div id="mainloader">
+			<div class="preLoaderText">
+				<img src="media/style/common/images/misc/logo.png" />
+				<p><?php echo $_lang['loading_page'] ?></p>
+				<i class="fa fa-cog fa-spin"></i>
+			</div>
+		</div>
 	</div>
 	<div id="resizer"></div>
 	<div id="searchresult"></div>

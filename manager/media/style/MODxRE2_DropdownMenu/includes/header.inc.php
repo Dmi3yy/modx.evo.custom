@@ -42,13 +42,12 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 
 		function document_onload() {
 			stopWorker();
-			hideLoader();
+			//hideLoader();
 			<?php
 			if(isset($_REQUEST['r']) && preg_match('@^[0-9]+$@', $_REQUEST['r'])) {
 				echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
 			}
 			?>
-			<?php if($modx->config['manager_theme'] == 'MODxRE2_DropdownMenu') { ?>
 
 			var actionButtons = document.getElementById('actions'),
 				actionSelect = document.getElementById('stay');
@@ -87,8 +86,6 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 					this.parentNode.classList.toggle('show')
 				}
 			}
-			<?php } ?>
-
 		}
 
 		function reset_path(elementName) {
@@ -158,8 +155,8 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 		function hideLoader() {
 			document.getElementById('preLoader').style.display = "none";
 		}
-
-		hideL = window.setTimeout("hideLoader()", 1500);
+//
+//		hideL = window.setTimeout("hideLoader()", 1500);
 
 		// add the 'unsaved changes' warning event handler
 		if(typeof window.addEventListener !== "undefined") {
@@ -198,6 +195,8 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 </head>
 <body <?php echo $modx_textdir ? ' class="rtl"' : '' ?> class="<?php echo $body_class ?>">
 
+<!--
 <div id="preLoader">
 	<div class="preLoaderText"><?php echo $_style['ajax_loader']; ?></div>
 </div>
+-->
