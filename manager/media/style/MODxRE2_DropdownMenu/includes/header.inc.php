@@ -71,7 +71,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 					if(!actionSelectOptions[i].selected) {
 						actionSelectNewOption = document.createElement('SPAN');
 						actionSelectNewOption.dataset.id = i;
-						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' ' + actionSelect.children[i].innerText;
+						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' ' + actionSelect.children[i].innerHTML;
 						actionSelectNewOption.onclick = function() {
 							var s = actionSelect.querySelector('option[selected=selected]');
 							if(s) s.selected = false;
