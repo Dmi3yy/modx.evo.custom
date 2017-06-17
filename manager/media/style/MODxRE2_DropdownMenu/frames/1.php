@@ -307,7 +307,11 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 	<div id="main">
 		<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="modx.main.onload()"></iframe>
 		<div id="mainloader">
-			<div class="preLoaderText"><?php echo $_style['ajax_loader']; ?></div>
+			<div class="preLoaderText">
+				<img src="media/style/common/images/misc/logo.png" />
+				<p><?php echo $_lang['loading_page'] ?></p>
+				<i class="fa fa-cog fa-spin"></i>
+			</div>
 		</div>
 	</div>
 	<div id="resizer"></div>
