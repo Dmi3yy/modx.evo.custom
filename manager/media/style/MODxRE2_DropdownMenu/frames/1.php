@@ -193,16 +193,11 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 <body class="<?php echo $body_class ?>">
 <input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id()); ?>" />
 <div id="frameset">
-	<div id="bandload"></div>
 	<div id="mainMenu" class="dropdown">
 		<div class="container">
 			<div class="row">
 				<div class="cell">
 					<?php include('mainmenu.php'); ?>
-					<div id="statusbar">
-						<div id="buildText"></div>
-						<div id="workText"></div>
-					</div>
 				</div>
 				<div class="cell">
 					<ul id="settings" class="nav">
@@ -311,6 +306,9 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 	</div>
 	<div id="main">
 		<iframe name="main" id="mainframe" src="index.php?a=<?php echo $initMainframeAction; ?>" scrolling="auto" frameborder="0" onload="modx.main.onload()"></iframe>
+		<div id="mainloader">
+			<div class="preLoaderText"><?php echo $_style['ajax_loader']; ?></div>
+		</div>
 	</div>
 	<div id="resizer"></div>
 	<div id="searchresult"></div>

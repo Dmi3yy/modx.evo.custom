@@ -247,18 +247,10 @@
 				}
 			},
 			work: function() {
-				var el = d.getElementById('workText');
-				if(el) {
-					el.innerHTML = modx.style.icons_working + modx.lang.working;
-					el.style.display = 'block';
-				} else setTimeout('modx.main.work()', 50)
+				d.getElementById('mainloader').classList.add('show')
 			},
 			stopWork: function() {
-				modx.tree.setSelectedByContext();
-				var el = d.getElementById('workText');
-				if(el) {
-					el.style.display = 'none';
-				} else setTimeout('modx.main.stopWork()', 50)
+				d.getElementById('mainloader').classList.remove('show')
 			},
 			scrollWork: function() {
 				var a = d.getElementById(modx.main.idFrame).contentWindow,
@@ -595,11 +587,7 @@
 					modx.openedArray[b] = 1;
 					if(rpcNodeText === "" || rpcNodeText.indexOf(loadText) > 0) {
 						var folderState = this.getFolderState();
-						var el = d.getElementById('buildText');
-						if(el) {
-							el.innerHTML = modx.style.tree_info + loadText;
-							el.style.display = 'block'
-						}
+						d.getElementById('treeloader').classList.add('show');
 						modx.get('index.php?a=1&f=nodes&indent=' + a + '&parent=' + b + '&expandAll=' + c + folderState, function(r) {
 							modx.tree.rpcLoadData(r);
 							modx.tree.draggable()
@@ -623,10 +611,8 @@
 					if(this.rpcNode.id !== 'treeRoot') {
 						modx.animation.slideDown(this.rpcNode, 80)
 					}
-					var el = d.getElementById('buildText');
-					if(el) {
-						el.style.display = 'none'
-					}
+					var el;
+					d.getElementById('treeloader').classList.remove('show');
 					if(this.rpcNode.id === 'treeRoot') {
 						el = d.getElementById('binFull');
 						if(el) this.showBin(true);
@@ -918,11 +904,7 @@
 			},
 			restoreTree: function() {
 				console.log('modx.tree.restoreTree()');
-				var el = d.getElementById('buildText');
-				if(el) {
-					el.innerHTML = modx.style.tree_info + modx.lang.loading_doc_tree;
-					el.style.display = 'block'
-				}
+				d.getElementById('treeloader').classList.add('show');
 				this.setItemToChange();
 				this.rpcNode = d.getElementById('treeRoot');
 				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2&id=' + this.itemToChange, function(r) {
@@ -932,11 +914,7 @@
 			},
 			expandTree: function() {
 				this.rpcNode = d.getElementById('treeRoot');
-				var el = d.getElementById('buildText');
-				if(el) {
-					el.innerHTML = modx.style.tree_info + modx.lang.loading_doc_tree;
-					el.style.display = 'block'
-				}
+				d.getElementById('treeloader').classList.add('show');
 				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=1&id=' + this.itemToChange, function(r) {
 					modx.tree.rpcLoadData(r);
 					modx.tree.saveFolderState();
@@ -945,11 +923,7 @@
 			},
 			collapseTree: function() {
 				this.rpcNode = d.getElementById('treeRoot');
-				var el = d.getElementById('buildText');
-				if(el) {
-					el.innerHTML = modx.style.tree_info + modx.lang.loading_doc_tree;
-					el.style.display = 'block'
-				}
+				d.getElementById('treeloader').classList.add('show');
 				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=0&id=' + this.itemToChange, function(r) {
 					modx.openedArray = [];
 					modx.tree.saveFolderState();
@@ -959,11 +933,7 @@
 			},
 			updateTree: function() {
 				this.rpcNode = d.getElementById('treeRoot');
-				var el = d.getElementById('buildText');
-				if(el) {
-					el.innerHTML = modx.style.tree_info + modx.lang.loading_doc_tree;
-					el.style.display = 'block'
-				}
+				d.getElementById('treeloader').classList.add('show');
 				var a = d.sortFrm;
 				var b = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + a.dt.value + '&tree_sortby=' + a.sortby.value + '&tree_sortdir=' + a.sortdir.value + '&tree_nodename=' + a.nodename.value + '&id=' + this.itemToChange + '&showonlyfolders=' + a.showonlyfolders.value;
 				modx.get('index.php?' + b, function(r) {
@@ -1210,13 +1180,16 @@
 		XHR: function() {
 			return ('XMLHttpRequest' in w) ? new XMLHttpRequest : new ActiveXObject('Microsoft.XMLHTTP');
 		},
-		get: function(a, b) {
+		get: function(a, b, c) {
 			var x = this.XHR();
 			x.open('GET', a, true);
 			x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+			if(c) {
+				x.responseType = 'document';
+			}
 			x.onload = function() {
 				if(this.status === 200 && typeof b === 'function') {
-					return b(this.responseText)
+					return b(this.response)
 				}
 			};
 			x.send()
@@ -1242,7 +1215,7 @@
 			x.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
 			x.onload = function() {
 				if(this.readyState === 4 && c !== u) {
-					return c(this.responseText)
+					return c(this.response)
 				}
 			};
 			x.send(f)

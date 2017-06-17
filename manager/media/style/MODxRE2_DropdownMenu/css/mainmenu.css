@@ -1,5 +1,3 @@
-/* bandload */
-#bandload { display: none; position: fixed; z-index: 101; left: 0; top: 0; width: 100%; height: 2px; background-color: #1976D2; -webkit-transition-duration: 0.5s; transition-duration: 0.5s; }
 /* #mainMenu */
 #mainMenu { background-color: #1d2023; color: #8b9298; -webkit-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.25); }
 #mainMenu.show { overflow: visible }
