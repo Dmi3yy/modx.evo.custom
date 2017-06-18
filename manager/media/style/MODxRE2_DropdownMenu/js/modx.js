@@ -25,7 +25,7 @@
 			id: 'mainMenu',
 			init: function() {
 				//console.log('modx.mainMenu.init()');
-				var mm = d.getElementById('mainMenu'), el, els, i, ii;
+				var mm = d.getElementById('mainMenu'), el, els, i, ii, timer;
 				mm.onclick = function(e) {
 					el = e.target.closest('a');
 					if(el) {
@@ -60,41 +60,54 @@
 				for(i = 0; i < els.length; i++) {
 					els[i].onmouseover = function(e) {
 						var self = this;
-						// :TODO сделать обновляемые элементы
+						clearTimeout(timer);
+						var ul = null;
+						if(self.parentNode.parentNode.lastChild.classList && self.parentNode.parentNode.lastChild.classList.contains('sub-menu')) {
+							ul = self.parentNode.parentNode.lastChild
+						} else {
+							ul = d.createElement('ul');
+							ul.className = 'sub-menu dropdown-menu';
+							self.parentNode.parentNode.appendChild(ul);
+							ul.style.left = self.offsetWidth + 'px';
+						}
 						els = mm.querySelectorAll('.nav > li li.hover');
 						for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
-						els = mm.querySelectorAll('.nav .sub-menu.show');
-						for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('show');
 						self.classList.add('hover');
-						if(self.classList.contains('toggle-dropdown')) {
-							el = self.parentNode.parentNode.children['parent_' + self.id];
-							if(el) {
-								el.classList.add('show')
-							} else {
-								var href = self.firstChild.href && self.firstChild.target === 'main' ? '&' + self.firstChild.href.split('?')[1] : '';
-								modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', href + '&parent=' + self.id, function(r) {
-									if(r) {
-										var ul = d.createElement('ul');
-										ul.innerHTML = r;
-										ul.className = 'sub-menu dropdown-menu';
-										self.parentNode.parentNode.appendChild(ul);
-										ul.style.left = self.offsetWidth + 'px';
-										ul.id = 'parent_' + self.id;
-										els = ul.querySelectorAll('li');
-										for(ii = 0; ii < els.length; ii++) {
-											els[ii].onmouseover = function() {
-												els = self.parentNode.parentNode.querySelectorAll('li.hover');
-												for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
-												this.classList.add('hover');
-												self.classList.add('hover');
-												e.stopPropagation()
+						timer = setTimeout(function() {
+							els = mm.querySelectorAll('.nav .sub-menu.show');
+							for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('show');
+							if(self.classList.contains('toggle-dropdown')) {
+								if(ul.id === 'parent_' + self.id) {
+									ul.classList.add('show')
+								} else {
+									ul.classList.remove('show');
+									timer = setTimeout(function() {
+										var href = self.firstChild.href && self.firstChild.target === 'main' ? '&' + self.firstChild.href.split('?')[1] : '';
+										modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', href + '&parent=' + self.id, function(r) {
+											if(r) {
+												ul.innerHTML = r;
+												ul.id = 'parent_' + self.id;
+												els = ul.querySelectorAll('li');
+												// :TODO добавить класс selected для третьего уровня
+												for(ii = 0; ii < els.length; ii++) {
+													els[ii].onmouseover = function() {
+														clearTimeout(timer);
+														els = self.parentNode.parentNode.querySelectorAll('li.hover');
+														for(ii = 0; ii < els.length; ii++) els[ii].classList.remove('hover');
+														this.classList.add('hover');
+														self.classList.add('hover');
+														e.stopPropagation()
+													}
+												}
+												ul.classList.add('show')
 											}
-										}
-										ul.classList.add('show')
-									}
-								})
+										})
+									}, 100)
+								}
+							} else {
+								ul.classList.remove('open')
 							}
-						}
+						}, 100)
 					}
 				}
 			}
