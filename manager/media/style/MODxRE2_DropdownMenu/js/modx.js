@@ -15,7 +15,9 @@
 			this.resizer.init();
 			this.search.init();
 			this.setLastClickedElement(0, 0);
-			w.setInterval(this.keepMeAlive, 1000 * 60 * this.config.session_timeout);
+			if(this.config.session_timeout > 0) {
+				w.setInterval(this.keepMeAlive, 1000 * 60 * this.config.session_timeout);
+			}
 			if(modx.config.mail_check_timeperiod > 0) {
 				setTimeout('modx.updateMail(true)', 1000 * modx.config.mail_check_timeperiod)
 			}
@@ -58,6 +60,13 @@
 				}
 				els = mm.querySelectorAll('.nav > li > ul > li');
 				for(i = 0; i < els.length; i++) {
+					// :TODO добавить класс selected для второго уровня
+					if(w.location.hash) {
+						el = els[i]
+						if(el.firstChild &&  el.firstChild.href === w.location.href.replace('#', 'index.php')) {
+							el.classList.add('selected')
+						}
+					}
 					els[i].onmouseover = function(e) {
 						var self = this;
 						clearTimeout(timer);
@@ -88,7 +97,14 @@
 												ul.innerHTML = r;
 												ul.id = 'parent_' + self.id;
 												els = ul.querySelectorAll('li');
-												// :TODO добавить класс selected для третьего уровня
+												var id = w.location.hash.substr(2).replace(/=/g, '_').replace(/&/g, '__');
+												if(w.location.hash) {
+													var el = d.getElementById(id);
+													if(el) {
+														el.parentNode.classList.add('selected');
+														d.getElementById(el.parentNode.parentNode.id.substr(7)).classList.add('selected')
+													}
+												}
 												for(ii = 0; ii < els.length; ii++) {
 													els[ii].onmouseover = function() {
 														clearTimeout(timer);
@@ -509,7 +525,7 @@
 						for(i = 0; i < els.length; i++) menuindex[i] = els[i].id.substr(4);
 					} else {
 						el.parentNode.removeChild(el);
-						d.getElementById('p' + parent).innerHTML = (parseInt(this.dataset.private) ? modx.style.tree_folder_secure : modx.style.tree_folder)
+						d.querySelector('#node' + parent + ' .icon').innerHTML = (parseInt(this.dataset.private) ? modx.style.tree_folder_secure : modx.style.tree_folder)
 					}
 					modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
 						a: 'movedocument',

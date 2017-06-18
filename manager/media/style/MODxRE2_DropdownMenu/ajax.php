@@ -36,7 +36,7 @@ if(isset($action)) {
 					#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
 					ORDER BY t1.templatename ASC');
 
-					echo '<li><a href="index.php?a=19" target="main"><i class="fa fa-plus"></i>' . $_lang['new_template'] . '</a></li>';
+					echo '<li><a id="a_19" href="index.php?a=19" target="main"><i class="fa fa-plus"></i>' . $_lang['new_template'] . '</a></li>';
 
 				} else if($_REQUEST['tab'] == 1) {
 					$a = 301;
@@ -47,7 +47,7 @@ if(isset($action)) {
 					GROUP BY t1.id
 					ORDER BY t1.name ASC');
 
-					echo '<li><a href="index.php?a=300" target="main"><i class="fa fa-plus"></i>' . $_lang['new_tmplvars'] . '</a></li>';
+					echo '<li><a id="a_300" href="index.php?a=300" target="main"><i class="fa fa-plus"></i>' . $_lang['new_tmplvars'] . '</a></li>';
 
 				} else if($_REQUEST['tab'] == 2) {
 					$a = 78;
@@ -56,7 +56,7 @@ if(isset($action)) {
 					#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
 					ORDER BY t1.name ASC');
 
-					echo '<li><a href="index.php?a=77" target="main"><i class="fa fa-plus"></i>' . $_lang['new_htmlsnippet'] . '</a></li>';
+					echo '<li><a id="a_77" href="index.php?a=77" target="main"><i class="fa fa-plus"></i>' . $_lang['new_htmlsnippet'] . '</a></li>';
 
 				} else if($_REQUEST['tab'] == 3) {
 					$a = 22;
@@ -65,7 +65,7 @@ if(isset($action)) {
 					#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
 					ORDER BY t1.name ASC');
 
-					echo '<li><a href="index.php?a=23" target="main"><i class="fa fa-plus"></i>' . $_lang['new_snippet'] . '</a></li>';
+					echo '<li><a id="a_23" href="index.php?a=23" target="main"><i class="fa fa-plus"></i>' . $_lang['new_snippet'] . '</a></li>';
 
 				} else if($_REQUEST['tab'] == 4) {
 					$a = 102;
@@ -74,14 +74,14 @@ if(isset($action)) {
 					#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
 					ORDER BY t1.name ASC');
 
-					echo '<li><a href="index.php?a=101" target="main"><i class="fa fa-plus"></i>' . $_lang['new_plugin'] . '</a></li>';
+					echo '<li><a id="a_101" href="index.php?a=101" target="main"><i class="fa fa-plus"></i>' . $_lang['new_plugin'] . '</a></li>';
 				}
 
 				if($modx->db->getRecordCount($sql)) {
 					while($row = $modx->db->getRow($sql)) {
 						if($row['locked'] && $role != 1) continue;
 
-						echo '<li class="' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+						echo '<li class="' . ($row['disabled'] ? 'disabled' : '') . ($row['locked'] ? ' locked' : '') . '"><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main" data-parent-id="a_76__tab_' . $_REQUEST['tab'] . '">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
 					}
 				}
 			}
@@ -97,11 +97,11 @@ if(isset($action)) {
 				#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
 				ORDER BY t1.username ASC');
 
-			echo '<li><a href="index.php?a=11" target="main"><i class="fa fa-plus"></i>' . $_lang['new_user'] . '</a></li>';
+			echo '<li><a id="a_11" href="index.php?a=11" target="main"><i class="fa fa-plus"></i>' . $_lang['new_user'] . '</a></li>';
 
 			if($modx->db->getRecordCount($sql)) {
 				while($row = $modx->db->getRow($sql)) {
-					echo '<li><a href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+					echo '<li><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
 				}
 			}
 
@@ -116,11 +116,11 @@ if(isset($action)) {
 				#LEFT JOIN ' . $modx->getFullTableName('categories') . ' AS t2 ON t2.id=t1.category
 				ORDER BY t1.username ASC');
 
-			echo '<li><a href="index.php?a=87" target="main"><i class="fa fa-plus"></i>' . $_lang['new_web_user'] . '</a></li>';
+			echo '<li><a id="a_87" href="index.php?a=87" target="main"><i class="fa fa-plus"></i>' . $_lang['new_web_user'] . '</a></li>';
 
 			if($modx->db->getRecordCount($sql)) {
 				while($row = $modx->db->getRow($sql)) {
-					echo '<li><a href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
+					echo '<li><a id="a_' . $a . '__id_' . $row['id'] . '" href="index.php?a=' . $a . '&id=' . $row['id'] . '" target="main">' . $row['name'] . ' <small>(' . $row['id'] . ')</small></a></li>';
 				}
 			}
 
