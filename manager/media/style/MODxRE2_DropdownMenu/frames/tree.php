@@ -59,7 +59,7 @@ if(is_array($evtOut)) {
 		}
 		?>
 		<!--<div>-->
-		<div class="rootNode" onclick="modx.tree.treeAction(event, 0, '<?php $site_name = htmlspecialchars($site_name, ENT_QUOTES, $modx->config['modx_charset']);
+		<div id="node0" class="rootNode" onclick="modx.tree.treeAction(event, 0, '<?php $site_name = htmlspecialchars($site_name, ENT_QUOTES, $modx->config['modx_charset']);
 		echo $site_name; ?>');"><?php echo $_style['tree_showtree']; ?>&nbsp;<b><?php echo $site_name; ?></b>
 			<div id="treeloader"><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
 		</div>
