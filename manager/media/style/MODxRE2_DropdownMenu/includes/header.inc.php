@@ -65,7 +65,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				actionStay['stay2'] = '<i class="<?php echo $_style['actions_pencil'] ?>"></i>';
 				actionStay['stay3'] = '<i class="<?php echo $_style['actions_reply'] ?>"></i>';
 				if(actionSelect.value) {
-					actionSaveButton.innerHTML += '<i class="<?php echo $_style['actions_plus'] ?>"></i> + ' + actionStay['stay' + actionSelect.value] + ' ' + actionSelect.children['stay' + actionSelect.value].innerText
+					actionSaveButton.innerHTML += '<i class="<?php echo $_style['actions_plus'] ?>"></i> + ' + actionStay['stay' + actionSelect.value] + ' ' + actionSelect.children['stay' + actionSelect.value].innerHTML
 				}
 				var actionSelectNewOption = null,
 					actionSelectOptions = actionSelect.children,
