@@ -696,7 +696,7 @@
 				if(e.ctrlKey) return;
 				e.preventDefault();
 				var tree = d.getElementById('tree'),
-					el = e.currentTarget || e.target;
+					el = d.getElementById('node' + id) || e.target;
 				if(el) {
 					if(el.dataset.contextmenu) {
 						e.target.dataset.toggle = '#contextmenu';
