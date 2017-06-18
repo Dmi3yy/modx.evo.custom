@@ -88,7 +88,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset ?>" />
 	<meta name="viewport" content="initial-scale=0.9, maximum-scale=0.9, user-scalable=no" />
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/css/page.css" />
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/css/page.css?v=<?php echo $modx->config['settings_version'] ?>" />
 	<style>
 		#tree { width: <?php echo $MODX_positionSideBar ?>rem }
 		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>rem }
@@ -188,7 +188,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 		echo (empty($opened) ? '' : 'modx.openedArray[' . implode("] = 1;\n		modx.openedArray[", $opened) . '] = 1;') . "\n";
 		?>
 	</script>
-	<script src="media/style/<?php echo $modx->config['manager_theme'] ?>/js/modx.js"></script>
+	<script src="media/style/<?php echo $modx->config['manager_theme'] ?>/js/modx.js?v=<?php echo $modx->config['settings_version'] ?>"></script>
 </head>
 <body class="<?php echo $body_class ?>">
 <input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id()); ?>" />
