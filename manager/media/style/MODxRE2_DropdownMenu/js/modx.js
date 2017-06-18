@@ -628,16 +628,17 @@
 					}
 				}
 			},
-			treeAction: function(e, id) {
+			treeAction: function(e, id, title) {
 				if(e.ctrlKey) return;
 				var el = d.getElementById('node' + id).firstChild,
 					treepageclick = parseInt(el.dataset.treepageclick),
 					showchildren = parseInt(el.dataset.showchildren),
 					openfolder = parseInt(el.dataset.openfolder);
+				title = title || (el.dataset && el.dataset.titleEsc);
 				if(tree.ca === "move") {
 					try {
 						this.setSelectedByContext(id);
-						w.main.setMoveValue(id, el.dataset.titleEsc)
+						w.main.setMoveValue(id, title)
 					} catch(oException) {
 						alert(modx.lang.unable_set_parent)
 					}
@@ -676,7 +677,7 @@
 				if(tree.ca === "parent") {
 					try {
 						this.setSelectedByContext(id);
-						w.main.setParent(id, el.dataset.titleEsc)
+						w.main.setParent(id, title)
 					} catch(oException) {
 						alert(modx.lang.unable_set_parent)
 					}
@@ -691,7 +692,7 @@
 				}
 				e.preventDefault();
 			},
-			showPopup: function(e, id, titleEsc) {
+			showPopup: function(e, id, title) {
 				if(e.ctrlKey) return;
 				e.preventDefault();
 				var tree = d.getElementById('tree'),
@@ -750,7 +751,7 @@
 							y = y - this.ctx.offsetHeight / 2
 						}
 						this.itemToChange = id;
-						this.selectedObjectName = titleEsc;
+						this.selectedObjectName = title;
 						this.dopopup(this.ctx, x + 10, y)
 					} else {
 						el = el.firstChild;
@@ -797,7 +798,7 @@
 						}
 						if(e.target.parentNode.parentNode.classList.contains('node')) x += 50;
 						this.itemToChange = id;
-						this.selectedObjectName = titleEsc;
+						this.selectedObjectName = title;
 						this.dopopup(ctx, x + 10, y)
 					}
 					e.stopPropagation()
