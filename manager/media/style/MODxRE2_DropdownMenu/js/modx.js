@@ -248,8 +248,7 @@
 			oncontextmenu: function(e) {
 				if(e.ctrlKey) return;
 				var el = e.target;
-				if(el.className.match(/modxtv|modxplaceholder|modxattributevalue|modxchunk|modxsnippet|modxsnippetnocache/i)) {
-				//if(/modxtv|modxplaceholder|modxattributevalue|modxchunk|modxsnippet|modxsnippetnocache/i.test(el.className)) {
+				if(/modxtv|modxplaceholder|modxattributevalue|modxchunk|modxsnippet|modxsnippetnocache/i.test(el.className)) {
 					var id = Date.now(),
 						name = el.innerText.replace(/[\[|\]|{|}|\*||\#|\+|?|\!|&|=|`]/g, ''),
 						type = el.className.replace(/cm-modx/, ''),
