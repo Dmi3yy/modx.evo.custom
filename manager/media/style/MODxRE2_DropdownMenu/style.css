@@ -478,7 +478,7 @@ div#tabCategory.tab-page ul li ul li { padding-top: 7px; padding-bottom: 7px; }
 .rTableBody { display: table-row-group; }
 .rTableFoot { display: table-footer-group; }
 .lockCell, .mainCell, .btnCell, .rTableHead { display: table-cell; padding: 0; }
-.lockCell { width: 30px; padding-left: 10px; }
+.lockCell { width: 2.5em; padding-left: 10px; }
 .mainCell { width: auto; }
 .btnCell { width: 6em; text-align: right; padding-right: 10px; }
 .mainCell > span { display: block }
