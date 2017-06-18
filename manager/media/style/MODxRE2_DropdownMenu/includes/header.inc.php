@@ -42,7 +42,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 
 		function document_onload() {
 			stopWorker();
-			//hideLoader();
+
 			<?php
 			if(isset($_REQUEST['r']) && preg_match('@^[0-9]+$@', $_REQUEST['r'])) {
 				echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
@@ -128,6 +128,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 		}
 
 		var documentDirty = false;
+		var timerForUnload;
 
 		function checkDirt(evt) {
 			if(documentDirty === true) {
@@ -138,7 +139,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				if(evt) {
 					evt.returnValue = message;
 				}
-				stopWorker();
+				timerForUnload = setTimeout('stopWorker()', 100);
 				return message;
 			}
 		}
@@ -149,14 +150,6 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				document.forms[fName].elements[i].disabled = 'disabled';
 			}
 		}
-
-		var managerPath = "";
-
-		function hideLoader() {
-			document.getElementById('preLoader').style.display = "none";
-		}
-//
-//		hideL = window.setTimeout("hideLoader()", 1500);
 
 		// add the 'unsaved changes' warning event handler
 		if(typeof window.addEventListener !== "undefined") {
@@ -190,13 +183,11 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 			}
 		}
 
+		window.onunload = function() {
+			clearTimeout(timerForUnload);
+		}
+
 		/* ]]> */
 	</script>
 </head>
 <body <?php echo $modx_textdir ? ' class="rtl"' : '' ?> class="<?php echo $body_class ?>">
-
-<!--
-<div id="preLoader">
-	<div class="preLoaderText"><?php echo $_style['ajax_loader']; ?></div>
-</div>
--->
