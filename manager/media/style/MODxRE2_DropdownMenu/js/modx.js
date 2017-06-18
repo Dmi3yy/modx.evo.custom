@@ -1187,9 +1187,7 @@
 			var x = this.XHR();
 			x.open('GET', a, true);
 			x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-			if(c) {
-				x.responseType = 'document';
-			}
+			if(c) x.responseType = c;
 			x.onload = function() {
 				if(this.status === 200 && typeof b === 'function') {
 					return b(this.response)
