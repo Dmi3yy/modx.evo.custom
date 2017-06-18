@@ -28,11 +28,16 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
 	<link rel="stylesheet" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css?v=<?php echo $modx->config['settings_version'] ?>" />
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css" />
 	<?php echo sprintf('<script src="%s" type="text/javascript"></script>' . "\n", $modx->config['mgr_jquery_path']); ?>
+
+	<?php 
+	$aArr = array('2');
+	if(!in_array($_REQUEST['a'] ,$aArr)) {?>
 	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
 	<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
 	<script type="text/javascript" src="media/script/tabpane.js"></script>
+	<?php } ?>
 
 	<!-- OnManagerMainFrameHeaderHTMLBlock -->
 	<?php echo $onManagerMainFrameHeaderHTMLBlock . "\n"; ?>
@@ -71,7 +76,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 					if(!actionSelectOptions[i].selected) {
 						actionSelectNewOption = document.createElement('SPAN');
 						actionSelectNewOption.dataset.id = i;
-						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' ' + actionSelect.children[i].innerHTML;
+						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' ' + actionSelect.children[i].innerText;
 						actionSelectNewOption.onclick = function() {
 							var s = actionSelect.querySelector('option[selected=selected]');
 							if(s) s.selected = false;
@@ -194,9 +199,3 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 	</script>
 </head>
 <body <?php echo $modx_textdir ? ' class="rtl"' : '' ?> class="<?php echo $body_class ?>">
-
-<!--
-<div id="preLoader">
-	<div class="preLoaderText"><?php echo $_style['ajax_loader']; ?></div>
-</div>
--->
