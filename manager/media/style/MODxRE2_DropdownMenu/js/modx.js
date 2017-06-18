@@ -61,11 +61,8 @@
 				els = mm.querySelectorAll('.nav > li > ul > li');
 				for(i = 0; i < els.length; i++) {
 					// :TODO добавить класс selected для второго уровня
-					if(w.location.hash) {
-						el = els[i]
-						if(el.firstChild &&  el.firstChild.href === w.location.href.replace('#', 'index.php')) {
-							el.classList.add('selected')
-						}
+					if(w.location.hash && els[i].firstChild && els[i].firstChild.href === w.location.href.replace('#', 'index.php')) {
+						els[i].classList.add('selected')
 					}
 					els[i].onmouseover = function(e) {
 						var self = this;
@@ -244,36 +241,35 @@
 			onload: function() {
 				this.stopWork();
 				this.scrollWork();
-				this.contextmenu();
 				w.main.onclick = modx.hideDropDown;
+				w.main.oncontextmenu = this.oncontextmenu;
 				w.location.hash = w.main.frameElement.contentWindow.location.search;
 			},
-			contextmenu: function() {
-				w.main.oncontextmenu = function(e) {
-					if(e.ctrlKey) return;
-					var el = e.target;
-					if(/modxtv|modxplaceholder|modxattributevalue|modxchunk|modxsnippet|modxsnippetnocache/i.test(el.className)) {
-						var id = Date.now(),
-							name = el.innerText.replace(/[\[|\]|{|}|\*||\#|\+|?|\!|&|=|`]/g, ''),
-							type = el.className.replace(/cm-modx/, ''),
-							n = !!name.replace(/^\d+$/, '');
-						if(name && n) {
-							e.preventDefault();
-							modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
-								a: 'modxTagHelper',
-								name: name,
-								type: type
-							}, function(r) {
-								if(r) {
-									el.id = 'node' + id;
-									el.dataset.contextmenu = r;
-									modx.tree.showPopup(e, id, name)
-								}
-							});
-							console.log("name: " + name + ", type: " + type);
-						}
+			oncontextmenu: function(e) {
+				if(e.ctrlKey) return;
+				var el = e.target;
+				if(/modxtv|modxplaceholder|modxattributevalue|modxchunk|modxsnippet|modxsnippetnocache/i.test(el.className)) {
+					var id = Date.now(),
+						name = el.innerText.replace(/[\[|\]|{|}|\*||\#|\+|?|\!|&|=|`]/g, ''),
+						type = el.className.replace(/cm-modx/, ''),
+						n = !!name.replace(/^\d+$/, '');
+					if(name && n) {
+						e.preventDefault();
+						modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
+							a: 'modxTagHelper',
+							name: name,
+							type: type
+						}, function(r) {
+							if(r) {
+								el.id = 'node' + id;
+								el.dataset.contextmenu = r;
+								modx.tree.showPopup(e, id, name)
+							}
+						});
+						console.log("name: " + name + ", type: " + type);
 					}
 				}
+				e.preventDefault()
 			},
 			work: function() {
 				d.getElementById('mainloader').classList.add('show')
