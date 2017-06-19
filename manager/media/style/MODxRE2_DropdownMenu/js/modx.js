@@ -15,7 +15,9 @@
 			this.resizer.init();
 			this.search.init();
 			this.setLastClickedElement(0, 0);
-			w.setInterval(this.keepMeAlive, 1000 * 60 * this.config.session_timeout);
+			if(this.config.session_timeout > 0) {
+				w.setInterval(this.keepMeAlive, 1000 * 60 * this.config.session_timeout);
+			}
 			if(modx.config.mail_check_timeperiod > 0) {
 				setTimeout('modx.updateMail(true)', 1000 * modx.config.mail_check_timeperiod)
 			}
@@ -58,6 +60,10 @@
 				}
 				els = mm.querySelectorAll('.nav > li > ul > li');
 				for(i = 0; i < els.length; i++) {
+					// :TODO добавить класс selected для второго уровня
+					if(w.location.hash && els[i].firstChild && els[i].firstChild.href === w.location.href.replace('#', 'index.php')) {
+						els[i].classList.add('selected')
+					}
 					els[i].onmouseover = function(e) {
 						var self = this;
 						clearTimeout(timer);
@@ -88,7 +94,14 @@
 												ul.innerHTML = r;
 												ul.id = 'parent_' + self.id;
 												els = ul.querySelectorAll('li');
-												// :TODO добавить класс selected для третьего уровня
+												var id = w.location.hash.substr(2).replace(/=/g, '_').replace(/&/g, '__');
+												if(w.location.hash) {
+													var el = d.getElementById(id);
+													if(el) {
+														el.parentNode.classList.add('selected');
+														d.getElementById(el.parentNode.parentNode.id.substr(7)).classList.add('selected')
+													}
+												}
 												for(ii = 0; ii < els.length; ii++) {
 													els[ii].onmouseover = function() {
 														clearTimeout(timer);
@@ -228,36 +241,35 @@
 			onload: function() {
 				this.stopWork();
 				this.scrollWork();
-				this.contextmenu();
 				w.main.onclick = modx.hideDropDown;
+				w.main.oncontextmenu = this.oncontextmenu;
 				w.location.hash = w.main.frameElement.contentWindow.location.search;
 			},
-			contextmenu: function() {
-				w.main.oncontextmenu = function(e) {
-					if(e.ctrlKey) return;
-					var el = e.target;
-					if(/modxtv|modxplaceholder|modxattributevalue|modxchunk|modxsnippet|modxsnippetnocache/i.test(el.className)) {
-						var id = Date.now(),
-							name = el.innerText.replace(/[\[|\]|{|}|\*||\#|\+|?|\!|&|=|`]/g, ''),
-							type = el.className.replace(/cm-modx/, ''),
-							n = !!name.replace(/^\d+$/, '');
-						if(name && n) {
-							e.preventDefault();
-							modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
-								a: 'modxTagHelper',
-								name: name,
-								type: type
-							}, function(r) {
-								if(r) {
-									el.id = 'node' + id;
-									el.dataset.contextmenu = r;
-									modx.tree.showPopup(e, id, name)
-								}
-							});
-							console.log("name: " + name + ", type: " + type);
-						}
+			oncontextmenu: function(e) {
+				if(e.ctrlKey) return;
+				var el = e.target;
+				if(/modxtv|modxplaceholder|modxattributevalue|modxchunk|modxsnippet|modxsnippetnocache/i.test(el.className)) {
+					var id = Date.now(),
+						name = el.innerText.replace(/[\[|\]|{|}|\*||\#|\+|?|\!|&|=|`]/g, ''),
+						type = el.className.replace(/cm-modx/, ''),
+						n = !!name.replace(/^\d+$/, '');
+					if(name && n) {
+						e.preventDefault();
+						modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
+							a: 'modxTagHelper',
+							name: name,
+							type: type
+						}, function(r) {
+							if(r) {
+								el.id = 'node' + id;
+								el.dataset.contextmenu = r;
+								modx.tree.showPopup(e, id, name)
+							}
+						});
+						console.log("name: " + name + ", type: " + type);
 					}
 				}
+				e.preventDefault()
 			},
 			work: function() {
 				d.getElementById('mainloader').classList.add('show')
@@ -509,7 +521,7 @@
 						for(i = 0; i < els.length; i++) menuindex[i] = els[i].id.substr(4);
 					} else {
 						el.parentNode.removeChild(el);
-						d.getElementById('p' + parent).innerHTML = (parseInt(this.dataset.private) ? modx.style.tree_folder_secure : modx.style.tree_folder)
+						d.querySelector('#node' + parent + ' .icon').innerHTML = (parseInt(this.dataset.private) ? modx.style.tree_folder_secure : modx.style.tree_folder)
 					}
 					modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
 						a: 'movedocument',

@@ -667,7 +667,7 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .mce-container, .mce-container-body { box-sizing: border-box !important }
 /* codeMirror */
 .CodeMirror pre { word-break: break-all !important; }
-.CodeMirror > div:first-child > textarea { opacity: 0 }
+.CodeMirror > div:first-child > textarea { /*opacity: 0;*/ z-index: -1; left: -9999rem; }
 /* bootstrap */
 .dropdown-menu { display: none }
 .show > .dropdown-menu { display: block }

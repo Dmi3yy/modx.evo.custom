@@ -22,7 +22,7 @@
 #mainMenu .nav .caret, #mainMenu .nav .divider { display: none }
 #mainMenu .nav > li > ul { display: block; position: absolute; overflow: auto; top: 100%; left: 0; margin: 0; padding: 0 0 0.25rem; min-width: 15rem; max-height: -webkit-calc(100vh - 2.2rem); max-height: calc(100vh - 2.2rem); border: none; border-radius: 0 0 0.25rem 0.25rem; background-color: #fff; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); opacity: 0; visibility: hidden; -webkit-transition-duration: 0.15s; transition-duration: 0.15s; }
 #mainMenu.show .nav > li:hover > a + ul, #mainMenu.show .nav > li.hover > a + ul, #mainMenu.show .nav > li.hover > ul.sub-menu.show { opacity: 1; visibility: visible }
-#mainMenu.show .nav > li > ul.sub-menu { left: 15rem; margin-left: -0.1rem; opacity: 0; visibility: hidden; }
+#mainMenu.show .nav > li > ul.sub-menu { left: 15rem; opacity: 0; visibility: hidden; }
 #mainMenu.show .nav > li:hover > ul.sub-menu { }
 #mainMenu.show .nav > li:hover > ul.sub-menu.show { }
 #mainMenu #settings.nav > li > ul { left: auto; right: 0 }
