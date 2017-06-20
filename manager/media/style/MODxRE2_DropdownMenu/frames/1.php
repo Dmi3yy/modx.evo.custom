@@ -17,7 +17,7 @@ if(!isset($modx->config['manager_menu_height'])) {
 }
 
 if(!isset($modx->config['manager_tree_width'])) {
-	$modx->config['manager_tree_width'] = 25; // rem
+	$modx->config['manager_tree_width'] = 20; // rem
 }
 
 if(isset($_SESSION['onLoginForwardToAction']) && is_int($_SESSION['onLoginForwardToAction'])) {
