@@ -668,6 +668,7 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 /* codeMirror */
 .CodeMirror pre { word-break: break-all !important; }
 .CodeMirror > div:first-child > textarea { /*opacity: 0;*/ z-index: -1; left: -9999rem; }
+div.CodeMirror-cursors { pointer-events: none; }
 /* bootstrap */
 .dropdown-menu { display: none }
 .show > .dropdown-menu { display: block }
