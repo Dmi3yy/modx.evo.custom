@@ -134,15 +134,16 @@
 			},
 			search: function(href, ul) {
 				var items,
-					input = ul.querySelector('input[name=filter]');
+					input = ul.querySelector('input[name=filter]'),
+					index = -1;
 				if(input) {
 					input.focus();
-					var index = -1;
 					input.onkeyup = function(e) {
 						if(e.keyCode === 13 && ul.querySelector('.item.hover')) {
 							d.body.click();
 							w.main.location.href = ul.querySelector('.item.hover').firstChild.href;
 						} else if(e.keyCode == 38 || e.keyCode == 40) {
+							input.selectionStart = input.value.length;
 							items = ul.querySelectorAll('.item');
 							if(items.length) {
 								if(e.keyCode == 40) index++;
@@ -161,21 +162,20 @@
 								}
 							}
 						} else {
-							if(input.value.length > 2 || input.value === '') {
-								modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', href + '&filter=' + input.value, function(r) {
-									items = ul.querySelectorAll('.item');
-									for(var i = 0; i < items.length; i++) ul.removeChild(items[i]);
-									items = (new w.DOMParser).parseFromString(r, "text/html").documentElement.lastChild.childNodes;
-									for(i = 0; i < items.length; i++) {
-										items[i].onmouseenter = function() {
-											var el = ul.querySelector('.hover');
-											if(el) el.classList.remove('hover');
-											this.classList.add('hover')
-										}
-										ul.appendChild(items[i]);
+							modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', href + '&filter=' + input.value, function(r) {
+								index = -1;
+								items = ul.querySelectorAll('.item');
+								for(var i = 0; i < items.length; i++) ul.removeChild(items[i]);
+								items = (new w.DOMParser).parseFromString(r, "text/html").documentElement.lastChild.childNodes;
+								for(i = 0; i < items.length; i++) {
+									items[i].onmouseenter = function() {
+										var el = ul.querySelector('.hover');
+										if(el) el.classList.remove('hover');
+										this.classList.add('hover')
 									}
-								})
-							}
+									ul.appendChild(items[i]);
+								}
+							})
 						}
 					}
 				}

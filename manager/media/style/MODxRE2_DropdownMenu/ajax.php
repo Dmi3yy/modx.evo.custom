@@ -30,7 +30,7 @@ if(isset($action)) {
 				$sql = '';
 				$a = '';
 				$role = $_SESSION['mgrRole'];
-				$filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
+				$filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '%*_') : '';
 				$sqlLike = $filter ? 'WHERE t1.name LIKE "' . $modx->db->escape($filter) . '%"' : '';
 				$limit = $modx->config['number_of_results'];
 				$sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
