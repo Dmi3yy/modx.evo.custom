@@ -30,9 +30,14 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 	<link rel="stylesheet" type="text/css" href="media/style/common/bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/style.css?v=<?php echo $modx->config['settings_version'] ?>" />
 	<?php echo sprintf('<script src="%s" type="text/javascript"></script>' . "\n", $modx->config['mgr_jquery_path']); ?>
-	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
-	<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
-	<script type="text/javascript" src="media/script/tabpane.js"></script>
+	
+	<?php 
+	$aArr = array('2');
+	if(!in_array($_REQUEST['a'] ,$aArr)) {?>
+		<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
+		<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
+		<script type="text/javascript" src="media/script/tabpane.js"></script>
+	<?php } ?>
 
 	<!-- OnManagerMainFrameHeaderHTMLBlock -->
 	<?php echo $onManagerMainFrameHeaderHTMLBlock . "\n"; ?>
@@ -42,7 +47,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 
 		function document_onload() {
 			stopWorker();
-
+			//hideLoader();
 			<?php
 			if(isset($_REQUEST['r']) && preg_match('@^[0-9]+$@', $_REQUEST['r'])) {
 				echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
@@ -128,7 +133,6 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 		}
 
 		var documentDirty = false;
-		var timerForUnload;
 
 		function checkDirt(evt) {
 			if(documentDirty === true) {
@@ -139,7 +143,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				if(evt) {
 					evt.returnValue = message;
 				}
-				timerForUnload = setTimeout('stopWorker()', 100);
+				stopWorker();
 				return message;
 			}
 		}
@@ -150,6 +154,14 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				document.forms[fName].elements[i].disabled = 'disabled';
 			}
 		}
+
+		var managerPath = "";
+
+		function hideLoader() {
+			document.getElementById('preLoader').style.display = "none";
+		}
+//
+//		hideL = window.setTimeout("hideLoader()", 1500);
 
 		// add the 'unsaved changes' warning event handler
 		if(typeof window.addEventListener !== "undefined") {
@@ -181,10 +193,6 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 			window.onload = function() {
 				document_onload()
 			}
-		}
-
-		window.onunload = function() {
-			clearTimeout(timerForUnload);
 		}
 
 		/* ]]> */
