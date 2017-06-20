@@ -26,8 +26,8 @@
 #mainMenu.show .nav > li:hover > ul.sub-menu { }
 #mainMenu.show .nav > li:hover > ul.sub-menu.show { }
 #mainMenu #settings.nav > li > ul { left: auto; right: 0 }
-#mainMenu .nav > li > ul > li { border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
-#mainMenu .nav > li > ul > li:last-child { border: none }
+#mainMenu .nav > li > ul > li { border-bottom: 1px solid rgba(0, 0, 0, 0.05); margin-bottom: -1px; }
+#mainMenu .nav > li > ul > li:last-child { border: none; margin-bottom: 0 }
 #mainMenu .nav > li > ul > li.item-input { padding: 0.25em 0.5em; }
 #mainMenu .nav > li > ul > li > a, #mainMenu .nav > li > ul > li > span { display: block; position: relative; padding: 0 2em 0 1em; line-height: 2.7em; color: #444; text-decoration: none }
 #mainMenu .nav > li > ul > li.hover > a { color: #fff; background-color: #1976D2; }
