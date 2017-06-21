@@ -1,6 +1,14 @@
 Сайт сборки: http://modx.com.ua
 
 Актуальная версия: https://github.com/dmi3yy/modx.evo.custom/releases
+1.2.1-d9.1.7 (21.06.2017)
+- Add search in 3 level menu (http://take.ms/nQaUK)
+- remove mutools from login page. 
+- fix for iOS (now normail work)
+- fix some nitices for php 7.2 
+- fix errors founded in 1.2.1-d9.1.7(bugs in Firefox, bugs with size tree, bug with keepalive and more)
+
+
 1.2.1-d9.1.6  (18.06.2017)
 =======================================================
 - refactor MODxRE_dropdownmenu theme.  x4 faster works (http://take.ms/Wwgbq)
