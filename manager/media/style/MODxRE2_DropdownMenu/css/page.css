@@ -40,3 +40,7 @@
 /* dark */
 .dark #main { background-color: #ecf0f1 }
 /*.dark #mainloader { background-color: rgba(0, 0, 0, 0.15); }*/
+
+/*for* ios*/
+#main {  overflow: scroll; -webkit-overflow-scrolling: touch;}
+
