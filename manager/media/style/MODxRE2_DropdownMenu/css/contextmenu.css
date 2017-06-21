@@ -6,3 +6,4 @@
 #mx_contextmenu .menuLink, #contextmenu .menuLink, .nu-context-menu ul li { cursor: pointer; }
 #mx_contextmenu .menuLink:hover, #contextmenu .menuLink:hover, .nu-context-menu ul li:hover { background-color: #1976D2; color: #fff; }
 #mx_contextmenu .seperator, #contextmenu .seperator, .nu-context-menu ul hr { height: 1px; background-color: rgba(0, 0, 0, 0.07); margin: 0.25em 0; padding: 0; }
+.nu-context-menu ul { margin: 0; padding: 0; }

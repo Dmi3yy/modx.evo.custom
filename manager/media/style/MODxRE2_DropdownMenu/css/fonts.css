@@ -27,6 +27,8 @@ html[lang="th"] body { font-family: "Sukhumvit Set", "Helvetica Neue", Helvetica
 /* For Arabic Font */
 html[lang="fa"] body { font-family: Tahoma, Arial, sans-serif; }
 body { background-color: #fafafa; color: #444; }
+body.drag *, body.drag::after { cursor: grabbing !important; cursor: -moz-grabbing !important; cursor: -webkit-grabbing !important; cursor: -moz-grab !important; -moz-user-select: none !important; -webkit-user-select: none !important; user-select: none !important }
+body.drag::after { bottom: 0; content: ""; left: 0; position: fixed; right: 0; top: 0; z-index: 999 }
 body, ul, li { padding: 0; margin: 0; }
 li { list-style: none }
 img { max-width: 100% }

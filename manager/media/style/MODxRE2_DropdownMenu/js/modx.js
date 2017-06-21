@@ -295,6 +295,7 @@
 			onbeforeonload: function() {
 			},
 			onload: function() {
+				this.tabRow.init();
 				this.stopWork();
 				this.scrollWork();
 				w.main.onclick = modx.hideDropDown;
@@ -325,6 +326,143 @@
 						//console.log("name: " + name + ", type: " + type);
 					}
 					e.preventDefault()
+				}
+			},
+			tabRow: {
+				init: function() {
+					var row = w.main.document.querySelectorAll('.tab-pane > .tab-row');
+					for(var i = 0; i < row.length; i++) modx.main.tabRow.build(row[i]);
+				},
+				build: function(row) {
+					var rowContainer = d.createElement('div'),
+						sel = row.querySelector('.selected');
+					rowContainer.className = 'tab-row-container';
+					row.parentNode.insertBefore(rowContainer, row);
+					rowContainer.appendChild(row);
+					this.scroll(row, sel);
+					w.main.onresize = function() {
+						modx.main.tabRow.scroll(row, sel);
+					};
+					var p = d.createElement('i');
+					p.className = 'fa fa-angle-left prev disable';
+					if(sel && sel.previousSibling) p.classList.remove('disable');
+					p.onclick = function(e) {
+						e.stopPropagation();
+						e.preventDefault();
+						var sel = row.querySelector('.selected');
+						if(sel.previousSibling) {
+							sel.previousSibling.click();
+							modx.main.tabRow.scroll(row, sel)
+						}
+					};
+					rowContainer.appendChild(p);
+					var n = d.createElement('i');
+					n.className = 'fa fa-angle-right next disable';
+					if(sel && sel.nextSibling) n.classList.remove('disable');
+					n.onclick = function(e) {
+						e.stopPropagation();
+						e.preventDefault();
+						var sel = row.querySelector('.selected');
+						if(sel.nextSibling) {
+							sel.nextSibling.click();
+							modx.main.tabRow.scroll(row, sel)
+						}
+					};
+					rowContainer.appendChild(n);
+					row.onclick = function(e) {
+						var sel = e.target.tagName === 'H2' ? e.target : (e.target.tagName === 'SPAN' ? e.target.parentNode : null);
+						if(sel) {
+							if(sel.previousSibling) this.parentNode.querySelector('i.prev').classList.remove('disable');
+							else this.parentNode.querySelector('i.prev').classList.add('disable');
+							if(sel.nextSibling) this.parentNode.querySelector('i.next').classList.remove('disable');
+							else this.parentNode.querySelector('i.next').classList.add('disable');
+							modx.main.tabRow.scroll(this, sel)
+						}
+					}
+				},
+				scroll: function(row, sel) {
+					let b = row.querySelector('.selected'),
+						c = 0,
+						elms = row.querySelectorAll('.tab'),
+						p = row.offsetParent.querySelector('.prev'),
+						n = row.offsetParent.querySelector('.next');
+					for(let i = 0; i < elms.length; i++) {
+						elms[i].index = i;
+						c += elms[i].offsetWidth
+					}
+					if((b.index < sel.index || b.index === sel.index) && row.scrollLeft > b.offsetLeft) {
+						this.animate(row, 'scrollLeft', '', row.scrollLeft, b.offsetLeft - 1, 100)
+					}
+					if((b.index > sel.index || b.index === sel.index) && (b.offsetLeft + b.offsetWidth) > (row.offsetWidth + row.scrollLeft)) {
+						this.animate(row, 'scrollLeft', '', row.scrollLeft, (b.offsetLeft - row.offsetWidth + b.offsetWidth), 100)
+					}
+					if(c > row.offsetWidth) {
+						this.drag(row)
+					}
+				},
+				drag: function(row) {
+					row.onmousedown = function(e) {
+						if(e.button === 0) {
+							e.preventDefault();
+							var x = e.clientX,
+								f = row.scrollLeft,
+								g = '';
+							w.main.document.body.focus();
+							this.onmousemove = w.main.document.onmousemove = function(e) {
+								if(Math.abs(e.clientX - x) > 5) {
+									e.stopPropagation();
+									row.scrollLeft = f - (e.clientX - x);
+									w.main.document.body.classList.add('drag');
+									if(e.clientX - x > 0) g = 'right';
+									else g = 'left'
+								}
+							};
+							this.onmouseup = w.main.document.onmouseup = function(e) {
+								e.stopPropagation();
+								row.onmousemove = null;
+								w.main.document.onmousemove = null;
+								w.main.document.body.classList.remove('drag')
+							}
+						}
+					}
+					var x,
+						g,
+						f = row.scrollLeft;
+					row.addEventListener('touchstart', function(e) {
+						x = e.changedTouches[0].clientX;
+						g = false;
+						f = row.scrollLeft;
+					}, false);
+					row.addEventListener('touchmove', function(e) {
+						var touch = e.changedTouches[0]
+						if(Math.abs(touch.clientX - x) > 5) {
+							e.stopPropagation();
+							row.scrollLeft = f - (touch.clientX - x);
+							w.main.document.body.classList.add('drag');
+							if(e.clientX - x > 0) g = 'right';
+							else g = 'left'
+						}
+						e.preventDefault()
+					}, false);
+					row.addEventListener('touchend', function(e) {
+						if(g) {
+							e.stopPropagation();
+							row.touchmove = null;
+						}
+						w.main.document.body.classList.remove('drag')
+					}, false);
+				},
+				animate: function(a, b, c, d, e, f) {
+					var g = Date.now();
+					var timer = 0;
+					clearInterval(timer);
+					timer = setInterval(function() {
+						var i = Math.min(1, (Date.now() - g) / f);
+						a[b] = (d + i * (e - d)) + c;
+						if(1 === i) {
+							clearInterval(timer)
+						}
+					}, 1)
 				}
 			},
 			work: function() {
@@ -376,9 +514,8 @@
 				modx.resizer.mask = d.createElement('div');
 				modx.resizer.mask.id = 'mask_resizer';
 				modx.resizer.mask.style.zIndex = modx.resizer.oldZIndex;
-				//d.getElementById(modx.resizer.switcher).onclick = modx.resizer.toggle;
 				d.getElementById(modx.resizer.id).onmousedown = modx.resizer.onMouseDown;
-				d.getElementById(modx.resizer.id).onmouseup = modx.resizer.mask.onmouseup = modx.resizer.onMouseUp
+				d.getElementById(modx.resizer.id).onmouseup = modx.resizer.mask.onmouseup = modx.resizer.onMouseUp;
 			},
 			onMouseDown: function(e) {
 				e = e || w.event;
