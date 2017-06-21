@@ -35,6 +35,7 @@
 		.loginCaptcha img { height: 60px }
 		.gpl { float: right; color: #B2B2B2; margin: -2em 0.5em 0.5em; font-size: 0.85em; }
 		.gpl a, .loginLicense a { color: #B2B2B2; }
+		input {-webkit-appearance: none;}
 	</style>
 </head>
 <body>
