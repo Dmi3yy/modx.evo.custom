@@ -1,4 +1,10 @@
 html { font-size: 16px }
+@media (max-width: 900px) {
+html { font-size: 15px; }
+}
+@media (max-width: 400px) {
+html { font-size: 14px; }
+}
 body { font-weight: normal; font-style: normal; font-size: 0.8rem; line-height: 1.5; font-family: sans-serif; -webkit-font-smoothing: subpixel-antialiased }
 /* For Arabic Font */
 html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
@@ -23,6 +29,7 @@ html[lang="fa"] body { font-family: Tahoma, Arial, sans-serif; }
 body { background-color: #fafafa; color: #444; }
 body, ul, li { padding: 0; margin: 0; }
 li { list-style: none }
+img { max-width: 100% }
 .fa { font-size: 1.1em; width: 1.3em; text-align: center }
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 { margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit }
 .h1, h1 { font-size: 2.5rem }
