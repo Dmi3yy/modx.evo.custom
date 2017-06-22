@@ -95,6 +95,11 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 	</style>
 	<?php echo $jQuery ?>
 	<script type="text/javascript">
+		if(!!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)) {
+			document.classList.add('iphone ipad ipod')
+		}
+	</script>
+	<script type="text/javascript">
 		// GLOBAL variable modx
 		var modx = {
 			MGR_DIR: "<?php echo MGR_DIR ?>",

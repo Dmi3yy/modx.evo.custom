@@ -1,33 +1,6 @@
-/* for IE7 */
-html, body, form, fieldset, img { margin: 0; padding: 0; }
-img { border: none; }
-html { font-size: 13px; line-height: 1.5; color: #333; overflow: hidden; overflow-y: scroll }
-body { font-family: Arial, sans-serif !important; font-size: 13px !important; line-height: 1.5; color: #333; background: #FAFAFA !important; overflow: hidden; -webkit-font-smoothing: subpixel-antialiased !important; /*-webkit-backface-visibility: hidden; -moz-backface-visibility: hidden; -ms-backface-visibility: hidden;*/ }
-body[ondragstart*=""] { overflow-y: scroll }
-/* For Arabic Font */
-html[lang="ar"] body, html[lang="ary"] body, html[lang="azb"] body, html[lang="fa-IR"] body, html[lang="haz"] body, html[lang="ps"] body, html[lang="ur"] body { font-family: Tahoma, Arial, sans-serif; }
-/* For Chinese Font */
-html[lang="zh"] body { font-family: "PingFang SC", "Microsoft JhengHei", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", Helvetica, sans-serif; }
-/* For Devanagari Font */
-html[lang="bn-BD"] body, html[lang="hi-IN"] body, html[lang="mr-IN"] body { font-family: Arial, sans-serif; }
-/* For Greek Font */
-html[lang="el"] body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
-/* For Gujarati Font */
-html[lang="gu-IN"] body { font-family: Arial, sans-serif; }
-/* For Hebrew Font */
-html[lang="he"] body { font-family: "Arial Hebrew", Arial, sans-serif; }
-/* For Japanese Font */
-html[lang="ja"] body { font-family: Meiryo, "Hiragino Kaku Gothic Pro", sans-serif; }
-/* For Korean font */
-html[lang="ko-KR"] body { font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Nanum Gothic", Dotum, sans-serif; }
-/* For Thai Font */
-html[lang="th"] body { font-family: "Sukhumvit Set", "Helvetica Neue", Helvetica, Arial, sans-serif; }
-/* For Arabic Font */
-html[lang="fa"] body { font-family: Tahoma, Arial, sans-serif; }
-* { -moz-osx-font-smoothing: grayscale; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box }
-*::-ms-clear { display: none; }
-img, a img { border: 0 !important; text-decoration: none; padding: 0; margin: 0; vertical-align: middle; max-width: 100% }
-h1, h2, h3, h4, h5, h6, p, pre, blockquote, ul, ol, dl, address { margin: 0 0 .5em; padding: 0; font-weight: normal; }
+@import "css/fonts.css";
+@import "css/contextmenu.css";
+@import "css/tabpane.css";
 li, dd, blockquote { margin: 0 0 0 1em; }
 .file-manager td { border-bottom: 1px solid #d5dfea; }
 .ab2 { padding-bottom: 20px; }
@@ -50,7 +23,7 @@ td { vertical-align: top; }
 .rotate180 { -webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); }
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1, h2, h3, h4, h5, h6, .subTitle { font-weight: 500; }
-h1 { font-size: 1.8em; line-height: 35px; padding: 15px; margin: 0; }
+h1 { font-size: 1.5em; line-height: 1.5rem; padding: 0.8rem; margin: 0; }
 h1 .fa { font-size: 0.8em; color: #1377c5; margin-right: 5px }
 h1 small { margin-left: 5px }
 h2 { font-size: 164%; }
@@ -112,9 +85,10 @@ input.submit { display: block !important; float: none !important; margin: 20px 0
 .sectionHeader, .showHideVisible { color: #333; margin: 0 15px; padding: 5px 3px 5px; zoom: 1; font-weight: 500; text-shadow: 0 1px 0 #FFF; }
 .sectionHeader + .sectionBody, .showHideVisible + .sectionBody { margin-top: -1px !important }
 .tab-page .sectionHeader { margin: 15px 3px 0; }
-.sectionBody, .layerVisible { position: relative; display: none; margin: 5px 0px 0px; display: block; }
+.sectionBody, .layerVisible { position: relative; }
 .tab-page .sectionBody, .tab-page .section .sectionBody, .sectionBody .sectionBody { border-top: 1px solid #CCCCCC; margin: 0 3px 15px; padding: 7px; }
 .section .sectionBody { margin: 0 15px 15px; padding: 15px; background-color: #fff; border: 1px solid #CCCCCC; }
+form[name="settings"] > h1 + #actions + div { margin: 0 !important; }
 .showHideVisible, .layerVisible { margin: 0 10px 4px; }
 .comment { font-size: 11px; color: #999; padding: 4px 0; }
 thead, .fancyrow { color: #333; height: 18px !important; background-color: #E4E4E4; }
@@ -187,22 +161,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .settings th { width: 200px !important; text-align: left; color: #555; font-size: inherit; }
 .filelist td { border-bottom: 1px solid #C2C3CF; }
 /* -------------------------[ Tabs ]--- */
-.tab-row .tab span, .tab-row .tab.hover { text-decoration: none }
-/*.tab-pane { position: relative; width: 100%; margin-top: 0 }*/
-.tab-row .tab.selected { color: #333; border-radius: 0 }
-.tab-row .tab.selected span { background-color: #fff; text-shadow: none }
-.tab-row { position: relative; z-index: 1; white-space: nowrap; padding-left: 15px; }
-.tab-row .tab, .tab-row .tab span { color: #1377c5; font-size: 13px }
-.tab-row .tab { position: relative; float: left; margin: 3px 2px 1px 0; padding: 0 12px; line-height: 35px; height: 35px; border: none; text-shadow: none; background: 0 0; cursor: pointer }
-.tab-row .tab.hover { background: 0 0; filter: none }
-.tab-row .tab.selected span, .tab-row .tab.selected.hover span { color: #1377c5 }
-.tab-row .tab.selected, .tab-row .tab.selected.hover { background: #fff; filter: none; box-shadow: 0 -3px 0 #1377c5, -1px 0 0 transparent }
-.tab-row .tab:after, .tab-row .tab:before { position: absolute; content: ''; left: 0; display: block; right: 0 }
-.tab-row .tab.selected.hover:after, .tab-row .tab.selected:after { border-radius: 3px; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1); top: -3px; bottom: 1px; z-index: -1 }
-.tab-row .tab.selected:before { background: #FFF; top: 90%; bottom: -4px }
-.tab-row .tab.hover, .tab-row .tab.hover span { color: #2b749d }
-.tab-row .tab .fa { margin-right: 3px; font-size: 14px }
-.tab-page { clear: both; background-color: #fff; position: relative; top: -2px; padding: 15px; border: 0; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1) }
+.tab-page { clear: both; background-color: #fff; position: relative; padding: 15px; border: 0; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1) }
 .sectionHeader { padding: 7px 0px; }
 .tab-page .sectionBody { padding: 12px 0px; }
 .tab-page > table { width: 100%; border-collapse: collapse }
@@ -365,7 +324,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .dp_cal select option { padding: 1px 3px }
 .dp_cal table { border-collapse: collapse; border-spacing: 0; width: 100% }
 .dp_cal td.dp_roll { background-color: #fff6bf; color: #333 !important }
-.dp_cal th, .dp_cal td { font-size: 1em; padding: 8px 0 !important; text-align: center !important; width: 14.2857%; cursor: default }
+.dp_cal th, .dp_cal td { font-size: 1em; padding: 0.5em 0 !important; text-align: center !important; width: 14.2857%; cursor: default }
 .dp_cal tbody th { background-color: #656d79; color: #fff; }
 .dp_cal tbody td:nth-child(6), .dp_cal tbody td:nth-child(7) { color: indianred }
 .dp_cal .dp_empty { background-color: #f9f9f9 }
@@ -435,15 +394,6 @@ form input[type="text"], form input[type="password"], form input[type="number"],
 /* nav */
 .alert-warning { color: #1377c5; }
 .no-events { pointer-events: none; }
-/* Context Menu */
-.nu-context-menu { position: absolute; overflow: hidden; top: 0; min-width: 200px; max-width: 350px; height: auto; padding: 0.25em 0; visibility: hidden; opacity: 0; z-index: 10000; background: #fff; line-height: 1; font-size: 0.9em; border: none; border-radius: 3px; -webkit-box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.2); box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.2); }
-.nu-context-menu.active { visibility: visible; opacity: 1; }
-.nu-context-menu-title { color: #1377c5; padding: 0.75em 1em; }
-.nu-context-menu ul { list-style: none; margin: 0; padding: 0; }
-.nu-context-menu ul li { padding: 0.5em 1em; cursor: pointer; }
-.nu-context-menu ul li:hover { background-color: #1976D2; color: #fff; }
-.nu-context-menu ul li .fa { font-size: 1.1rem; width: 1.3rem; text-align: center }
-.nu-context-menu ul hr { height: 1px; background-color: rgba(0, 0, 0, 0.07); margin: 0.25em 0; }
 /* Required for Bootstrap3 Collapse */
 .fade { opacity: 0; -webkit-transition: opacity .15s linear; -o-transition: opacity .15s linear; transition: opacity .15s linear; }
 .fade.in { opacity: 1; }
