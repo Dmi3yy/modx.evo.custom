@@ -9,21 +9,8 @@
 .tab-row-container { height: 2.5rem; left: 0; overflow: hidden; padding: 0 1.5rem; position: relative; }
 .tab-row-container .tab-row { z-index: 2; overflow: hidden; padding: 0; white-space: nowrap }
 .tab-row-container .tab-row::after { display: none }
-.tab-row-container > i { position: absolute; top: 0; height: 100%; text-align: center; font: normal normal normal 1rem/2.7rem FontAwesome; cursor: pointer; transition: color .2s; width: 1.5rem; }
+.tab-row-container > i { position: absolute; top: 0; height: 100%; text-align: center; font: normal normal normal 1.2rem/2.7rem FontAwesome; cursor: pointer; transition-duration: 0.2s; width: 1.5rem; }
 .tab-row-container > i.prev { left: 0; }
 .tab-row-container > i.next { right: 0; }
-.tab-row-container > i.disable { color: rgba(0, 0, 0, 0.2); pointer-events: none }
-/*
-.tab-row.fixed .tab.selected { height: 2.5rem }
-.tab-row .tab .fa { color: #616161; font-size: 14px; font-weight: 400; margin-right: 5px }
-.tab-row-wrap .tab-row { padding: 0; position: relative; }
-.tab-row-prev, .tab-row-next, .tab-row-wrap i { bottom: 1px; cursor: pointer; height: 2.5rem; text-align: center; position: absolute; top: 0; transition: color .2s; width: 1.5rem; z-index: 99; font: normal normal normal 1rem/2.7rem FontAwesome; }
-.tab-row-prev, .tab-row-wrap i.prev { left: 0 }
-.tab-row-next, .tab-row-wrap i.next { right: 0 }
-.tab-row-prev.disable, .tab-row-next.disable, .tab-row-wrap i.disable { color: rgba(0, 0, 0, 0.2); cursor: not-allowed }
-.tab-row.fixed .tab { position: static }
-.tab-row-wrap::before { position: absolute; content: ""; display: table; width: 100%; background-color: #e3e5e7; height: 1px; left: 0; right: 0; bottom: 0 }
-.tab-row-wrap i.prev::before { content: "\f104"; }
-.tab-row-wrap i.next::before { content: "\f105"; }
-*/
+.tab-row-container > i.disable { font-size: 0.8rem; color: rgba(0, 0, 0, 0.2); pointer-events: none }
 /* dark */

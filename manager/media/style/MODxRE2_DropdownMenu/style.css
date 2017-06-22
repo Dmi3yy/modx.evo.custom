@@ -23,7 +23,7 @@ td { vertical-align: top; }
 .rotate180 { -webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); -ms-transform: rotate(180deg); -o-transform: rotate(180deg); transform: rotate(180deg); }
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1, h2, h3, h4, h5, h6, .subTitle { font-weight: 500; }
-h1 { font-size: 1.8em; line-height: 35px; padding: 15px; margin: 0; }
+h1 { font-size: 1.5em; line-height: 1.5rem; padding: 0.8rem; margin: 0; }
 h1 .fa { font-size: 0.8em; color: #1377c5; margin-right: 5px }
 h1 small { margin-left: 5px }
 h2 { font-size: 164%; }
@@ -324,7 +324,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .dp_cal select option { padding: 1px 3px }
 .dp_cal table { border-collapse: collapse; border-spacing: 0; width: 100% }
 .dp_cal td.dp_roll { background-color: #fff6bf; color: #333 !important }
-.dp_cal th, .dp_cal td { font-size: 1em; padding: 8px 0 !important; text-align: center !important; width: 14.2857%; cursor: default }
+.dp_cal th, .dp_cal td { font-size: 1em; padding: 0.5em 0 !important; text-align: center !important; width: 14.2857%; cursor: default }
 .dp_cal tbody th { background-color: #656d79; color: #fff; }
 .dp_cal tbody td:nth-child(6), .dp_cal tbody td:nth-child(7) { color: indianred }
 .dp_cal .dp_empty { background-color: #f9f9f9 }
