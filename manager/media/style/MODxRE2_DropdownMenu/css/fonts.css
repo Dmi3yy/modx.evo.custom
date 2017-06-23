@@ -53,3 +53,7 @@ a:not([href]):not([tabindex]):focus { outline: 0 }
 .text-left { text-align: left !important }
 .text-right { text-align: right !important }
 .text-center { text-align: center !important }
+.hide { display: none !important }
+.show { display: block !important }
+.visible { visibility: visible !important; }
+.invisible { visibility: hidden !important; }

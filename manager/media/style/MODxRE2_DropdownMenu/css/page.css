@@ -37,6 +37,7 @@
 70% { color: #5EA5D5 }
 100% { color: #5DB54D; -webkit-transform: rotate(359deg) }
 }
+.paused { -webkit-animation-play-state: paused; animation-play-state: paused; }
 /*for* ios*/
 .iphone #main { overflow: scroll; -webkit-overflow-scrolling: touch; }
 #main { -webkit-overflow-scrolling: touch; }
