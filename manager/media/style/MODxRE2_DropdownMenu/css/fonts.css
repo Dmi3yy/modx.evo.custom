@@ -3,7 +3,7 @@ html { font-size: 16px }
 html { font-size: 15px; }
 }
 @media (max-width: 400px) {
-html { font-size: 14px; }
+html { font-size: 15px; }
 }
 body { font-weight: normal; font-style: normal; font-size: 0.8rem; line-height: 1.5; font-family: sans-serif; -webkit-font-smoothing: subpixel-antialiased }
 /* For Arabic Font */
@@ -47,6 +47,7 @@ a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover { color
 a:not([href]):not([tabindex]):focus { outline: 0 }
 * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box }
 *::-ms-clear { display: none; }
+.fa { font-size: 14px; width: 1.2em; text-align: center; vertical-align: baseline }
 .text-justify { text-align: justify !important }
 .text-nowrap { white-space: nowrap !important }
 .text-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }

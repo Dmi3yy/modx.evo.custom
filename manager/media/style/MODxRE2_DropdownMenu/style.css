@@ -1,6 +1,7 @@
 @import "css/fonts.css";
-@import "css/contextmenu.css";
 @import "css/tabpane.css";
+@import "css/contextmenu.css";
+@import "css/datepicker.css";
 li, dd, blockquote { margin: 0 0 0 1em; }
 .file-manager td { border-bottom: 1px solid #d5dfea; }
 .ab2 { padding-bottom: 20px; }
@@ -32,7 +33,7 @@ h4 { font-size: 118%; }
 h5 { font-size: 100%; font-weight: 500; }
 h6 { font-size: 86%; font-weight: 500; }
 p.caption, p.comment { font-size: 86%; color: #888; }
-button { color: #821517; font: inherit; font-weight: 500; width: 112px; margin: 0 5px 0 0; cursor: pointer; }
+button { font: inherit; font-weight: 500; width: 112px; margin: 0 5px 0 0; cursor: pointer; }
 a, a:active { color: #1377c5; text-decoration: none; }
 a[href=""], a:not([href]) { cursor: default }
 a.disabled { cursor: not-allowed !important }
@@ -44,7 +45,6 @@ hr { background-color: #ddd; height: 1px; border: none; margin: 0.5em 0; }
 .messageUnread { color: #3CB371; font-weight: 500; }
 .right { font-weight: 500; color: #333; float: left; padding: 0 20px 20px; }
 .gridster > * { -webkit-transition: height .4s, width .4s !important; -moz-transition: height .4s !important; -o-transition: height .4s !important; -ms-transition: height .4s !important; transition: height .4s !important; }
-.fa { font-size: 14px; width: 1.2em; text-align: center; vertical-align: baseline }
 /* -------------------------[ Forms ]--- */
 tbody, thead, tr { margin: 0; padding: 0; border: 0; }
 form label { cursor: pointer; display: inline-block; margin-bottom: .5em }
@@ -312,33 +312,6 @@ th > [data-tooltip].fa-question-circle, td > [data-tooltip].fa-question-circle {
 */
 fieldset.legacy { background: #fff; padding: 10px; margin: 10px 10px 35px; border: 1px solid #e4e4e4 !important; position: relative; }
 fieldset.legacy h2 { width: 100%; background: #f5f5f5; margin: -10px -10px 15px -10px; padding: 0 10px; border-bottom: 1px solid #e4e4e4 !important; }
-/* -------------------------[ date picker ]--- */
-input.DatePicker, #mutate input.DatePicker, #userPane input.DatePicker, #webUserPane input.DatePicker, input#datefrom.DatePicker, input#dateto.DatePicker { width: 150px; cursor: pointer; ime-mode: disabled; }
-input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.DatePicker, #webUserPane input:focus.DatePicker, input#datefrom:focus.DatePicker, input#dateto:focus.DatePicker { cursor: text; }
-.dp_container { position: relative; padding: 0; z-index: 500; }
-/* [ datepicker ] */
-.dp_container { padding: 0; position: relative; z-index: 500 }
-.dp_cal { position: absolute; top: 30px; width: 220px; padding: 0; background-color: #fff; -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.3); box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.3); }
-.dp_cal p { position: relative; margin: 10px; }
-.dp_cal select { font-size: 1em; margin: 2px 3px; width: auto !important }
-.dp_cal select option { padding: 1px 3px }
-.dp_cal table { border-collapse: collapse; border-spacing: 0; width: 100% }
-.dp_cal td.dp_roll { background-color: #fff6bf; color: #333 !important }
-.dp_cal th, .dp_cal td { font-size: 1em; padding: 0.5em 0 !important; text-align: center !important; width: 14.2857%; cursor: default }
-.dp_cal tbody th { background-color: #656d79; color: #fff; }
-.dp_cal tbody td:nth-child(6), .dp_cal tbody td:nth-child(7) { color: indianred }
-.dp_cal .dp_empty { background-color: #f9f9f9 }
-.dp_cal .dp_hide { visibility: hidden }
-.dp_cal .dp_selected { background-color: #3189ba; color: #fff !important }
-.dp_cal .dp_today { background-color: #4caf50; color: #fff !important }
-.dp_cal input, .dp_cal button, .dp_cal select { padding: 5px !important; line-height: 1em !important }
-.dp_cal input { width: 68% !important }
-.dp_cal button { position: absolute; top: 0; right: 0; margin: 0 !important; padding: 5px 10px !important; width: 30% !important }
-/* -------------------------[ must have this for the IE6 select box hiding ]--- */
-.dp_hide { visibility: hidden; }
-.dp_empty { background: #eee; }
-.dp_today { background: #daf2e6; }
-.dp_selected { color: #fff; background: #328dcf; }
 /* System Alert Box ---------------------------------------------------------- */
 .cbOverlay { background-color: #000; z-index: 50000; }
 .cbContainer { padding: 5px; background-color: white; z-index: 50000; }
@@ -501,7 +474,7 @@ ul.elements_buttonbar .fa { font-size: 13px !important; padding: 1px 1px 0; }
 input[type="button"], input[type="submit"] { background: #ededed; border: 1px solid #ddd; border-radius: 3px !important; }
 input[type="button"]:hover, input[type="submit"]:hover { background: #1377c5; border: 1px solid #1377c5; color: #fff; }
 input[type="button"]:active, input[type="submit"]:active { background: #3189ba; border: 1px solid #3189ba; }
-form select, input[type="text"], input[type="email"], input[type="password"], input[type="url"], input[type="number"], textarea, form input[type="text"], form input[type="password"], form input[type="number"], form textarea, #tv_body select, #tv_body input[type="text"], #tv_body input[type="email"], #tv_body input[type="password"], #tv_body input[type="url"], #tv_body input[type="number"], #tv_body textarea { background-color: #FBFBFB; transition: all .2s; border-color: #dbdbdb; -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05) inset; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05) inset; }
+form select, input[type="text"], input[type="email"], input[type="password"], input[type="url"], input[type="number"], textarea, form input[type="text"], form input[type="password"], form input[type="number"], form textarea, #tv_body select, #tv_body input[type="text"], #tv_body input[type="email"], #tv_body input[type="password"], #tv_body input[type="url"], #tv_body input[type="number"], #tv_body textarea { background-color: #FBFBFB; transition: all .2s; border: 1px solid #dbdbdb; -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05) inset; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05) inset; }
 #tmplvars-pane select, #tmplvars-pane input[type="text"], #tmplvars-pane input[type="email"], #tmplvars-pane input[type="password"], #tmplvars-pane input[type="url"], #tmplvars-pane input[type="number"], #tmplvars-pane textarea { background-color: #FBFBFB; border-color: #dbdbdb; }
 input[type="email"]:focus, input[type="password"]:focus, input[type="search"]:focus, input[type="text"]:focus, input[type="url"]:focus, input[type="number"]:focus, textarea:focus, select:focus, form input[type="text"]:focus, form input[type="password"]:focus, form input[type="email"]:focus, form input[type="url"]:focus, form input[type="number"]:focus, form textarea:focus, #tv_body input[type="text"]:focus, #tv_body input[type="password"]:focus, #tv_body input[type="email"]:focus, #tv_body input[type="url"]:focus, #tv_body input[type="number"]:focus, #tv_body textarea:focus { border-color: #1377c5; }
 #range input#pids { width: calc(100% - 95px) !important; margin: 0; float: left; }

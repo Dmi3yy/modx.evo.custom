@@ -367,7 +367,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 						<th><?php echo $_lang['user_dob']; ?>:</th>
 						<td>&nbsp;</td>
 						<td><input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo($userdata['dob'] ? $modx->toDateFormat($userdata['dob'], 'dateOnly') : ""); ?>" onBlur='documentDirty=true;'>
-							<a onClick="document.userform.dob.value=''; return true;" onMouseOver="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseOut="window.status=''; return true;" style="cursor:pointer; cursor:hand"><i class="<?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></a></td>
+							<a onClick="document.userform.dob.value=''; return true;"><i class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></a></td>
 					</tr>
 					<tr>
 						<th><?php echo $_lang['user_gender']; ?>:</th>
@@ -411,13 +411,13 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 							<th><?php echo $_lang['user_blockeduntil']; ?>:</th>
 							<td>&nbsp;</td>
 							<td><input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo($userdata['blockeduntil'] ? $modx->toDateFormat($userdata['blockeduntil']) : ""); ?>" onBlur='documentDirty=true;' readonly>
-								<a href="javascript:;" onClick="document.userform.blockeduntil.value=''; return true;" onMouseOver="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseOut="window.status=''; return true;" style="cursor:pointer; cursor:hand"><i class="<?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></a></td>
+								<i onClick="document.userform.blockeduntil.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 						</tr>
 						<tr>
 							<th><?php echo $_lang['user_blockedafter']; ?>:</th>
 							<td>&nbsp;</td>
 							<td><input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo($userdata['blockedafter'] ? $modx->toDateFormat($userdata['blockedafter']) : ""); ?>" onBlur='documentDirty=true;' readonly>
-								<a href="javascript:;" onClick="document.userform.blockedafter.value=''; return true;" onMouseOver="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseOut="window.status=''; return true;" style="cursor:pointer; cursor:hand"><i class="<?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></a></td>
+								<i onClick="document.userform.blockedafter.value=''; return true;" class="clearDate <?php echo $_style["actions_calendar_delete"] ?>" data-tooltip="<?php echo $_lang['remove_date']; ?>"></i></td>
 						</tr>
 					<?php } ?>
 				</table>

@@ -422,32 +422,6 @@
 							}
 						}
 					}
-					var x,
-						g,
-						f = row.scrollLeft;
-					row.addEventListener('touchstart', function(e) {
-						x = e.changedTouches[0].clientX;
-						g = false;
-						f = row.scrollLeft;
-					}, false);
-					row.addEventListener('touchmove', function(e) {
-						var touch = e.changedTouches[0]
-						if(Math.abs(touch.clientX - x) > 5) {
-							e.stopPropagation();
-							row.scrollLeft = f - (touch.clientX - x);
-							w.main.document.body.classList.add('drag');
-							if(e.clientX - x > 0) g = 'right';
-							else g = 'left'
-						}
-						e.preventDefault()
-					}, false);
-					row.addEventListener('touchend', function(e) {
-						if(g) {
-							e.stopPropagation();
-							row.touchmove = null;
-						}
-						w.main.document.body.classList.remove('drag')
-					}, false);
 				}
 			},
 			work: function() {
