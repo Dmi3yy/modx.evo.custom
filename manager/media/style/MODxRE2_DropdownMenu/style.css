@@ -2,6 +2,7 @@
 @import "css/tabpane.css";
 @import "css/contextmenu.css";
 @import "css/datepicker.css";
+@import "css/cols.css";
 li, dd, blockquote { margin: 0 0 0 1em; }
 .file-manager td { border-bottom: 1px solid #d5dfea; }
 .ab2 { padding-bottom: 20px; }
