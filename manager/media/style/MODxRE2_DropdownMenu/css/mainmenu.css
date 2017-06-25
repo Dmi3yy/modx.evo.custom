@@ -29,7 +29,7 @@
 #mainMenu #settings.nav > li > ul { left: auto; right: 0 }
 #mainMenu .nav > li > ul > li { border-bottom: 1px solid rgba(0, 0, 0, 0.05); margin-bottom: -1px; }
 #mainMenu .nav > li > ul > li:last-child { border: none; margin-bottom: 0 }
-#mainMenu .nav > li > ul > li.item-input { padding: 0.25em 0.5em; }
+#mainMenu .nav > li > ul > li.item-input { padding: 0.35em 0.5em; }
 #mainMenu .nav > li > ul > li > a, #mainMenu .nav > li > ul > li > span { display: block; position: relative; padding: 0 2rem 0 1rem; line-height: 2.2rem; color: #444; text-decoration: none }
 #mainMenu .nav > li > ul > li.hover > a { color: #fff; background-color: #1976D2; }
 #mainMenu .nav > li > ul > li > span { padding: 0 1em; text-align: center; font-size: 0.875em; color: #aaa; }
