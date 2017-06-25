@@ -161,7 +161,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .tab-pane { }
 .tab-pane > .tab-page { display: none }
 .tab-pane > .tab-page:first-child { display: block }
-.tab-page { clear: both; overflow-x: auto; width: 100%; background-color: #fff; position: relative; padding: 15px; border: 0; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1) }
+.tab-page { clear: both; overflow-x: auto; width: 100%; background-color: #fff; padding: 15px; border: 0; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1) }
 .sectionHeader { padding: 7px 0px; }
 .tab-page .sectionBody { padding: 12px 0px; }
 .tab-page > table { width: 100%; border-collapse: collapse }
@@ -583,6 +583,9 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .actionButtons a span { display: none; }
 .actionButtons a .fa { display: inline-block; }
 }
+/* ManagerManager */
+.sectionHeader.minimizable { position: relative; z-index: 1; background-color: #fafafa; padding: 0.5rem; border: 1px solid rgba(0, 0, 0, 0.15); }
+.dark .sectionHeader.minimizable { background-color: #f2f2f2 }
 /* gridster */
 .gs-w:hover .gs-resize-handle, .resizing .gs-resize-handle { right: 7px; bottom: 0 }
 .widget-controls .btn-group .btn { width: 28px }
