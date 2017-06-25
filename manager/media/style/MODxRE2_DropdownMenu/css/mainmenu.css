@@ -75,9 +75,11 @@
 #mainMenu .nav > li > a, #mainMenu .nav .label_searchid { padding: 0 0.75rem; }
 }
 @media (max-width: 840px) {
+#mainMenu .nav > li { position: static; }
 #mainMenu #nav > li > a { font-size: 0; }
 #mainMenu .nav > li > a, #mainMenu .nav .label_searchid { padding: 0 0.5rem; }
 #mainMenu #nav > li > a > .fa { display: inline-block; margin-right: 0; }
+#mainMenu .nav > li > ul { left: 0; width: 100% }
 #statusbar { display: none }
 }
 @media (max-width: 480px) {

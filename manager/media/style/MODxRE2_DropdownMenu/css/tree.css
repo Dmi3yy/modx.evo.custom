@@ -2,8 +2,7 @@
 #treeloader { position: absolute; display: block; overflow: hidden; right: 0.3em; top: 0.3em; opacity: 0; visibility: hidden; -webkit-transition-duration: 0.5s; transition-duration: 0.5s }
 #treeloader .fa { font-size: 1em; }
 #treeloader.visible { opacity: 0.7; visibility: visible; -webkit-transition-duration: 0s; transition-duration: 0s }
-.treeframebody { height: 100%; -webkit-box-shadow: inset -0.15rem 0.15rem 0.45rem 0 rgba(0, 0, 0, 0.1);
-box-shadow: inset -0.15rem 0.15rem 0.45rem 0 rgba(0, 0, 0, 0.1); }
+.treeframebody { height: 100%; background-color: #fafafa; box-shadow: inset -0.15rem 0.15rem 0.45rem 0 rgba(0, 0, 0, 0.1); }
 #treeMenu { overflow: hidden; padding: 0 0.1em; height: 2.3em; background-color: #dfdfdf; border-bottom: 1px solid #cfd2d6 }
 #treeMenu .treeButton { display: inline-block; cursor: pointer; padding: 0 0.2em; height: 2.3em; line-height: 2.5em; white-space: nowrap; text-align: center; vertical-align: middle; -webkit-transition-duration: 0.15s; transition-duration: 0.15s }
 #treeMenu .treeButton:hover:not(.disabled) { background-color: rgba(255, 255, 255, .5); cursor: pointer; -webkit-transition-duration: 0s; transition-duration: 0s }
