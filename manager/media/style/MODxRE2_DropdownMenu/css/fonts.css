@@ -32,14 +32,13 @@ body.drag::after { bottom: 0; content: ""; left: 0; position: fixed; right: 0; t
 body, ul, li { padding: 0; margin: 0; }
 li { list-style: none }
 img { max-width: 100% }
-.fa { font-size: 1.1em; width: 1.3em; text-align: center }
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 { margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit }
-.h1, h1 { font-size: 2.5rem }
-.h2, h2 { font-size: 2rem }
-.h3, h3 { font-size: 1.75rem }
-.h4, h4 { font-size: 1.5rem }
-.h5, h5 { font-size: 1.25rem }
-.h6, h6 { font-size: 1rem }
+.h1, h1 { font-size: 1.75rem }
+.h2, h2 { font-size: 1.5rem }
+.h3, h3 { font-size: 1.25rem }
+.h4, h4 { font-size: 1rem }
+.h5, h5 { font-size: 0.8rem }
+.h6, h6 { font-size: 0.7rem }
 a { color: #0275d8; text-decoration: none }
 a:focus, a:hover { color: #014c8c; text-decoration: underline }
 a:not([href]):not([tabindex]) { color: inherit; text-decoration: none }
@@ -47,7 +46,6 @@ a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover { color
 a:not([href]):not([tabindex]):focus { outline: 0 }
 * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box }
 *::-ms-clear { display: none; }
-.fa { font-size: 14px; width: 1.2em; text-align: center; vertical-align: baseline }
 .text-justify { text-align: justify !important }
 .text-nowrap { white-space: nowrap !important }
 .text-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }

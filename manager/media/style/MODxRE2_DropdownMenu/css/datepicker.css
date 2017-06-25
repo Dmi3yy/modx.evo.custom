@@ -7,7 +7,6 @@
 .dp_cal table { border-collapse: collapse; border-spacing: 0; width: 100% }
 .dp_cal td.dp_roll { background-color: rgba(0, 0, 0, 0.1); color: #333 !important }
 .dp_cal th, .dp_cal td { font-size: 1em; padding: 0.5em 0 !important; text-align: center !important; width: 14.2857%; cursor: default }
-.dp_cal td.dob_calDay { border-radius: 50% }
 .dp_cal tbody th { background-color: #656d79; color: #fff; }
 .dp_cal tbody td:nth-child(6), .dp_cal tbody td:nth-child(7) { color: indianred }
 .dp_cal .dp_empty { background-color: #f9f9f9 }
@@ -18,4 +17,4 @@
 .dp_cal input { width: 68% !important }
 .dp_cal button { position: absolute; top: 0; right: 0; margin: 0 !important; padding: 5px 10px !important; width: 30% !important }
 /* datepicker icon clear */
-.clearDate { position: relative; margin: 0.5rem 0 0 -2rem; }
+.clearDate { position: relative; margin: 0.5rem 0 0 -1.5rem; }
