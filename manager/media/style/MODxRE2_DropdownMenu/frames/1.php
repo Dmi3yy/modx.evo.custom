@@ -344,7 +344,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 			<div class="form-group">
 				<input type="hidden" name="dt" value="<?php echo htmlspecialchars($_REQUEST['dt']); ?>" />
 				<label><?php echo $_lang["sort_tree"] ?></label>
-				<select name="sortby" class="form-control form-control-sm">
+				<select name="sortby" class="form-control">
 					<option value="isfolder" <?php echo $_SESSION['tree_sortby'] == 'isfolder' ? "selected='selected'" : "" ?>><?php echo $_lang['folder']; ?></option>
 					<option value="pagetitle" <?php echo $_SESSION['tree_sortby'] == 'pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
 					<option value="longtitle" <?php echo $_SESSION['tree_sortby'] == 'longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
@@ -356,14 +356,14 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 				</select>
 			</div>
 			<div class="form-group">
-				<select name="sortdir" class="form-control form-control-sm">
+				<select name="sortdir" class="form-control">
 					<option value="DESC" <?php echo $_SESSION['tree_sortdir'] == 'DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
 					<option value="ASC" <?php echo $_SESSION['tree_sortdir'] == 'ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
 				</select>
 			</div>
 			<div class="form-group">
 				<label><?php echo $_lang["setting_resource_tree_node_name"] ?></label>
-				<select name="nodename" class="form-control form-control-sm">
+				<select name="nodename" class="form-control">
 					<option value="default" <?php echo $_SESSION['tree_nodename'] == 'default' ? "selected='selected'" : "" ?>><?php echo trim($_lang['default'], ':'); ?></option>
 					<option value="pagetitle" <?php echo $_SESSION['tree_nodename'] == 'pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
 					<option value="longtitle" <?php echo $_SESSION['tree_nodename'] == 'longtitle' ? "selected='selected'" : "" ?>><?php echo $_lang['long_title']; ?></option>
@@ -379,7 +379,7 @@ if(isset($modx->pluginCache['ElementsInTree'])) {
 					<input type="checkbox" name="showonlyfolders" value="<?php echo($_SESSION['tree_show_only_folders'] ? 1 : '') ?>" onclick="this.value = (this.value ? '' : 1);" <?php echo($_SESSION['tree_show_only_folders'] ? '' : ' checked="checked"') ?> /> <?php echo $_lang['view_child_resources_in_container'] ?></label>
 			</div>
 			<div class="text-center">
-				<a href="javascript:;" class="btn btn-primary btn-sm" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
+				<a href="javascript:;" class="btn btn-primary" onclick="modx.tree.updateTree();modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a>
 			</div>
 		</form>
 	</div>

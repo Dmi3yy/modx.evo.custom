@@ -4,7 +4,7 @@ button, select { text-transform: none }
 [type=reset], [type=submit], button, html [type=button] { -webkit-appearance: button }
 [type=button]::-moz-focus-inner, [type=reset]::-moz-focus-inner, [type=submit]::-moz-focus-inner, button::-moz-focus-inner { border-style: none; padding: 0 }
 [type=button]:-moz-focusring, [type=reset]:-moz-focusring, [type=submit]:-moz-focusring, button:-moz-focusring { outline: 1px dotted ButtonText }
-fieldset { border: 0; margin: 0 2px; padding: .35em .625em .75em }
+fieldset { border: 0; margin: 0; padding: 0 }
 legend { -webkit-box-sizing: border-box; box-sizing: border-box; color: inherit; display: table; max-width: 100%; padding: 0; white-space: normal; margin-bottom: .5rem; font-size: 1em; line-height: inherit  }
 textarea { overflow: auto; resize: vertical }
 [type=checkbox], [type=radio] { -webkit-box-sizing: border-box; box-sizing: border-box; margin-right: 0.2em; padding: 0; vertical-align: -0.2em }
@@ -20,7 +20,7 @@ button, input, select, textarea { line-height: inherit }
 input[type=checkbox]:disabled, input[type=radio]:disabled { cursor: not-allowed }
 input[type=date], input[type=time], input[type=datetime-local], input[type=month] { -webkit-appearance: listbox }
 input[type=search] { -webkit-appearance: none }
-.form-control, input[type=text], input[type=password], input[type=number], input[type=email], input[type=date], input[type=url], input[type=search], select, textarea { display: inline-block; width: 100%; max-width: 100%; padding: .5em; font-size: 0.8rem; line-height: 1.25; color: #464a4c; background-color: #fff; background-image: none; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid rgba(0, 0, 0, .15); border-radius: .1em; -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s; transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s; -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s; transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s; transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s }
+.form-control, input[type=text], input[type=password], input[type=number], input[type=email], input[type=date], input[type=url], input[type=search], select, textarea { display: inline-block; width: 100%; max-width: 100%; padding: 0.375em .5em; font-size: 0.8rem; line-height: 1.5; color: #464a4c; background-color: #fff; background-image: none; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid rgba(0, 0, 0, .15); border-radius: .1em; -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s; transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s; -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s; transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s; transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s }
 .form-control::-ms-expand { background-color: transparent; border: 0 }
 .form-control:focus { color: #464a4c; background-color: #fff; border-color: #5cb3fd; outline: 0 }
 .form-control::-webkit-input-placeholder { color: #636c72; opacity: 1 }
@@ -29,9 +29,8 @@ input[type=search] { -webkit-appearance: none }
 .form-control::placeholder { color: #636c72; opacity: 1 }
 .form-control:disabled, .form-control[readonly] { background-color: #eceeef; opacity: 1 }
 .form-control:disabled { cursor: not-allowed }
-select.form-control:not([size]):not([multiple]) { height: calc(2.171em + 2px) }
+select.form-control:not([size]):not([multiple]), select:not([size]):not([multiple]) { height: calc(2.25em + 2px) }
 select.form-control:focus::-ms-value { color: #464a4c; background-color: #fff }
-input[size], select[size] { width: auto }
 .form-control-file, .form-control-range { display: block }
 .col-form-label { padding-top: calc(.5rem - 1px * 2); padding-bottom: calc(.5rem - 1px * 2); margin-bottom: 0 }
 .col-form-label-lg { padding-top: calc(.75rem - 1px * 2); padding-bottom: calc(.75rem - 1px * 2); font-size: 1.25rem }
@@ -83,7 +82,7 @@ input[size], select[size] { width: auto }
 .form-inline .custom-control-indicator { position: static; display: inline-block; margin-right: .25rem; vertical-align: text-bottom }
 .form-inline .has-feedback .form-control-feedback { top: 0 }
 }
-.btn, button, input[type="button"], input[type="submit"] { display: inline-block; font-weight: 400; line-height: 1.25; text-align: center; text-decoration: none; white-space: nowrap; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; border: 1px solid transparent; padding: .5em 1em; font-size: 0.8rem; border-radius: .15em; -webkit-transition: all .2s ease-in-out; -o-transition: all .2s ease-in-out; transition: all .2s ease-in-out }
+.btn, button, input[type="button"], input[type="submit"] { display: inline-block; font-weight: 400; line-height: 1.5; text-align: center; text-decoration: none; white-space: nowrap; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; border: 1px solid transparent; padding: .375em 1em; font-size: 0.8rem; border-radius: .15em; -webkit-transition: all .2s ease-in-out; -o-transition: all .2s ease-in-out; transition: all .2s ease-in-out }
 .btn:focus, .btn:hover { text-decoration: none }
 .btn.focus, .btn:focus { outline: 0; -webkit-box-shadow: 0 0 0 2px rgba(2, 117, 216, .25); box-shadow: 0 0 0 2px rgba(2, 117, 216, .25) }
 .btn.disabled, .btn:disabled { cursor: not-allowed; opacity: .65 }
@@ -241,4 +240,10 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .custom-file-control::before { position: absolute; top: -1px; right: -1px; bottom: -1px; z-index: 6; display: block; height: 2.5rem; padding: .5rem 1rem; line-height: 1.5; color: #464a4c; background-color: #eceeef; border: 1px solid rgba(0, 0, 0, .15); border-radius: 0 .25rem .25rem 0 }
 .custom-file-control:lang(en)::before { content: "Browse" }
 /* custom */
-input[type=date], input[name*=date] { width: auto }
+input[type=date], input[name*=date], input[size="1"], select[size="1"], select[name=usergroup], select[name=docgroup] { width: auto !important; vertical-align: middle }
+input[size="50"], select[size="50"] { width: 10rem !important }
+select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
+select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
+input[maxlength="255"], input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !important }
+#editorRow_TinyMCE { background-color: #fff; }
+#editorRow_TinyMCE th, #editorRow_TinyMCE td { padding: 0.5em; }

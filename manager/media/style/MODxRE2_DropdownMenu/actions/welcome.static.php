@@ -461,8 +461,8 @@ function getRecentInfoList() {
 
 	$tpl = getRecentInfoRowTpl();
 
-	$btntpl['edit'] = '<a class="btn btn-xs btn-success" title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]"><i class="fa fa-edit fa-fw"></i></a> ';
-	$btntpl['preview_btn'] = '<a class="btn btn-xs btn-info [+preview_disabled+]"  title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
+	$btntpl['edit'] = '<a class="btn btn-sm btn-success" title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]"><i class="fa fa-edit fa-fw"></i></a> ';
+	$btntpl['preview_btn'] = '<a class="btn btn-sm btn-info [+preview_disabled+]" title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
 
 	$output = array();
 	while($ph = $modx->db->getRow($rs)) {
@@ -495,9 +495,9 @@ function getRecentInfoList() {
 
 		if($modx->hasPermission('delete_document')) {
 			if($ph['deleted'] == 0) {
-				$delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" class="btn btn-xs btn-danger"  title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]"><i class="fa fa-trash fa-fw"></i></a> ';
+				$delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" class="btn btn-sm btn-danger" title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]"><i class="fa fa-trash fa-fw"></i></a> ';
 			} else {
-				$delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" class="btn btn-xs btn-success"  title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
+				$delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" class="btn btn-sm btn-success" title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
 			}
 			$ph['delete_btn'] = str_replace('[+id+]', $docid, $delete_btn);
 		} else {
@@ -505,17 +505,17 @@ function getRecentInfoList() {
 		}
 
 		if($ph['deleted'] == 1 && $ph['published'] == 0) {
-			$publish_btn = '<a class="btn btn-xs btn-primary disabled"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+			$publish_btn = '<a class="btn btn-sm btn-primary disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
 		} elseif($ph['deleted'] == 1 && $ph['published'] == 1) {
-			$publish_btn = '<a class="btn btn-xs btn-primary disabled"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+			$publish_btn = '<a class="btn btn-sm btn-primary disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
 		} elseif($ph['deleted'] == 0 && $ph['published'] == 0) {
-			$publish_btn = '<a class="btn btn-xs btn-primary"  title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up  fa-fw"></i></a> ';
+			$publish_btn = '<a class="btn btn-sm btn-primary" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
 		} else {
-			$publish_btn = '<a class="btn btn-xs btn-warning"  title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]"><i class="fa fa-arrow-down  fa-fw"></i></a> ';
+			$publish_btn = '<a class="btn btn-sm btn-warning" title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
 		}
 		$ph['publish_btn'] = str_replace('[+id+]', $docid, $publish_btn);
 
-		$ph['info_btn'] = str_replace('[+id+]', $docid, '<a class="btn btn-xs btn-default btn-expand btn-action" title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info"></i></a>');
+		$ph['info_btn'] = str_replace('[+id+]', $docid, '<a class="btn btn-sm btn-default btn-expand btn-action" title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info fa-fw"></i></a>');
 
 		if($ph['longtitle'] == '') {
 			$ph['longtitle'] = '(<i>[%not_set%]</i>)';

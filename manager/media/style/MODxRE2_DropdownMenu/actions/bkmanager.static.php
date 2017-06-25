@@ -337,7 +337,7 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 					</p>
 					<div><input type="file" name="sqlfile" id="sqlfile" size="70" style="display:<?php echo $f_display; ?>;" /></div>
 					<div id="textarea" style="display:<?php echo $t_display; ?>;">
-						<textarea name="textarea" style="width:500px;height:200px;"><?php echo $value; ?></textarea>
+						<textarea name="textarea" style="height:200px;"><?php echo $value; ?></textarea>
 					</div>
 					<div class="actionButtons" style="margin-top:10px;">
 						<a href="javascript:;" class="primary" onclick="document.mutate.save.click();"><i class="<?php echo $_style['actions_save'] ?>"></i> <?php echo $_lang["bkmgr_run_sql_submit"]; ?></a>
