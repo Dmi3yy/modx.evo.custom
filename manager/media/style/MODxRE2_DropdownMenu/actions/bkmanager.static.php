@@ -193,16 +193,16 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 					</p>
 					<table class="grid">
 						<thead>
-							<tr>
-								<td style="width: 17rem"><label><input type="checkbox" name="chkselall" onclick="selectAll()" title="Select All Tables" /><b><?php echo $_lang['database_table_tablename'] ?></b></label></td>
-								<td><b><?php echo $_lang['database_table_records'] ?></b></td>
-								<td><b><?php echo $_lang['database_collation'] ?></b></td>
-								<td><b><?php echo $_lang['database_table_datasize'] ?></b></td>
-								<td><b><?php echo $_lang['database_table_overhead'] ?></b></td>
-								<td><b><?php echo $_lang['database_table_effectivesize'] ?></b></td>
-								<td><b><?php echo $_lang['database_table_indexsize'] ?></b></td>
-								<td><b><?php echo $_lang['database_table_totalsize'] ?></b></td>
-							</tr>
+						<tr>
+							<td style="width: 17rem"><label><input type="checkbox" name="chkselall" onclick="selectAll()" title="Select All Tables" /><b><?php echo $_lang['database_table_tablename'] ?></b></label></td>
+							<td><b><?php echo $_lang['database_table_records'] ?></b></td>
+							<td><b><?php echo $_lang['database_collation'] ?></b></td>
+							<td><b><?php echo $_lang['database_table_datasize'] ?></b></td>
+							<td><b><?php echo $_lang['database_table_overhead'] ?></b></td>
+							<td><b><?php echo $_lang['database_table_effectivesize'] ?></b></td>
+							<td><b><?php echo $_lang['database_table_indexsize'] ?></b></td>
+							<td><b><?php echo $_lang['database_table_totalsize'] ?></b></td>
+						</tr>
 						</thead>
 						<tbody>
 						<?php
@@ -246,13 +246,13 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
 						?>
 						</tbody>
 						<tfoot>
-							<tr>
-								<td><b><?php echo $_lang['database_table_totals'] ?></b></td>
-								<td colspan="3">&nbsp;</td>
-								<td><?php echo $totaloverhead > 0 ? '<b class="text-danger">' . $modx->nicesize($totaloverhead) . '</b><br />(' . number_format($totaloverhead) . ' B)' : '-' ?></td>
-								<td colspan="2">&nbsp;</td>
-								<td><?php echo "<b>" . $modx->nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>
-							</tr>
+						<tr>
+							<td><b><?php echo $_lang['database_table_totals'] ?></b></td>
+							<td colspan="3">&nbsp;</td>
+							<td><?php echo $totaloverhead > 0 ? '<b class="text-danger">' . $modx->nicesize($totaloverhead) . '</b><br />(' . number_format($totaloverhead) . ' B)' : '-' ?></td>
+							<td colspan="2">&nbsp;</td>
+							<td><?php echo "<b>" . $modx->nicesize($total) . "</b><br />(" . number_format($total) . " B)" ?></td>
+						</tr>
 						</tfoot>
 					</table>
 					<?php

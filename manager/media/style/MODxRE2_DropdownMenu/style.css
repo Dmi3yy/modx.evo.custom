@@ -158,9 +158,10 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .settings th { width: 200px !important; text-align: left; color: #555; font-size: inherit; }
 .filelist td { border-bottom: 1px solid #C2C3CF; }
 /* -------------------------[ Tabs ]--- */
+.tab-pane { }
 .tab-pane > .tab-page { display: none }
 .tab-pane > .tab-page:first-child { display: block }
-.tab-page { clear: both; background-color: #fff; position: relative; padding: 15px; border: 0; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1) }
+.tab-page { clear: both; overflow-x: auto; width: 100%; background-color: #fff; position: relative; padding: 15px; border: 0; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1) }
 .sectionHeader { padding: 7px 0px; }
 .tab-page .sectionBody { padding: 12px 0px; }
 .tab-page > table { width: 100%; border-collapse: collapse }
@@ -596,6 +597,7 @@ div.CodeMirror-cursors { pointer-events: none; }
 .show > .dropdown-menu { display: block }
 /* SimpleGallery */
 #SimpleGallery .pagination { display: block }
+#SimpleGallery .sg_image { width: auto }
 /*multiTV*/
 .multitv .list li.element a.copy, .multitv .list li.element a.remove {
 width: 25px !important;
@@ -613,9 +615,9 @@ margin-bottom: 10px !important;
 .dark .tab-page, .dark .tab-row .tab.selected, .dark .tab-row .tab.selected.hover, .dark .tab-row .tab.selected:before, .dark .tab-row .tab.selected span {
 background: #F9F9F9;
 }
-/*.dark, .dark .resourceTable .panel-heading { background: #ecf0f1 !important; }
+.dark, .dark .resourceTable .panel-heading { background: #ecf0f1 !important; }
 .dark .resourceTable .panel-heading:hover { background: #ecf0f1 !important; }
-.dark form select,
+/*.dark form select,
 .dark input[type="text"],
 .dark input[type="email"],
 .dark input[type="password"],

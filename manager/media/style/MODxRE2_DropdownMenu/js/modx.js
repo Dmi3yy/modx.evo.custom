@@ -479,30 +479,52 @@
 				d.getElementById(modx.resizer.id).onmousedown = modx.resizer.onMouseDown;
 				d.getElementById(modx.resizer.id).onmouseup = modx.resizer.mask.onmouseup = modx.resizer.onMouseUp;
 				if(w.outerWidth < modx.minWidth) {
-					var x, y, g, tree = d.getElementById('tree'), h = tree.offsetWidth;
+					var x, y, tree = d.getElementById('tree'), h = tree.offsetWidth;
+					d.getElementById('frameset').appendChild(modx.resizer.mask);
 					w.addEventListener('touchstart', function(e) {
 						x = e.changedTouches[0].clientX;
 						y = e.changedTouches[0].clientY;
-						g = false;
+						this.swipe = '';
+						this.sidebar = !d.body.classList.contains('sidebar-closed');
 					}, false);
 					w.addEventListener('touchmove', function(e) {
 						var touch = e.changedTouches[0];
 						tree.style.transition = 'none';
 						tree.style.WebkitTransition = 'none';
+						modx.resizer.mask.style.transition = 'none';
+						modx.resizer.mask.style.WebkitTransition = 'none';
+						modx.resizer.mask.style.visibility = 'visible';
 						var ax = touch.clientX - x;
 						var ay = touch.clientY - y;
-						if(ax < 0 && Math.abs(ax) > Math.abs(ay) && !d.body.classList.contains('sidebar-closed')) {
-							if(Math.abs(ax) > h) ax = -h;
-							tree.style.transform = 'translate3d(' + ax + 'px, 0, 0)';
-							tree.style.WebkitTransform = 'translate3d(' + ax + 'px, 0, 0)';
-							if(Math.abs(ax) > h / 3) g = true
-						} else {
-							g = false
+						if(Math.abs(ax) > Math.abs(ay)) {
+							if(ax < 0 && this.sidebar) {
+								if(Math.abs(ax) > h) ax = -h;
+								tree.style.transform = 'translate3d(' + ax + 'px, 0, 0)';
+								tree.style.WebkitTransform = 'translate3d(' + ax + 'px, 0, 0)';
+								modx.resizer.mask.style.opacity = (0.5 - (0.5 / -h) * ax).toFixed(2);
+								if(Math.abs(ax) > h / 3) this.swipe = 'left'
+								else this.swipe = 'right'
+							} else if(ax > 0 && !this.sidebar) {
+								if(Math.abs(ax) > h) ax = h;
+								tree.style.transform = 'translate3d(' + -(h - ax) + 'px, 0, 0)';
+								tree.style.WebkitTransform = 'translate3d(' + -(h - ax) + 'px, 0, 0)';
+								modx.resizer.mask.style.opacity = ((0.5 / h) * ax).toFixed(2);
+								if(Math.abs(ax) > h / 3) this.swipe = 'right'
+								else this.swipe = 'left'
+							}
 						}
 					}, false);
 					w.addEventListener('touchend', function(e) {
-						if(g) d.body.classList.add('sidebar-closed');
+						if(this.swipe === 'left') {
+							d.body.classList.add('sidebar-closed');
+							modx.resizer.setWidth(0)
+						}
+						if(this.swipe === 'right') {
+							d.body.classList.remove('sidebar-closed');
+							modx.resizer.setWidth(h)
+						}
 						tree.style.cssText = '';
+						modx.resizer.mask.style.cssText = '';
 					}, false)
 				}
 			},
