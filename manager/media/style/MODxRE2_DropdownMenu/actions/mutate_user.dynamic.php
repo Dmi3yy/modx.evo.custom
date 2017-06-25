@@ -262,7 +262,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 								<input type=radio name="passwordgenmethod" value="spec" <?php echo $_POST['passwordgenmethod'] == "spec" ? 'checked="checked"' : ""; ?>>
 								<?php echo $_lang['password_gen_specify']; ?>
 								<br />
-								<div style="padding-left:20px">
+								<div>
 									<label for="specifiedpassword" style="width:120px"><?php echo $_lang['change_password_new']; ?>:</label>
 									<input type="password" name="specifiedpassword" onChange="documentdirty=true;" onKeyPress="document.userform.passwordgenmethod[1].checked=true;" size="20" />
 									<br />
@@ -353,7 +353,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					<tr>
 						<th><?php echo $_lang['user_country']; ?>:</th>
 						<td>&nbsp;</td>
-						<td><select size="1" name="country" onChange="documentDirty=true;">
+						<td><select name="country" onChange="documentDirty=true;">
 								<?php $chosenCountry = isset($_POST['country']) ? $_POST['country'] : $userdata['country']; ?>
 								<option value="" <?php (!isset($chosenCountry) ? ' selected' : '') ?> >&nbsp;</option>
 								<?php
@@ -433,7 +433,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 				<table border="0" cellspacing="0" cellpadding="3" class="table table--edit table--editUser">
 					<tr>
 						<th><?php echo $_lang["language_title"] ?></th>
-						<td><select name="manager_language" size="1" class="inputBox" onChange="documentDirty=true">
+						<td><select name="manager_language" class="inputBox" onChange="documentDirty=true">
 								<option value=""></option>
 								<?php
 								$activelang = !empty($usersettings['manager_language']) ? $usersettings['manager_language'] : '';
@@ -522,7 +522,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					</tr>
 					<tr>
 						<th><?php echo $_lang["manager_theme"] ?></th>
-						<td><select name="manager_theme" size="1" class="inputBox" onChange="documentDirty=true;document.userform.theme_refresher.value = Date.parse(new Date());">
+						<td><select name="manager_theme" class="inputBox" onChange="documentDirty=true;document.userform.theme_refresher.value = Date.parse(new Date());">
 								<option value=""></option>
 								<?php
 								$dir = dir("media/style/");
@@ -550,7 +550,7 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 					</tr>
 					<tr>
 						<th><?php echo $_lang["which_browser_title"] ?></th>
-						<td><select name="which_browser" size="1" class="inputBox" onChange="documentDirty=true;">
+						<td><select name="which_browser" class="inputBox" onChange="documentDirty=true;">
 								<?php
 								$selected = 'default' == $usersettings['which_browser'] || !$usersettings['which_browser'] ? ' selected="selected"' : '';
 								echo '<option value="default"' . $selected . '>' . $_lang['option_default'] . "</option>\n";

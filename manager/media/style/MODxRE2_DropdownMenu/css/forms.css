@@ -5,7 +5,7 @@ button, select { text-transform: none }
 [type=button]::-moz-focus-inner, [type=reset]::-moz-focus-inner, [type=submit]::-moz-focus-inner, button::-moz-focus-inner { border-style: none; padding: 0 }
 [type=button]:-moz-focusring, [type=reset]:-moz-focusring, [type=submit]:-moz-focusring, button:-moz-focusring { outline: 1px dotted ButtonText }
 fieldset { border: 0; margin: 0; padding: 0 }
-legend { -webkit-box-sizing: border-box; box-sizing: border-box; color: inherit; display: table; max-width: 100%; padding: 0; white-space: normal; margin-bottom: .5rem; font-size: 1em; line-height: inherit  }
+legend { -webkit-box-sizing: border-box; box-sizing: border-box; color: inherit; display: table; max-width: 100%; padding: 0; white-space: normal; margin-bottom: .5rem; font-size: 1em; line-height: inherit }
 textarea { overflow: auto; resize: vertical }
 [type=checkbox], [type=radio] { -webkit-box-sizing: border-box; box-sizing: border-box; margin-right: 0.2em; padding: 0; vertical-align: -0.2em }
 [type=number]::-webkit-inner-spin-button, [type=number]::-webkit-outer-spin-button { height: auto }
@@ -244,6 +244,8 @@ input[type=date], input[name*=date], input[size="1"], select[size="1"], select[n
 input[size="50"], select[size="50"] { width: 10rem !important }
 select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
 select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
-input[maxlength="255"], input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !important }
+input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !important }
 #editorRow_TinyMCE { background-color: #fff; }
 #editorRow_TinyMCE th, #editorRow_TinyMCE td { padding: 0.5em; }
+#settingsPane #filemanager_path, #settingsPane #rb_base_dir, #settingsPane input[name=txt_custom_contenttype], input[name=photo] { float: left; width: calc(100% - 6rem) !important; border-top-right-radius: 0; border-bottom-right-radius: 0 }
+#settingsPane #filemanager_path + input[name=reset_filemanager_path], #settingsPane #rb_base_dir + input[name=reset_rb_base_dir], #settingsPane input[name=txt_custom_contenttype] + input[type=button], input[name=photo] + input[type=button] { float: right; width: 6rem !important; border-top-left-radius: 0; border-bottom-left-radius: 0 }

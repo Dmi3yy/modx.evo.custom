@@ -52,6 +52,28 @@ a:not([href]):not([tabindex]):focus { outline: 0 }
 .text-left { text-align: left !important }
 .text-right { text-align: right !important }
 .text-center { text-align: center !important }
+.text-lowercase { text-transform: lowercase !important }
+.text-uppercase { text-transform: uppercase !important }
+.text-capitalize { text-transform: capitalize !important }
+.font-weight-normal { font-weight: 400 }
+.font-weight-bold { font-weight: 700 }
+.font-italic { font-style: italic }
+.text-white { color: #fff !important }
+.text-muted { color: #636c72 !important }
+a.text-muted:focus, a.text-muted:hover { color: #4b5257 !important }
+.text-primary { color: #0275d8 !important }
+a.text-primary:focus, a.text-primary:hover { color: #025aa5 !important }
+.text-success { color: #5cb85c !important }
+a.text-success:focus, a.text-success:hover { color: #449d44 !important }
+.text-info { color: #5bc0de !important }
+a.text-info:focus, a.text-info:hover { color: #31b0d5 !important }
+.text-warning { color: #f0ad4e !important }
+a.text-warning:focus, a.text-warning:hover { color: #ec971f !important }
+.text-danger { color: #d9534f !important }
+a.text-danger:focus, a.text-danger:hover { color: #c9302c !important }
+.text-gray-dark { color: #292b2c !important }
+a.text-gray-dark:focus, a.text-gray-dark:hover { color: #101112 !important }
+.text-hide { font: 0/0 a; color: transparent; text-shadow: none; background-color: transparent; border: 0 }
 .hide { display: none !important }
 .show { display: block !important }
 .visible { visibility: visible !important; }
