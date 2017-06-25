@@ -304,7 +304,6 @@
 				w.main.onclick = modx.hideDropDown;
 				w.main.oncontextmenu = this.oncontextmenu;
 				w.location.hash = w.main.frameElement.contentWindow.location.search;
-				w.main.frameElement.style.minHeight = w.main.frameElement.contentDocument.body.offsetHeight + 'px'
 			},
 			oncontextmenu: function(e) {
 				if(e.ctrlKey) return;
