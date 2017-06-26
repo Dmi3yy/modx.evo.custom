@@ -3,6 +3,7 @@
 	modx.extended({
 		frameset: 'frameset',
 		minWidth: 840,
+		isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
 		init: function() {
 			if(!localStorage.getItem('MODX_lastPositionSideBar')) {
 				localStorage.setItem('MODX_lastPositionSideBar', this.config.tree_width)
@@ -230,7 +231,7 @@
 													var el = t.result.querySelector('.selected');
 													if(el) el.className = '';
 													p.className = 'selected';
-													if(w.innerWidth < modx.minWidth) t.close()
+													if(modx.isMobile) t.close()
 												}
 											}
 										} else {
@@ -478,7 +479,7 @@
 				modx.resizer.mask.style.zIndex = modx.resizer.oldZIndex;
 				d.getElementById(modx.resizer.id).onmousedown = modx.resizer.onMouseDown;
 				d.getElementById(modx.resizer.id).onmouseup = modx.resizer.mask.onmouseup = modx.resizer.onMouseUp;
-				if(w.outerWidth < modx.minWidth) {
+				if(modx.isMobile) {
 					var x, y, tree = d.getElementById('tree'), h = tree.offsetWidth;
 					d.getElementById('frameset').appendChild(modx.resizer.mask);
 					w.addEventListener('touchstart', function(e) {
@@ -584,7 +585,7 @@
 				}
 			},
 			toggle: function() {
-				if(w.innerWidth < modx.minWidth) {
+				if(modx.isMobile) {
 					if(d.body.classList.contains('sidebar-closed')) {
 						d.body.classList.remove('sidebar-closed');
 						localStorage.setItem('MODX_lastPositionSideBar', 0);
@@ -904,7 +905,7 @@
 								this.restoreTree()
 							} else {
 								w.main.location.href = href;
-								if(w.innerWidth < modx.minWidth) modx.resizer.toggle()
+								if(modx.isMobile) modx.resizer.toggle()
 							}
 						}
 					}

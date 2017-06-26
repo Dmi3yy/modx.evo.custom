@@ -161,7 +161,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .tab-pane { }
 .tab-pane > .tab-page { display: none }
 .tab-pane > .tab-page:first-child { display: block }
-.tab-page { clear: both; overflow-x: auto; width: 100%; background-color: #fff; padding: 15px; border: 0; border-radius: 0; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1) }
+.tab-page { clear: both; overflow-x: auto; width: 100%; background-color: #fff; padding: 1rem; border: 0; border-radius: 0; box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, .1) }
 .sectionHeader { padding: 7px 0px; }
 .tab-page .sectionBody { padding: 12px 0px; }
 .tab-page > table { width: 100%; border-collapse: collapse }
@@ -269,8 +269,6 @@ form#mutate fieldset#settings_page_settings select { width: 155px; }
 /*
 * Individual Styles for fieldset#meta_keywords
 */
-form#mutate fieldset#meta_keywords { }
-form#mutate fieldset#meta_keywords { }
 form#mutate fieldset#meta_keywords select.inputBox { display: block; margin-bottom: 0; }
 form#mutate fieldset#meta_keywords dl.keywords { float: left; margin-right: 30px; }
 form#mutate fieldset#meta_keywords dl.metatags { float: left; }
@@ -355,8 +353,8 @@ li.breadcrumbs__li_current { font-size: 12px; font-weight: 500; }
 table th { font-weight: 500; }
 .table--edit th { width: 200px; color: #555; font-size: inherit; }
 .table--edit input[type="text"], .table--edit input[type="password"], .table--edit input[type="number"], .table--edit textarea, .table--edit select, .settings input[type="text"], .settings input[type="password"], .settings input[type="number"], .settings textarea, .settings select { width: 300px; }
-.table th, .table td, #tabTemplate tbody td, .sectionBody td, .sectionBody th { padding: 0.25em; }
-.table tr:first-child > th, .table tr:first-child > td, #tabTemplate tbody tr:first-child > td, .sectionBody tr:first-child > td, .sectionBody tr:first-child > th { border-top: none }
+.table th, .table td, .sectionBody td, .sectionBody th { padding: 0.25em; }
+.table tr:first-child > th, .table tr:first-child > td, .sectionBody tr:first-child > td, .sectionBody tr:first-child > th { border-top: none }
 /* STYLES FOR HELP */
 #helpPane h1 { font-size: 20px; display: block; border-bottom: 1px solid #888; margin-bottom: 1em; font-weight: 500; }
 #helpPane li:not(:first-child) > strong { margin-top: 1.4em; }
@@ -477,9 +475,9 @@ ul.elements_buttonbar .fa { font-size: 13px !important; padding: 1px 1px 0; }
 /*input[type="button"], input[type="submit"] { background: #ededed; border: 1px solid #ddd; border-radius: 3px !important; }
 input[type="button"]:hover, input[type="submit"]:hover { background: #1377c5; border: 1px solid #1377c5; color: #fff; }
 input[type="button"]:active, input[type="submit"]:active { background: #3189ba; border: 1px solid #3189ba; }
-form select, input[type="text"], input[type="email"], input[type="password"], input[type="url"], input[type="number"], textarea, form input[type="text"], form input[type="password"], form input[type="number"], form textarea, #tv_body select, #tv_body input[type="text"], #tv_body input[type="email"], #tv_body input[type="password"], #tv_body input[type="url"], #tv_body input[type="number"], #tv_body textarea { background-color: #FBFBFB; transition: all .2s; border: 1px solid #dbdbdb; -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05) inset; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05) inset; }*/
+form select, input[type="text"], input[type="email"], input[type="password"], input[type="url"], input[type="number"], textarea, form input[type="text"], form input[type="password"], form input[type="number"], form textarea, #tv_body select, #tv_body input[type="text"], #tv_body input[type="email"], #tv_body input[type="password"], #tv_body input[type="url"], #tv_body input[type="number"], #tv_body textarea { background-color: #FBFBFB; transition: all .2s; border: 1px solid #dbdbdb; -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05) inset; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05) inset; }
 #tmplvars-pane select, #tmplvars-pane input[type="text"], #tmplvars-pane input[type="email"], #tmplvars-pane input[type="password"], #tmplvars-pane input[type="url"], #tmplvars-pane input[type="number"], #tmplvars-pane textarea { background-color: #FBFBFB; border-color: #dbdbdb; }
-input[type="email"]:focus, input[type="password"]:focus, input[type="search"]:focus, input[type="text"]:focus, input[type="url"]:focus, input[type="number"]:focus, textarea:focus, select:focus, form input[type="text"]:focus, form input[type="password"]:focus, form input[type="email"]:focus, form input[type="url"]:focus, form input[type="number"]:focus, form textarea:focus, #tv_body input[type="text"]:focus, #tv_body input[type="password"]:focus, #tv_body input[type="email"]:focus, #tv_body input[type="url"]:focus, #tv_body input[type="number"]:focus, #tv_body textarea:focus { border-color: #1377c5; }
+input[type="email"]:focus, input[type="password"]:focus, input[type="search"]:focus, input[type="text"]:focus, input[type="url"]:focus, input[type="number"]:focus, textarea:focus, select:focus, form input[type="text"]:focus, form input[type="password"]:focus, form input[type="email"]:focus, form input[type="url"]:focus, form input[type="number"]:focus, form textarea:focus, #tv_body input[type="text"]:focus, #tv_body input[type="password"]:focus, #tv_body input[type="email"]:focus, #tv_body input[type="url"]:focus, #tv_body input[type="number"]:focus, #tv_body textarea:focus { border-color: #1377c5; }*/
 #range input#pids { width: 100% !important; }
 #range input#pids + input[name=fsubmit] { margin-top: 0.5rem; }
 #range::after { content: ""; display: table; width: 100% }
@@ -537,7 +535,40 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 .c-roleslist-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom-width: 0; }
 .c-roleslist-item--admin { font-style: italic; }
 /*Manage Files*/
-#ManageFiles i.fa, #ManageFiles span.fa { color: #39515d; }
+#ManageFiles { padding-bottom: 1rem; }
+#ManageFiles .breadcrumbs { }
+#ManageFiles .breadcrumbs a, #ManageFiles .breadcrumbs span { display: inline-block; padding: 0 0.25em; }
+#ManageFiles #imageviewer { text-align: center; }
+#ManageFiles #imageviewer img { display: inline-block; max-width: 100%; margin-top: 1rem }
+#FilesTable { width: 100%; margin-bottom: 1rem; border-bottom: 1px solid #ddd; background-color: #F9F9F9 }
+#FilesTable tr { border-bottom: 1px solid #e8e8e8; cursor: default }
+#FilesTable th { padding: 0.675rem 1rem; font-size: 0.675rem; font-weight: 400; text-transform: uppercase; text-align: center; color: #666; white-space: nowrap; vertical-align: middle }
+#FilesTable th::after { float: right; overflow: hidden; width: 0.1rem; margin-right: -1rem; content: "\f142"; font: normal normal normal 14px/1 FontAwesome; color: #eee; }
+#FilesTable tr > th:last-child::after { display: none }
+#FilesTable td { padding: 0.25rem; white-space: nowrap; text-align: right; }
+#FilesTable > thead { background: #f1f1f1; border-top: 1px solid #e8e8e8; }
+#FilesTable > thead > tr > th:first-child, #FilesTable > tbody > tr > td:first-child { text-align: left; padding-left: 1rem !important; width: 100%; }
+#FilesTable > tbody > tr > td:last-child { padding-right: 1rem !important; }
+#FilesTable > thead > tr > th:first-child .fa, #FilesTable > tbody > tr > td:first-child .fa { float: left; margin: 0.3rem 0.5rem 0 0; }
+#FilesTable > tbody > tr:nth-child(2n) { background-color: rgba(255, 255, 255, 0.64) }
+#FilesTable > tbody > tr:hover { background-color: rgba(33, 150, 243, 0.1) }
+#FilesTable > tbody > tr.viewRow, #FilesTable > tbody > tr.editRow { background-color: #1976D2; color: #fff; }
+#FilesTable > tbody > tr.viewRow a, #FilesTable > tbody > tr.editRow a { color: #fff !important; }
+#FilesTable > tbody > tr > td:last-child .fa { position: relative; width: 1.3rem; font-size: 0.9rem; text-align: center; }
+#FilesTable > tbody > tr > td:last-child .fa::before { position: relative; z-index: 1; }
+#FilesTable > tbody > tr > td:last-child .fa::after { content: ""; position: absolute; z-index: 0; left: 50%; top: 50%; width: 1rem; height: 1rem; margin: -0.5rem 0 0 -0.5rem; border-radius: 50%; background-color: rgba(25, 118, 210, 0.25); opacity: 0; transition: 0.15s; }
+#FilesTable > tbody > tr > td:last-child .fa.fa-trash::after { background-color: #e8b8ba !important }
+#FilesTable > tbody > tr.viewRow > td:last-child .fa::after, #FilesTable > tbody > tr.editRow > td:last-child .fa::after { background-color: rgba(255, 255, 255, 0.5) }
+#FilesTable > tbody > tr > td:last-child a:hover .fa::after, #FilesTable > tbody > tr > td:last-child span:not(.disabled):hover .fa::after { opacity: 1; transform: scale(1.3) }
+#FilesTable > tbody > tr > td:last-child a:hover .fa, #FilesTable > tbody > tr > td:last-child span:not(.disabled):hover .fa { color: #000 }
+#FilesTable > tbody > tr > td:last-child span.disabled { visibility: hidden }
+#FilesTable > tbody > tr > td:last-child a { color: #333; }
+#file_editfile.section .sectionHeader { margin: 0; padding: 0.5rem 1rem; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background-color: #f9f9f9 }
+#file_editfile.section .sectionBody { margin: 0 !important; padding: 0 0 1rem; border: none; border-bottom: 1px solid #ddd; background-color: #F9F9F9 }
+#file_editfile td { padding: 0 !important; }
+#file_editfile #content { float: left; width: 100%; min-height: 10rem; border: none; border-bottom: 1px solid rgba(0, 0, 0, .15) }
+#file_editfile .CodeMirror { margin: 0 !important; border: none !important; border-bottom: 1px solid rgba(0, 0, 0, .15) !important; }
+/*#ManageFiles i.fa, #ManageFiles span.fa { color: #39515d; }
 #ManageFiles i.fa.FilesTopFolder { color: #80969c; font-size: 19px !important; }
 #ManageFiles i.fa.FilesFolder { font-size: 19px !important; color: #80969c; margin-right: 4px; }
 #ManageFiles i.fa.FilesDeletedFolder { font-size: 19px !important; color: #e2e2e2; margin-right: 4px; }
@@ -551,7 +582,7 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 #FilesTable { border-collapse: collapse; }
 #FilesTable tr, #FilesTable td { padding: 2px !important; }
 #FilesTable td { border-bottom: 1px dotted #e2e2e2 !important; }
-#FilesTable th { background: #fff; border: none; }
+#FilesTable th { background: #fff; border: none; }*/
 /*BS button*/
 /*.btn { display: inline-block; padding: 6px 12px; margin-bottom: 0; font-weight: normal; text-align: center; white-space: nowrap; vertical-align: middle; -ms-touch-action: manipulation; touch-action: manipulation; cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-image: none; border: 1px solid transparent; border-radius: 4px; }
 .btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus { outline: thin dotted; outline: 5px auto -webkit-focus-ring-color; outline-offset: -2px; }
@@ -583,6 +614,8 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .actionButtons a span { display: none; }
 .actionButtons a .fa { display: inline-block; }
 }
+/* extras */
+.pack_install select[name=link] { width: auto !important; margin-left: 0.5rem }
 /* ManagerManager */
 .sectionHeader.minimizable { position: relative; z-index: 1; background-color: #fafafa; padding: 0.5rem; border: 1px solid rgba(0, 0, 0, 0.15); }
 .dark .sectionHeader.minimizable { background-color: #f2f2f2 }

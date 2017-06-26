@@ -240,6 +240,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .custom-file-control::before { position: absolute; top: -1px; right: -1px; bottom: -1px; z-index: 6; display: block; height: 2.5rem; padding: .5rem 1rem; line-height: 1.5; color: #464a4c; background-color: #eceeef; border: 1px solid rgba(0, 0, 0, .15); border-radius: 0 .25rem .25rem 0 }
 .custom-file-control:lang(en)::before { content: "Browse" }
 /* custom */
+.form-control:focus, input:not([type=button]):not([type=submit]):focus, select:focus, textarea:focus { outline: none; border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 0 0 0.05em rgb(77, 142, 249); }
 input[type=date], input[name*=date], input[size="1"], select[size="1"], select[name=usergroup], select[name=docgroup] { width: auto !important; vertical-align: middle }
 input[size="50"], select[size="50"] { width: 10rem !important }
 select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
