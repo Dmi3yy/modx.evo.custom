@@ -348,12 +348,14 @@ li.breadcrumbs__li_current { font-size: 12px; font-weight: 500; }
 .table, #documentPane #tv_body table, #documentPane [id*="table-"], #documentPane [id*="table-tv"] { width: 100%; }
 #documentPane .tab-page > table > tr > td:first-child, #documentPane .tab-page > table > tbody > tr > td:first-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > td:first-child, #tmplvarsPane .tab-page > table > tbody > tr > th:first-child, #chunkPane .tab-page > table > tbody > tr > td:first-child, #chunkPane .tab-page > table > tbody > tr > th:first-child, #snipetPane .tab-page > table > tbody > tr > td:first-child, #snipetPane .tab-page > table > tbody > tr > th:first-child, #pluginPane .tab-page > table > tbody > tr > td:first-child, #pluginPane .tab-page > table > tbody > tr > th:first-child, #modulePane .tab-page > table > tbody > tr > td:first-child, #modulePane .tab-page > table > tbody > tr > th:first-child, #docManagerPane .tab-page #dates > table > tbody > tr > td:first-child { width: 200px }
 #documentPane .tab-page > table > tr > td:last-child, #documentPane .tab-page .tmplvars > table > tbody > tr > td:last-child { width: inherit !important }
+#documentPane .tab-page > table > tbody > tr > td:first-child .warning { display: inline-block; width: calc(100% - 1rem); }
+#documentPane .tab-page > table > tbody > tr > td:first-child > [data-tooltip].fa-question-circle { float: none; display: inline-block }
 .table--edit { margin-bottom: 15px; }
 .table th, .table td { text-align: left; vertical-align: middle; }
 table th { font-weight: 500; }
 .table--edit th { width: 200px; color: #555; font-size: inherit; }
 .table--edit input[type="text"], .table--edit input[type="password"], .table--edit input[type="number"], .table--edit textarea, .table--edit select, .settings input[type="text"], .settings input[type="password"], .settings input[type="number"], .settings textarea, .settings select { width: 300px; }
-.table th, .table td, .sectionBody td, .sectionBody th { padding: 0.25em; }
+.table th, .table td, .sectionBody td, .sectionBody th { padding: 0.15rem 0.25rem; }
 .table tr:first-child > th, .table tr:first-child > td, .sectionBody tr:first-child > td, .sectionBody tr:first-child > th { border-top: none }
 /* STYLES FOR HELP */
 #helpPane h1 { font-size: 20px; display: block; border-bottom: 1px solid #888; margin-bottom: 1em; font-weight: 500; }
