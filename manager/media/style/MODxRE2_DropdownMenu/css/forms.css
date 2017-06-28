@@ -29,9 +29,9 @@ input[type=search] { -webkit-appearance: none }
 .form-control::placeholder { color: #636c72; opacity: 1 }
 .form-control:disabled, .form-control[readonly] { background-color: #eceeef; opacity: 1 }
 .form-control:disabled { cursor: not-allowed }
-select.form-control:not([size]):not([multiple]), select:not([size]):not([multiple]) { height: calc(2.25em + 2px) }
+select.form-control:not([size]):not([multiple]), select:not([size]):not([multiple]) { height: calc(2.235em + 2px) }
 select.form-control:focus::-ms-value { color: #464a4c; background-color: #fff }
-.form-control:focus, input:not([type=radio]):not([type=checkbox]):focus, select:focus, textarea:focus, .btn.focus, .btn:focus { z-index: 1; /*outline: none; border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 0 0 0.05em rgb(77, 142, 249);*/ outline-offset: -1px; outline: rgba(77, 142, 249, 0.5) solid 2px; }
+.form-control:focus, input:not([type=radio]):not([type=checkbox]):focus, select:focus, textarea:focus, .btn.focus, .btn:focus { z-index: 1; outline-offset: -1px; outline: rgba(77, 142, 249, 0.5) solid 2px; }
 .form-control-file, .form-control-range { display: block }
 .col-form-label { padding-top: calc(.5rem - 1px * 2); padding-bottom: calc(.5rem - 1px * 2); margin-bottom: 0 }
 .col-form-label-lg { padding-top: calc(.75rem - 1px * 2); padding-bottom: calc(.75rem - 1px * 2); font-size: 1.25rem }
@@ -83,7 +83,7 @@ select.form-control:focus::-ms-value { color: #464a4c; background-color: #fff }
 .form-inline .custom-control-indicator { position: static; display: inline-block; margin-right: .25rem; vertical-align: text-bottom }
 .form-inline .has-feedback .form-control-feedback { top: 0 }
 }
-.btn, button, input[type="button"], input[type="submit"] { display: inline-block; font-weight: 400; line-height: 1.5; text-align: center; text-decoration: none; white-space: nowrap; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; border: 1px solid transparent; padding: .375em 1em; font-size: 0.8rem; border-radius: .15em; -webkit-transition: all .2s ease-in-out; -o-transition: all .2s ease-in-out; transition: all .2s ease-in-out }
+.btn, button, input[type="button"], input[type="submit"] { display: inline-block; font-weight: 400; line-height: 1.5; text-align: center; text-decoration: none; white-space: nowrap; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; border: 1px solid transparent; padding: .375em 1em; font-size: 0.8rem; border-radius: .1em; -webkit-transition: all .2s ease-in-out; -o-transition: all .2s ease-in-out; transition: all .2s ease-in-out }
 .btn:focus, .btn:hover { text-decoration: none }
 .btn.disabled, .btn:disabled { cursor: not-allowed; opacity: .65 }
 .btn.active, .btn:active { background-image: none }
@@ -245,7 +245,5 @@ input[size="50"], select[size="50"] { width: 10rem !important }
 select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
 select[name=docgroup] + input[type=submit] { float: none; margin: 0; }
 input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !important }
-#editorRow_TinyMCE { background-color: #fff; }
-#editorRow_TinyMCE th, #editorRow_TinyMCE td { padding: 0.5em; }
 #settingsPane #filemanager_path, #settingsPane #rb_base_dir, #settingsPane input[name=txt_custom_contenttype], input[name=photo] { float: left; width: calc(100% - 6rem) !important; border-top-right-radius: 0; border-bottom-right-radius: 0 }
 #settingsPane #filemanager_path + input[name=reset_filemanager_path], #settingsPane #rb_base_dir + input[name=reset_rb_base_dir], #settingsPane input[name=txt_custom_contenttype] + input[type=button], input[name=photo] + input[type=button] { float: right; width: 6rem !important; border-top-left-radius: 0; border-bottom-left-radius: 0 }

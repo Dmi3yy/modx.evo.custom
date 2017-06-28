@@ -20,6 +20,9 @@ include_once MODX_BASE_PATH . MGR_DIR . '/includes/lang/' . $modx->config['manag
 
 $action = $_REQUEST['a'];
 
+// set limit sql query
+$limit = !empty($modx->config['number_of_results']) ? $modx->config['number_of_results'] : 100;
+
 if(isset($action)) {
 	switch($action) {
 		case '76': {
@@ -32,7 +35,6 @@ if(isset($action)) {
 				$role = $_SESSION['mgrRole'];
 				$filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '%*_') : '';
 				$sqlLike = $filter ? 'WHERE t1.name LIKE "' . $modx->db->escape($filter) . '%"' : '';
-				$limit = $modx->config['number_of_results'];
 				$sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
 				if($_REQUEST['tab'] == 0) {
@@ -120,7 +122,6 @@ if(isset($action)) {
 			$items = '';
 			$filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
 			$sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
-			$limit = $modx->config['number_of_results'];
 			$sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
 			$sql = $modx->db->query('SELECT t1.*, t1.username AS name, t2.blocked
@@ -131,7 +132,6 @@ if(isset($action)) {
 				' . $sqlLimit);
 
 			$output .= '<li><a id="a_11" href="index.php?a=11" target="main"><i class="fa fa-plus"></i>' . $_lang['new_user'] . '</a></li>';
-
 
 			if($count = $modx->db->getRecordCount($sql)) {
 				if($count == $limit) {
@@ -159,7 +159,6 @@ if(isset($action)) {
 			$items = '';
 			$filter = !empty($_REQUEST['filter']) ? addcslashes(trim($_REQUEST['filter']), '\%*_') : '';
 			$sqlLike = $filter ? 'WHERE t1.username LIKE "' . $modx->db->escape($filter) . '%"' : '';
-			$limit = $modx->config['number_of_results'];
 			$sqlLimit = $sqlLike ? '' : 'LIMIT ' . $limit;
 
 			$sql = $modx->db->query('SELECT t1.*, t1.username AS name, t2.blocked
@@ -170,7 +169,6 @@ if(isset($action)) {
 				' . $sqlLimit);
 
 			$output .= '<li><a id="a_87" href="index.php?a=87" target="main"><i class="fa fa-plus"></i>' . $_lang['new_web_user'] . '</a></li>';
-
 
 			if($count = $modx->db->getRecordCount($sql)) {
 				if($count == $limit) {

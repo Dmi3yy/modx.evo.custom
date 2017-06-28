@@ -13,8 +13,7 @@
 .dp_cal .dp_hide { visibility: hidden }
 .dp_cal .dp_today { background-color: #4caf50; color: #fff !important }
 .dp_cal .dp_selected { background-color: #3189ba; color: #fff !important }
-.dp_cal input, .dp_cal button, .dp_cal select { padding: 5px !important; line-height: 1em !important }
 .dp_cal input { width: 68% !important }
-.dp_cal button { position: absolute; top: 0; right: 0; margin: 0 !important; padding: 5px 10px !important; width: 30% !important }
+.dp_cal button { position: absolute; top: 0; right: 0; margin: 0 !important; width: 30% !important }
 /* datepicker icon clear */
 .clearDate { position: relative; margin: 0.5rem 0 0 -1.5rem; }
