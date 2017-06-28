@@ -545,9 +545,8 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 #FilesTable { width: 100%; margin-bottom: 1rem; border-bottom: 1px solid #ddd; background-color: #F9F9F9 }
 #FilesTable tr { border-bottom: 1px solid #e8e8e8; cursor: default }
 #FilesTable th { padding: 0.675rem 1rem; font-size: 0.675rem; font-weight: 400; text-transform: uppercase; text-align: center; color: #666; white-space: nowrap; vertical-align: middle }
-#FilesTable th::after { float: right; overflow: hidden; width: 0.1rem; margin-right: -1rem; content: "\f142"; font: normal normal normal 14px/1 FontAwesome; color: #eee; }
 #FilesTable tr > th:last-child::after { display: none }
-#FilesTable td { padding: 0.25rem; white-space: nowrap; text-align: right; }
+#FilesTable td { padding: 0.25rem 0.5rem; white-space: nowrap; text-align: right; }
 #FilesTable > thead { background: #f1f1f1; border-top: 1px solid #e8e8e8; }
 #FilesTable > thead > tr > th:first-child, #FilesTable > tbody > tr > td:first-child { text-align: left; padding-left: 1rem !important; width: 100%; }
 #FilesTable > tbody > tr > td:last-child { padding-right: 1rem !important; }
@@ -558,9 +557,9 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 #FilesTable > tbody > tr.viewRow a, #FilesTable > tbody > tr.editRow a { color: #fff !important; }
 #FilesTable > tbody > tr > td:last-child .fa { position: relative; width: 1.3rem; height: 1.3rem; line-height: 1.3rem; font-size: 0.9rem; text-align: center; border-radius: 50%; -webkit-transition: 0.15s; transition: 0.15s; }
 #FilesTable > tbody > tr > td:last-child a:hover .fa, #FilesTable > tbody > tr > td:last-child span:not(.disabled):hover .fa { color: #000; background-color: #88bbe9 }
-#FilesTable > tbody > tr > td:last-child a:hover .fa.fa-trash { background-color: #e8b8ba !important }
+#FilesTable > tbody > tr > td:last-child a:hover .fa.fa-trash { color: #d80030 }
 #FilesTable > tbody > tr > td:last-child span.disabled { visibility: hidden }
-#FilesTable > tbody > tr > td:last-child a { color: #666; }
+#FilesTable > tbody > tr > td:last-child a,#FilesTable > tbody > tr > td:last-child span { color: #666; }
 #file_editfile.section .sectionHeader { margin: 0; padding: 0.5rem 1rem; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background-color: #f9f9f9 }
 #file_editfile.section .sectionBody { margin: 0 !important; padding: 0 0 1rem; border: none; border-bottom: 1px solid #ddd; background-color: #F9F9F9 }
 #file_editfile td { padding: 0 !important; }
@@ -598,7 +597,7 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none; }
 .actionButtons a .fa { display: inline-block; }
 }
 /* extras */
-.pack_install select[name=link] { width: auto !important; margin-left: 0.5rem }
+.catalog_item select[name=link] { width: auto !important; margin-left: 0.5rem }
 /* ManagerManager */
 .sectionHeader.minimizable { position: relative; z-index: 1; background-color: #fafafa; padding: 0.5rem; border: 1px solid rgba(0, 0, 0, 0.15); }
 .dark .sectionHeader.minimizable { background-color: #f2f2f2 }

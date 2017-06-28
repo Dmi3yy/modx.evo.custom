@@ -254,15 +254,17 @@
 						t.empty()
 					}
 				};
+				if(modx.isMobile) {
+					el.onblur = function() {
+						t.close()
+					}
+				}
 				el.onfocus = function() {
 					t.open()
 				};
 				el.onclick = function() {
 					t.open()
 				};
-				// el.onblur = function() {
-				// 	t.close()
-				// };
 				el.onmouseenter = function() {
 					t.open()
 				};
@@ -373,8 +375,10 @@
 						w.main.onresize = function() {
 							modx.main.tabRow.scroll(row);
 						};
-						if(sel && sel.previousSibling) p.classList.remove('disable');
-						if(sel && sel.nextSibling) n.classList.remove('disable');
+						if(sel) {
+							if(sel.previousSibling) p.classList.remove('disable');
+							if(sel.nextSibling) n.classList.remove('disable');
+						}
 					}, 100);
 					row.onclick = function(e) {
 						var sel = e.target.tagName === 'H2' ? e.target : (e.target.tagName === 'SPAN' ? e.target.parentNode : null);
@@ -395,10 +399,10 @@
 						n = row.offsetParent.querySelector('.next');
 					for(var i = 0; i < elms.length; i++) c += elms[i].offsetWidth;
 					if(row.scrollLeft > sel.offsetLeft) {
-						modx.animation.scrollLeft(row, sel.offsetLeft - 1, 100)
+						modx.animation.scrollLeft(row, sel.offsetLeft - (sel.previousSibling ? 30 : 1), 100)
 					}
 					if(sel.offsetLeft + sel.offsetWidth > row.offsetWidth + row.scrollLeft) {
-						modx.animation.scrollLeft(row, (sel.offsetLeft - row.offsetWidth + sel.offsetWidth), 100)
+						modx.animation.scrollLeft(row, (sel.offsetLeft - row.offsetWidth + sel.offsetWidth) + (sel.nextSibling ? 30 : 0), 100)
 					}
 					if(c > row.offsetWidth) {
 						this.drag(row)

@@ -1,4 +1,4 @@
-button, input, optgroup, select, textarea { font-family: sans-serif; font-size: 100%; line-height: 1.15; margin: 0 }
+button, input, optgroup, select, textarea { position: relative; font-family: sans-serif; font-size: 100%; line-height: 1.15; margin: 0 }
 button, input { overflow: visible }
 button, select { text-transform: none }
 [type=reset], [type=submit], button, html [type=button] { -webkit-appearance: button }
@@ -15,7 +15,7 @@ textarea { overflow: auto; resize: vertical }
 [role=button] { cursor: pointer }
 [role=button], a, area, button, input, label, select, summary, textarea { -ms-touch-action: manipulation; touch-action: manipulation }
 label { display: inline-block; margin-bottom: .5rem }
-button:focus { outline: 1px dotted; outline: 5px auto -webkit-focus-ring-color }
+button:focus, input[type=button], input[type=submit] { outline: none; }
 button, input, select, textarea { line-height: inherit }
 input[type=checkbox]:disabled, input[type=radio]:disabled { cursor: not-allowed }
 input[type=date], input[type=time], input[type=datetime-local], input[type=month] { -webkit-appearance: listbox }
@@ -31,6 +31,7 @@ input[type=search] { -webkit-appearance: none }
 .form-control:disabled { cursor: not-allowed }
 select.form-control:not([size]):not([multiple]), select:not([size]):not([multiple]) { height: calc(2.25em + 2px) }
 select.form-control:focus::-ms-value { color: #464a4c; background-color: #fff }
+.form-control:focus, input:not([type=radio]):not([type=checkbox]):focus, select:focus, textarea:focus, .btn.focus, .btn:focus { z-index: 1; /*outline: none; border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 0 0 0.05em rgb(77, 142, 249);*/ outline-offset: -1px; outline: rgba(77, 142, 249, 0.5) solid 2px; }
 .form-control-file, .form-control-range { display: block }
 .col-form-label { padding-top: calc(.5rem - 1px * 2); padding-bottom: calc(.5rem - 1px * 2); margin-bottom: 0 }
 .col-form-label-lg { padding-top: calc(.75rem - 1px * 2); padding-bottom: calc(.75rem - 1px * 2); font-size: 1.25rem }
@@ -84,7 +85,6 @@ select.form-control:focus::-ms-value { color: #464a4c; background-color: #fff }
 }
 .btn, button, input[type="button"], input[type="submit"] { display: inline-block; font-weight: 400; line-height: 1.5; text-align: center; text-decoration: none; white-space: nowrap; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; border: 1px solid transparent; padding: .375em 1em; font-size: 0.8rem; border-radius: .15em; -webkit-transition: all .2s ease-in-out; -o-transition: all .2s ease-in-out; transition: all .2s ease-in-out }
 .btn:focus, .btn:hover { text-decoration: none }
-.btn.focus, .btn:focus { outline: 0; -webkit-box-shadow: 0 0 0 2px rgba(2, 117, 216, .25); box-shadow: 0 0 0 2px rgba(2, 117, 216, .25) }
 .btn.disabled, .btn:disabled { cursor: not-allowed; opacity: .65 }
 .btn.active, .btn:active { background-image: none }
 a.btn.disabled, fieldset[disabled] a.btn { pointer-events: none }
@@ -240,7 +240,6 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .custom-file-control::before { position: absolute; top: -1px; right: -1px; bottom: -1px; z-index: 6; display: block; height: 2.5rem; padding: .5rem 1rem; line-height: 1.5; color: #464a4c; background-color: #eceeef; border: 1px solid rgba(0, 0, 0, .15); border-radius: 0 .25rem .25rem 0 }
 .custom-file-control:lang(en)::before { content: "Browse" }
 /* custom */
-.form-control:focus, input:not([type=button]):not([type=submit]):focus, select:focus, textarea:focus { outline: none; border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 0 0 0.05em rgb(77, 142, 249); }
 input[type=date], input[name*=date], input[size="1"], select[size="1"], select[name=usergroup], select[name=docgroup] { width: auto !important; vertical-align: middle }
 input[size="50"], select[size="50"] { width: 10rem !important }
 select[name=usergroup], select[name=docgroup] { margin: 0 0.5em; }
