@@ -782,7 +782,7 @@
 					if(elMenuIndex && index >= 0) elMenuIndex.value = index;
 					if(elParent && elParentName) {
 						elParent.value = parent;
-						elParentName.innerHTML = parent + ' (' + d.querySelector('#node' + parent).firstChild.dataset.titleEsc + ')'
+						elParentName.innerHTML = parent + ' (' + d.querySelector('#node' + parent + ' > a').dataset.titleEsc + ')'
 					}
 				}
 			},
