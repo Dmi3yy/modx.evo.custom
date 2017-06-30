@@ -998,8 +998,8 @@ class DocumentParser {
             
             // if(!isset($ph[$key]) && !$context) continue; // #1218 TVs/PHs will not be rendered if custom_meta_title is not assigned to template like [*custom_meta_title:ne:then=`[*custom_meta_title*]`:else=`[*pagetitle*]`*]
             if($context) $value = $this->_contextValue("{$key}@{$context}");
-            else         $value = $ph[$key];
-            
+            else         $value = isset($ph[$key]) ? $ph[$key] : '';
+
             if (is_array($value)) {
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.format.inc.php');
                 include_once(MODX_MANAGER_PATH . 'includes/tmplvars.commands.inc.php');
@@ -2220,7 +2220,8 @@ class DocumentParser {
     }
     
     function mb_basename($path, $suffix = null) {
-        return str_replace($suffix, '', end(explode('/', $path)));
+    	$exp = explode('/', $path);
+    	return str_replace($suffix, '', end($exp));
     }
 
     function _IIS_furl_fix()
