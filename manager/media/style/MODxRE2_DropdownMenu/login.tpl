@@ -113,7 +113,7 @@
 				}
 			}
 		};
-		xhr.send('ajax=1&username=' + form.username.value + '&password=' + form.password.value + (form.captcha_code ? '&captcha_code=' + form.captcha_code.value : ''));
+		xhr.send('ajax=1&username=' + encodeURIComponent(form.username.value) + '&password=' + encodeURIComponent(form.password.value) + (form.captcha_code ? '&captcha_code=' + encodeURIComponent(form.captcha_code.value) : ''));
 		e.preventDefault();
 	}
 	/* ]]> */
