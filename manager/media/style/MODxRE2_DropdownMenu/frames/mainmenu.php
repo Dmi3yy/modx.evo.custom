@@ -431,7 +431,7 @@ $menu = $modx->invokeEvent("OnManagerMenuPrerender", array('menu' => $sitemenu))
 if(is_array($menu)) {
 	$newmenu = array();
 	foreach($menu as $item){
-		$new = array_merge($newmenu, unserialize($item));
+		$newmenu = array_merge($newmenu, unserialize($item));
 	} 
 	$sitemenu = $newmenu;
 }
