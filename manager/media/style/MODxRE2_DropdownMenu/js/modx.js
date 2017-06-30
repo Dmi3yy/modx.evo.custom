@@ -254,15 +254,17 @@
 						t.empty()
 					}
 				};
+				if(modx.isMobile) {
+					el.onblur = function() {
+						t.close()
+					}
+				}
 				el.onfocus = function() {
 					t.open()
 				};
 				el.onclick = function() {
 					t.open()
 				};
-				// el.onblur = function() {
-				// 	t.close()
-				// };
 				el.onmouseenter = function() {
 					t.open()
 				};
@@ -373,8 +375,10 @@
 						w.main.onresize = function() {
 							modx.main.tabRow.scroll(row);
 						};
-						if(sel && sel.previousSibling) p.classList.remove('disable');
-						if(sel && sel.nextSibling) n.classList.remove('disable');
+						if(sel) {
+							if(sel.previousSibling) p.classList.remove('disable');
+							if(sel.nextSibling) n.classList.remove('disable');
+						}
 					}, 100);
 					row.onclick = function(e) {
 						var sel = e.target.tagName === 'H2' ? e.target : (e.target.tagName === 'SPAN' ? e.target.parentNode : null);
@@ -395,10 +399,10 @@
 						n = row.offsetParent.querySelector('.next');
 					for(var i = 0; i < elms.length; i++) c += elms[i].offsetWidth;
 					if(row.scrollLeft > sel.offsetLeft) {
-						modx.animation.scrollLeft(row, sel.offsetLeft - 1, 100)
+						modx.animation.scrollLeft(row, sel.offsetLeft - (sel.previousSibling ? 30 : 1), 100)
 					}
 					if(sel.offsetLeft + sel.offsetWidth > row.offsetWidth + row.scrollLeft) {
-						modx.animation.scrollLeft(row, (sel.offsetLeft - row.offsetWidth + sel.offsetWidth), 100)
+						modx.animation.scrollLeft(row, (sel.offsetLeft - row.offsetWidth + sel.offsetWidth) + (sel.nextSibling ? 30 : 0), 100)
 					}
 					if(c > row.offsetWidth) {
 						this.drag(row)
@@ -435,7 +439,7 @@
 				d.getElementById('mainloader').classList.remove('show')
 			},
 			scrollWork: function() {
-				var a = d.getElementById(modx.main.idFrame).contentWindow,
+				var a = w.main.frameElement.contentWindow,
 					b = localStorage.getItem('page_y'),
 					c = localStorage.getItem('page_url');
 				if(b === u) {
@@ -736,65 +740,51 @@
 						el.parentNode.removeChild(el);
 						d.querySelector('#node' + parent + ' .icon').innerHTML = (parseInt(this.dataset.private) ? modx.style.tree_folder_secure : modx.style.tree_folder)
 					}
-					modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
-						a: 'movedocument',
-						id: id,
-						parent: parent,
-						menuindex: menuindex
-					}, function() {
-						modx.tree.restoreTree()
-					});
-					// :TODO проверка на открытый документ
-					// index = menuindex.indexOf(id);
-					// el = w.main.document.querySelector('#documentPane input[name=menuindex]');
-					// if(el && index > 0) el.value = index;
-					//console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
+					modx.tree.ondragupdate(this, id, parent, menuindex)
 				}
 				if(this.parentNode.classList.contains('dragafter')) {
-					parent = this.parentNode.parentNode.parentNode.id ? parseInt(this.parentNode.parentNode.parentNode.id.substr(4)) : 0;
+					parent = /node/.test(this.parentNode.parentNode.parentNode.id) ? parseInt(this.parentNode.parentNode.parentNode.id.substr(4)) : 0;
 					level = parseInt(this.dataset.level);
 					for(i = 0; i < level; i++) indent.innerHTML += '<i></i>';
 					this.parentNode.parentNode.insertBefore(el, this.parentNode.nextSibling);
 					els = this.parentNode.parentNode.children;
 					for(i = 0; i < els.length; i++) menuindex[i] = els[i].id.substr(4);
-					modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
-						a: 'movedocument',
-						id: id,
-						parent: parent,
-						menuindex: menuindex
-					}, function() {
-						modx.tree.restoreTree()
-					});
-					// :TODO проверка на открытый документ
-					// index = menuindex.indexOf(id);
-					// el = w.main.document.querySelector('#documentPane input[name=menuindex]');
-					// if(el && index > 0) el.value = index;
-					//console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
+					modx.tree.ondragupdate(this, id, parent, menuindex)
 				}
 				if(this.parentNode.classList.contains('dragbefore')) {
-					parent = this.parentNode.parentNode.parentNode.id ? parseInt(this.parentNode.parentNode.parentNode.id.substr(4)) : 0;
+					parent = /node/.test(this.parentNode.parentNode.parentNode.id) ? parseInt(this.parentNode.parentNode.parentNode.id.substr(4)) : 0;
 					level = parseInt(this.dataset.level);
 					for(i = 0; i < level; i++) indent.innerHTML += '<i></i>';
 					this.parentNode.parentNode.insertBefore(el, this.parentNode);
 					els = this.parentNode.parentNode.children;
 					for(i = 0; i < els.length; i++) menuindex[i] = els[i].id.substr(4);
-					modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
-						a: 'movedocument',
-						id: id,
-						parent: parent,
-						menuindex: menuindex
-					}, function() {
-						modx.tree.restoreTree()
-					});
-					// :TODO проверка на открытый документ
-					// index = menuindex.indexOf(id);
-					// el = w.main.document.querySelector('#documentPane input[name=menuindex]');
-					// if(el && index > 0) el.value = index;
-					//console.log('id: ' + id + ', parent: ' + parent + ', menuindex: ' + menuindex);
+					modx.tree.ondragupdate(this, id, parent, menuindex)
 				}
 				this.parentNode.removeAttribute('class');
 				this.parentNode.removeAttribute('draggable');
 				e.preventDefault();
+			},
+			ondragupdate: function(a, id, parent, menuindex) {
+				modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php', {
+					a: 'movedocument',
+					id: id,
+					parent: parent,
+					menuindex: menuindex
+				}, function() {
+					modx.tree.restoreTree()
+				});
+				var b = w.main.frameElement.contentWindow.location.search.substr(1);
+				if(parseInt(modx.main.getQueryVariable('a', b)) === 27 && parseInt(modx.main.getQueryVariable('id', b)) === parseInt(id)) {
+					var index = menuindex.indexOf(id),
+						elMenuIndex = w.main.document.querySelector('#documentPane input[name=menuindex]'),
+						elParent = w.main.document.querySelector('#documentPane input[name=parent]'),
+						elParentName = w.main.document.querySelector('#documentPane #parentName');
+					if(elMenuIndex && index >= 0) elMenuIndex.value = index;
+					if(elParent && elParentName) {
+						elParent.value = parent;
+						elParentName.innerHTML = parent + ' (' + d.querySelector('#node' + parent + ' > a').dataset.titleEsc + ')'
+					}
+				}
 			},
 			toggleTheme: function(e) {
 				if(e.currentTarget.classList.contains('rotate180')) {
@@ -1135,7 +1125,7 @@
 				if(el) el.classList.add('selected');
 			},
 			setItemToChange: function() {
-				var a = d.getElementById(modx.main.idFrame).contentWindow,
+				var a = w.main.frameElement.contentWindow,
 					b = a.location.search.substring(1);
 				if((parseInt(modx.main.getQueryVariable('a', b)) === 27 || parseInt(modx.main.getQueryVariable('a', b)) === 3) && modx.main.getQueryVariable('id', b)) {
 					this.itemToChange = parseInt(modx.main.getQueryVariable('id', b))
@@ -1591,7 +1581,7 @@
 		console.log('tree.resizeTree() off')
 	};
 	w.onbeforeunload = function() {
-		var a = d.getElementById(modx.main.idFrame).contentWindow;
+		var a = w.main.frameElement.contentWindow;
 		if(parseInt(modx.main.getQueryVariable('a', a.location.search.substring(1))) === 27) {
 			modx.get('index.php?a=67&type=7&id=' + modx.main.getQueryVariable('id', a.location.search.substring(1)));
 		}
