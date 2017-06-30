@@ -74,6 +74,7 @@ class DocumentParser {
     var $time;
     var $sid;
     private $q;
+    var $decoded_request_uri;
 
     /**
      * Document constructor
