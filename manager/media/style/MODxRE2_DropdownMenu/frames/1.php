@@ -177,7 +177,7 @@ if($user['which_browser'] == 'default') {
 
 			},
 			extend: function(a, b) {
-				for(var c in a) a[c] = a[c];
+				for(var c in a) a[c] = b[c];
 			},
 			extended: function(a) {
 				for(var b in a) this[b] = a[b];

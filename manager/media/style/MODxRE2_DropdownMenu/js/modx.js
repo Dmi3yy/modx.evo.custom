@@ -1114,13 +1114,6 @@
 				d.getElementById('treeloader').classList.add('visible');
 				this.setItemToChange();
 				this.rpcNode = d.getElementById('treeRoot');
-				// modx.post(modx.MODX_SITE_URL + modx.MGR_DIR + '/media/style/' + modx.config.theme + '/ajax.php?indent=1&parent=0&expandAll=2&id=' + this.itemToChange, {
-				// 	a: 1,
-				// 	f: 'nodes'
-				// }, function(r) {
-				// 	modx.tree.rpcLoadData(r);
-				// 	modx.tree.draggable()
-				// })
 				modx.get('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2&id=' + this.itemToChange, function(r) {
 					modx.tree.rpcLoadData(r);
 					modx.tree.draggable()
