@@ -57,8 +57,9 @@
 #mainMenu #searchform .fa-search { position: relative; z-index: 1 }
 #mainMenu #searchform .fa-refresh { position: absolute; z-index: 9; display: none; top: 0.6rem; right: 0.8rem; line-height: 1em }
 /* #searchresult */
-#searchresult { position: absolute; z-index: 99; overflow: auto; top: 2.2rem; right: -30rem; bottom: 0; width: 30rem; max-width: 100%; background-color: #fff; border-left: 1px solid rgba(0, 0, 0, 0.1); opacity: 0; visibility: hidden; -webkit-transition: 0.25s ease 0.5s; transition: 0.25s ease 0.5s; -webkit-transition-delay: 0.3s; transition-delay: 0.3s; }
-#searchresult.open { right: 0; box-shadow: 0 0 4.5rem rgba(0, 0, 0, 0.15); opacity: 1; visibility: visible; -webkit-transition: 0.5s ease 0.5s; transition: 0.5s ease 0.5s; -webkit-transition-delay: 0s; transition-delay: 0s }
+#searchresult { position: absolute; z-index: 99; overflow: hidden; top: 2.2rem; right: 0; bottom: 0; width: 0; max-width: 100%; background-color: #fff; border-left: 1px solid rgba(0, 0, 0, 0.1); opacity: 0; visibility: hidden; -webkit-transition: 0.25s ease 0.5s; transition: 0.25s ease 0.5s; -webkit-transition-delay: 0.3s; transition-delay: 0.3s; }
+#searchresult.open { width: 20rem; box-shadow: 0 0 4.5rem rgba(0, 0, 0, 0.15); opacity: 1; visibility: visible; -webkit-transition: 0.5s ease 0.5s; transition: 0.5s ease 0.5s; -webkit-transition-delay: 0s; transition-delay: 0s }
+#searchresult .ajaxSearchResults { width: 20rem; height: 100%; overflow: auto; }
 #searchresult .ajaxSearchResults ul, #searchresult .ajaxSearchResults li { margin: 0; padding: 0; list-style: none }
 #searchresult .ajaxSearchResults b, #searchresult .ajaxSearchResults strong, #searchresult .ajaxSearchResults a { position: relative; z-index: 0; display: block; color: #333; padding: 0.25rem 1rem; margin-top: -1px; border-top: 1px solid rgba(0, 0, 0, 0.03); border-bottom: 1px solid rgba(0, 0, 0, 0.03); box-sizing: border-box }
 #searchresult .ajaxSearchResults b { z-index: 1; background-color: #ddd }
@@ -85,5 +86,6 @@
 @media (max-width: 480px) {
 #mainMenu .nav > li > a .username, #searchresult .ajaxSearchResults a > i { display: none }
 #mainMenu .nav > li > a .icon { margin-left: 0 }
+#searchresult.open, #searchresult .ajaxSearchResults { width: 100% }
 }
 /* dark */

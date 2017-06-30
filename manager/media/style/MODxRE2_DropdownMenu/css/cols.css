@@ -331,3 +331,5 @@
 .offset-xl-10 { margin-left: 83.333333% }
 .offset-xl-11 { margin-left: 91.666667% }
 }
+/* custom */
+.container { width: 100% }
