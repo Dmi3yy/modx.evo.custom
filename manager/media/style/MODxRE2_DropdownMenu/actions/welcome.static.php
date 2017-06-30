@@ -350,11 +350,12 @@ foreach($widgets as $widget) {
 }
 $ph['widgets'] = $output;
 
-// invoke event OnManagerWelcomeRender
-$evtOut = $modx->invokeEvent('OnManagerWelcomeRender');
-if(is_array($evtOut)) {
-	$output = implode('', $evtOut);
-	$ph['OnManagerWelcomeRender'] = $output;
+// invoke OnManagerWelcomeHome event
+$sitewidgets = $modx->invokeEvent("OnManagerWelcomeHome", array('widgets' => $widgets));
+if(is_array($sitewidgets)) {
+	foreach($sitewidgets as $widget){
+		$widgets = array_merge($widgets, unserialize($widget));
+	} 
 }
 
 // load template

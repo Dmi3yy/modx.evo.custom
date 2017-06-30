@@ -234,9 +234,10 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 
 			// invoke OnManagerNodePrerender event
 			$prenode = $modx->invokeEvent("OnManagerNodePrerender", array('ph' => $ph));
-			$prenode = unserialize($prenode[0]);
 			if(is_array($prenode)) {
-				$ph = $prenode;
+				foreach($prenode as $node){
+					$ph = array_merge($ph, unserialize($node));
+				} 
 			}
 
 			if($ph['contextmenu']) {
@@ -290,9 +291,10 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						'ph' => $ph,
 						'opened' => '1'
 					));
-					$prenode = unserialize($prenode[0]);
 					if(is_array($prenode)) {
-						$ph = $prenode;
+						foreach($prenode as $node){
+							$ph = array_merge($ph, unserialize($node));
+						} 
 					}
 
 					if($ph['contextmenu']) {
@@ -325,9 +327,10 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						'ph' => $ph,
 						'opened' => '0'
 					));
-					$prenode = unserialize($prenode[0]);
 					if(is_array($prenode)) {
-						$ph = $prenode;
+						foreach($prenode as $node){
+							$ph = array_merge($ph, unserialize($node));
+						} 
 					}
 
 					if($ph['contextmenu']) {
@@ -360,9 +363,10 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						'ph' => $ph,
 						'opened' => '1'
 					));
-					$prenode = unserialize($prenode[0]);
 					if(is_array($prenode)) {
-						$ph = $prenode;
+						foreach($prenode as $node){
+							$ph = array_merge($ph, unserialize($node));
+						}
 						if($ph['showChildren'] == 0) {
 							unset($opened2[$row['id']]);
 							$ph['node_toggle'] = 0;
@@ -403,14 +407,15 @@ function makeHTML($indent, $parent, $expandAll, $theme, $hereid = '') {
 						'ph' => $ph,
 						'opened' => '0'
 					));
-					$prenode = unserialize($prenode[0]);
 					if(is_array($prenode)) {
-						$ph = $prenode;
+						foreach($prenode as $node){
+							$ph = array_merge($ph, unserialize($node));
+						} 
 						if($ph['showChildren'] == 0) {
 							$tpl = getTplFolderNodeNotChildren();
 						}
 					}
-
+					
 					if($ph['showChildren'] == 0) {
 						$ph['icon_node_toggle'] = '';
 						$ph['donthit'] = 1;
