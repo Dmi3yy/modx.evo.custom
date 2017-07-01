@@ -135,12 +135,6 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 		document.getElementById("failed").innerHTML = "0";
 	}
 
-	function deleteuser() {
-		if(confirm("<?php echo $_lang['confirm_delete_user']; ?>") === true) {
-			window.location.href = "index.php?id=" + document.userform.id.value + "&a=90";
-		}
-	}
-
 	// change name
 	function changeName() {
 		if(confirm("<?php echo $_lang['confirm_name_change']; ?>") === true) {
@@ -174,6 +168,22 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 		}
 	};
 
+	var actions = {
+		save: function() {
+			documentDirty = false;
+			document.userform.save.click();
+		},
+		delete: function() {
+			if(confirm("<?php echo $_lang['confirm_delete_user']; ?>") === true) {
+				window.location.href = "index.php?id=" + document.userform.id.value + "&a=90";
+			}
+		},
+		cancel: function() {
+			documentDirty = false;
+			window.location.href = 'index.php?a=99';
+		}
+	}
+
 </script>
 
 <form action="index.php?a=89" method="post" name="userform">
@@ -188,6 +198,11 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 	<input type="hidden" name="id" value="<?php echo $user ?>" />
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />
 	<h1><i class="fa fa fa-users"></i><?php echo $_lang['web_user_title']; ?> </h1>
+
+	<?php echo $_style['actionsbuttons']['dynamic']['user'] ?>
+
+	<!--
+
 	<div id="actions">
 		<ul class="actionButtons">
 			<li id="Button1" class="transition"><a href="javascript:;" onClick="documentDirty=false; document.userform.save.click();"> <i class="<?php echo $_style["actions_save"] ?>"></i> <?php echo $_lang['save']; ?></a><span class="plus"> + </span>
@@ -207,6 +222,8 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 			<li id="Button5" class="transition"><a href="javascript:;" onClick="documentDirty=false;window.location.href='index.php?a=99';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <?php echo $_lang['cancel']; ?></a></li>
 		</ul>
 	</div>
+
+	-->
 
 	<!-- Tab Start -->
 	<div class="sectionBody">

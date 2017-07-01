@@ -4,6 +4,7 @@
 @import "css/datepicker.css";
 @import "css/cols.css";
 @import "css/forms.css";
+@import "css/actionsbuttons.css";
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1 { font-size: 1.5em; line-height: 1.5rem; padding: 0.8rem; margin: 0; }
 h1 .fa { margin-right: 0.25em; color: #1377c5; }
@@ -32,7 +33,6 @@ optgroup option { font-weight: normal; background-color: #fff; }
 .tab-page .sectionBody, .tab-page .section .sectionBody, .sectionBody .sectionBody { border-top: 1px solid #CCCCCC; margin: 0 3px 15px; padding: 7px; }
 .section .sectionBody { margin: 0 15px 15px; padding: 15px; background-color: #fff; border: 1px solid #CCCCCC; }
 .sectionBody > p:first-child { margin-left: 1rem; margin-right: 1rem }
-form[name="settings"] > h1 + #actions + div { margin: 0 !important; }
 .showHideVisible, .layerVisible { margin: 0 10px 4px; }
 .comment { font-size: 11px; color: #999; padding: 4px 0; }
 thead, .fancyrow { color: #333; height: 18px !important; background-color: #E4E4E4; }
@@ -131,28 +131,6 @@ fieldset.tab-page { border: 1px solid #e4e4e4 !important; }
 h2#edit_document_title { font-size: 15px; color: #f5f5f5; width: 100%; border-bottom: none; padding: 5px 10px; }
 fieldset#preview h2.tab { float: right; }
 /* -------------------------[ Action Buttons ]--- */
-#actions { background: none repeat scroll 0 0 rgba(230, 230, 230, 0.8); padding: 8px; position: fixed; top: 0; right: 15px; text-align: right; z-index: 100; -moz-border-radius: 0 0 5px 5px; -webkit-border-radius: 0 0 5px 5px; border-radius: 0 0 5px 5px; }
-#actions .actionButtons { float: left; min-height: 32px }
-#actions .actionButtons li { position: relative; float: left; margin-right: 3px; border: none }
-#actions .actionButtons li a, #actions .actionButtons .plus { float: left; padding: 0 10px !important; height: 32px; line-height: 30px; -webkit-user-select: none; user-select: none; }
-#actions .actionButtons li:last-child { margin: 0 }
-#actions #Button1 a { width: 100%; text-align: left; }
-#actions .actionButtons .plus { overflow: hidden; float: right; margin: -32px 0 0 0; width: 35px; border-radius: 0 3px 3px 0 !important; text-align: center; cursor: default; font: normal normal normal 0/30px FontAwesome }
-#actions .actionButtons .plus::before { content: "\f107"; font-size: 14px }
-#actions .actionButtons .show .plus::before { content: "\f106"; }
-#actions .actionButtons .dropdown-menu { display: none; position: absolute; z-index: -1; left: auto; right: 0; top: 100%; width: 100%; min-width: 35px; margin: -2px 0 0; padding: 2px 0 0; text-align: left; font-size: 1em; background-color: #fff; border: 1px solid #32ab9a; border-top: none; border-radius: 0 0 3px 3px; overflow: hidden; }
-#actions .actionButtons .show > .dropdown-menu { display: block }
-#actions .actionButtons .dropdown-menu span { display: block; padding: 0 10px; height: 32px; line-height: 30px; border: none; border-top: 1px solid #f2f2f2; cursor: pointer; }
-#actions .actionButtons .dropdown-menu span:hover { background-color: #fbfbfb; }
-#actions select#stay { display: block; position: relative; z-index: -1; clear: both; width: auto; height: 0; padding: 0 10px; margin: -100% 0 -32px 0; font-size: 1em; opacity: 0; visibility: hidden; }
-@media (max-width: 900px) {
-#actions .actionButtons li a, #actions .actionButtons .dropdown-menu span { font-size: 0 }
-#actions .actionButtons li a .fa, #actions .actionButtons .dropdown-menu span .fa { display: inline-block; font-size: 14px; line-height: 30px }
-#actions .actionButtons .dropdown-menu { width: 35px }
-#actions #Button1 a { margin: 0; width: auto }
-#actions .actionButtons .plus { margin: 0 0 0 -2px }
-#actions select#stay { display: none }
-}
 .actionButtons { margin: 0; padding: 0; background: none; width: auto; white-space: nowrap; }
 .actionButtons li { float: left; margin: 0; padding: 0; list-style: none; }
 .actionButtons li:before, .mmTagList li:before, .rTable li:before, .tab-pane ul li ul li:before, .dashboard li:before, div#idShowHideSocialBox.sectionBody > div.btn-group.ope > ul.dropdown-menu > li:before, .sectionBody .multitv .list li:before { display: none; content: ''; }
@@ -393,12 +371,12 @@ ul.elements_buttonbar .fa { font-size: 13px !important; padding: 1px 1px 0; }
 .resourceTable.flex .elements_descr { display: block; margin-left: 1.5em; }
 /* action buttons */
 .actionButtons a { float: left; padding: 5px 10px; height: 32px; font-size: 13px; font-weight: 500; }
-.actionButtons a, .actionButtons li.primary a, .actionButtons a.primary, .actionButtons a.default, #actions .actionButtons .plus { text-shadow: none; background: #fff; color: #555; border: 1px solid #E4E4E4; border-radius: 3px; /*box-shadow: 0 0 0 1px #E4E4E4;*/ box-shadow: none; transition: none; }
+.actionButtons a, .actionButtons li.primary a, .actionButtons a.primary, .actionButtons a.default { text-shadow: none; background: #fff; color: #555; border: 1px solid #E4E4E4; border-radius: 3px; /*box-shadow: 0 0 0 1px #E4E4E4;*/ box-shadow: none; transition: none; }
 .actionButtons a:hover { background: #1377c5; box-shadow: none; border-color: #1377c5; color: #FFF !important; transition: none; }
 .actionButtons a:active { background-color: #3189ba; border-color: #3189ba; }
-.actionButtons li.primary a, .actionButtons a.primary, #actions #Button1 a, #actions .actionButtons .plus { color: #fff; border-color: #32AB9A; background: #32AB9A linear-gradient(#32AB9A, #00948E); }
-.actionButtons li.primary a:hover, .actionButtons a.primary:hover, #actions #Button1 a:hover, #actions .actionButtons .plus:hover { background: #2b9385 linear-gradient(#2b9385, #007571); border-color: #2b9385; }
-.actionButtons li.primary a:active, .actionButtons a.primary:active, #actions #Button1 a:active, #actions .actionButtons .plus:active { background: #32AB9A; border-color: #32AB9A; }
+.actionButtons li.primary a, .actionButtons a.primary { color: #fff; border-color: #32AB9A; background: #32AB9A linear-gradient(#32AB9A, #00948E); }
+.actionButtons li.primary a:hover, .actionButtons a.primary:hover { background: #2b9385 linear-gradient(#2b9385, #007571); border-color: #2b9385; }
+.actionButtons li.primary a:active, .actionButtons a.primary:active { background: #32AB9A; border-color: #32AB9A; }
 .actionButtons img { display: none; }
 #treePane .actionButtons img { display: inline; }
 .actionButtons--tableheader .fa { font-size: 14px; }

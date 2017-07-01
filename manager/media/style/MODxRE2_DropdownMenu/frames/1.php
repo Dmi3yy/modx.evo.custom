@@ -36,13 +36,13 @@ $menu_height = $modx->config['manager_menu_height'];
 $tree_width = $modx->config['manager_tree_width'];
 $tree_min_width = 0;
 
-if(isset($_COOKIE['MODX_positionSideBar'])) {
-	$MODX_positionSideBar = $_COOKIE['MODX_positionSideBar'];
+if(isset($_COOKIE['MODX_widthSideBar'])) {
+	$MODX_widthSideBar = $_COOKIE['MODX_widthSideBar'];
 } else {
-	$MODX_positionSideBar = $tree_width;
+	$MODX_widthSideBar = $tree_width;
 }
 
-if(!$MODX_positionSideBar) {
+if(!$MODX_widthSideBar) {
 	$body_class .= 'sidebar-closed';
 }
 
@@ -87,8 +87,8 @@ if($user['which_browser'] == 'default') {
 	<link rel="stylesheet" type="text/css" href="media/style/common/font-awesome/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $modx->config['manager_theme']; ?>/css/page.css?v=<?php echo $modx->config['settings_version'] ?>" />
 	<style>
-		#tree { width: <?php echo $MODX_positionSideBar ?>rem }
-		#main, #resizer { left: <?php echo $MODX_positionSideBar ?>rem }
+		#tree { width: <?php echo $MODX_widthSideBar ?>rem }
+		#main, #resizer { left: <?php echo $MODX_widthSideBar ?>rem }
 		.ios #main { -webkit-overflow-scrolling: touch; overflow-y: scroll; }
 	</style>
 	<script type="text/javascript">
