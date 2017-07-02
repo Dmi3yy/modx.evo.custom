@@ -85,7 +85,8 @@ $fields = array (
 	'export_static' => $export_static,
     'remove_locks' => $remove_locks,
     'display_locks' => $display_locks,
-    'change_resourcetype' => $change_resourcetype
+    'change_resourcetype' => $change_resourcetype,
+	'category_manager' => $category_manager
 );
 
 $fields = $modx->db->escape($fields);
@@ -132,5 +133,3 @@ switch ($_POST['mode']) {
 }
 
 $modx->unlockElement(8, $id);
-
-?>

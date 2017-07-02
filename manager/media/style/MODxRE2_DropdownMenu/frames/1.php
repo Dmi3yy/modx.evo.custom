@@ -419,6 +419,8 @@ if($user['which_browser'] == 'default') {
 	?>
 
 	<script type="text/javascript">
+		<?php if($modx->hasPermission('edit_template') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('edit_plugin')) { ?>
+
 		document.getElementById('treeMenu_openelements').onclick = function(e) {
 			e.preventDefault();
 			var randomNum = '<?php echo $_lang["elements"] ?>';
@@ -430,6 +432,9 @@ if($user['which_browser'] == 'default') {
 				title: randomNum
 			})
 		};
+		<?php } ?>
+		<?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
+
 		document.getElementById('treeMenu_openimages').onclick = function(e) {
 			e.preventDefault();
 			var randomNum = '<?php echo $_lang["files_files"] ?>';
@@ -441,6 +446,9 @@ if($user['which_browser'] == 'default') {
 				title: randomNum
 			})
 		};
+		<?php } ?>
+		<?php if($use_browser && $modx->hasPermission('assets_files')) { ?>
+
 		document.getElementById('treeMenu_openfiles').onclick = function(e) {
 			e.preventDefault();
 			var randomNum = '<?php echo $_lang["files_files"] ?>';
@@ -452,6 +460,8 @@ if($user['which_browser'] == 'default') {
 				title: randomNum
 			})
 		};
+		<?php } ?>
+
 	</script>
 
 	<?php

@@ -212,27 +212,6 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 
 	<?php echo $_style['actionsbuttons']['dynamic']['user'] ?>
 
-	<!--
-	<div id="actions">
-		<ul class="actionButtons">
-			<li id="Button1" class="transition"><a href="javascript:;" onClick="documentDirty=false; document.userform.save.click();"> <i class="<?php echo $_style["actions_save"] ?>"></i> <span><?php echo $_lang['save']; ?></span> </a> <span class="plus"> + </span>
-				<select id="stay" name="stay">
-					<option id="stay1" value="1" <?php echo $_REQUEST['stay'] == '1' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay_new'] ?></option>
-					<option id="stay2" value="2" <?php echo $_REQUEST['stay'] == '2' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay'] ?></option>
-					<option id="stay3" value="" <?php echo $_REQUEST['stay'] == '' ? ' selected="selected"' : '' ?> ><?php echo $_lang['close'] ?></option>
-				</select>
-			</li>
-			<?php if($modx->manager->action == '11') { ?>
-				<li id="Button3" class="disabled"><a href="javascript:;" onClick="deleteuser();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <span><?php echo $_lang['delete'] ?></span></a></li>
-			<?php } else { ?>
-				<li id="Button3"><a href="javascript:;" onClick="deleteuser();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <span><?php echo $_lang['delete'] ?></span></a></li>
-			<?php } ?>
-			<li id="Button5" class="transition"><a href="javascript:;" onClick="documentDirty=false;window.location.href='index.php?a=75';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <span><?php echo $_lang['cancel'] ?></span></a></li>
-		</ul>
-	</div>
-
-	-->
-
 	<!-- Tab Start -->
 	<div class="sectionBody">
 

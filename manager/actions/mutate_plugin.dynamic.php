@@ -60,19 +60,30 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 ?>
 	<script language="JavaScript">
 
-		function duplicaterecord() {
-			if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>") == true) {
+		var actions = {
+			save: function() {
 				documentDirty = false;
-				document.location.href = "index.php?id=<?php echo $_REQUEST['id']; ?>&a=105";
-			}
-		}
-
-		function deletedocument() {
-			if(confirm("<?php echo $_lang['confirm_delete_plugin']; ?>") == true) {
+				form_save = true;
+				document.mutate.save.click();
+				saveWait('mutate');
+			},
+			duplicate: function() {
+				if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>") === true) {
+					documentDirty = false;
+					document.location.href = "index.php?id=<?php echo $_REQUEST['id']; ?>&a=105";
+				}
+			},
+			delete: function() {
+				if(confirm("<?php echo $_lang['confirm_delete_plugin']; ?>") === true) {
+					documentDirty = false;
+					document.location.href = "index.php?id=" + document.mutate.id.value + "&a=104";
+				}
+			},
+			cancel: function() {
 				documentDirty = false;
-				document.location.href = "index.php?id=" + document.mutate.id.value + "&a=104";
+				document.location.href = 'index.php?a=76';
 			}
-		}
+		};
 
 		function setTextWrap(ctrl, b) {
 			if(!ctrl) return;
@@ -422,29 +433,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<i class="fa fa-plug"></i><?php echo $_lang['plugin_title']; ?>
 		</h1>
 
-		<div id="actions">
-			<ul class="actionButtons">
-				<li id="Button1" class="transition">
-					<a href="javascript:;" onclick="documentDirty=false; form_save=true; document.mutate.save.click();saveWait('mutate');">
-						<i class="<?php echo $_style["actions_save"] ?>"></i> <span><?php echo $_lang['save']; ?></span>
-					</a>
-					<span class="plus"> + </span>
-					<select id="stay" name="stay">
-						<option id="stay1" value="1" <?php echo $_REQUEST['stay'] == '1' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay_new'] ?></option>
-						<option id="stay2" value="2" <?php echo $_REQUEST['stay'] == '2' ? ' selected="selected"' : '' ?> ><?php echo $_lang['stay'] ?></option>
-						<option id="stay3" value="" <?php echo $_REQUEST['stay'] == '' ? ' selected="selected"' : '' ?> ><?php echo $_lang['close'] ?></option>
-					</select>
-				</li>
-				<?php if($modx->manager->action == '101') { ?>
-					<li id="Button6" class="disabled"><a href="javascript:;" onclick="duplicaterecord();"><i class="<?php echo $_style["actions_duplicate"] ?>"></i> <span><?php echo $_lang["duplicate"]; ?></span></a></li>
-					<li id="Button3" class="disabled"><a href="javascript:;" onclick="deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <span><?php echo $_lang['delete'] ?></span></a></li>
-				<?php } else { ?>
-					<li id="Button6"><a href="javascript:;" onclick="duplicaterecord();"><i class="<?php echo $_style["actions_duplicate"] ?>"></i> <span><?php echo $_lang["duplicate"]; ?></span></a></li>
-					<li id="Button3"><a href="javascript:;" onclick="deletedocument();"><i class="<?php echo $_style["actions_delete"] ?>"></i> <span><?php echo $_lang['delete'] ?></span></a></li>
-				<?php } ?>
-				<li id="Button5" class="transition"><a href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?a=76';"><i class="<?php echo $_style["actions_cancel"] ?>"></i> <span><?php echo $_lang['cancel'] ?></span></a></li>
-			</ul>
-		</div>
+		<?php echo $_style['actionsbuttons']['dynamic']['element'] ?>
 
 		<div class="sectionBody">
 

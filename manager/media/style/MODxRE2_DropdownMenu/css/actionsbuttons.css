@@ -10,7 +10,7 @@
 #actions .btn-group .show > .dropdown-menu { display: block }
 #actions .btn-group .dropdown-menu > span { display: block; margin: 0; text-align: left }
 #actions .btn-group .dropdown-menu > span:hover { background-color: #e6e6e6; }
-#actions .btn-group .dropdown-toggle::after { transition-duration: 0.25s }
+#actions .btn-group .dropdown-toggle::after { margin: 0; border-width: 0.4em; transition-duration: 0.25s }
 #actions .btn-group .show .dropdown-toggle::after { transform: rotate(180deg) }
 @media (max-width: 840px) {
 #actions { right: 0 }
