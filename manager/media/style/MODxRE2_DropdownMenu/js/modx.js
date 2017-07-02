@@ -34,10 +34,10 @@
 						$mm.addClass('show');
 						e.target.dataset.toggle = '#mainMenu'
 					}
-					$('.nav > .active').removeClass('active');
 					if($(this).closest('ul').hasClass('dropdown-menu')) {
+						$('.nav > .active').removeClass('active');
 						$('.nav li.selected').removeClass('selected');
-						$(this).closest('.nav > .active').addClass('active');
+						$(this).closest('.nav > li').addClass('active');
 						$(this).parent().addClass('selected');
 						if(this.offsetParent.id) {
 							$('#' + this.offsetParent.id.substr(7)).addClass('selected')

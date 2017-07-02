@@ -46,12 +46,12 @@ if(!$MODX_widthSideBar) {
 	$body_class .= 'sidebar-closed';
 }
 
+if(isset($_COOKIE['MODX_themeColor'])) {
+	$body_class .= ' ' . $_COOKIE['MODX_themeColor'];
+}
+
 if(isset($modx->pluginCache['ElementsInTree'])) {
 	$body_class .= ' ElementsInTree';
-} else {
-	if(!empty($_COOKIE['MODX_themeColor'])) {
-		$body_class .= ' ' . $_COOKIE['MODX_themeColor'];
-	}
 }
 
 $unlockTranslations = array(

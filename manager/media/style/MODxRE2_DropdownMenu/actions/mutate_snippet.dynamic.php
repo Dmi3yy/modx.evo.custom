@@ -253,7 +253,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 				info = '';
 				info += desc ? '<br/><small>' + desc + '</small>' : '';
-				sd = defaultVal != undefined ? ' <ul class="actionButtons" style="position:absolute;right:0px;bottom:6px;min-height:0;"><li><a href="javascript:;" class="primary btn-small btnSetDefault" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a></li></ul>' : '';
+				sd = defaultVal != undefined ? ' <a href="javascript:;" class="btn btn-primary float-right" style="width: 19%" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a>' : '';
 
 				t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
 
@@ -479,9 +479,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<table border="0" cellspacing="0" cellpadding="6" width="100%">
 					<tr>
 						<td colspan="2">
-							<ul class="actionButtons"
-							<li><a href="javascript:;" class="primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a></li>
-							</ul>
+							<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a>
 						</td>
 					</tr>
 					<tr id="displayparamrow">
@@ -516,9 +514,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					</tr>
 					<tr>
 						<td colspan="2"><textarea name="properties" class="phptextarea" style="width:300px;" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'] ?></textarea><br />
-							<ul class="actionButtons" style="min-height:0;">
-								<li><a href="javascript:;" class="primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a></li>
-							</ul>
+							<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
 						</td>
 					</tr>
 				</table>
