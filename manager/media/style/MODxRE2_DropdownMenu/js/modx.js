@@ -757,12 +757,26 @@
 					e.currentTarget.classList.remove('rotate180');
 					d.body.classList.remove('dark');
 					w.main.document.body.classList.remove('dark');
-					d.cookie = 'MODX_themeColor='
+					d.cookie = 'MODX_themeColor=';
+					if(w.main.myCodeMirrors) {
+						var codeMirrors = w.main.document.querySelectorAll('.CodeMirror');
+						for(var i = 0; i < codeMirrors.length; i++) {
+							codeMirrors[i].classList.remove('cm-s-' + w.main.myCodeMirrors.post.options.darktheme)
+							codeMirrors[i].classList.add('cm-s-' + w.main.myCodeMirrors.post.options.defaulttheme)
+						}
+					}
 				} else {
 					e.currentTarget.classList.add('rotate180');
 					d.body.classList.add('dark');
 					w.main.document.body.classList.add('dark');
-					d.cookie = 'MODX_themeColor=dark'
+					d.cookie = 'MODX_themeColor=dark';
+					if(w.main.myCodeMirrors) {
+						var codeMirrors = w.main.document.querySelectorAll('.CodeMirror');
+						for(var i = 0; i < codeMirrors.length; i++) {
+							codeMirrors[i].classList.add('cm-s-' + w.main.myCodeMirrors.post.options.darktheme)
+							codeMirrors[i].classList.remove('cm-s-' + w.main.myCodeMirrors.post.options.defaulttheme)
+						}
+					}
 				}
 			},
 			toggleNode: function(e, id) {
