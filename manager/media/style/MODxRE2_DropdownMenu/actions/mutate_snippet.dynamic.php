@@ -117,7 +117,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		tr = document.getElementById('displayparamrow');
 
 		// check if codemirror is used
-		var props = typeof myCodeMirrors != "undefined" && typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value, dp, t;
+		var props = typeof myCodeMirrors != "undefined" && typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value, t, td, dp, desc;
 
 		// convert old schemed setup parameters
 		if(!IsJsonString(props)) {
@@ -134,7 +134,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					value = decode((ar[2]) ? ar[2] : '');
 
 					// convert values to new json-format
-					if(key && (dt == 'menu' || dt == 'list' || dt == 'list-multi' || dt == 'checkbox' || dt == 'radio')) {
+					if(key && (dt === 'menu' || dt === 'list' || dt === 'list-multi' || dt === 'checkbox' || dt === 'radio')) {
 						defaultVal = decode((ar[4]) ? ar[4] : ar[3]);
 						desc = decode((ar[5]) ? ar[5] : "");
 						currentParams[key] = [];
@@ -151,14 +151,13 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			currentParams = JSON.parse(props);
 		}
 
-		t = '<table width="100%" class="displayparams grid"><thead><tr><td width="1%"><?php echo $_lang['parameter']; ?></td><td width="99%"><?php echo $_lang['value']; ?></td></tr></thead>';
+		t = '<table width="100%" class="displayparams grid"><thead><tr><td><?php echo $_lang['parameter']; ?></td><td><?php echo $_lang['value']; ?></td><td style="text-align:right;white-space:nowrap"><?php echo $_lang["set_default"]; ?> </td></tr></thead>';
 
 		try {
-
 			var type, options, found, info, sd;
-			var ll, ls, sets = [];
+			var ll, ls, sets = [], lv, arrValue, split;
 
-			Object.keys(currentParams).forEach(function(key) {
+			for(var key in currentParams) {
 
 				if(key === 'internal' || currentParams[key][0]['label'] == undefined) return;
 
@@ -188,38 +187,38 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 				switch(type) {
 					case 'int':
-						c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
+						c = '<input type="text" name="prop_' + key + '" value="' + value + '" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
 						break;
 					case 'menu':
-						c = '<select name="prop_' + key + '" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
-						if(currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
+						c = '<select name="prop_' + key + '" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+						if(currentParams[key] === options) currentParams[key] = ls[0]; // use first list item as default
 						for(i = 0; i < ls.length; i++) {
-							c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
+							c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
 						}
 						c += '</select>';
 						break;
 					case 'list':
-						if(currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
-						c = '<select name="prop_' + key + '" size="' + ls.length + '" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+						if(currentParams[key] === options) currentParams[key] = ls[0]; // use first list item as default
+						c = '<select name="prop_' + key + '" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
 						for(i = 0; i < ls.length; i++) {
-							c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
+							c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
 						}
 						c += '</select>';
 						break;
 					case 'list-multi':
 						// value = typeof ar[3] !== 'undefined' ? (ar[3] + '').replace(/^\s|\s$/, "") : '';
 						arrValue = value.split(",");
-						if(currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
-						c = '<select name="prop_' + key + '" size="' + ls.length + '" multiple="multiple" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+						if(currentParams[key] === options) currentParams[key] = ls[0]; // use first list item as default
+						c = '<select name="prop_' + key + '" size="' + ls.length + '" multiple="multiple" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
 						for(i = 0; i < ls.length; i++) {
 							if(arrValue.length) {
 								found = false;
 								for(j = 0; j < arrValue.length; j++) {
-									if(ls[i] == arrValue[j]) {
+									if(ls[i] === arrValue[j]) {
 										found = true;
 									}
 								}
-								if(found == true) {
+								if(found === true) {
 									c += '<option value="' + ls[i] + '" selected="selected">' + ll[i] + '</option>';
 								} else {
 									c += '<option value="' + ls[i] + '">' + ll[i] + '</option>';
@@ -234,30 +233,29 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						lv = (value + '').split(",");
 						c = '';
 						for(i = 0; i < ls.length; i++) {
-							c += '<label><input type="checkbox" name="prop_' + key + '[]" value="' + ls[i] + '"' + ((contains(lv, ls[i]) == true) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />' + ll[i] + '</label>&nbsp;';
+							c += '<label><input type="checkbox" name="prop_' + key + '[]" value="' + ls[i] + '"' + ((contains(lv, ls[i]) === true) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" /> ' + ll[i] + '</label>&nbsp;';
 						}
 						break;
 					case 'radio':
 						c = '';
 						for(i = 0; i < ls.length; i++) {
-							c += '<label><input type="radio" name="prop_' + key + '" value="' + ls[i] + '"' + ((ls[i] == value) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />' + ll[i] + '</label>&nbsp;';
+							c += '<label><input type="radio" name="prop_' + key + '" value="' + ls[i] + '"' + ((ls[i] === value) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" /> ' + ll[i] + '</label>&nbsp;';
 						}
 						break;
 					case 'textarea':
-						c = '<textarea name="prop_' + key + '" style="width:80%" rows="4" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">' + value + '</textarea>';
+						c = '<textarea name="prop_' + key + '" rows="4" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">' + value + '</textarea>';
 						break;
 					default:  // string
-						c = '<input type="text" name="prop_' + key + '" value="' + value + '" style="width:80%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
+						c = '<input type="text" name="prop_' + key + '" value="' + value + '" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
 						break;
 				}
 
 				info = '';
 				info += desc ? '<br/><small>' + desc + '</small>' : '';
-				sd = defaultVal != undefined ? ' <a href="javascript:;" class="btn btn-primary float-right" style="width: 19%" onclick="setDefaultParam(\'' + key + '\',1);return false;"><?php echo $_lang["set_default"]; ?></a>' : '';
+				sd = defaultVal != undefined ? '<a title="<?php echo $_lang["set_default"]; ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="fa fa-refresh"></i></a>' : '';
 
-				t += '<tr><td class="labelCell" bgcolor="#FFFFFF" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" bgcolor="#FFFFFF" width="80%">' + c + sd + '</td></tr>';
-
-			});
+				t += '<tr><td class="labelCell" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" width="74%">' + c + '</td><td style="text-align: center">' + sd + '</td></tr>';
+			}
 
 			t += '</table>';
 
@@ -342,6 +340,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		return s;
 	}
 
+	/**
+	 * @return {boolean}
+	 */
 	function IsJsonString(str) {
 		try {
 			JSON.parse(str);
@@ -509,8 +510,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							<option>&nbsp;</option>
 							<?php
 							$ds = $modx->db->select('sm.id,sm.name,sm.guid', "{$tbl_site_modules} AS sm 
-							INNER JOIN {$tbl_site_module_depobj} AS smd ON smd.module=sm.id AND smd.type=40 
-							INNER JOIN {$tbl_site_snippets} AS ss ON ss.id=smd.resource", "smd.resource='{$id}' AND sm.enable_sharedparams=1", 'sm.name');
+								INNER JOIN {$tbl_site_module_depobj} AS smd ON smd.module=sm.id AND smd.type=40 
+								INNER JOIN {$tbl_site_snippets} AS ss ON ss.id=smd.resource", "smd.resource='{$id}' AND sm.enable_sharedparams=1", 'sm.name');
 							while($row = $modx->db->getRow($ds)) {
 								echo "<option value='" . $row['guid'] . "'" . ($content['moduleguid'] == $row['guid'] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($row['name']) . "</option>";
 							}
