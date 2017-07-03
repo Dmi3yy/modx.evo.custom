@@ -753,16 +753,18 @@
 				}
 			},
 			toggleTheme: function(e) {
+				var myCodeMirrors = w.main.myCodeMirrors, key;
 				if(e.currentTarget.classList.contains('rotate180')) {
 					e.currentTarget.classList.remove('rotate180');
 					d.body.classList.remove('dark');
 					w.main.document.body.classList.remove('dark');
 					d.cookie = 'MODX_themeColor=';
-					if(w.main.myCodeMirrors) {
-						var codeMirrors = w.main.document.querySelectorAll('.CodeMirror');
-						for(var i = 0; i < codeMirrors.length; i++) {
-							codeMirrors[i].classList.remove('cm-s-' + w.main.myCodeMirrors.post.options.darktheme)
-							codeMirrors[i].classList.add('cm-s-' + w.main.myCodeMirrors.post.options.defaulttheme)
+					if(myCodeMirrors) {
+						for(key in myCodeMirrors) {
+							if(myCodeMirrors.hasOwnProperty(key)) {
+								w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.darktheme)
+								w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.defaulttheme)
+							}
 						}
 					}
 				} else {
@@ -770,11 +772,12 @@
 					d.body.classList.add('dark');
 					w.main.document.body.classList.add('dark');
 					d.cookie = 'MODX_themeColor=dark';
-					if(w.main.myCodeMirrors) {
-						var codeMirrors = w.main.document.querySelectorAll('.CodeMirror');
-						for(var i = 0; i < codeMirrors.length; i++) {
-							codeMirrors[i].classList.add('cm-s-' + w.main.myCodeMirrors.post.options.darktheme)
-							codeMirrors[i].classList.remove('cm-s-' + w.main.myCodeMirrors.post.options.defaulttheme)
+					if(myCodeMirrors) {
+						for(key in myCodeMirrors) {
+							if(myCodeMirrors.hasOwnProperty(key)) {
+								w.main.document.getElementsByName(key)[0].nextElementSibling.classList.add('cm-s-' + myCodeMirrors[key].options.darktheme)
+								w.main.document.getElementsByName(key)[0].nextElementSibling.classList.remove('cm-s-' + myCodeMirrors[key].options.defaulttheme)
+							}
 						}
 					}
 				}
