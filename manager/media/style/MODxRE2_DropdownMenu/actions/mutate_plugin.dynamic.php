@@ -110,7 +110,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			tr = document.getElementById('displayparamrow');
 
 			// check if codemirror is used
-			var props = typeof myCodeMirrors != "undefined" && typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value;
+			var props = typeof myCodeMirrors != "undefined" && typeof myCodeMirrors['properties'] != "undefined" ? myCodeMirrors['properties'].getValue() : f.properties.value, t, td, desc, dp;
 
 			// convert old schemed setup parameters
 			if(!IsJsonString(props)) {
@@ -127,7 +127,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						value = decode((ar[2]) ? ar[2] : '');
 
 						// convert values to new json-format
-						if(key && (dt == 'menu' || dt == 'list' || dt == 'list-multi' || dt == 'checkbox' || dt == 'radio')) {
+						if(key && (dt === 'menu' || dt === 'list' || dt === 'list-multi' || dt === 'checkbox' || dt === 'radio')) {
 							defaultVal = decode((ar[4]) ? ar[4] : ar[3]);
 							desc = decode((ar[5]) ? ar[5] : "");
 							currentParams[key] = [];
@@ -148,11 +148,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 			try {
 				var type, options, found, info, sd;
-				var ll, ls, sets = [];
+				var ll, ls, sets = [], lv, arrValue, split;
 
-				Object.keys(currentParams).forEach(function(key) {
+				//Object.keys(currentParams).forEach(function(key) {
+				for(var key in currentParams) {
 
-					if(key == 'internal' || currentParams[key][0]['label'] == undefined) return;
+					if(key === 'internal' || currentParams[key][0]['label'] == undefined) return;
 
 					cp = currentParams[key][0];
 					type = cp['type'];
@@ -180,38 +181,38 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 					switch(type) {
 						case 'int':
-							c = '<input type="text" name="prop_' + key + '" value="' + value + '" size="30" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
+							c = '<input type="text" name="prop_' + key + '" value="' + value + '" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />';
 							break;
 						case 'menu':
-							c = '<select name="prop_' + key + '" style="width:100%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
-							if(currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
+							c = '<select name="prop_' + key + '" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+							if(currentParams[key] === options) currentParams[key] = ls[0]; // use first list item as default
 							for(i = 0; i < ls.length; i++) {
-								c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
+								c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
 							}
 							c += '</select>';
 							break;
 						case 'list':
-							if(currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
-							c = '<select name="prop_' + key + '" size="' + ls.length + '" style="width:100%" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+							if(currentParams[key] === options) currentParams[key] = ls[0]; // use first list item as default
+							c = '<select name="prop_' + key + '" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
 							for(i = 0; i < ls.length; i++) {
-								c += '<option value="' + ls[i] + '"' + ((ls[i] == value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
+								c += '<option value="' + ls[i] + '"' + ((ls[i] === value) ? ' selected="selected"' : '') + '>' + ll[i] + '</option>';
 							}
 							c += '</select>';
 							break;
 						case 'list-multi':
 							// value = typeof ar[3] !== 'undefined' ? (ar[3] + '').replace(/^\s|\s$/, "") : '';
 							arrValue = value.split(",");
-							if(currentParams[key] == options) currentParams[key] = ls[0]; // use first list item as default
-							c = '<select name="prop_' + key + '" size="' + ls.length + '" multiple="multiple" style="width:auto" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
+							if(currentParams[key] === options) currentParams[key] = ls[0]; // use first list item as default
+							c = '<select name="prop_' + key + '" size="' + ls.length + '" multiple="multiple" onchange="setParameter(\'' + key + '\',\'' + type + '\',this)">';
 							for(i = 0; i < ls.length; i++) {
 								if(arrValue.length) {
 									found = false;
 									for(j = 0; j < arrValue.length; j++) {
-										if(ls[i] == arrValue[j]) {
+										if(ls[i] === arrValue[j]) {
 											found = true;
 										}
 									}
-									if(found == true) {
+									if(found === true) {
 										c += '<option value="' + ls[i] + '" selected="selected">' + ll[i] + '</option>';
 									} else {
 										c += '<option value="' + ls[i] + '">' + ll[i] + '</option>';
@@ -226,13 +227,13 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							lv = (value + '').split(",");
 							c = '';
 							for(i = 0; i < ls.length; i++) {
-								c += '<label><input type="checkbox" name="prop_' + key + '[]" value="' + ls[i] + '"' + ((contains(lv, ls[i]) == true) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />&nbsp;';
+								c += '<label><input type="checkbox" name="prop_' + key + '[]" value="' + ls[i] + '"' + ((contains(lv, ls[i]) === true) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />&nbsp;';
 							}
 							break;
 						case 'radio':
 							c = '';
 							for(i = 0; i < ls.length; i++) {
-								c += '<label><input type="radio" name="prop_' + key + '" value="' + ls[i] + '"' + ((ls[i] == value) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />' + ll[i] + '</label>&nbsp;';
+								c += '<label><input type="radio" name="prop_' + key + '" value="' + ls[i] + '"' + ((ls[i] === value) ? ' checked="checked"' : '') + ' onchange="setParameter(\'' + key + '\',\'' + type + '\',this)" />' + ll[i] + '</label>&nbsp;';
 							}
 							break;
 						case 'textarea':
@@ -245,10 +246,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 					info = '';
 					info += desc ? '<br/><small>' + desc + '</small>' : '';
-					sd = defaultVal != undefined ? '<a title="<?php echo $_lang["set_default"]; ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="fa fa-refresh"></i></a>' : '';
+					sd = defaultVal != 'undefined' ? '<a title="<?php echo $_lang["set_default"]; ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="fa fa-refresh"></i></a>' : '';
 
 					t += '<tr><td class="labelCell" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" width="74%">' + c + '</td><td style="text-align: center">' + sd + '</td></tr>';
-				});
+				};
 
 				t += '</table>';
 
@@ -258,7 +259,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				t = e + "\n\n" + props;
 			}
 
-			td = (document.getElementById) ? document.getElementById('displayparams') : document.all['displayparams'];
+			td = document.getElementById('displayparams');
 			td.innerHTML = t;
 			tr.style.display = '';
 
@@ -266,8 +267,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		}
 
 		function setParameter(key, dt, ctrl) {
-			var v;
-			var arrValues, cboxes = [];
+			var v, arrValues, cboxes = [];
 			if(!ctrl) return null;
 			switch(dt) {
 				case 'int':
@@ -318,7 +318,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				documentDirty = false;
 				first = false;
 			}
-			;
 		}
 
 		function encode(s) {
@@ -335,6 +334,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			return s;
 		}
 
+		/**
+		 * @return {boolean}
+		 */
 		function IsJsonString(str) {
 			try {
 				JSON.parse(str);
@@ -394,7 +396,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			var last = keys[keys.length - 1],
 				show;
 			Object.keys(currentParams).forEach(function(key) {
-				show = key == last ? 1 : 0;
+				show = key === last ? 1 : 0;
 				setDefaultParam(key, show);
 			});
 		}
@@ -501,12 +503,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					<?php if($modx->hasPermission('save_role')): ?>
 						<div class="form-row">
 							<div class="form-row">
-								<label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?php echo $_lang['lock_plugin']; ?></label>
+								<label><input name="locked" type="checkbox" <?php echo $content['locked'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?php echo $_lang['lock_plugin']; ?></label>
 								<small class="form-text text-muted"><?php echo $_lang['lock_plugin_msg']; ?></small>
 							</div>
 						</div>
 						<div class="form-row">
-							<label style="display:block;"><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 101 ? 'checked="checked"' : ''; ?> value="1" /> <?php echo $_lang['parse_docblock']; ?></label>
+							<label><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 101 ? 'checked="checked"' : ''; ?> value="1" /> <?php echo $_lang['parse_docblock']; ?></label>
 							<small class="form-text text-muted"><?php echo $_lang['parse_docblock_msg']; ?></small>
 						</div>
 					<?php endif; ?>
@@ -515,7 +517,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<!-- PHP text editor start -->
 				<label><?php echo $_lang['plugin_code']; ?></label>
 				<span class="float-xs-right"><?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" class="ml-1"<?php echo $content['wrap'] == 1 ? " checked='checked'" : ""; ?> onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
-				<div class="row form-group">
+				<div class="row">
 					<textarea dir="ltr" name="post" class="phptextarea" style="width:100%;" wrap="<?php echo $content['wrap'] == 1 ? "soft" : "off"; ?>" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['plugincode']); ?></textarea>
 				</div>
 				<!-- PHP text editor end -->
@@ -619,7 +621,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							echo '<hr class="clear">';
 							echo '<div class="form-group"><b>' . $row['groupname'] . '</b></div>';
 						}
-						$evtnames[] = '<input name="sysevents[]" id="' . $row['name'] . '" type="checkbox"' . (in_array($row['id'], $evts) ? " checked='checked' " : "") . 'class="inputBox" value="' . $row['id'] . '" /> <label for="' . $row['name'] . '"' . bold(in_array($row['id'], $evts)) . '> ' . $row['name'] . '</label>' . "\n";
+						$evtnames[] = '<input name="sysevents[]" id="' . $row['name'] . '" type="checkbox" ' . (in_array($row['id'], $evts) ? " checked='checked' " : "") . 'class="inputBox" value="' . $row['id'] . '" /> <label for="' . $row['name'] . '" ' . bold(in_array($row['id'], $evts)) . '> ' . $row['name'] . '</label>' . "\n";
 						if(count($evtnames) == 2) {
 							echoEventRows($evtnames);
 						}
@@ -666,4 +668,3 @@ function bold($cond = false) {
 		return;
 	}
 }
-
