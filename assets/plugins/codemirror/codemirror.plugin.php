@@ -35,6 +35,8 @@ $search = (($search == 'true') ? '<script src="' . $_CM_URL . 'cm/search-compres
 $indentWithTabs = (isset($indentWithTabs) ? $indentWithTabs : false);
 $undoDepth = (isset($undoDepth) ? $undoDepth : 200);
 $historyEventDelay = (isset($historyEventDelay) ? $historyEventDelay : 1250);
+$fontSize = (isset($fontSize) ? 'font-size:' . $fontSize . 'px !important;' : '');
+$lineHeight = (isset($lineHeight) ? 'line-height:' . $lineHeight . ' !important;' : '');
 if(isset($_COOKIE['MODX_themeColor']) && $_COOKIE['MODX_themeColor'] == 'dark') {
 	$theme = $darktheme;
 }
@@ -142,6 +144,7 @@ if (('none' == $rte) && $mode && !defined('INIT_CODEMIRROR')) {
     <link rel="stylesheet" href="{$_CM_URL}cm/lib/codemirror.css">
     <link rel="stylesheet" href="{$_CM_URL}cm/theme/{$defaulttheme}.css">
     <link rel="stylesheet" href="{$_CM_URL}cm/theme/{$darktheme}.css">
+    <style>.CodeMirror { {$fontSize} {$lineHeight} } .CodeMirror pre { {$fontSize} {$lineHeight} } </style>
     <script src="{$_CM_URL}cm/lib/codemirror-compressed.js"></script>
     <script src="{$_CM_URL}cm/addon-compressed.js"></script>
     <script src="{$_CM_URL}cm/mode/xml-compressed.js"></script> <!-- required by mode htmlmixed -->

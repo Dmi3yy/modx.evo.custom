@@ -8,15 +8,15 @@
 /* UI Theme /----------------------------------------------------------------------------------- */
 .cm-s-one-dark.CodeMirror {
 border: none;
+font-size: 1em;
 }
 .cm-s-one-dark.CodeMirror pre {
 line-height: 1.3;
-font-size: 1rem;
 }
 .cm-s-one-dark.CodeMirror, .cm-s-one-dark .CodeMirror-scroll {
-font-family: 'Inconsolata', 'Monaco', 'Consolas', 'Courier New', 'Courier', cursive;
+font-family: 'Inconsolata', 'Monaco', 'Consolas', 'Courier New', 'Courier', monospace;
 font-weight: 300;
-font-size: 18px;
+font-size: 1em;
 background-color: hsl(220, 13%, 18%);
 color: #abb2bf;
 }
