@@ -882,18 +882,10 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 											<hr>
 											<!-- Content -->
 											<label id="content_header"><?php echo $_lang['resource_content'] ?></label>
-											<div id="content_body">
-												<?php
-												if(($content['richtext'] == 1 || $modx->manager->action == '4') && $use_editor == 1) {
-													$htmlContent = $content['content'];
-													?>
-													<div>
-														<textarea id="ta" name="ta" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($htmlContent) ?></textarea>
-														<span class="warning"><?php echo $_lang['which_editor_title'] ?></span>
-
-														<select id="which_editor" name="which_editor" onchange="changeRTE();">
-															<option value="none"><?php echo $_lang['none'] ?></option>
-															<?php
+											<label class="float-xs-right"><?php echo $_lang['which_editor_title'] ?>
+													<select id="which_editor" size="1" name="which_editor" onchange="changeRTE();">
+														<option value="none"><?php echo $_lang['none'] ?></option>
+														<?php
 															// invoke OnRichTextEditorRegister event
 															$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
 															if(is_array($evtOut)) {
@@ -902,8 +894,17 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 																	echo "\t\t\t", '<option value="', $editor, '"', ($modx->config['which_editor'] == $editor ? ' selected="selected"' : ''), '>', $editor, "</option>\n";
 																}
 															}
-															?>
-														</select>
+														?>
+													</select>
+											</label>	
+											<div id="content_body">
+												<?php
+												if(($content['richtext'] == 1 || $modx->manager->action == '4') && $use_editor == 1) {
+													$htmlContent = $content['content'];
+													?>
+													<div>
+														<textarea id="ta" name="ta" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($htmlContent) ?></textarea>
+														
 													</div>
 													<?php
 													// Richtext-[*content*]
