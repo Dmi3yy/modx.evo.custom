@@ -404,17 +404,17 @@ if(is_array($evtOut)) {
 						</div>
 					</div>
 					<div class="row form-row">
-						<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_elements']; ?></label>
-						<div class="col-md-9 col-lg-10 form-row">
-							<textarea name="elements" maxlength="65535" rows="2" class="form-control" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['elements']); ?></textarea>
-							<small class="form-text text-muted"><?php echo $_lang['tmplvars_binding_msg'] ?></small>
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_elements']; ?>
+							<small class="form-text text-muted"><?php echo $_lang['tmplvars_binding_msg'] ?></small></label>
+						<div class="col-md-9 col-lg-10">
+							<textarea name="elements" maxlength="65535" rows="4" class="form-control" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['elements']); ?></textarea>
 						</div>
 					</div>
 					<div class="row form-row">
-						<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_default']; ?></label>
-						<div class="col-md-9 col-lg-10 form-row">
-							<textarea name="default_text" type="text" class="form-control" rows="5" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['default_text']); ?></textarea>
-							<small class="form-text text-muted"><?php echo $_lang['tmplvars_binding_msg'] ?></small>
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['tmplvars_default']; ?>
+							<small class="form-text text-muted"><?php echo $_lang['tmplvars_binding_msg'] ?></small></label>
+						<div class="col-md-9 col-lg-10">
+							<textarea name="default_text" class="form-control" rows="4" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['default_text']); ?></textarea>
 						</div>
 					</div>
 					<div class="row form-row">
