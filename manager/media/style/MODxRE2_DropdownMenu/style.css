@@ -98,7 +98,8 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .tab-pane { }
 .tab-pane > .tab-page { display: none }
 .tab-pane > .tab-page:first-child { display: block }
-.tab-page { clear: both; overflow-x: auto; width: 100%; background-color: #fff; padding: 1rem; border: 0; border-radius: 0; box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, .1) }
+.tab-page { clear: both; overflow-x: auto; width: 100%; background-color: #fff; padding: 0; border: 0; border-radius: 0; box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, .1) }
+.sectionBody > .tab-pane > .tab-page { padding: 1rem; }
 .sectionHeader { padding: 7px 0px; }
 .tab-page .sectionBody { padding: 12px 0px; }
 .tab-page > table { width: 100%; border-collapse: collapse }
