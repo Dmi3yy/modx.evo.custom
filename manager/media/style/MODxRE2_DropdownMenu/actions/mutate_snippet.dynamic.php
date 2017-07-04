@@ -423,63 +423,71 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<h2 class="tab"><?php echo $_lang['settings_general'] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabSnippet"));</script>
 
-			<div class="element-edit-message alert alert-info">
-				<?php echo $_lang['snippet_msg'] ?>
-			</div>
+			<div class="container container-body">
 
-			<div class="form-group">
-				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['snippet_name'] ?></label>
-					<div class="col-md-9 col-lg-10">
-						<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
-						<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
-						<small class="form-text text-danger hide" id='savingMessage'></small>
+
+				<div class="element-edit-message alert alert-info">
+					<?php echo $_lang['snippet_msg'] ?>
+				</div>
+
+				<div class="form-group">
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['snippet_name'] ?></label>
+						<div class="col-md-9 col-lg-10">
+							<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+							<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
+							<small class="form-text text-danger hide" id='savingMessage'></small>
+						</div>
+					</div>
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['snippet_desc'] ?></label>
+						<div class="col-md-9 col-lg-10">
+							<input name="description" type="text" maxlength="255" value="<?php echo $content['description'] ?>" class="form-control" onchange="documentDirty=true;" />
+						</div>
+					</div>
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['existing_category'] ?></label>
+						<div class="col-md-9 col-lg-10">
+							<select name="categoryid" class="form-control" onchange="documentDirty=true;">
+								<option>&nbsp;</option>
+								<?php
+								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
+								foreach(getCategories() as $n => $v) {
+									echo '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($v['category']) . '</option>';
+								}
+								?>
+							</select>
+						</div>
+					</div>
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['new_category'] ?></label>
+						<div class="col-md-9 col-lg-10">
+							<input name="newcategory" type="text" maxlength="45" value="" class="form-control" onchange="documentDirty=true;" />
+						</div>
 					</div>
 				</div>
-				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['snippet_desc'] ?></label>
-					<div class="col-md-9 col-lg-10">
-						<input name="description" type="text" maxlength="255" value="<?php echo $content['description'] ?>" class="form-control" onchange="documentDirty=true;" />
+				<?php if($modx->hasPermission('save_role')): ?>
+					<div class="form-group">
+						<label>
+							<input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? " checked='checked'" : "" ?> /> <?php echo $_lang['lock_snippet'] ?></label>
+						<small class="form-text text-muted"><?php echo $_lang['lock_snippet_msg']; ?></small>
 					</div>
-				</div>
-				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['existing_category'] ?></label>
-					<div class="col-md-9 col-lg-10">
-						<select name="categoryid" class="form-control" onchange="documentDirty=true;">
-							<option>&nbsp;</option>
-							<?php
-							include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
-							foreach(getCategories() as $n => $v) {
-								echo '<option value="' . $v['id'] . '"' . ($content['category'] == $v['id'] ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($v['category']) . '</option>';
-							}
-							?>
-						</select>
+					<div class="form-group">
+						<label>
+							<input name="parse_docblock" type="checkbox"<?php echo $modx->manager->action == 23 ? ' checked="checked"' : ''; ?> value="1" /> <?php echo $_lang['parse_docblock'] ?></label>
+						<small class="form-text text-muted"><?php echo $_lang['parse_docblock_msg']; ?></small>
 					</div>
-				</div>
-				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['new_category'] ?></label>
-					<div class="col-md-9 col-lg-10">
-						<input name="newcategory" type="text" maxlength="45" value="" class="form-control" onchange="documentDirty=true;" />
-					</div>
-				</div>
+				<?php endif; ?>
 			</div>
-			<?php if($modx->hasPermission('save_role')): ?>
-				<div class="form-group">
-					<label>
-						<input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? " checked='checked'" : "" ?> /> <?php echo $_lang['lock_snippet'] ?></label>
-					<small class="form-text text-muted"><?php echo $_lang['lock_snippet_msg']; ?></small>
-				</div>
-				<div class="form-group">
-					<label>
-						<input name="parse_docblock" type="checkbox"<?php echo $modx->manager->action == 23 ? ' checked="checked"' : ''; ?> value="1" /> <?php echo $_lang['parse_docblock'] ?></label>
-					<small class="form-text text-muted"><?php echo $_lang['parse_docblock_msg']; ?></small>
-				</div>
-			<?php endif; ?>
 
 			<!-- PHP text editor start -->
-			<label><?php echo $_lang['snippet_code']; ?></label>
-			<span class="float-xs-right"><?php echo $_lang['wrap_lines'] ?><input name="wrap" type="checkbox" class="ml-1"<?php echo $content['wrap'] == 1 ? " checked='checked'" : "" ?> onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
-			<div class="row">
+			<div class="container">
+				<label><?php echo $_lang['snippet_code']; ?></label>
+				<label class="float-xs-right">
+					<?php echo $_lang['wrap_lines'] ?> <input name="wrap" type="checkbox" class="ml-1"<?php echo $content['wrap'] == 1 ? " checked='checked'" : "" ?> onclick="setTextWrap(document.mutate.post,this.checked)" />
+				</label>
+			</div>
+			<div class="clearfix">
 				<textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="<?php echo $content['wrap'] == 1 ? "soft" : "off" ?>" onchange="documentDirty=true;"><?php echo isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php" . "\n" . trim($modx->htmlspecialchars($content['snippet'])) . "\n"; ?></textarea>
 			</div>
 			<!-- PHP text editor end -->
@@ -489,11 +497,13 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		<div class="tab-page" id="tabConfig">
 			<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabConfig"));</script>
-			<div class="form-group">
-				<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a>
-			</div>
-			<div id="displayparamrow">
-				<div id="displayparams"></div>
+			<div class="container container-body">
+				<div class="form-group">
+					<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a>
+				</div>
+				<div id="displayparamrow">
+					<div id="displayparams"></div>
+				</div>
 			</div>
 		</div>
 
@@ -501,39 +511,44 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		<div class="tab-page" id="tabProps">
 			<h2 class="tab"><?php echo $_lang['settings_properties'] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabProps"));</script>
-
-			<div class="form-group">
-				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['import_params'] ?></label>
-					<div class="col-md-9 col-lg-10">
-						<select name="moduleguid" class="form-control" onchange="documentDirty=true;">
-							<option>&nbsp;</option>
-							<?php
-							$ds = $modx->db->select('sm.id,sm.name,sm.guid', "{$tbl_site_modules} AS sm 
+			<div class="container container-body">
+				<div class="form-group">
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['import_params'] ?></label>
+						<div class="col-md-9 col-lg-10">
+							<select name="moduleguid" class="form-control" onchange="documentDirty=true;">
+								<option>&nbsp;</option>
+								<?php
+								$ds = $modx->db->select('sm.id,sm.name,sm.guid', "{$tbl_site_modules} AS sm 
 								INNER JOIN {$tbl_site_module_depobj} AS smd ON smd.module=sm.id AND smd.type=40 
 								INNER JOIN {$tbl_site_snippets} AS ss ON ss.id=smd.resource", "smd.resource='{$id}' AND sm.enable_sharedparams=1", 'sm.name');
-							while($row = $modx->db->getRow($ds)) {
-								echo "<option value='" . $row['guid'] . "'" . ($content['moduleguid'] == $row['guid'] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($row['name']) . "</option>";
-							}
-							?>
-						</select>
-						<small class="form-text text-muted"><?php echo $_lang['import_params_msg'] ?></small>
+								while($row = $modx->db->getRow($ds)) {
+									echo "<option value='" . $row['guid'] . "'" . ($content['moduleguid'] == $row['guid'] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($row['name']) . "</option>";
+								}
+								?>
+							</select>
+							<small class="form-text text-muted"><?php echo $_lang['import_params_msg'] ?></small>
+						</div>
 					</div>
 				</div>
 			</div>
 			<!-- HTML text editor start -->
-			<div class="row form-group">
+			<div class="container form-group">
+				<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
+			</div>
+			<div class="clearfix">
 				<textarea name="properties" class="phptextarea" rows="20" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'] ?></textarea>
 			</div>
 			<!-- HTML text editor end -->
-			<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
 		</div>
 
 		<!-- docBlock Info -->
 		<div class="tab-page" id="tabDocBlock">
 			<h2 class="tab"><?php echo $_lang['information']; ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabDocBlock"));</script>
-			<?php echo $docBlockList; ?>
+			<div class="container container-body">
+				<?php echo $docBlockList; ?>
+			</div>
 		</div>
 
 		<input type="submit" name="save" style="display:none">
