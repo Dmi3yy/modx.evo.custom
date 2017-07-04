@@ -376,7 +376,7 @@ class Form extends Core
             $this->sendAutosender();
             $this->setSubmitProtection()->postProcess();
         } else {
-            $this->addMessage($this->lexicon->getMsg('form.form_failed'));
+            $this->addMessage($this->lexicon->getMsg('form.formFailed'));
         }
     }
 
