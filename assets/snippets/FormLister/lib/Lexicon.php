@@ -1,7 +1,5 @@
 <?php namespace Helpers;
 
-include_once(MODX_BASE_PATH . 'assets/lib/APIHelpers.class.php');
-
 /**
  * Class Lexicon
  * @package Helpers
