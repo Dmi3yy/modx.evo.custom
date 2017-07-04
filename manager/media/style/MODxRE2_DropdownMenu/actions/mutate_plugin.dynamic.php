@@ -368,7 +368,7 @@ function bold($cond = false) {
 		if(document.getElementById('assignEvents') === null) {
 			var button = document.createElement("div");
 			button.setAttribute('id', 'assignEvents');
-			button.className = 'form-group';
+			button.className = 'container container-body';
 			button.innerHTML = '<a class="btn btn-primary" href="javascript:;" onclick="assignEvents();return false;"><?php echo $_lang["set_automatic"]; ?></a>';
 			var tab = document.getElementById("tabEvents");
 			tab.insertBefore(button, tab.firstChild);
@@ -464,68 +464,70 @@ function bold($cond = false) {
 			<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabPlugin"));</script>
 
-			<p class="element-edit-message alert alert-info">
-				<?php echo $_lang['plugin_msg']; ?>
-			</p>
-
-			<div class="form-group">
-				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['plugin_name']; ?></label>
-					<div class="col-md-9 col-lg-10">
-						<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']); ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
-						<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
-						<small class="form-text text-danger hide" id='savingMessage'></small>
-					</div>
-				</div>
-				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['plugin_desc']; ?></label>
-					<div class="col-md-9 col-lg-10">
-						<input name="description" type="text" maxlength="255" value="<?php echo $content['description']; ?>" class="form-control" onchange="documentDirty=true;" />
-					</div>
-				</div>
-				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['existing_category']; ?></label>
-					<div class="col-md-9 col-lg-10">
-						<select name="categoryid" class="form-control" onchange="documentDirty=true;">
-							<option>&nbsp;</option>
-							<?php
-							include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
-							foreach(getCategories() as $n => $v) {
-								echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($v["category"]) . "</option>";
-							}
-							?>
-						</select>
-					</div>
-				</div>
-				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['new_category']; ?></label>
-					<div class="col-md-9 col-lg-10">
-						<input name="newcategory" type="text" maxlength="45" value="" class="form-control" onchange="documentDirty=true;" />
-					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="form-row">
-					<label><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?php echo $content['disabled'] == 1 ? "<span class='warning'>" . $_lang['plugin_disabled'] . "</span>" : $_lang['plugin_disabled']; ?></label>
-				</div>
-				<?php if($modx->hasPermission('save_role')): ?>
-					<div class="form-row">
-						<div class="form-row">
-							<label><input name="locked" type="checkbox" <?php echo $content['locked'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?php echo $_lang['lock_plugin']; ?></label>
-							<small class="form-text text-muted"><?php echo $_lang['lock_plugin_msg']; ?></small>
+			<div class="container container-body">
+				<p class="element-edit-message alert alert-info">
+					<?php echo $_lang['plugin_msg']; ?>
+				</p>
+				<div class="form-group">
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['plugin_name']; ?></label>
+						<div class="col-md-9 col-lg-10">
+							<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']); ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+							<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
+							<small class="form-text text-danger hide" id='savingMessage'></small>
 						</div>
 					</div>
-					<div class="form-row">
-						<label><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 101 ? 'checked="checked"' : ''; ?> value="1" /> <?php echo $_lang['parse_docblock']; ?></label>
-						<small class="form-text text-muted"><?php echo $_lang['parse_docblock_msg']; ?></small>
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['plugin_desc']; ?></label>
+						<div class="col-md-9 col-lg-10">
+							<input name="description" type="text" maxlength="255" value="<?php echo $content['description']; ?>" class="form-control" onchange="documentDirty=true;" />
+						</div>
 					</div>
-				<?php endif; ?>
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['existing_category']; ?></label>
+						<div class="col-md-9 col-lg-10">
+							<select name="categoryid" class="form-control" onchange="documentDirty=true;">
+								<option>&nbsp;</option>
+								<?php
+								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
+								foreach(getCategories() as $n => $v) {
+									echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($v["category"]) . "</option>";
+								}
+								?>
+							</select>
+						</div>
+					</div>
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['new_category']; ?></label>
+						<div class="col-md-9 col-lg-10">
+							<input name="newcategory" type="text" maxlength="45" value="" class="form-control" onchange="documentDirty=true;" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="form-row">
+						<label><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?php echo $content['disabled'] == 1 ? "<span class='warning'>" . $_lang['plugin_disabled'] . "</span>" : $_lang['plugin_disabled']; ?></label>
+					</div>
+					<?php if($modx->hasPermission('save_role')): ?>
+						<div class="form-row">
+							<div class="form-row">
+								<label><input name="locked" type="checkbox" <?php echo $content['locked'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?php echo $_lang['lock_plugin']; ?></label>
+								<small class="form-text text-muted"><?php echo $_lang['lock_plugin_msg']; ?></small>
+							</div>
+						</div>
+						<div class="form-row">
+							<label><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 101 ? 'checked="checked"' : ''; ?> value="1" /> <?php echo $_lang['parse_docblock']; ?></label>
+							<small class="form-text text-muted"><?php echo $_lang['parse_docblock_msg']; ?></small>
+						</div>
+					<?php endif; ?>
+				</div>
 			</div>
-
 			<!-- PHP text editor start -->
-			<label><?php echo $_lang['plugin_code']; ?></label>
-			<span class="float-xs-right"><?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" class="ml-1"<?php echo $content['wrap'] == 1 ? " checked='checked'" : ""; ?> onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
-			<div class="row">
+			<div class="container">
+				<label><?php echo $_lang['plugin_code']; ?></label>
+				<label class="float-xs-right"><?php echo $_lang['wrap_lines']; ?> <input name="wrap" type="checkbox" class="ml-1"<?php echo $content['wrap'] == 1 ? " checked='checked'" : ""; ?> onclick="setTextWrap(document.mutate.post,this.checked)" /></label>
+			</div>
+			<div class="clearfix">
 				<textarea dir="ltr" name="post" class="phptextarea" style="width:100%;" wrap="<?php echo $content['wrap'] == 1 ? "soft" : "off"; ?>" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['plugincode']); ?></textarea>
 			</div>
 			<!-- PHP text editor end -->
@@ -535,11 +537,13 @@ function bold($cond = false) {
 		<div class="tab-page" id="tabConfig">
 			<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabConfig"));</script>
-			<div class="form-group">
-				<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a>
-			</div>
-			<div id="displayparamrow">
-				<div id="displayparams"></div>
+			<div class="container container-body">
+				<div class="form-group">
+					<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a>
+				</div>
+				<div id="displayparamrow">
+					<div id="displayparams"></div>
+				</div>
 			</div>
 		</div>
 
@@ -547,111 +551,116 @@ function bold($cond = false) {
 		<div class="tab-page" id="tabProps">
 			<h2 class="tab"><?php echo $_lang["settings_properties"] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabProps"));</script>
-
-
-			<div class="form-group">
-				<div class="row form-row">
-					<label class="col-md-3 col-lg-2"><?php echo $_lang['import_params'] ?></label>
-					<div class="col-md-9 col-lg-10">
-						<select name="moduleguid" class="form-control" onchange="documentDirty=true;">
-							<option>&nbsp;</option>
-							<?php
-							$ds = $modx->db->select('sm.id,sm.name,sm.guid', $modx->getFullTableName("site_modules") . " sm 
+			<div class="container container-body">
+				<div class="form-group">
+					<div class="row form-row">
+						<label class="col-md-3 col-lg-2"><?php echo $_lang['import_params'] ?></label>
+						<div class="col-md-9 col-lg-10">
+							<select name="moduleguid" class="form-control" onchange="documentDirty=true;">
+								<option>&nbsp;</option>
+								<?php
+								$ds = $modx->db->select('sm.id,sm.name,sm.guid', $modx->getFullTableName("site_modules") . " sm 
 							INNER JOIN " . $modx->getFullTableName("site_module_depobj") . " smd ON smd.module=sm.id AND smd.type=30
 							INNER JOIN " . $modx->getFullTableName("site_plugins") . " sp ON sp.id=smd.resource", "smd.resource='{$id}' AND sm.enable_sharedparams='1'", 'sm.name');
-							while($row = $modx->db->getRow($ds)) {
-								echo "<option value='" . $row['guid'] . "'" . ($content["moduleguid"] == $row["guid"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($row["name"]) . "</option>";
-							}
-							?>
-						</select>
-						<small class="form-text text-muted"><?php echo $_lang['import_params_msg'] ?></small>
+								while($row = $modx->db->getRow($ds)) {
+									echo "<option value='" . $row['guid'] . "'" . ($content["moduleguid"] == $row["guid"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($row["name"]) . "</option>";
+								}
+								?>
+							</select>
+							<small class="form-text text-muted"><?php echo $_lang['import_params_msg'] ?></small>
+						</div>
 					</div>
 				</div>
 			</div>
 			<!-- HTML text editor start -->
-			<div class="row form-group">
+			<div class="container form-group">
+				<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
+			</div>
+			<div class="clearfix">
 				<textarea name="properties" class="phptextarea" rows="20" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'] ?></textarea>
 			</div>
 			<!-- HTML text editor end -->
-			<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
 		</div>
 
 		<!-- System Events -->
 		<div class="tab-page" id="tabEvents">
 			<h2 class="tab"><?php echo $_lang["settings_events"] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabEvents"));</script>
-			<p><?php echo $_lang['plugin_event_msg']; ?></p>
-
-			<?php
-			// get selected events
-			if(is_numeric($id) && $id > 0) {
-				$rs = $modx->db->select('evtid', $tbl_site_plugin_events, "pluginid='{$id}'");
-				$evts = $modx->db->getColumn('evtid', $rs);
-			} else {
-				if(isset($content['sysevents']) && is_array($content['sysevents'])) {
-					$evts = $content['sysevents'];
+			<div class="container container-body">
+				<p><?php echo $_lang['plugin_event_msg']; ?></p>
+				<?php
+				// get selected events
+				if(is_numeric($id) && $id > 0) {
+					$rs = $modx->db->select('evtid', $tbl_site_plugin_events, "pluginid='{$id}'");
+					$evts = $modx->db->getColumn('evtid', $rs);
 				} else {
-					$evts = array();
-				}
-			}
-
-			// display system events
-			$evtnames = array();
-			$services = array(
-				"Parser Service Events",
-				"Manager Access Events",
-				"Web Access Service Events",
-				"Cache Service Events",
-				"Template Service Events",
-				"User Defined Events"
-			);
-			$rs = $modx->db->select('*', $tbl_system_eventnames, '', 'service DESC, groupname, name');
-			$limit = $modx->db->getRecordCount($rs);
-			if($limit == 0) {
-				echo "";
-			} else {
-				while($row = $modx->db->getRow($rs)) {
-					// display records
-					if($srv != $row['service']) {
-						$srv = $row['service'];
-						if(count($evtnames) > 0) {
-							echoEventRows($evtnames);
-						}
-						echo '<hr class="clear">';
-						echo '<div class="form-group"><b>' . $services[$srv - 1] . '</b></div>';
-					}
-					// display group name
-					if($grp != $row['groupname']) {
-						$grp = $row['groupname'];
-						if(count($evtnames) > 0) {
-							echoEventRows($evtnames);
-						}
-						echo '<hr class="clear">';
-						echo '<div class="form-group"><b>' . $row['groupname'] . '</b></div>';
-					}
-					$evtnames[] = '<input name="sysevents[]" id="' . $row['name'] . '" type="checkbox" ' . (in_array($row['id'], $evts) ? " checked='checked' " : "") . 'class="inputBox" value="' . $row['id'] . '" /> <label for="' . $row['name'] . '" ' . bold(in_array($row['id'], $evts)) . '> ' . $row['name'] . '</label>' . "\n";
-					if(count($evtnames) == 2) {
-						echoEventRows($evtnames);
+					if(isset($content['sysevents']) && is_array($content['sysevents'])) {
+						$evts = $content['sysevents'];
+					} else {
+						$evts = array();
 					}
 				}
-			}
-			if(count($evtnames) > 0) {
-				echoEventRows($evtnames);
-			}
 
-			function echoEventRows(&$evtnames) {
-				echo '<div class="row form-row"><div class="col-sm-6 col-md-4 col-lg-3">' . implode('</div><div class="col-sm-6 col-md-4 col-lg-3">', $evtnames) . '</div></div>';
+				// display system events
 				$evtnames = array();
-			}
+				$services = array(
+					"Parser Service Events",
+					"Manager Access Events",
+					"Web Access Service Events",
+					"Cache Service Events",
+					"Template Service Events",
+					"User Defined Events"
+				);
+				$rs = $modx->db->select('*', $tbl_system_eventnames, '', 'service DESC, groupname, name');
+				$limit = $modx->db->getRecordCount($rs);
+				if($limit == 0) {
+					echo "";
+				} else {
+					while($row = $modx->db->getRow($rs)) {
+						// display records
+						if($srv != $row['service']) {
+							$srv = $row['service'];
+							if(count($evtnames) > 0) {
+								echoEventRows($evtnames);
+							}
+							echo '<hr class="clear">';
+							echo '<div class="form-group"><b>' . $services[$srv - 1] . '</b></div>';
+						}
+						// display group name
+						if($grp != $row['groupname']) {
+							$grp = $row['groupname'];
+							if(count($evtnames) > 0) {
+								echoEventRows($evtnames);
+							}
+							echo '<hr class="clear">';
+							echo '<div class="form-group"><b>' . $row['groupname'] . '</b></div>';
+						}
+						$evtnames[] = '<input name="sysevents[]" id="' . $row['name'] . '" type="checkbox" ' . (in_array($row['id'], $evts) ? " checked='checked' " : "") . 'class="inputBox" value="' . $row['id'] . '" /> <label for="' . $row['name'] . '" ' . bold(in_array($row['id'], $evts)) . '> ' . $row['name'] . '</label>' . "\n";
+						if(count($evtnames) == 2) {
+							echoEventRows($evtnames);
+						}
+					}
+				}
+				if(count($evtnames) > 0) {
+					echoEventRows($evtnames);
+				}
 
-			?>
+				function echoEventRows(&$evtnames) {
+					echo '<div class="row form-row"><div class="col-sm-6 col-md-4 col-lg-3">' . implode('</div><div class="col-sm-6 col-md-4 col-lg-3">', $evtnames) . '</div></div>';
+					$evtnames = array();
+				}
+
+				?>
+			</div>
 		</div>
 
 		<!-- docBlock Info -->
 		<div class="tab-page" id="tabDocBlock">
 			<h2 class="tab"><?php echo $_lang['information']; ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabDocBlock"));</script>
-			<?php echo $docBlockList; ?>
+			<div class="container container-body">
+				<?php echo $docBlockList; ?>
+			</div>
 		</div>
 
 	</div>
