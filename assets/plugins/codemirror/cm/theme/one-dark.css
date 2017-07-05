@@ -13,6 +13,18 @@ font-size: 1em;
 .cm-s-one-dark.CodeMirror pre {
 line-height: 1.3;
 }
+.cm-s-one-dark.CodeMirror .CodeMirror-activeline-background {
+background: #323640 !important;
+}
+.cm-s-one-dark.CodeMirror .cm-tab::before {
+content: "";
+position: absolute;
+border-left: 1px dotted #353b46;
+height: 90%;
+}
+.cm-s-one-dark.CodeMirror .cm-tab:first-child::before {
+display: none;
+}
 .cm-s-one-dark.CodeMirror, .cm-s-one-dark .CodeMirror-scroll {
 font-family: 'Inconsolata', 'Monaco', 'Consolas', 'Courier New', 'Courier', monospace;
 font-weight: 300;
