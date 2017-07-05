@@ -77,13 +77,13 @@ function bold($cond = false) {
 			saveWait('mutate');
 		},
 		duplicate: function() {
-			if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>") === true) {
+			if(confirm("<?= $_lang['confirm_duplicate_record'] ?>") === true) {
 				documentDirty = false;
-				document.location.href = "index.php?id=<?php echo $_REQUEST['id']; ?>&a=105";
+				document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=105";
 			}
 		},
 		delete: function() {
-			if(confirm("<?php echo $_lang['confirm_delete_plugin']; ?>") === true) {
+			if(confirm("<?= $_lang['confirm_delete_plugin'] ?>") === true) {
 				documentDirty = false;
 				document.location.href = "index.php?id=" + document.mutate.id.value + "&a=104";
 			}
@@ -153,7 +153,7 @@ function bold($cond = false) {
 			currentParams = JSON.parse(props);
 		}
 
-		t = '<table width="100%" class="displayparams grid"><thead><tr><td><?php echo $_lang['parameter']; ?></td><td><?php echo $_lang['value']; ?></td><td style="text-align:right;white-space:nowrap"><?php echo $_lang["set_default"]; ?> </td></tr></thead>';
+		t = '<table width="100%" class="displayparams grid"><thead><tr><td><?= $_lang['parameter'] ?></td><td><?= $_lang['value'] ?></td><td style="text-align:right;white-space:nowrap"><?= $_lang["set_default"] ?> </td></tr></thead>';
 
 		try {
 			var type, options, found, info, sd;
@@ -254,7 +254,7 @@ function bold($cond = false) {
 
 				info = '';
 				info += desc ? '<br/><small>' + desc + '</small>' : '';
-				sd = defaultVal != undefined ? '<a title="<?php echo $_lang["set_default"]; ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="fa fa-refresh"></i></a>' : '';
+				sd = defaultVal != undefined ? '<a title="<?= $_lang["set_default"] ?>" href="javascript:;" class="btn btn-primary" onclick="setDefaultParam(\'' + key + '\',1);return false;"><i class="fa fa-refresh"></i></a>' : '';
 
 				t += '<tr><td class="labelCell" width="20%"><span class="paramLabel">' + label + '</span><span class="paramDesc">' + info + '</span></td><td class="inputCell relative" width="74%">' + c + '</td><td style="text-align: center">' + sd + '</td></tr>';
 			}
@@ -369,7 +369,7 @@ function bold($cond = false) {
 			var button = document.createElement("div");
 			button.setAttribute('id', 'assignEvents');
 			button.className = 'container container-body';
-			button.innerHTML = '<a class="btn btn-primary" href="javascript:;" onclick="assignEvents();return false;"><?php echo $_lang["set_automatic"]; ?></a>';
+			button.innerHTML = '<a class="btn btn-primary" href="javascript:;" onclick="assignEvents();return false;"><?= $_lang["set_automatic"] ?></a>';
 			var tab = document.getElementById("tabEvents");
 			tab.insertBefore(button, tab.firstChild);
 		}
@@ -432,7 +432,7 @@ function bold($cond = false) {
 	$internal = array();
 	$internal[0]['events'] = isset($parsed['events']) ? $parsed['events'] : '';
 	?>
-	var internal = <?php echo json_encode($internal); ?>;
+	var internal = <?= json_encode($internal); ?>;
 
 	document.addEventListener('DOMContentLoaded', function() {
 		var h1help = document.querySelector('h1 > .help');
@@ -445,46 +445,54 @@ function bold($cond = false) {
 
 <form name="mutate" method="post" action="index.php?a=103" enctype="multipart/form-data">
 
-	<input type="hidden" name="id" value="<?php echo $content['id']; ?>">
-	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
+	<input type="hidden" name="id" value="<?= $content['id'] ?>">
+	<input type="hidden" name="mode" value="<?= $modx->manager->action; ?>">
 
 	<h1>
-		<i class="fa fa-plug"></i><?php echo $_lang['plugin_title']; ?><i class="fa fa-question-circle help"></i>
+		<i class="fa fa-plug"></i><?= $_lang['plugin_title'] ?><i class="fa fa-question-circle help"></i>
 	</h1>
 
-	<?php echo $_style['actionbuttons']['dynamic']['element'] ?>
+	<?= $_style['actionbuttons']['dynamic']['element'] ?>
+
+	<div class="container element-edit-message">
+		<div class="alert alert-info"><?= $_lang['plugin_msg'] ?></div>
+	</div>
 
 	<div class="tab-pane" id="pluginPane">
 		<script type="text/javascript">
-			tpSnippet = new WebFXTabPane(document.getElementById("pluginPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+			tpSnippet = new WebFXTabPane(document.getElementById("pluginPane"), <?= $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 		</script>
 
 		<!-- General -->
 		<div class="tab-page" id="tabPlugin">
-			<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
+			<h2 class="tab"><?= $_lang["settings_general"] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabPlugin"));</script>
-
 			<div class="container container-body">
-				<p class="element-edit-message alert alert-info">
-					<?php echo $_lang['plugin_msg']; ?>
-				</p>
 				<div class="form-group">
 					<div class="row form-row">
-						<label class="col-md-3 col-lg-2"><?php echo $_lang['plugin_name']; ?></label>
+						<label class="col-md-3 col-lg-2"><?= $_lang['plugin_name'] ?></label>
 						<div class="col-md-9 col-lg-10">
-							<input name="name" type="text" maxlength="100" value="<?php echo $modx->htmlspecialchars($content['name']); ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+							<div class="form-control-name clearfix">
+								<input name="name" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['name']); ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+								<?php if($modx->hasPermission('save_role')): ?>
+									<label class="custom-control" title="<?= $_lang['lock_plugin'] . "\n" . $_lang['lock_plugin_msg'] ?>" tooltip>
+										<input name="locked" type="checkbox" value="on"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
+										<i class="fa fa-lock"></i>
+									</label>
+								<?php endif; ?>
+							</div>
 							<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
 							<small class="form-text text-danger hide" id='savingMessage'></small>
 						</div>
 					</div>
 					<div class="row form-row">
-						<label class="col-md-3 col-lg-2"><?php echo $_lang['plugin_desc']; ?></label>
+						<label class="col-md-3 col-lg-2"><?= $_lang['plugin_desc'] ?></label>
 						<div class="col-md-9 col-lg-10">
-							<input name="description" type="text" maxlength="255" value="<?php echo $content['description']; ?>" class="form-control" onchange="documentDirty=true;" />
+							<input name="description" type="text" maxlength="255" value="<?= $content['description'] ?>" class="form-control" onchange="documentDirty=true;" />
 						</div>
 					</div>
 					<div class="row form-row">
-						<label class="col-md-3 col-lg-2"><?php echo $_lang['existing_category']; ?></label>
+						<label class="col-md-3 col-lg-2"><?= $_lang['existing_category'] ?></label>
 						<div class="col-md-9 col-lg-10">
 							<select name="categoryid" class="form-control" onchange="documentDirty=true;">
 								<option>&nbsp;</option>
@@ -498,7 +506,7 @@ function bold($cond = false) {
 						</div>
 					</div>
 					<div class="row form-row">
-						<label class="col-md-3 col-lg-2"><?php echo $_lang['new_category']; ?></label>
+						<label class="col-md-3 col-lg-2"><?= $_lang['new_category'] ?></label>
 						<div class="col-md-9 col-lg-10">
 							<input name="newcategory" type="text" maxlength="45" value="" class="form-control" onchange="documentDirty=true;" />
 						</div>
@@ -506,40 +514,34 @@ function bold($cond = false) {
 				</div>
 				<div class="form-group">
 					<div class="form-row">
-						<label><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?php echo $content['disabled'] == 1 ? "<span class='warning'>" . $_lang['plugin_disabled'] . "</span>" : $_lang['plugin_disabled']; ?></label>
+						<label><input name="disabled" type="checkbox" <?= $content['disabled'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?= $content['disabled'] == 1 ? "<span class='warning'>" . $_lang['plugin_disabled'] . "</span>" : $_lang['plugin_disabled'] ?></label>
 					</div>
 					<?php if($modx->hasPermission('save_role')): ?>
 						<div class="form-row">
-							<div class="form-row">
-								<label><input name="locked" type="checkbox" <?php echo $content['locked'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?php echo $_lang['lock_plugin']; ?></label>
-								<small class="form-text text-muted"><?php echo $_lang['lock_plugin_msg']; ?></small>
-							</div>
-						</div>
-						<div class="form-row">
-							<label><input name="parse_docblock" type="checkbox" <?php echo $modx->manager->action == 101 ? 'checked="checked"' : ''; ?> value="1" /> <?php echo $_lang['parse_docblock']; ?></label>
-							<small class="form-text text-muted"><?php echo $_lang['parse_docblock_msg']; ?></small>
+							<label><input name="parse_docblock" type="checkbox" <?= $modx->manager->action == 101 ? 'checked="checked"' : ''; ?> value="1" /> <?= $_lang['parse_docblock'] ?></label>
+							<small class="form-text text-muted"><?= $_lang['parse_docblock_msg'] ?></small>
 						</div>
 					<?php endif; ?>
 				</div>
 			</div>
 			<!-- PHP text editor start -->
-			<div class="container">
-				<label><?php echo $_lang['plugin_code']; ?></label>
-				<label class="float-xs-right"><?php echo $_lang['wrap_lines']; ?> <input name="wrap" type="checkbox" class="ml-1"<?php echo $content['wrap'] == 1 ? " checked='checked'" : ""; ?> onclick="setTextWrap(document.mutate.post,this.checked)" /></label>
+			<div class="navbar navbar-editor">
+				<span><?= $_lang['plugin_code'] ?></span>
+				<span class="float-xs-right"><?= $_lang['wrap_lines'] ?> <input name="wrap" type="checkbox" class="ml-1"<?= $content['wrap'] == 1 ? " checked='checked'" : ""; ?> onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
 			</div>
-			<div class="clearfix">
-				<textarea dir="ltr" name="post" class="phptextarea" style="width:100%;" wrap="<?php echo $content['wrap'] == 1 ? "soft" : "off"; ?>" onchange="documentDirty=true;"><?php echo $modx->htmlspecialchars($content['plugincode']); ?></textarea>
+			<div class="section-editor clearfix">
+				<textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="<?= $content['wrap'] == 1 ? "soft" : "off"; ?>" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['plugincode']); ?></textarea>
 			</div>
 			<!-- PHP text editor end -->
 		</div>
 
 		<!-- Config -->
 		<div class="tab-page" id="tabConfig">
-			<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
+			<h2 class="tab"><?= $_lang["settings_config"] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabConfig"));</script>
 			<div class="container container-body">
 				<div class="form-group">
-					<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?php echo $_lang['set_default_all']; ?></a>
+					<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?= $_lang['set_default_all'] ?></a>
 				</div>
 				<div id="displayparamrow">
 					<div id="displayparams"></div>
@@ -549,12 +551,12 @@ function bold($cond = false) {
 
 		<!-- Properties -->
 		<div class="tab-page" id="tabProps">
-			<h2 class="tab"><?php echo $_lang["settings_properties"] ?></h2>
+			<h2 class="tab"><?= $_lang["settings_properties"] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabProps"));</script>
 			<div class="container container-body">
 				<div class="form-group">
 					<div class="row form-row">
-						<label class="col-md-3 col-lg-2"><?php echo $_lang['import_params'] ?></label>
+						<label class="col-md-3 col-lg-2"><?= $_lang['import_params'] ?></label>
 						<div class="col-md-9 col-lg-10">
 							<select name="moduleguid" class="form-control" onchange="documentDirty=true;">
 								<option>&nbsp;</option>
@@ -567,27 +569,27 @@ function bold($cond = false) {
 								}
 								?>
 							</select>
-							<small class="form-text text-muted"><?php echo $_lang['import_params_msg'] ?></small>
+							<small class="form-text text-muted"><?= $_lang['import_params_msg'] ?></small>
 						</div>
 					</div>
 				</div>
+				<div class="form-group">
+					<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?= $_lang['update_params'] ?></a>
+				</div>
 			</div>
 			<!-- HTML text editor start -->
-			<div class="container form-group">
-				<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?php echo $_lang['update_params']; ?></a>
-			</div>
-			<div class="clearfix">
-				<textarea name="properties" class="phptextarea" rows="20" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'] ?></textarea>
+			<div class="section-editor clearfix">
+				<textarea dir="ltr" name="properties" class="phptextarea" rows="20" onChange='showParameters(this);documentDirty=true;'><?= $content['properties'] ?></textarea>
 			</div>
 			<!-- HTML text editor end -->
 		</div>
 
 		<!-- System Events -->
 		<div class="tab-page" id="tabEvents">
-			<h2 class="tab"><?php echo $_lang["settings_events"] ?></h2>
+			<h2 class="tab"><?= $_lang["settings_events"] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabEvents"));</script>
 			<div class="container container-body">
-				<p><?php echo $_lang['plugin_event_msg']; ?></p>
+				<p><?= $_lang['plugin_event_msg'] ?></p>
 				<?php
 				// get selected events
 				if(is_numeric($id) && $id > 0) {
@@ -656,10 +658,10 @@ function bold($cond = false) {
 
 		<!-- docBlock Info -->
 		<div class="tab-page" id="tabDocBlock">
-			<h2 class="tab"><?php echo $_lang['information']; ?></h2>
+			<h2 class="tab"><?= $_lang['information'] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabDocBlock"));</script>
 			<div class="container container-body">
-				<?php echo $docBlockList; ?>
+				<?= $docBlockList; ?>
 			</div>
 		</div>
 
