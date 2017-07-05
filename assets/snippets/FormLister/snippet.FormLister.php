@@ -9,6 +9,7 @@
  * @var array $params
  */
 if (!isset($formid)) return;
+include_once ('__autoload.php');
 $out = '';
 $FLDir = MODX_BASE_PATH . 'assets/snippets/FormLister/';
 if (isset($controller)) {
@@ -17,16 +18,19 @@ if (isset($controller)) {
 } else {
     $params['controller'] = $controller = "Form";
 }
+if ($controller == 'Core') return $out;
+
 $classname = '\FormLister\\'.$controller;
 
-$dir = isset($dir) ? MODX_BASE_PATH.$dir : $FLDir . "core/controller/";
-if ($classname != '\FormLister\Core' && file_exists($dir . $controller . ".php") && !class_exists($classname, false)) {
-    require_once($dir . $controller . ".php");
+if (!class_exists($classname)) {
+    $dir = isset($dir) ? MODX_BASE_PATH . $dir : $FLDir . "core/controller/";
+    if (file_exists($dir . $controller . ".php") && !class_exists($classname)) {
+        require_once($dir . $controller . ".php");
+    }
 }
-
 if (!isset($langDir)) $params['langDir'] = 'assets/snippets/FormLister/core/lang/';
 
-if (class_exists($classname, false) && $classname != '\FormLister\Core') {
+if (class_exists($classname)) {
     /** @var \FormLister\Core $FormLister */
     $FormLister = new $classname($modx, $params);
     if (!$FormLister->getFormId()) return;
