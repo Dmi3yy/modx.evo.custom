@@ -107,7 +107,7 @@ if(is_array($evtOut)) {
 		},
 		cancel: function() {
 			documentDirty = false;
-			document.location.href = 'index.php?a=<?= $origin ?><?=($originId != NULL ? '&id=' . $originId : ''); ?>';
+			document.location.href = 'index.php?a=<?= $origin ?><?=($originId != NULL ? '&id=' . $originId : '') ?>';
 		}
 	};
 
@@ -120,7 +120,7 @@ if(is_array($evtOut)) {
 	widgetParams['htmltag'] = '&tagname=Tag Name;string;div &tagid=Tag ID;string &class=Class;string &style=Style;string &attrib=Attributes;string';
 	widgetParams['viewport'] = '&vpid=ID/Name;string &width=Width;string;100 &height=Height;string;100 &borsize=Border Size;int;1 &sbar=Scrollbars;list;,Auto,Yes,No &asize=Auto Size;list;,Yes,No &aheight=Auto Height;list;,Yes,No &awidth=Auto Width;list;,Yes,No &stretch=Stretch To Fit;list;,Yes,No &class=Class;string &style=Style;string &attrib=Attributes;string';
 	widgetParams['datagrid'] = '&cols=Column Names;string &flds=Field Names;string &cwidth=Column Widths;string &calign=Column Alignments;string &ccolor=Column Colors;string &ctype=Column Types;string &cpad=Cell Padding;int;1 &cspace=Cell Spacing;int;1 &rowid=Row ID Field;string &rgf=Row Group Field;string &rgstyle = Row Group Style;string &rgclass = Row Group Class;string &rowsel=Row Select;string &rhigh=Row Hightlight;string; &psize=Page Size;int;100 &ploc=Pager Location;list;top-right,top-left,bottom-left,bottom-right,both-right,both-left; &pclass=Pager Class;string &pstyle=Pager Style;string &head=Header Text;string &foot=Footer Text;string &tblc=Grid Class;string &tbls=Grid Style;string &itmc=Item Class;string &itms=Item Style;string &aitmc=Alt Item Class;string &aitms=Alt Item Style;string &chdrc=Column Header Class;string &chdrs=Column Header Style;string;&egmsg=Empty message;string;No records found;';
-	widgetParams['richtext'] = '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;<?= $RTEditors; ?>';
+	widgetParams['richtext'] = '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;<?= $RTEditors ?>';
 	widgetParams['image'] = '&alttext=Alternate Text;string &hspace=H Space;int &vspace=V Space;int &borsize=Border Size;int &align=Align;list;none,baseline,top,middle,bottom,texttop,absmiddle,absbottom,left,right &name=Name;string &class=Class;string &id=ID;string &style=Style;string &attrib=Attributes;string';
 	widgetParams['custom_widget'] = '&output=Output;textarea;[+value+]';
 
@@ -285,10 +285,10 @@ if(is_array($evtOut)) {
 	?>
 	<input type="hidden" name="id" value="<?= $content['id'] ?>">
 	<input type="hidden" name="a" value="302">
-	<input type="hidden" name="or" value="<?= $origin; ?>">
-	<input type="hidden" name="oid" value="<?= $originId; ?>">
-	<input type="hidden" name="mode" value="<?= $modx->manager->action; ?>">
-	<input type="hidden" name="params" value="<?= $modx->htmlspecialchars($content['display_params']); ?>">
+	<input type="hidden" name="or" value="<?= $origin ?>">
+	<input type="hidden" name="oid" value="<?= $originId ?>">
+	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
+	<input type="hidden" name="params" value="<?= $modx->htmlspecialchars($content['display_params']) ?>">
 
 	<h1>
 		<i class="fa fa-list-alt"></i><?= $_lang['tmplvars_title'] ?><i class="fa fa-question-circle help"></i>
@@ -313,7 +313,7 @@ if(is_array($evtOut)) {
 					<label class="col-md-3 col-lg-2"><?= $_lang['tmplvars_name'] ?></label>
 					<div class="col-md-9 col-lg-10">
 						<div class="form-control-name clearfix">
-							<input name="name" type="text" maxlength="50" value="<?= $modx->htmlspecialchars($content['name']); ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+							<input name="name" type="text" maxlength="50" value="<?= $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
 							<?php if($modx->hasPermission('save_role')): ?>
 								<label class="custom-control" title="<?= $_lang['lock_tmplvars'] . "\n" . $_lang['lock_tmplvars_msg'] ?>" tooltip>
 									<input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
@@ -322,19 +322,19 @@ if(is_array($evtOut)) {
 							<?php endif; ?>
 						</div>
 						<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
-						<small class="form-text text-danger hide" id='savingMessage'></small>
+						<small class="form-text text-danger hide" id="savingMessage"></small>
 					</div>
 				</div>
 				<div class="row form-row">
 					<label class="col-md-3 col-lg-2"><?= $_lang['tmplvars_caption'] ?></label>
 					<div class="col-md-9 col-lg-10">
-						<input name="caption" type="text" maxlength="80" value="<?= $modx->htmlspecialchars($content['caption']); ?>" class="form-control" onchange="documentDirty=true;" />
+						<input name="caption" type="text" maxlength="80" value="<?= $modx->htmlspecialchars($content['caption']) ?>" class="form-control" onchange="documentDirty=true;" />
 					</div>
 				</div>
 				<div class="row form-row">
 					<label class="col-md-3 col-lg-2"><?= $_lang['tmplvars_description'] ?></label>
 					<div class="col-md-9 col-lg-10">
-						<input name="description" type="text" maxlength="255" value="<?= $modx->htmlspecialchars($content['description']); ?>" class="form-control" onChange="documentDirty=true;">
+						<input name="description" type="text" maxlength="255" value="<?= $modx->htmlspecialchars($content['description']) ?>" class="form-control" onChange="documentDirty=true;">
 					</div>
 				</div>
 				<div class="row form-row">
@@ -362,31 +362,31 @@ if(is_array($evtOut)) {
 					<div class="col-md-9 col-lg-10">
 						<select name="type" size="1" class="form-control" onchange="documentDirty=true;">
 							<optgroup label="Standard Type">
-								<option value="text" <?= ($content['type'] == '' || $content['type'] == 'text') ? "selected='selected'" : ""; ?>>Text</option>
-								<option value="rawtext" <?= ($content['type'] == 'rawtext') ? "selected='selected'" : ""; ?>>Raw Text (deprecated)</option>
-								<option value="textarea" <?= ($content['type'] == 'textarea') ? "selected='selected'" : ""; ?>>Textarea</option>
-								<option value="rawtextarea" <?= ($content['type'] == 'rawtextarea') ? "selected='selected'" : ""; ?>>Raw Textarea (deprecated)</option>
-								<option value="textareamini" <?= ($content['type'] == 'textareamini') ? "selected='selected'" : ""; ?>>Textarea (Mini)</option>
-								<option value="richtext" <?= ($content['type'] == 'richtext' || $content['type'] == 'htmlarea') ? "selected='selected'" : ""; ?>>RichText</option>
-								<option value="dropdown" <?= ($content['type'] == 'dropdown') ? "selected='selected'" : ""; ?>>DropDown List Menu</option>
-								<option value="listbox" <?= ($content['type'] == 'listbox') ? "selected='selected'" : ""; ?>>Listbox (Single-Select)</option>
-								<option value="listbox-multiple" <?= ($content['type'] == 'listbox-multiple') ? "selected='selected'" : ""; ?>>Listbox (Multi-Select)</option>
-								<option value="option" <?= ($content['type'] == 'option') ? "selected='selected'" : ""; ?>>Radio Options</option>
-								<option value="checkbox" <?= ($content['type'] == 'checkbox') ? "selected='selected'" : ""; ?>>Check Box</option>
-								<option value="image" <?= ($content['type'] == 'image') ? "selected='selected'" : ""; ?>>Image</option>
-								<option value="file" <?= ($content['type'] == 'file') ? "selected='selected'" : ""; ?>>File</option>
-								<option value="url" <?= ($content['type'] == 'url') ? "selected='selected'" : ""; ?>>URL</option>
-								<option value="email" <?= ($content['type'] == 'email') ? "selected='selected'" : ""; ?>>Email</option>
-								<option value="number" <?= ($content['type'] == 'number') ? "selected='selected'" : ""; ?>>Number</option>
-								<option value="date" <?= ($content['type'] == 'date') ? "selected='selected'" : ""; ?>>Date</option>
+								<option value="text" <?= ($content['type'] == '' || $content['type'] == 'text' ? "selected='selected'" : "") ?>>Text</option>
+								<option value="rawtext" <?= ($content['type'] == 'rawtext' ? "selected='selected'" : "") ?>>Raw Text (deprecated)</option>
+								<option value="textarea" <?= ($content['type'] == 'textarea' ? "selected='selected'" : "") ?>>Textarea</option>
+								<option value="rawtextarea" <?= ($content['type'] == 'rawtextarea' ? "selected='selected'" : "") ?>>Raw Textarea (deprecated)</option>
+								<option value="textareamini" <?= ($content['type'] == 'textareamini' ? "selected='selected'" : "") ?>>Textarea (Mini)</option>
+								<option value="richtext" <?= ($content['type'] == 'richtext' || $content['type'] == 'htmlarea' ? "selected='selected'" : "") ?>>RichText</option>
+								<option value="dropdown" <?= ($content['type'] == 'dropdown' ? "selected='selected'" : "") ?>>DropDown List Menu</option>
+								<option value="listbox" <?= ($content['type'] == 'listbox' ? "selected='selected'" : "") ?>>Listbox (Single-Select)</option>
+								<option value="listbox-multiple" <?= ($content['type'] == 'listbox-multiple' ? "selected='selected'" : "") ?>>Listbox (Multi-Select)</option>
+								<option value="option" <?= ($content['type'] == 'option' ? "selected='selected'" : "") ?>>Radio Options</option>
+								<option value="checkbox" <?= ($content['type'] == 'checkbox' ? "selected='selected'" : "") ?>>Check Box</option>
+								<option value="image" <?= ($content['type'] == 'image' ? "selected='selected'" : "") ?>>Image</option>
+								<option value="file" <?= ($content['type'] == 'file' ? "selected='selected'" : "") ?>>File</option>
+								<option value="url" <?= ($content['type'] == 'url' ? "selected='selected'" : "") ?>>URL</option>
+								<option value="email" <?= ($content['type'] == 'email' ? "selected='selected'" : "") ?>>Email</option>
+								<option value="number" <?= ($content['type'] == 'number' ? "selected='selected'" : "") ?>>Number</option>
+								<option value="date" <?= ($content['type'] == 'date' ? "selected='selected'" : "") ?>>Date</option>
 							</optgroup>
 							<optgroup label="Custom Type">
-								<option value="custom_tv" <?= ($content['type'] == 'custom_tv') ? "selected='selected'" : ""; ?>>Custom Input</option>
+								<option value="custom_tv" <?= ($content['type'] == 'custom_tv' ? "selected='selected'" : "") ?>>Custom Input</option>
 								<?php
 								$custom_tvs = scandir(MODX_BASE_PATH . 'assets/tvs');
 								foreach($custom_tvs as $ctv) {
 									if(strpos($ctv, '.') !== 0 && $ctv != 'index.html') {
-										$selected = ($content['type'] == 'custom_tv:' . $ctv) ? "selected='selected'" : "";
+										$selected = ($content['type'] == 'custom_tv:' . $ctv ? "selected='selected'" : "");
 										echo '<option value="custom_tv:' . $ctv . '"  ' . $selected . '>' . $ctv . '</option>';
 									}
 								}
@@ -400,7 +400,7 @@ if(is_array($evtOut)) {
 						<small class="form-text text-muted"><?= $_lang['tmplvars_binding_msg'] ?></small>
 					</label>
 					<div class="col-md-9 col-lg-10">
-						<textarea name="elements" maxlength="65535" rows="4" class="form-control" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['elements']); ?></textarea>
+						<textarea name="elements" maxlength="65535" rows="4" class="form-control" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['elements']) ?></textarea>
 					</div>
 				</div>
 				<div class="row form-row">
@@ -408,29 +408,29 @@ if(is_array($evtOut)) {
 						<small class="form-text text-muted"><?= $_lang['tmplvars_binding_msg'] ?></small>
 					</label>
 					<div class="col-md-9 col-lg-10">
-						<textarea name="default_text" class="form-control" rows="4" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['default_text']); ?></textarea>
+						<textarea name="default_text" class="form-control" rows="4" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['default_text']) ?></textarea>
 					</div>
 				</div>
 				<div class="row form-row">
 					<label class="col-md-3 col-lg-2"><?= $_lang['tmplvars_widget'] ?></label>
 					<div class="col-md-9 col-lg-10">
-						<select name="display" size="1" class="form-control" onChange='documentDirty=true;showParameters(this);'>
-							<option value="" <?= ($content['display'] == '') ? "selected='selected'" : ""; ?>>&nbsp;</option>
+						<select name="display" size="1" class="form-control" onChange="documentDirty=true;showParameters(this);">
+							<option value="" <?= ($content['display'] == '' ? "selected='selected'" : "") ?>>&nbsp;</option>
 							<optgroup label="Widgets">
-								<option value="datagrid" <?= ($content['display'] == 'datagrid') ? "selected='selected'" : ""; ?>>Data Grid</option>
-								<option value="richtext" <?= ($content['display'] == 'richtext') ? "selected='selected'" : ""; ?>>RichText</option>
-								<option value="viewport" <?= ($content['display'] == 'viewport') ? "selected='selected'" : ""; ?>>View Port</option>
-								<option value="custom_widget" <?= ($content['display'] == 'custom_widget') ? "selected='selected'" : ""; ?>>Custom Widget</option>
+								<option value="datagrid" <?= ($content['display'] == 'datagrid' ? "selected='selected'" : "") ?>>Data Grid</option>
+								<option value="richtext" <?= ($content['display'] == 'richtext' ? "selected='selected'" : "") ?>>RichText</option>
+								<option value="viewport" <?= ($content['display'] == 'viewport' ? "selected='selected'" : "") ?>>View Port</option>
+								<option value="custom_widget" <?= ($content['display'] == 'custom_widget' ? "selected='selected'" : "") ?>>Custom Widget</option>
 							</optgroup>
 							<optgroup label="Formats">
-								<option value="htmlentities" <?= ($content['display'] == 'htmlentities') ? "selected='selected'" : ""; ?>>HTML Entities</option>
-								<option value="date" <?= ($content['display'] == 'date') ? "selected='selected'" : ""; ?>>Date Formatter</option>
-								<option value="unixtime" <?= ($content['display'] == 'unixtime') ? "selected='selected'" : ""; ?>>Unixtime</option>
-								<option value="delim" <?= ($content['display'] == 'delim') ? "selected='selected'" : ""; ?>>Delimited List</option>
-								<option value="htmltag" <?= ($content['display'] == 'htmltag') ? "selected='selected'" : ""; ?>>HTML Generic Tag</option>
-								<option value="hyperlink" <?= ($content['display'] == 'hyperlink') ? "selected='selected'" : ""; ?>>Hyperlink</option>
-								<option value="image" <?= ($content['display'] == 'image') ? "selected='selected'" : ""; ?>>Image</option>
-								<option value="string" <?= ($content['display'] == 'string') ? "selected='selected'" : ""; ?>>String Formatter</option>
+								<option value="htmlentities" <?= ($content['display'] == 'htmlentities' ? "selected='selected'" : "") ?>>HTML Entities</option>
+								<option value="date" <?= ($content['display'] == 'date' ? "selected='selected'" : "") ?>>Date Formatter</option>
+								<option value="unixtime" <?= ($content['display'] == 'unixtime' ? "selected='selected'" : "") ?>>Unixtime</option>
+								<option value="delim" <?= ($content['display'] == 'delim' ? "selected='selected'" : "") ?>>Delimited List</option>
+								<option value="htmltag" <?= ($content['display'] == 'htmltag' ? "selected='selected'" : "") ?>>HTML Generic Tag</option>
+								<option value="hyperlink" <?= ($content['display'] == 'hyperlink' ? "selected='selected'" : "") ?>>Hyperlink</option>
+								<option value="image" <?= ($content['display'] == 'image' ? "selected='selected'" : "") ?>>Image</option>
+								<option value="string" <?= ($content['display'] == 'string' ? "selected='selected'" : "") ?>>String Formatter</option>
 							</optgroup>
 						</select>
 					</div>
@@ -443,7 +443,7 @@ if(is_array($evtOut)) {
 				<div class="row form-row">
 					<label class="col-md-3 col-lg-2"><?= $_lang['tmplvars_rank'] ?></label>
 					<div class="col-md-9 col-lg-10">
-						<input name="rank" type="text" maxlength="4" size="1" value="<?= (isset($content['rank'])) ? $content['rank'] : 0; ?>" class="form-control" onchange="documentDirty=true;" />
+						<input name="rank" type="text" maxlength="4" size="1" value="<?= (isset($content['rank']) ? $content['rank'] : 0) ?>" class="form-control" onchange="documentDirty=true;" />
 					</div>
 				</div>
 				<hr>

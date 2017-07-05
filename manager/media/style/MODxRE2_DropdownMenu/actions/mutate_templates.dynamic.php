@@ -106,7 +106,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	?>
 	<input type="hidden" name="a" value="20">
 	<input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>">
-	<input type="hidden" name="mode" value="<?= $modx->manager->action; ?>">
+	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 
 	<h1>
 		<i class="fa fa-newspaper-o"></i><?= $_lang['template_title'] ?><i class="fa fa-question-circle help"></i>
@@ -121,7 +121,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 	<div class="tab-pane" id="templatesPane">
 		<script type="text/javascript">
-			tp = new WebFXTabPane(document.getElementById("templatesPane"), <?= $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+			tp = new WebFXTabPane(document.getElementById("templatesPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
 		</script>
 
 		<div class="tab-page" id="tabTemplate">
@@ -138,7 +138,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						</label>
 						<div class="col-md-9 col-lg-10">
 							<div class="form-control-name clearfix">
-								<input name="templatename" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['templatename']); ?>" class="form-control form-control-lg" onchange="documentDirty=true;">
+								<input name="templatename" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['templatename']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;">
 								<?php if($modx->hasPermission('save_role')): ?>
 									<label class="custom-control" title="<?= $_lang['lock_template'] . "\n" . $_lang['lock_template_msg'] ?>" tooltip>
 										<input name="locked" type="checkbox"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
@@ -153,7 +153,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 					<div class="row form-row">
 						<label class="col-md-3 col-lg-2"><?= $_lang['template_desc'] ?></label>
 						<div class="col-md-9 col-lg-10">
-							<input name="description" type="text" maxlength="255" value="<?= $modx->htmlspecialchars($content['description']); ?>" class="form-control" onchange="documentDirty=true;">
+							<input name="description" type="text" maxlength="255" value="<?= $modx->htmlspecialchars($content['description']) ?>" class="form-control" onchange="documentDirty=true;">
 						</div>
 					</div>
 					<div class="row form-row">
@@ -180,7 +180,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<?php if($modx->hasPermission('save_role')): ?>
 					<div class="form-group">
 						<label>
-							<input name="selectable" type="checkbox" <?= $selectable == 1 ? "checked='checked'" : ""; ?>> <?= $_lang['template_selectable'] ?></label>
+							<input name="selectable" type="checkbox"<?= ($selectable == 1 ? ' checked="checked"' : '') ?> /> <?= $_lang['template_selectable'] ?></label>
 					</div>
 				<?php endif; ?>
 			</div>
@@ -190,7 +190,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<span><?= $_lang['template_code'] ?></span>
 			</div>
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" name="post" class="phptextarea" rows="20" onChange="documentDirty=true;"><?= isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['content']); ?></textarea>
+				<textarea dir="ltr" name="post" class="phptextarea" rows="20" onChange="documentDirty=true;"><?= (isset($content['post']) ? $modx->htmlspecialchars($content['post']) : $modx->htmlspecialchars($content['content'])) ?></textarea>
 			</div>
 			<!-- HTML text editor end -->
 

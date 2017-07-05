@@ -405,7 +405,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	$docBlockList = $modx->convertDocBlockIntoList($parsed);
 	?>
 	<input type="hidden" name="id" value="<?= $content['id'] ?>">
-	<input type="hidden" name="mode" value="<?= $modx->manager->action; ?>">
+	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 
 	<h1 class="pagetitle">
 		<i class="fa fa-code"></i><?= $_lang['snippet_title'] ?><i class="fa fa-question-circle help"></i>
@@ -419,7 +419,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 	<div class="tab-pane" id="snipetPane">
 		<script type="text/javascript">
-			tpSnippet = new WebFXTabPane(document.getElementById("snipetPane"), <?= $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+			tpSnippet = new WebFXTabPane(document.getElementById("snipetPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
 		</script>
 
 		<!-- General -->
@@ -441,7 +441,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								<?php endif; ?>
 							</div>
 							<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
-							<small class="form-text text-danger hide" id='savingMessage'></small>
+							<small class="form-text text-danger hide" id="savingMessage"></small>
 						</div>
 					</div>
 					<div class="row form-row">
@@ -474,7 +474,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 				<?php if($modx->hasPermission('save_role')): ?>
 					<div class="form-group">
 						<label>
-							<input name="parse_docblock" type="checkbox"<?= $modx->manager->action == 23 ? ' checked="checked"' : ''; ?> value="1" /> <?= $_lang['parse_docblock'] ?></label>
+							<input name="parse_docblock" type="checkbox"<?= ($modx->manager->action == 23 ? ' checked="checked"' : '') ?> value="1" /> <?= $_lang['parse_docblock'] ?></label>
 						<small class="form-text text-muted"><?= $_lang['parse_docblock_msg'] ?></small>
 					</div>
 				<?php endif; ?>
@@ -483,11 +483,11 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<!-- PHP text editor start -->
 			<div class="navbar navbar-editor">
 				<span><?= $_lang['snippet_code'] ?></span>
-				<span class="float-xs-right"><?= $_lang['wrap_lines'] ?> <input name="wrap" type="checkbox" class="ml-1"<?= $content['wrap'] == 1 ? " checked='checked'" : "" ?> onclick="setTextWrap(document.mutate.post,this.checked)" />
+				<span class="float-xs-right"><?= $_lang['wrap_lines'] ?> <input name="wrap" type="checkbox" class="ml-1"<?= ($content['wrap'] == 1 ? " checked='checked'" : "") ?> onclick="setTextWrap(document.mutate.post,this.checked)" />
 				</span>
 			</div>
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="<?= $content['wrap'] == 1 ? "soft" : "off" ?>" onchange="documentDirty=true;"><?= isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php" . "\n" . trim($modx->htmlspecialchars($content['snippet'])) . "\n"; ?></textarea>
+				<textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="<?= $content['wrap'] == 1 ? "soft" : "off" ?>" onchange="documentDirty=true;"><?= (isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php" . "\n" . trim($modx->htmlspecialchars($content['snippet'])) . "\n") ?></textarea>
 			</div>
 			<!-- PHP text editor end -->
 		</div>
@@ -498,7 +498,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabConfig"));</script>
 			<div class="container container-body">
 				<div class="form-group">
-					<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?= $_lang['set_default_all'] ?></a>
+					<a href="javascript:;" class="btn btn-primary" onclick="setDefaults(this);return false;"><?= $_lang['set_default_all'] ?></a>
 				</div>
 				<div id="displayparamrow">
 					<div id="displayparams"></div>
@@ -536,7 +536,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			</div>
 			<!-- HTML text editor start -->
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" name="properties" class="phptextarea" rows="20" onChange='showParameters(this);documentDirty=true;'><?= $content['properties'] ?></textarea>
+				<textarea dir="ltr" name="properties" class="phptextarea" rows="20" onChange="showParameters(this);documentDirty=true;"><?= $content['properties'] ?></textarea>
 			</div>
 			<!-- HTML text editor end -->
 		</div>
@@ -546,7 +546,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<h2 class="tab"><?= $_lang['information'] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabDocBlock"));</script>
 			<div class="container container-body">
-				<?= $docBlockList; ?>
+				<?= $docBlockList ?>
 			</div>
 		</div>
 
