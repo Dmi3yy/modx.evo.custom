@@ -133,7 +133,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	?>
 	<input type="hidden" name="a" value="79" />
 	<input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>" />
-	<input type="hidden" name="mode" value="<?= $modx->manager->action; ?>" />
+	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>" />
 
 	<h1>
 		<i class="fa fa-th-large"></i><?= $_lang['htmlsnippet_title'] ?><i class="fa fa-question-circle help"></i>
@@ -147,7 +147,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 	<div class="tab-pane" id="chunkPane">
 		<script type="text/javascript">
-			tpChunk = new WebFXTabPane(document.getElementById("chunkPane"), <?= $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+			tpChunk = new WebFXTabPane(document.getElementById("chunkPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
 		</script>
 
 		<div class="tab-page" id="tabGeneral">
@@ -167,7 +167,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 							<?php endif; ?>
 						</div>
 						<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
-						<small class="form-text text-danger hide" id='savingMessage'></small>
+						<small class="form-text text-danger hide" id="savingMessage"></small>
 					</div>
 				</div>
 				<div class="row form-row">

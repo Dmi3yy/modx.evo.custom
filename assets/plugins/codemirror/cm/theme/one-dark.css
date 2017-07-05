@@ -13,18 +13,30 @@ font-size: 1em;
 .cm-s-one-dark.CodeMirror pre {
 line-height: 1.3;
 }
+.cm-s-one-dark.CodeMirror .CodeMirror-activeline-background {
+background: #23272f !important;
+}
+.cm-s-one-dark.CodeMirror .cm-tab::before {
+content: "";
+position: absolute;
+border-left: 1px solid #353b46;
+height: 100%;
+}
+.cm-s-one-dark.CodeMirror .cm-tab:first-child::before {
+display: none;
+}
 .cm-s-one-dark.CodeMirror, .cm-s-one-dark .CodeMirror-scroll {
 font-family: 'Inconsolata', 'Monaco', 'Consolas', 'Courier New', 'Courier', monospace;
 font-weight: 300;
 font-size: 1em;
-background-color: hsl(220, 13%, 18%);
+background-color: #282c34;
 color: #abb2bf;
 }
 .cm-s-one-dark div.CodeMirror-selected {
-background: rgba(204, 217, 255, 0.05);
+background: #343c4a;
 }
 .cm-s-one-dark .CodeMirror-focused div.CodeMirror-selected {
-background: rgba(204, 217, 255, 0.09);
+background: #485263;
 }
 .cm-s-one-dark .CodeMirror-lines {
 padding: 4px 0; /* Vertical padding around content */
@@ -33,7 +45,7 @@ padding: 4px 0; /* Vertical padding around content */
 padding: 0 4px; /* Horizontal padding of content */
 }
 /* Gutter & Folding */
-.cm-s-one-dark .CodeMirror-gutters{
+.cm-s-one-dark .CodeMirror-gutters {
 border-color: #3c4048;
 }
 .cm-s-one-dark .CodeMirror .CodeMirror-gutters, .cm-s-one-dark .CodeMirror-gutter {
@@ -54,7 +66,7 @@ color: #5f6b82;
 line-height: .3;
 cursor: pointer;
 color: #abb2bf;
-background: rgba(204, 217, 255, 0.05);
+background: #343c4a;
 }
 .cm-s-one-dark .CodeMirror-foldgutter {
 width: 15px;
@@ -132,7 +144,6 @@ border-bottom: 1px solid #528bff;
 .cm-s-one-dark .cm-meta { color: #abb2bf; }
 .cm-s-one-dark .cm-bracket { color: #abb2bf; }
 .cm-s-one-dark .cm-comment { color: #5c6370; font-style: italic; }
-
 .cm-s-one-dark .cm-modxChunk, .cm-s-one-dark .cm-modxSnippet, .cm-s-one-dark .cm-modxTv, .cm-s-one-dark .cm-modxPlaceholder, .cm-s-one-dark .cm-modxSnippetNoCache, .cm-s-one-dark .cm-modxVariable, .cm-s-one-dark .cm-modxUrl, .cm-s-one-dark .cm-modxConfig {
 color: #00d4c0;
 font-weight: 100;

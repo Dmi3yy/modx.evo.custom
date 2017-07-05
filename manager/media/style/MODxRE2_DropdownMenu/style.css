@@ -22,7 +22,7 @@ a[href=""], a:not([href]) { cursor: default }
 /* -------------------------[ Forms ]--- */
 tbody, thead, tr { margin: 0; padding: 0; border: 0; }
 form label { cursor: pointer; display: inline-block; margin-bottom: .5em }
-form label:not(for) { cursor: default }
+form label:not([for]) { cursor: default }
 fieldset { border: none; }
 optgroup { font-style: normal; font-weight: 500; background-color: #ddd; }
 optgroup option { font-weight: normal; background-color: #fff; }

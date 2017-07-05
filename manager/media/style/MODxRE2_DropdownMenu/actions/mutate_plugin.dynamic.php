@@ -432,7 +432,7 @@ function bold($cond = false) {
 	$internal = array();
 	$internal[0]['events'] = isset($parsed['events']) ? $parsed['events'] : '';
 	?>
-	var internal = <?= json_encode($internal); ?>;
+	var internal = <?= json_encode($internal) ?>;
 
 	document.addEventListener('DOMContentLoaded', function() {
 		var h1help = document.querySelector('h1 > .help');
@@ -446,7 +446,7 @@ function bold($cond = false) {
 <form name="mutate" method="post" action="index.php?a=103" enctype="multipart/form-data">
 
 	<input type="hidden" name="id" value="<?= $content['id'] ?>">
-	<input type="hidden" name="mode" value="<?= $modx->manager->action; ?>">
+	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 
 	<h1>
 		<i class="fa fa-plug"></i><?= $_lang['plugin_title'] ?><i class="fa fa-question-circle help"></i>
@@ -460,7 +460,7 @@ function bold($cond = false) {
 
 	<div class="tab-pane" id="pluginPane">
 		<script type="text/javascript">
-			tpSnippet = new WebFXTabPane(document.getElementById("pluginPane"), <?= $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+			tpSnippet = new WebFXTabPane(document.getElementById("pluginPane"), <?= ($modx->config['remember_last_tab'] == 1 ? 'true' : 'false') ?> );
 		</script>
 
 		<!-- General -->
@@ -473,7 +473,7 @@ function bold($cond = false) {
 						<label class="col-md-3 col-lg-2"><?= $_lang['plugin_name'] ?></label>
 						<div class="col-md-9 col-lg-10">
 							<div class="form-control-name clearfix">
-								<input name="name" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['name']); ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
+								<input name="name" type="text" maxlength="100" value="<?= $modx->htmlspecialchars($content['name']) ?>" class="form-control form-control-lg" onchange="documentDirty=true;" />
 								<?php if($modx->hasPermission('save_role')): ?>
 									<label class="custom-control" title="<?= $_lang['lock_plugin'] . "\n" . $_lang['lock_plugin_msg'] ?>" tooltip>
 										<input name="locked" type="checkbox" value="on"<?= ($content['locked'] == 1 ? ' checked="checked"' : '') ?> />
@@ -482,7 +482,7 @@ function bold($cond = false) {
 								<?php endif; ?>
 							</div>
 							<script>if(!document.getElementsByName("name")[0].value) document.getElementsByName("name")[0].focus();</script>
-							<small class="form-text text-danger hide" id='savingMessage'></small>
+							<small class="form-text text-danger hide" id="savingMessage"></small>
 						</div>
 					</div>
 					<div class="row form-row">
@@ -499,7 +499,7 @@ function bold($cond = false) {
 								<?php
 								include_once(MODX_MANAGER_PATH . 'includes/categories.inc.php');
 								foreach(getCategories() as $n => $v) {
-									echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($v["category"]) . "</option>";
+									echo '<option value="' . $v['id'] . '"' . ($content["category"] == $v["id"] ? ' selected="selected"' : '') . '>' . $modx->htmlspecialchars($v["category"]) . "</option>";
 								}
 								?>
 							</select>
@@ -514,11 +514,11 @@ function bold($cond = false) {
 				</div>
 				<div class="form-group">
 					<div class="form-row">
-						<label><input name="disabled" type="checkbox" <?= $content['disabled'] == 1 ? "checked='checked'" : ""; ?> value="on" /> <?= $content['disabled'] == 1 ? "<span class='warning'>" . $_lang['plugin_disabled'] . "</span>" : $_lang['plugin_disabled'] ?></label>
+						<label><input name="disabled" type="checkbox" value="on"<?= ($content['disabled'] == 1 ? ' checked="checked"' : '') ?> /> <?= ($content['disabled'] == 1 ? "<span class='text-danger'>" . $_lang['plugin_disabled'] . "</span>" : $_lang['plugin_disabled']) ?></label>
 					</div>
 					<?php if($modx->hasPermission('save_role')): ?>
 						<div class="form-row">
-							<label><input name="parse_docblock" type="checkbox" <?= $modx->manager->action == 101 ? 'checked="checked"' : ''; ?> value="1" /> <?= $_lang['parse_docblock'] ?></label>
+							<label><input name="parse_docblock" type="checkbox"<?= ($modx->manager->action == 101 ? ' checked="checked"' : '') ?> value="1" /> <?= $_lang['parse_docblock'] ?></label>
 							<small class="form-text text-muted"><?= $_lang['parse_docblock_msg'] ?></small>
 						</div>
 					<?php endif; ?>
@@ -527,10 +527,10 @@ function bold($cond = false) {
 			<!-- PHP text editor start -->
 			<div class="navbar navbar-editor">
 				<span><?= $_lang['plugin_code'] ?></span>
-				<span class="float-xs-right"><?= $_lang['wrap_lines'] ?> <input name="wrap" type="checkbox" class="ml-1"<?= $content['wrap'] == 1 ? " checked='checked'" : ""; ?> onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
+				<label class="float-xs-right" for="wrap"><?= $_lang['wrap_lines'] ?> <input name="wrap" id="wrap" type="checkbox" onclick="setTextWrap(document.mutate.post,this.checked)"<?= ($content['wrap'] == 1 ? ' checked="checked"' : '') ?> /></label>
 			</div>
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="<?= $content['wrap'] == 1 ? "soft" : "off"; ?>" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['plugincode']); ?></textarea>
+				<textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="<?= ($content['wrap'] == 1 ? "soft" : "off") ?>" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['plugincode']) ?></textarea>
 			</div>
 			<!-- PHP text editor end -->
 		</div>
@@ -541,7 +541,7 @@ function bold($cond = false) {
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabConfig"));</script>
 			<div class="container container-body">
 				<div class="form-group">
-					<a href="javascript:;" class="btn btn-primary" onclick='setDefaults(this);return false;'><?= $_lang['set_default_all'] ?></a>
+					<a href="javascript:;" class="btn btn-primary" onclick="setDefaults(this);return false;"><?= $_lang['set_default_all'] ?></a>
 				</div>
 				<div id="displayparamrow">
 					<div id="displayparams"></div>
@@ -562,8 +562,8 @@ function bold($cond = false) {
 								<option>&nbsp;</option>
 								<?php
 								$ds = $modx->db->select('sm.id,sm.name,sm.guid', $modx->getFullTableName("site_modules") . " sm 
-							INNER JOIN " . $modx->getFullTableName("site_module_depobj") . " smd ON smd.module=sm.id AND smd.type=30
-							INNER JOIN " . $modx->getFullTableName("site_plugins") . " sp ON sp.id=smd.resource", "smd.resource='{$id}' AND sm.enable_sharedparams='1'", 'sm.name');
+								INNER JOIN " . $modx->getFullTableName("site_module_depobj") . " smd ON smd.module=sm.id AND smd.type=30
+								INNER JOIN " . $modx->getFullTableName("site_plugins") . " sp ON sp.id=smd.resource", "smd.resource='{$id}' AND sm.enable_sharedparams='1'", 'sm.name');
 								while($row = $modx->db->getRow($ds)) {
 									echo "<option value='" . $row['guid'] . "'" . ($content["moduleguid"] == $row["guid"] ? " selected='selected'" : "") . ">" . $modx->htmlspecialchars($row["name"]) . "</option>";
 								}
@@ -574,12 +574,12 @@ function bold($cond = false) {
 					</div>
 				</div>
 				<div class="form-group">
-					<a href="javascript:;" class="btn btn-primary" onclick='tpSnippet.pages[1].select();showParameters(this);return false;'><?= $_lang['update_params'] ?></a>
+					<a href="javascript:;" class="btn btn-primary" onclick="tpSnippet.pages[1].select();showParameters(this);return false;"><?= $_lang['update_params'] ?></a>
 				</div>
 			</div>
 			<!-- HTML text editor start -->
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" name="properties" class="phptextarea" rows="20" onChange='showParameters(this);documentDirty=true;'><?= $content['properties'] ?></textarea>
+				<textarea dir="ltr" name="properties" class="phptextarea" rows="20" onChange="showParameters(this);documentDirty=true;"><?= $content['properties'] ?></textarea>
 			</div>
 			<!-- HTML text editor end -->
 		</div>
@@ -637,7 +637,7 @@ function bold($cond = false) {
 							echo '<hr class="clear">';
 							echo '<div class="form-group"><b>' . $row['groupname'] . '</b></div>';
 						}
-						$evtnames[] = '<input name="sysevents[]" id="' . $row['name'] . '" type="checkbox" ' . (in_array($row['id'], $evts) ? " checked='checked' " : "") . 'class="inputBox" value="' . $row['id'] . '" /> <label for="' . $row['name'] . '" ' . bold(in_array($row['id'], $evts)) . '> ' . $row['name'] . '</label>' . "\n";
+						$evtnames[] = '<input name="sysevents[]" id="' . $row['name'] . '" type="checkbox" ' . (in_array($row['id'], $evts) ? ' checked="checked" ' : '') . 'class="inputBox" value="' . $row['id'] . '" /> <label for="' . $row['name'] . '" ' . bold(in_array($row['id'], $evts)) . '> ' . $row['name'] . '</label>' . "\n";
 						if(count($evtnames) == 2) {
 							echoEventRows($evtnames);
 						}
@@ -661,7 +661,7 @@ function bold($cond = false) {
 			<h2 class="tab"><?= $_lang['information'] ?></h2>
 			<script type="text/javascript">tpSnippet.addTabPage(document.getElementById("tabDocBlock"));</script>
 			<div class="container container-body">
-				<?= $docBlockList; ?>
+				<?= $docBlockList ?>
 			</div>
 		</div>
 
