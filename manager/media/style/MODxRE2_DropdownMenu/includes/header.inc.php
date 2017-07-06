@@ -134,6 +134,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 		}
 
 		var documentDirty = false;
+		var timerForUnload;
 
 		function checkDirt(evt) {
 			if(documentDirty === true) {
@@ -144,7 +145,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				if(evt) {
 					evt.returnValue = message;
 				}
-				stopWorker();
+				timerForUnload = setTimeout('stopWorker()', 100);
 				return message;
 			}
 		}
@@ -194,6 +195,10 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 			window.onload = function() {
 				document_onload()
 			}
+		}
+
+		window.onunload = function() {
+			clearTimeout(timerForUnload);
 		}
 
 		/* ]]> */
