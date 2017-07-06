@@ -5,6 +5,7 @@
 @import "css/cols.css";
 @import "css/forms.css";
 @import "css/actionbuttons.css";
+@import "css/tables.css";
 html, body { height: 100% }
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1 { font-size: 1.5em; line-height: 1.5rem; padding: 0.8rem; margin: 0; }
@@ -268,7 +269,7 @@ table th { font-weight: 500; }
 .table--edit th { width: 200px; color: #555; font-size: inherit; }
 .table--edit input[type="text"], .table--edit input[type="password"], .table--edit input[type="number"], .table--edit textarea, .table--edit select, .settings input[type="text"], .settings input[type="password"], .settings input[type="number"], .settings textarea, .settings select { width: 300px; }
 .table th, .table td, .sectionBody td, .sectionBody th { padding: 0.15rem 0.25rem; }
-.table tr:first-child > th, .table tr:first-child > td, .sectionBody tr:first-child > td, .sectionBody tr:first-child > th { border-top: none }
+.table tr:first-child > th, .table tr:first-child > td, .sectionBody tr:first-child > td, .sectionBody tr:first-child > th { /*border-top: none*/ }
 /* STYLES FOR HELP */
 #helpPane h1 { font-size: 20px; display: block; border-bottom: 1px solid #888; margin-bottom: 1em; font-weight: 500; }
 #helpPane li:not(:first-child) > strong { margin-top: 1.4em; }
@@ -409,7 +410,10 @@ ul.elements_buttonbar .fa { font-size: 0.875rem; padding: 1px 1px 0; }
 #modxrecent_widget table li:last-child { border-bottom-width: 0; padding-bottom: 0; }
 #content_body #which_editor { margin-top: 12px; }
 /* resource children list */
-#tabChildren select[name="dir"], #tabChildren select[name="sort"] { margin-top: 10px; margin-bottom: 5px; margin-right: 10px; padding: 3px; font-size: 12px; }
+#tabChildren .grid th, #tabChildren .grid tr > td:nth-child(5), #tabChildren .grid tr > td:nth-child(6)  { text-align: center; white-space: nowrap }
+#tabChildren .grid td { text-align: right; white-space: nowrap }
+#tabChildren .grid tr > th:nth-child(2), #tabChildren .grid tr > td:nth-child(2) { text-align: left; white-space: normal }
+#tabChildren .grid tr > td:nth-child(6) a { padding: 0 .2em; font-size: 0.9rem; color: #444; }
 table.actionButtons { margin-top: 1rem; margin-bottom: 10px; }
 table.actionButtons img { display: inline-block; }
 table.actionButtons .searchtext { padding: 5px; height: 24px; width: 150px; }
@@ -470,7 +474,6 @@ tr.userIdle td strong:before { font-family: "FontAwesome"; font-style: normal; f
 #file_editfile.section .sectionBody { margin: 0 !important; padding: 0 0 1rem; border: none; border-bottom: 1px solid #ddd; background-color: #F9F9F9 }
 #file_editfile td { padding: 0 !important; }
 #file_editfile #content { float: left; width: 100%; min-height: 25rem; border: none; border-bottom: 1px solid rgba(0, 0, 0, .15) }
-#file_editfile .CodeMirror { margin: 0 !important; border: none !important; border-bottom: 1px solid rgba(0, 0, 0, .15) !important; }
 /*responsive buttons*/
 .actionButtons .fa { display: none; text-align: center; font-size: 1em; line-height: 1em; width: 1.1em; vertical-align: initial }
 .sectionBody .actionButtons .fa, .actionButtons--eit .fa { display: inline-block; }
