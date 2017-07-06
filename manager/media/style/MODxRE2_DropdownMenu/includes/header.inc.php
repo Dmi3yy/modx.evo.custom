@@ -47,7 +47,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 
 		function document_onload() {
 			stopWorker();
-			//hideLoader();
+
 			<?php
 			if(isset($_REQUEST['r']) && preg_match('@^[0-9]+$@', $_REQUEST['r'])) {
 				echo 'doRefresh(' . $_REQUEST['r'] . ");\n";
@@ -58,14 +58,14 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				actionSelect = document.getElementById('stay');
 			if(actionButtons !== null && actionSelect !== null) {
 				var actionPlus = actionButtons.querySelector('.plus'),
-					actionSaveButton = actionButtons.querySelector('a#Button1') || actionButtons.querySelector('#Button1 > a'),
+					actionSaveButton = actionButtons.querySelector('#Button1 > a'),
 					actionStay = [];
 				actionPlus.classList.add('dropdown-toggle');
 				actionStay['stay1'] = '<i class="<?php echo $_style['actions_file'] ?>"></i>';
 				actionStay['stay2'] = '<i class="<?php echo $_style['actions_pencil'] ?>"></i>';
 				actionStay['stay3'] = '<i class="<?php echo $_style['actions_reply'] ?>"></i>';
 				if(actionSelect.value) {
-					actionSaveButton.innerHTML += '<i class="<?php echo $_style['actions_plus'] ?>"></i><span> + </span>' + actionStay['stay' + actionSelect.value] + '<span>' + actionSelect.children['stay' + actionSelect.value].innerHTML + '</span>'
+					actionSaveButton.innerHTML += '<i class="<?php echo $_style['actions_plus'] ?>"></i> + ' + actionStay['stay' + actionSelect.value] + ' ' + actionSelect.children['stay' + actionSelect.value].innerText
 				}
 				var actionSelectNewOption = null,
 					actionSelectOptions = actionSelect.children,
@@ -75,9 +75,8 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				for(var i = 0; i < actionSelectOptions.length; i++) {
 					if(!actionSelectOptions[i].selected) {
 						actionSelectNewOption = document.createElement('SPAN');
-						actionSelectNewOption.className = 'btn btn-block';
 						actionSelectNewOption.dataset.id = i;
-						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' <span>' + actionSelect.children[i].innerHTML + '</span>';
+						actionSelectNewOption.innerHTML = actionStay[actionSelect.children[i].id] + ' ' + actionSelect.children[i].innerHTML;
 						actionSelectNewOption.onclick = function() {
 							var s = actionSelect.querySelector('option[selected=selected]');
 							if(s) s.selected = false;
@@ -134,6 +133,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 		}
 
 		var documentDirty = false;
+		var timerForUnload;
 
 		function checkDirt(evt) {
 			if(documentDirty === true) {
@@ -144,7 +144,7 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				if(evt) {
 					evt.returnValue = message;
 				}
-				stopWorker();
+				timerForUnload = setTimeout('stopWorker()', 100);
 				return message;
 			}
 		}
@@ -155,14 +155,6 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 				document.forms[fName].elements[i].disabled = 'disabled';
 			}
 		}
-
-		var managerPath = "";
-
-		function hideLoader() {
-			document.getElementById('preLoader').style.display = "none";
-		}
-//
-//		hideL = window.setTimeout("hideLoader()", 1500);
 
 		// add the 'unsaved changes' warning event handler
 		if(typeof window.addEventListener !== "undefined") {
@@ -194,6 +186,10 @@ if(!empty($_COOKIE['MODX_themeColor'])) {
 			window.onload = function() {
 				document_onload()
 			}
+		}
+
+		window.onunload = function() {
+			clearTimeout(timerForUnload);
 		}
 
 		/* ]]> */
