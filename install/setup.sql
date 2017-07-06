@@ -914,6 +914,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('remember_last_tab', '1'),
 ('enable_bindings', '1'),
 ('seostrict', '1'),
+('number_of_results','30'),
 ('theme_refresher','');
 
 REPLACE INTO `{PREFIX}user_roles` 
