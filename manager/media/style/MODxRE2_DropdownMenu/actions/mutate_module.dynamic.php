@@ -547,11 +547,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<!-- PHP text editor start -->
 			<div class="navbar navbar-editor">
 				<span><?= $_lang['module_code'] ?></span>
-				<span class="float-xs-right"><?= $_lang['wrap_lines'] ?> <input name=" wrap" type="checkbox" <?= ($content['wrap'] == 1 ? ' checked="checked"' : '') ?> onclick="setTextWrap(document.mutate.post,this.checked)" />
-				</span>
 			</div>
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" class="phptextarea" name="post" rows="20" wrap="<?= ($content['wrap'] == 1 ? 'soft' : 'off') ?>" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['modulecode']) ?></textarea>
+				<textarea dir="ltr" class="phptextarea" name="post" rows="20" wrap="soft" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['modulecode']) ?></textarea>
 			</div>
 			<!-- PHP text editor end -->
 		</div>
@@ -597,7 +595,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			</div>
 			<!-- HTML text editor start -->
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" name="properties" class="phptextarea" rows="20" onChange="showParameters(this);documentDirty=true;"><?= $content['properties'] ?></textarea>
+				<textarea dir="ltr" name="properties" class="phptextarea" rows="20" wrap="soft" onChange="showParameters(this);documentDirty=true;"><?= $content['properties'] ?></textarea>
 			</div>
 			<!-- HTML text editor end -->
 		</div>
