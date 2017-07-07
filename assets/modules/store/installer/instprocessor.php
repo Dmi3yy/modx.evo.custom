@@ -288,7 +288,7 @@ if (isset ($_POST['module']) || $installData) {
                 $rs = $modx->db->query("SELECT * FROM `" . $table_prefix . "site_modules` WHERE name='$name'");
                 if ($modx->db->getRecordCount($rs)) {
                     $row = $modx->db->getRow($rs,'assoc');
-                    $props = propUpdate($properties,$modx->db->escape($row['properties']));
+                    $props = $modx->db->escape(propUpdate($properties,$row['properties']));
                     if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', enable_sharedparams='$shared' WHERE name='$name';")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -347,7 +347,7 @@ if (isset ($_POST['plugin']) || $installData) {
                 if ($modx->db->getRecordCount($rs)) {
                     $insert = true;
                     while($row = $modx->db->getRow($rs,'assoc')) {
-                        $props = propUpdate($properties,$modx->db->escape($row['properties']));
+                        $props = $modx->db->escape(propUpdate($properties,$row['properties']));
                         if($row['description'] == $desc){
                             if (!@ $modx->db->query("UPDATE `" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE id='{$row['id']}';")) {
                                 echo "<p>" . mysql_error() . "</p>";
@@ -423,7 +423,7 @@ if (isset ($_POST['snippet']) || $installData) {
                 if ($modx->db->getRecordCount($rs)) {
                 
                     $row = $modx->db->getRow($rs,'assoc');
-                    $props = propUpdate($properties,$modx->db->escape($row['properties']));
+                    $props = $modx->db->escape(propUpdate($properties,$row['properties']));
                     if (!$modx->db->query("UPDATE `" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -481,33 +481,60 @@ echo "<p><b>" . $_lang['installation_successful'] . "</b></p>";
 
 // Property Update function
 function propUpdate($new,$old){
-    // Split properties up into arrays
-    $returnArr = array();
-    $newArr = explode("&",$new);
-    $oldArr = explode("&",$old);
-
-    foreach ($newArr as $k => $v) {
-        if(!empty($v)){
-            $tempArr = explode("=",trim($v));
-            $returnArr[$tempArr[0]] = $tempArr[1];
-        }
-    }
-    foreach ($oldArr as $k => $v) {
-        if(!empty($v)){
-            $tempArr = explode("=",trim($v));
-            $returnArr[$tempArr[0]] = $tempArr[1];
-        }
-    }
-
-    // Make unique array
-    $returnArr = array_unique($returnArr);
-
-    // Build new string for new properties value
-    foreach ($returnArr as $k => $v) {
-        $return .= "&$k=$v ";
-    }
-
+    $newArr = parseProperties($new);
+    $oldArr = parseProperties($old);
+    $return = array_merge_recursive($oldArr, $newArr);
+    $return = json_encode($return, JSON_UNESCAPED_UNICODE);
     return $return;
+}
+
+function parseProperties($propertyString, $elementName = null, $elementType = null) {  
+    $propertyString = str_replace('{}', '', $propertyString ); 
+    $propertyString = str_replace('} {', ',', $propertyString );
+
+    if(empty($propertyString)) return array();
+    if($propertyString=='{}')  return array();
+    
+    $jsonFormat = isJson($propertyString, true);
+    $property = array();
+    // old format
+    if ( $jsonFormat === false) {
+        $props= explode('&', $propertyString);
+        $arr = array();
+        $key = array();
+        foreach ($props as $prop) {
+            if ($prop != ''){
+                $arr = explode(';', $prop);
+                $key = explode('=', $arr['0']);
+                $property[$key['0']]['0']['label'] = trim($key['1']);
+                $property[$key['0']]['0']['type'] = trim($arr['1']);
+                switch ($arr['1']) {
+                    case 'list':
+                    case 'list-multi':
+                    case 'checkbox':
+                    case 'radio':
+                        $property[$key['0']]['0']['value'] = trim($arr['3']);
+                        $property[$key['0']]['0']['options'] = trim($arr['2']);
+                        $property[$key['0']]['0']['default'] = trim($arr['3']);
+                        break;
+                    default:
+                        $property[$key['0']]['0']['value'] = trim($arr['2']);
+                        $property[$key['0']]['0']['default'] = trim($arr['2']);
+                }
+                $property[$key['0']]['0']['desc'] = '';
+            }
+            
+        }
+    // new json-format
+    } else if(!empty($jsonFormat)){
+        $property = $jsonFormat;
+    }
+    return $property;
+}
+
+function isJson($string, $returnData=false) {
+    $data = json_decode($string, true);
+    return (json_last_error() == JSON_ERROR_NONE) ? ($returnData ? $data : true) : false;
 }
 
 function getCreateDbCategory($category, $sqlParser) {
