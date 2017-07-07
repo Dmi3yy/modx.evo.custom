@@ -41,13 +41,14 @@ summary { display: list-item }
 .table.data th { padding: 0.75rem; text-transform: uppercase; white-space: nowrap; font-size: 0.675rem; color: #777 }
 .table.data td { padding: 0.55rem 0.75rem; }
 .table.data td, .table th { vertical-align: top; border-top: 1px solid #eceeef }
-.table.data td:first-child, .table.data th:first-child { padding-left: 1.5rem }
-.table.data td:last-child, .table.data th:last-child { padding-right: 1.5rem }
+.table.data td:first-child, .table.data th:first-child { padding-left: 1.3rem }
+.table.data td:last-child, .table.data th:last-child { padding-right: 1.3rem }
 .table.data thead { background-color: #fff; }
-.table.data > tbody > tr { -webkit-transition: background-color 0.1s; transition: background-color 0.1s; }
+.table.data > tbody > tr { background-color: #f9f9f9; transition-duration: .5s }
 .table.data > tbody > tr:nth-child(2n) { background-color: #fff }
-.table.data > tbody > tr:hover { background-color: rgba(93, 109, 202, 0.16) }
+.table.data > tbody > tr:hover { cursor: default; background-color: rgba(93, 109, 202, 0.16); transition-duration: .05s }
 .table.data a { color: #555 }
+.table.data .actions { white-space: nowrap }
 .table.data .actions a .fa { position: relative; margin: 0 0.4rem; font-size: 0.9rem; }
 .table.data .actions a:hover .fa { color: #000; }
 .table.data .actions a:hover .fa.fa-trash { color: #d80030 }

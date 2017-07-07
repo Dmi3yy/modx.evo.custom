@@ -109,7 +109,7 @@ function bold($cond = false) {
 
 		currentParams = {}; // reset;
 
-		if(ctrl) {
+		if(ctrl && ctrl.form) {
 			f = ctrl.form;
 		} else {
 			f = document.forms['mutate'];
@@ -527,10 +527,9 @@ function bold($cond = false) {
 			<!-- PHP text editor start -->
 			<div class="navbar navbar-editor">
 				<span><?= $_lang['plugin_code'] ?></span>
-				<label class="float-xs-right" for="wrap"><?= $_lang['wrap_lines'] ?> <input name="wrap" id="wrap" type="checkbox" onclick="setTextWrap(document.mutate.post,this.checked)"<?= ($content['wrap'] == 1 ? ' checked="checked"' : '') ?> /></label>
 			</div>
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="<?= ($content['wrap'] == 1 ? "soft" : "off") ?>" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['plugincode']) ?></textarea>
+				<textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="soft" onchange="documentDirty=true;"><?= $modx->htmlspecialchars($content['plugincode']) ?></textarea>
 			</div>
 			<!-- PHP text editor end -->
 		</div>

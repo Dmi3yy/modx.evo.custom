@@ -107,7 +107,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 		currentParams = {}; // reset;
 
-		if(ctrl) {
+		if(ctrl && ctrl.form) {
 			f = ctrl.form;
 		} else {
 			f = document.forms['mutate'];
@@ -483,11 +483,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 			<!-- PHP text editor start -->
 			<div class="navbar navbar-editor">
 				<span><?= $_lang['snippet_code'] ?></span>
-				<span class="float-xs-right"><?= $_lang['wrap_lines'] ?> <input name="wrap" type="checkbox" class="ml-1"<?= ($content['wrap'] == 1 ? " checked='checked'" : "") ?> onclick="setTextWrap(document.mutate.post,this.checked)" />
-				</span>
 			</div>
 			<div class="section-editor clearfix">
-				<textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="<?= $content['wrap'] == 1 ? "soft" : "off" ?>" onchange="documentDirty=true;"><?= (isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php" . "\n" . trim($modx->htmlspecialchars($content['snippet'])) . "\n") ?></textarea>
+				<textarea dir="ltr" name="post" class="phptextarea" rows="20" wrap="soft" onchange="documentDirty=true;"><?= (isset($content['post']) ? trim($modx->htmlspecialchars($content['post'])) : "<?php" . "\n" . trim($modx->htmlspecialchars($content['snippet'])) . "\n") ?></textarea>
 			</div>
 			<!-- PHP text editor end -->
 		</div>
