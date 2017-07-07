@@ -20,7 +20,7 @@
 - [F] when modx installed in folder, request of home page with parameters causes endless redirect
 - KCFinder thumb generation fixed on some php7 systems
 - [Fix] #1377 $modx->getDocumentChildrenTVars()
-- [F] check for 'register_globals' fixed #1370
+- [F]  check for 'register_globals' fixed #1370
 
 
 1.2.1-d9.1.7 (21.06.2017)
