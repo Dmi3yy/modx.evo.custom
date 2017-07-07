@@ -1,7 +1,7 @@
 Сайт сборки: http://modx.com.ua
 
 Актуальная версия: https://github.com/dmi3yy/modx.evo.custom/releases
-1.2.1-d9.1.8 (07.07.2017)
+1.2.1-d9.1.8 (08.07.2017)
 =======================================================
 - update MODxRE2_dropdown theme, refactor html form on elements and others pages
 - update FormLister
