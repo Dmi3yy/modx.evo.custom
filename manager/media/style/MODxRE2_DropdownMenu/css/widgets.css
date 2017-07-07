@@ -1,17 +1,23 @@
 /* widgets */
 .widgets .card { margin-bottom: .75rem; border: none; border-radius: 0.15rem; background-color: #fff; box-shadow: 0 .1rem .3rem rgba(0, 0, 0, .05) }
-.widgets .card-header { padding: .75rem 1rem; font-size: .675rem; color: #616a73; text-transform: uppercase; font-weight: 900; border: none; background-color: #fff; }
+.widgets .card-header { padding: .75rem 1rem; font-size: .675rem; color: #616a73; text-transform: uppercase; font-weight: 900; border: none; background-color: #fff; box-shadow: inset 0 -0.5rem 2rem rgba(32, 35, 41, 0.07); }
 .widgets .card-header .fa { font-size: .9rem }
 .widgets .card-block { padding: 0; }
-.widgets .card-block p { padding: 0 1rem }
-.widgets .wm_buttons { padding: .5rem 1rem; text-align: center }
-.widgets .wm_button { display: inline-block; margin: 0 .5rem 1rem; }
-.widgets .wm_button .fa { min-width: 3rem }
+.widgets .card-block .card-block p { padding: 0 1rem }
+.widgets .card-block .card-body { padding: 1rem; }
+.widgets .card-block .card-body + .card-body { padding-top: 0 }
 .widgets .table { margin-bottom: 1rem }
-.widgets .table.data tbody tr:not(:hover) { background-color: #fff }
-.widgets .table.data tbody tr:nth-child(4n+1):not(:hover) { background-color: #f6f8f8 }
-.widgets .table.data tbody tr:nth-child(2n) { background-color: #fff }
 .widgets .table:not(.data) tr th, .widgets .table:not(.data) tr td { padding: .15rem; }
 .widgets .table tr th:first-child, .widgets .table tr td:first-child { padding-left: 1rem !important }
 .widgets .table tr th:last-child, .widgets .table tr td:last-child { padding-right: 1rem !important }
 .widgets .table .actions a .fa { margin: 0 .05rem; }
+/* custom */
+.widgets #welcome .wm_buttons { text-align: center }
+.widgets #welcome .wm_button { display: inline-block; margin: 0 .5rem 1rem; }
+.widgets #welcome .wm_button a { display: inline-block; text-decoration: none; color: #444; }
+.widgets #welcome .wm_button a .fa { display: inline-block; min-width: 3rem; color: #646b7b; }
+.widgets #welcome .wm_button a:hover .fa { color: #373b46; }
+.widgets #welcome .wm_button a .fa + span { display: block; font-size: .675rem }
+.widgets #modxrecent_widget .table.data tbody tr:not(:hover) { background-color: #fff }
+.widgets #modxrecent_widget .table.data tbody tr:nth-child(4n+1):not(:hover) { background-color: #f6f8f8 }
+.widgets #modxrecent_widget .table.data tbody tr:nth-child(2n) { background-color: #fff }
