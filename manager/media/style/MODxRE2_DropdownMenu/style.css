@@ -7,7 +7,6 @@
 @import "css/actionbuttons.css";
 @import "css/tables.css";
 @import "css/widgets.css";
-html, body { height: 100% }
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1 { font-size: 1.5em; line-height: 1.5rem; padding: 0.8rem; margin: 0; }
 h1 .fa { margin-right: 0.25em; color: #1377c5; }
@@ -411,7 +410,7 @@ ul.elements_buttonbar .fa { font-size: 0.875rem; padding: 1px 1px 0; }
 #modxrecent_widget table li:last-child { border-bottom-width: 0; padding-bottom: 0; }*/
 #content_body #which_editor { margin-top: 12px; }
 /* resource children list */
-#tabChildren .grid th, #tabChildren .grid tr > td:nth-child(5), #tabChildren .grid tr > td:nth-child(6)  { text-align: center; white-space: nowrap }
+#tabChildren .grid th, #tabChildren .grid tr > td:nth-child(5), #tabChildren .grid tr > td:nth-child(6) { text-align: center; white-space: nowrap }
 #tabChildren .grid td { text-align: right; white-space: nowrap }
 #tabChildren .grid tr > th:nth-child(2), #tabChildren .grid tr > td:nth-child(2) { text-align: left; white-space: normal }
 #tabChildren .grid tr > td:nth-child(6) a { padding: 0 .2em; font-size: 0.9rem; color: #444; }
