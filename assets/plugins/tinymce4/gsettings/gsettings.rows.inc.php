@@ -1,6 +1,5 @@
 <?php
 
-global $params;
 
 // Hold general settings based on old Modx TinyMCE-Settings
 
