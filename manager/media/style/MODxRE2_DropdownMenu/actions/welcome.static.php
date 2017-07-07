@@ -156,7 +156,7 @@ if($modx->db->getRecordCount($rs) < 1) {
 			<th>ID</th>
 			<th>[%onlineusers_ipaddress%]</th>
 			<th>[%onlineusers_lasthit%]</th>
-			<th>[%onlineusers_action%]</th>
+			<th>[%onlineusers_action%]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 		</tr>
 	</thead>
 	<tbody>';
