@@ -121,7 +121,7 @@ $tpl = '
 	</tr>
 </table>';
 
-$nrnewmessages = '<span style="color:red;">' . $_SESSION['nrnewmessages'] . '</span>';
+$nrnewmessages = '<span class="text-danger">' . $_SESSION['nrnewmessages'] . '</span>';
 
 $ph['UserInfo'] = $modx->parseText($tpl, array(
 	'username' => $modx->getLoginUserName(),
@@ -144,10 +144,10 @@ if($modx->db->getRecordCount($rs) < 1) {
 	$ph['now'] = strftime('%H:%M:%S', $now);
 	$timetocheck = ($now - (60 * 20)); //+$server_offset_time;
 	$html = '
-	[%onlineusers_message%] 
-	<b>[+now+]</b>):
-	<br />
-	<br />
+	<p>
+		[%onlineusers_message%] 
+		<b>[+now+]</b>):
+	</p>
 	<div class="table-responsive">
 	<table class="table table-hover table-condensed">
 	<thead>
@@ -321,7 +321,7 @@ $widgets['news'] = array(
 	'cols' => 'col-sm-6',
 	'icon' => 'fa-rss',
 	'title' => '[%modx_news_title%]',
-	'body' => '<div style="max-height:200px;overflow-y: scroll;">[+modx_news_content+]</div>'
+	'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_news_content+]</div>'
 );
 $widgets['security'] = array(
 	'menuindex' => '50',
@@ -329,7 +329,7 @@ $widgets['security'] = array(
 	'cols' => 'col-sm-6',
 	'icon' => 'fa-exclamation-triangle',
 	'title' => '[%security_notices_title%]',
-	'body' => '<div style="max-height:200px;overflow-y: scroll;">[+modx_security_notices_content+]</div>'
+	'body' => '<div style="max-height:200px;overflow-y: scroll;padding: 1rem .5rem">[+modx_security_notices_content+]</div>'
 );
 
 // invoke OnManagerWelcomeHome event
@@ -416,8 +416,8 @@ echo $content;
 //</span>
 function getTplWidget() { // recent document info
 	return '
-		<div class="[+cols+] pr-0" id="[+id+]">
-			<div class="card mb-1">
+		<div class="[+cols+]" id="[+id+]">
+			<div class="card">
 				<div class="card-header"> <i class="fa [+icon+]"></i> [+title+] </div>
 				<div class="card-block"> [+body+] </div>
 			</div>
@@ -432,14 +432,14 @@ function getRecentInfo() { // recent document info
 
 	$html = '
 			<div class="table-responsive">
-				<table class="table table-hover table-condensed">
+				<table class="table data table-hover table-condensed">
 					<thead>
 						<tr>
-							<th style="width: 50px;">[%id%]</th>
+							<th style="width: 1%">[%id%]</th>
 							<th>[%resource_title%]</th>
-							<th style="width: 140px;">[%page_data_edited%]</th>
-							<th style="width: 180px;">[%user%]</th>
-							<th style="width: 180px; text-align: right;">[%mgrlog_action%]</th>
+							<th style="width: 1%">[%page_data_edited%]</th>
+							<th style="width: 1%">[%user%]</th>
+							<th style="width: 1%; text-align: center">[%mgrlog_action%]</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -462,8 +462,8 @@ function getRecentInfoList() {
 
 	$tpl = getRecentInfoRowTpl();
 
-	$btntpl['edit'] = '<a class="btn btn-sm btn-success" title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]"><i class="fa fa-edit fa-fw"></i></a> ';
-	$btntpl['preview_btn'] = '<a class="btn btn-sm btn-info [+preview_disabled+]" title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
+	$btntpl['edit'] = '<a title="[%edit_resource%]" href="index.php?a=27&amp;id=[+id+]"><i class="fa fa-edit fa-fw"></i></a> ';
+	$btntpl['preview_btn'] = '<a [+preview_disabled+]" title="[%preview_resource%]" target="_blank" href="../index.php?&amp;id=[+id+]"><i class="fa fa-eye fa-fw"></i></a> ';
 
 	$output = array();
 	while($ph = $modx->db->getRow($rs)) {
@@ -472,9 +472,9 @@ function getRecentInfoList() {
 		$ph['username'] = $_['username'];
 
 		if($ph['deleted'] == 1) {
-			$ph['status'] = 'deleted';
+			$ph['status'] = 'deleted text-danger';
 		} elseif($ph['published'] == 0) {
-			$ph['status'] = 'unpublished';
+			$ph['status'] = 'unpublished font-italic text-muted';
 		} else {
 			$ph['status'] = 'published';
 		}
@@ -496,9 +496,9 @@ function getRecentInfoList() {
 
 		if($modx->hasPermission('delete_document')) {
 			if($ph['deleted'] == 0) {
-				$delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" class="btn btn-sm btn-danger" title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]"><i class="fa fa-trash fa-fw"></i></a> ';
+				$delete_btn = '<a onclick="return confirm(\'[%confirm_delete_record%]\')" title="[%delete_resource%]" href="index.php?a=6&amp;id=[+id+]"><i class="fa fa-trash fa-fw"></i></a> ';
 			} else {
-				$delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" class="btn btn-sm btn-success" title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
+				$delete_btn = '<a onclick="return confirm(\'[%confirm_undelete%]\')" title="[%undelete_resource%]" href="index.php?a=63&amp;id=[+id+]"><i class="fa fa-arrow-circle-o-up fa-fw"></i></a> ';
 			}
 			$ph['delete_btn'] = str_replace('[+id+]', $docid, $delete_btn);
 		} else {
@@ -506,17 +506,17 @@ function getRecentInfoList() {
 		}
 
 		if($ph['deleted'] == 1 && $ph['published'] == 0) {
-			$publish_btn = '<a class="btn btn-sm btn-primary disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+			$publish_btn = '<a class="disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
 		} elseif($ph['deleted'] == 1 && $ph['published'] == 1) {
-			$publish_btn = '<a class="btn btn-sm btn-primary disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+			$publish_btn = '<a class="disabled" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
 		} elseif($ph['deleted'] == 0 && $ph['published'] == 0) {
-			$publish_btn = '<a class="btn btn-sm btn-primary" title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
+			$publish_btn = '<a title="[%publish_resource%]" href="index.php?a=61&amp;id=[+id+]"><i class="fa fa-arrow-up fa-fw"></i></a> ';
 		} else {
-			$publish_btn = '<a class="btn btn-sm btn-warning" title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
+			$publish_btn = '<a title="[%unpublish_resource%]" href="index.php?a=62&amp;id=[+id+]"><i class="fa fa-arrow-down fa-fw"></i></a> ';
 		}
 		$ph['publish_btn'] = str_replace('[+id+]', $docid, $publish_btn);
 
-		$ph['info_btn'] = str_replace('[+id+]', $docid, '<a class="btn btn-sm btn-default btn-expand btn-action" title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info fa-fw"></i></a>');
+		$ph['info_btn'] = str_replace('[+id+]', $docid, '<a title="[%resource_overview%]" data-toggle="collapse" data-target=".collapse[+id+]"><i class="fa fa-info fa-fw"></i></a>');
 
 		if($ph['longtitle'] == '') {
 			$ph['longtitle'] = '(<i>[%not_set%]</i>)';
@@ -539,27 +539,25 @@ function getRecentInfoList() {
 function getRecentInfoRowTpl() {
 	$tpl = '
 						<tr>
-							<td data-toggle="collapse" data-target=".collapse[+id+]"><span class="label label-info">[+id+]</span></td>
-							<td><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]">[+pagetitle+]</a></td>
-							<td data-toggle="collapse" data-target=".collapse[+id+]">[+editedon:math("%s+[(server_offset_time)]"):dateFormat+]</td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right"><span class="label label-info">[+id+]</span></td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]"><a class="[+status+]" title="[%edit_resource%]" href="index.php?a=3&amp;id=[+id+]">[+pagetitle+]</a></td>
+							<td data-toggle="collapse" data-target=".collapse[+id+]" class="text-right">[+editedon:math("%s+[(server_offset_time)]"):dateFormat+]</td>
 							<td data-toggle="collapse" data-target=".collapse[+id+]">[+username+]</td>
-							<td style="text-align: right;">[+edit_btn+][+preview_btn+][+delete_btn+][+publish_btn+][+info_btn+]</td>
+							<td style="text-align: right;" class="actions">[+edit_btn+][+preview_btn+][+delete_btn+][+publish_btn+][+info_btn+]</td>
 						</tr>
-						<tr>
-							<td colspan="6" class="hiddenRow">
-								<div class="resource-overview-accordian collapse collapse[+id+]">
-									<div class="overview-body small">
-										<ul>
-											<li><b>[%long_title%]</b>: [+longtitle+]</li>
-											<li><b>[%description%]</b>: [+description+]</li>
-											<li><b>[%resource_summary%]</b>: [+longtitle+]</li>
-											<li><b>[%type%]</b>: [+type:is(reference):then([%weblink%]):else([%resource%])+]</li>
-											<li><b>[%resource_alias%]</b>: [+alias+]</li>
-											<li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>
-											<li><b>[%resource_opt_show_menu%]</b>: [+hidemenu:is(0):then([%yes%]):else([%no%])+]</li>
-											<li><b>[%page_data_template%]</b>: [+template:templatename+]</li>
-										</ul>
-									</div>
+						<tr class="resource-overview-accordian collapse collapse[+id+]">
+							<td colspan="6">
+								<div class="overview-body text-small">
+									<ul>
+										<li><b>[%long_title%]</b>: [+longtitle+]</li>
+										<li><b>[%description%]</b>: [+description+]</li>
+										<li><b>[%resource_summary%]</b>: [+longtitle+]</li>
+										<li><b>[%type%]</b>: [+type:is(reference):then([%weblink%]):else([%resource%])+]</li>
+										<li><b>[%resource_alias%]</b>: [+alias+]</li>
+										<li><b>[%page_data_cacheable%]</b>: [+cacheable:is(1):then([%yes%]):else([%no%])+]</li>
+										<li><b>[%resource_opt_show_menu%]</b>: [+hidemenu:is(0):then([%yes%]):else([%no%])+]</li>
+										<li><b>[%page_data_template%]</b>: [+template:templatename+]</li>
+									</ul>
 								</div>
 							</td>
 						</tr>';
@@ -576,16 +574,24 @@ function getStartUpScript() {
         <script type="text/javascript">
         function hideConfigCheckWarning(key) {
         	var xhr = new XMLHttpRequest();
-        	xhr.open(\'POST\', \'index.php?a=118\', true);
-        	xhr.setRequestHeader(\'Content-Type\', \'application/x-www-form-urlencoded;\');
+        	xhr.open("POST", "index.php?a=118", true);
+        	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
         	xhr.onload = function() {
         		if(this.readyState === 4) {
-        			var fieldset = document.getElementById(key + \'_warning_wrapper\').parentNode.parentNode;
+        			var fieldset = document.getElementById(key + "_warning_wrapper").parentNode.parentNode;
         			fieldset.className = "collapse";
         		}
         	};
-        	xhr.send(\'action=setsetting&key=_hide_configcheck_\' + key + \'&value=1\');
+        	xhr.send("action=setsetting&key=_hide_configcheck_" + key + "&value=1");
         }
+		(function($) {
+			$("[data-toggle=\"collapse\"]").click(function(e) {
+				if(e.target.tagName == "A") return;
+				if($(this).data("target")) {
+					$($(this).data("target")).toggleClass("in")
+				}
+			});
+		})(jQuery);        
         </script>
 ';
 	return $script;

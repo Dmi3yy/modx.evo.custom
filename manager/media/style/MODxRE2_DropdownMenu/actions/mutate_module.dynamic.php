@@ -125,7 +125,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 		currentParams = {}; // reset;
 
-		if(ctrl) {
+		if(ctrl && ctrl.form) {
 			f = ctrl.form;
 		} else {
 			f = document.forms['mutate'];

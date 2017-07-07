@@ -6,6 +6,7 @@
 @import "css/forms.css";
 @import "css/actionbuttons.css";
 @import "css/tables.css";
+@import "css/widgets.css";
 html, body { height: 100% }
 /* -------------------------[ Headers and Paragraphs ]--- */
 h1 { font-size: 1.5em; line-height: 1.5rem; padding: 0.8rem; margin: 0; }
@@ -391,7 +392,7 @@ ul.elements_buttonbar .fa { font-size: 0.875rem; padding: 1px 1px 0; }
 #range input#pids + input[name=fsubmit] { margin-top: 0.5rem; }
 #range::after { content: ""; display: table; width: 100% }
 /* dashboard */
-.dashboard .wm_logo { margin: 1rem 1rem 10px 10px; }
+/*.dashboard .wm_logo { margin: 1rem 1rem 10px 10px; }
 .dashboard .wm_logo img { height: 56px; }
 .wm_buttons a { font-weight: normal !important; color: #3d5764 !important; }
 .wm_buttons .fa { margin-bottom: 5px; font-size: 2em; }
@@ -407,7 +408,7 @@ ul.elements_buttonbar .fa { font-size: 0.875rem; padding: 1px 1px 0; }
 #modxrecent_widget .table-condensed > tbody > tr > td.hiddenRow { padding: 0; border: none }
 #modxrecent_widget table ul { margin: 0; padding: 0; }
 #modxrecent_widget table li { padding: 3px 5px; }
-#modxrecent_widget table li:last-child { border-bottom-width: 0; padding-bottom: 0; }
+#modxrecent_widget table li:last-child { border-bottom-width: 0; padding-bottom: 0; }*/
 #content_body #which_editor { margin-top: 12px; }
 /* resource children list */
 #tabChildren .grid th, #tabChildren .grid tr > td:nth-child(5), #tabChildren .grid tr > td:nth-child(6)  { text-align: center; white-space: nowrap }
@@ -428,7 +429,6 @@ table.actionButtons .searchtext { padding: 5px; height: 24px; width: 150px; }
 .pagetitle-icon { margin-right: 2px; color: #1377c5; }
 /* element-edit-message */
 .msg-container { padding-bottom: 10px; border-bottom: 1px solid #ededed; margin-bottom: 1rem; color: #777; }
-.userprofiletable { margin-bottom: -20px; }
 .btn-small { padding: 2px 4px !important; font-size: 11px !important; }
 .relative { position: relative; }
 .modx-alert { display: block; margin: 60px 10px 10px 10px; padding: 1em; }
