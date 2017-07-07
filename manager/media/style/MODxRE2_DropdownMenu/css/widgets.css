@@ -22,4 +22,4 @@
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(4n+1):not(:hover) { background-color: #f6f8f8 }
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(2n) { background-color: #fff }
 /* dark */
-.dark .widgets .card-header { color: #fff; background-color: #282c34 }
+/*.dark .widgets .card-header { color: #fff; background-color: #282c34 }*/
