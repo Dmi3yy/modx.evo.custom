@@ -1,7 +1,30 @@
 Сайт сборки: http://modx.com.ua
 
 Актуальная версия: https://github.com/dmi3yy/modx.evo.custom/releases
+1.2.1-d9.1.8 (07.07.2017)
+=======================================================
+- update MODxRE2_dropdown theme, refactor html form on elements and others pages
+- update FormLister
+- update Doclister
+- fix errors for php 7.2 
+- first step to composer
+- fix pdf ico
+- fix smtp (now normal work in port != 25)
+- fix snippet IF (brocken in 9.1.6 now work &else)
+- add for codemirror (dark-one theme, auto on in dark-mode), now you can set шт settings font size
+- refactor action buttons
+- fix OnManagerNodePrerender, OnManagerWelcomeHome, OnManagerMenuPrerender
+- fix. .pdf.html to .pdf in URL
+- add parent and menuindex in open document from drag
+- update Datapicker 
+- [F] when modx installed in folder, request of home page with parameters causes endless redirect
+- KCFinder thumb generation fixed on some php7 systems
+- [Fix] #1377 $modx->getDocumentChildrenTVars()
+- [F] check for 'register_globals' fixed #1370
+
+
 1.2.1-d9.1.7 (21.06.2017)
+=======================================================
 - Add search in 3 level menu (http://take.ms/nQaUK)
 - remove mutools from login page. 
 - fix for iOS (now normail work)
