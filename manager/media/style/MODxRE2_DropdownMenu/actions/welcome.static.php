@@ -31,27 +31,27 @@ if($modx->hasPermission('messages')) {
 
 // setup icons
 if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user')) {
-	$icon = '<i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i><br />[%security%]';
+	$icon = '<i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>[%security%]';
 	$ph['SecurityIcon'] = wrapIcon($icon, 75);
 }
 if($modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user')) {
-	$icon = '<i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i><br />[%web_users%]';
+	$icon = '<i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i>[%web_users%]';
 	$ph['WebUserIcon'] = wrapIcon($icon, 99);
 }
 if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
-	$icon = '<i class="[&icons_modules_large&]" alt="[%manage_modules%]"> </i><br />[%modules%]';
+	$icon = '<i class="[&icons_modules_large&]" alt="[%manage_modules%]"> </i>[%modules%]';
 	$ph['ModulesIcon'] = wrapIcon($icon, 106);
 }
 if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) {
-	$icon = '<i class="[&icons_resources_large&]" alt="[%element_management%]"> </i><br />[%elements%]';
+	$icon = '<i class="[&icons_resources_large&]" alt="[%element_management%]"> </i>[%elements%]';
 	$ph['ResourcesIcon'] = wrapIcon($icon, 76);
 }
 if($modx->hasPermission('bk_manager')) {
-	$icon = '<i class="[&icons_backup_large&]" alt="[%bk_manager%]"> </i><br />[%backup%]';
+	$icon = '<i class="[&icons_backup_large&]" alt="[%bk_manager%]"> </i>[%backup%]';
 	$ph['BackupIcon'] = wrapIcon($icon, 93);
 }
 if($modx->hasPermission('help')) {
-	$icon = '<i class="[&icons_help_large&]" alt="[%help%]" /> </i><br />[%help%]';
+	$icon = '<i class="[&icons_help_large&]" alt="[%help%]" /> </i>[%help%]';
 	$ph['HelpIcon'] = wrapIcon($icon, 9);
 }
 // do some config checks
@@ -98,7 +98,7 @@ if($count > 1) {
 $ph['RecentInfo'] = getRecentInfo();
 
 $tpl = '
-<table class="table table-hover table-condensed">
+<table class="table data">
 	<tr>
 		<td width="150">[%yourinfo_username%]</td>
 		<td><b>[+username+]</b></td>
@@ -144,12 +144,12 @@ if($modx->db->getRecordCount($rs) < 1) {
 	$ph['now'] = strftime('%H:%M:%S', $now);
 	$timetocheck = ($now - (60 * 20)); //+$server_offset_time;
 	$html = '
-	<p>
+	<div class="card-body">
 		[%onlineusers_message%] 
 		<b>[+now+]</b>):
-	</p>
+	</div>
 	<div class="table-responsive">
-	<table class="table table-hover table-condensed">
+	<table class="table data">
 	<thead>
 		<tr>
 			<th>[%onlineusers_user%]</th>
@@ -239,40 +239,58 @@ $widgets['welcome'] = array(
 	'icon' => 'fa-home',
 	'title' => '[%welcome_title%]',
 	'body' => '
-				<div class="wm_buttons"> 
+				<div class="wm_buttons card-body"> 
 					<!--@IF:[[#hasPermission?key=new_user]] OR [[#hasPermission?key=edit_user]]--> 
-					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=75"><i class="[&icons_security_large&]" alt="[%user_management_title%]"> </i>
-					<br />
-					[%security%]</a> </span> 
+					<span class="wm_button">
+						<a href="index.php?a=75">
+							<i class="[&icons_security_large&]" title="[%user_management_title%]"></i>
+							<span>[%security%]</span>
+						</a>
+					</span> 
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=new_web_user]] OR [[#hasPermission?key=edit_web_user]]--> 
-					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=99"><i class="[&icons_webusers_large&]" alt="[%web_user_management_title%]"> </i>
-					<br />
-					[%web_users%]</a> </span> 
+					<span class="wm_button">
+						<a href="index.php?a=99">
+							<i class="[&icons_webusers_large&]" title="[%web_user_management_title%]"></i>
+							<span>[%web_users%]</span>
+						</a>
+					</span> 
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=new_module]] OR [[#hasPermission?key=edit_module]]--> 
-					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=106"><i class="[&icons_modules_large&]" alt="[%manage_modules%]"> </i>
-					<br />
-					[%modules%]</a> </span> 
+					<span class="wm_button">
+						<a href="index.php?a=106">
+							<i class="[&icons_modules_large&]" title="[%manage_modules%]"></i>
+							<span>[%modules%]</span>
+						</a>
+					</span> 
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasAnyPermission:is(1)]] --> 
-					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=76"><i class="[&icons_resources_large&]" alt="[%element_management%]"> </i>
-					<br />
-					[%elements%]</a> </span> 
+					<span class="wm_button">
+						<a href="index.php?a=76">
+							<i class="[&icons_resources_large&]" title="[%element_management%]"></i>
+							<span>[%elements%]</span>
+						</a>
+					</span> 
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=bk_manager]]--> 
-					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=93"><i class="[&icons_backup_large&]" alt="[%bk_manager%]"> </i>
-					<br />
-					[%backup%]</a> </span> 
+					<span class="wm_button">
+						<a href="index.php?a=93">
+							<i class="[&icons_backup_large&]" title="[%bk_manager%]"></i>
+							<span>[%backup%]</span>
+						</a>
+					</span> 
 					<!--@ENDIF--> 
 					<!--@IF:[[#hasPermission?key=help]] OR [[#hasPermission?key=edit_module]]--> 
-					<span class="wm_button" style="border:0"> <a class="hometblink" href="index.php?a=9"><i class="[&icons_help_large&]" alt="[%help%]"> </i>
-					<br />
-					[%help%]</a> </span> 
+					<span class="wm_button">
+						<a href="index.php?a=9">
+							<i class="[&icons_help_large&]" title="[%help%]"></i>
+							<span>[%help%]</span>
+						</a>
+					</span> 
 					<!--@ENDIF--> 
 				</div>
-				<div class="userprofiletable">
-					<table class="table table-hover table-condensed">
+				<div class="userprofiletable card-body">
+					<table>
 						<tr>
 							<td width="150">[%yourinfo_username%]</td>
 							<td><b>[[#getLoginUserName]]</b></td>
@@ -432,7 +450,7 @@ function getRecentInfo() { // recent document info
 
 	$html = '
 			<div class="table-responsive">
-				<table class="table data table-hover table-condensed">
+				<table class="table data">
 					<thead>
 						<tr>
 							<th style="width: 1%">[%id%]</th>
@@ -566,7 +584,7 @@ function getRecentInfoRowTpl() {
 
 // setup icons
 function wrapIcon($i, $action) {
-	return sprintf('<a class="hometblink" href="index.php?a=%s"><span class="wm_button" style="border:0">%s</span></a>', $action, $i);
+	return sprintf('<a href="index.php?a=%s"><span class="wm_button" style="border:0">%s</span></a>', $action, $i);
 }
 
 function getStartUpScript() {
@@ -585,8 +603,8 @@ function getStartUpScript() {
         	xhr.send("action=setsetting&key=_hide_configcheck_" + key + "&value=1");
         }
 		(function($) {
-			$("[data-toggle=\"collapse\"]").click(function(e) {
-				if(e.target.tagName == "A") return;
+			$("[data-toggle=\'collapse\']").click(function(e) {
+				if(e.target.tagName === "A") return;
 				if($(this).data("target")) {
 					$($(this).data("target")).toggleClass("in")
 				}

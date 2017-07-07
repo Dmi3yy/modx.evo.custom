@@ -86,8 +86,8 @@ label.disabled { color: #aaa; }
 .searchtoolbarbtn img { vertical-align: middle; padding: 3px; }
 .searchtoolbarbtn:hover { text-decoration: none; border: 1px solid #88939E; background: #fff; }
 /* -------------------------[ home page main links ]--- */
-a.hometblink, a.hometblink:active, .hometblink { text-decoration: underline; color: #333; font-weight: 500; font-size: 12px; }
-a.hometblink:hover { text-decoration: underline; color: Gray; }
+/*a.hometblink, a.hometblink:active, .hometblink { text-decoration: underline; color: #333; font-weight: 500; font-size: 12px; }
+a.hometblink:hover { text-decoration: underline; color: Gray; }*/
 .notice { width: 100%; padding: 5px; border: 1px solid #eee; background-color: #f5f5f5; color: #707070; }
 #preLoader { position: absolute; z-index: 50000; width: 100%; height: 100%; text-align: center; vertical-align: middle; padding: 100px 0 0 0; background-color: rgba(0, 0, 0, 0.07); }
 .preLoaderText { background-color: #fff; margin: auto; width: 400px; padding: 50px; border: 1px solid #dadada; -webkit-border-radius: 7px; -moz-border-radius: 7px; border-radius: 7px; -webkit-box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.2); -moz-box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.2); box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.2); }
@@ -106,7 +106,7 @@ a.hometblink:hover { text-decoration: underline; color: Gray; }
 .tab-page .sectionBody { padding: 12px 0px; }
 .tab-page > table { width: 100%; border-collapse: collapse }
 /* -------------------------[ Welcome Page ]--- */
-a.hometblink, a.hometblink img { border: 0 !important; text-decoration: none !important; }
+/*a.hometblink, a.hometblink img { border: 0 !important; text-decoration: none !important; }
 .wm_header { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dotted #bbb; }
 .wm_header_title { margin: 0; }
 .wm_button { display: inline-block; margin: 0 10px 10px 0; text-align: center; }
@@ -114,7 +114,7 @@ a.hometblink, a.hometblink img { border: 0 !important; text-decoration: none !im
 .wm_messages .comment { font-size: 12px; }
 .wm_messages_inbox_link { text-decoration: none !important; color: #333 !important; }
 .wm_messages_inbox_link:hover { color: gray !important; }
-.table--managerWelcome { width: 100%; }
+.table--managerWelcome { width: 100%; }*/
 /* -------------------------[ Welcome Page ]--- */
 #mainActionPages { background: #f5f5f5; }
 /* -------------------------[ New sortable table class ]--- */
