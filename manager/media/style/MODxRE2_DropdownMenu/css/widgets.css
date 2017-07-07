@@ -13,13 +13,13 @@
 .widgets .table .actions a .fa { margin: 0 .05rem; }
 /* custom */
 .widgets #welcome .wm_buttons { text-align: center }
-.widgets #welcome .wm_button { display: inline-block; margin: 0 .25rem .75rem; }
-.widgets #welcome .wm_button a { display: inline-block; text-decoration: none; color: #646b7b; padding: .5rem; min-width: 6rem; background-color: #f9f9f9; border-radius: 0.25rem; box-shadow: none; transition-duration: .5s }
+.widgets #welcome .wm_button { display: inline-block; margin: 0 .15rem .5rem; }
+.widgets #welcome .wm_button a { display: inline-block; text-decoration: none; color: #646b7b; padding: .25rem; /*min-width: 6rem; background-color: #f9f9f9;*/ border-radius: 0.25rem; box-shadow: none; transition-duration: .5s }
 .widgets #welcome .wm_button a:hover { color: #373b46; background-color: #f2f2f2 }
 .widgets #welcome .wm_button a .fa { display: inline-block; }
-.widgets #welcome .wm_button a .fa + span { display: block }
+.widgets #welcome .wm_button a .fa + span { display: block; font-size:.7rem; }
 .widgets #modxrecent_widget .table.data tbody tr:not(:hover) { background-color: #fff }
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(4n+1):not(:hover) { background-color: #f6f8f8 }
 .widgets #modxrecent_widget .table.data tbody tr:nth-child(2n) { background-color: #fff }
 /* dark */
-.dark .widgets .card-header { color: #fff; background-color: #282c34 }
+/*.dark .widgets .card-header { color: #fff; background-color: #282c34 }*/
