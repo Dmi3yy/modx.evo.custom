@@ -73,7 +73,7 @@ select.form-control:focus::-ms-value { color: #464a4c; background-color: #fff }
 .form-inline .form-control-static { display: inline-block }
 .form-inline .input-group { display: inline-table; width: auto; vertical-align: middle }
 .form-inline .input-group .form-control, .form-inline .input-group .input-group-addon, .form-inline .input-group .input-group-btn { width: auto }
-.form-inline .input-group>.form-control { width: 100% }
+.form-inline .input-group > .form-control { width: 100% }
 .form-inline .form-control-label { margin-bottom: 0; vertical-align: middle }
 .form-inline .form-check { display: inline-block; margin-top: 0; margin-bottom: 0; vertical-align: middle }
 .form-inline .form-check-label { padding-left: 0 }
@@ -192,7 +192,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .input-group .form-control:active, .input-group .form-control:focus, .input-group .form-control:hover { z-index: 3 }
 .input-group .form-control, .input-group-addon, .input-group-btn { display: table-cell }
 .input-group .form-control:not(:first-child):not(:last-child), .input-group-addon:not(:first-child):not(:last-child), .input-group-btn:not(:first-child):not(:last-child) { border-radius: 0 }
-.input-group-addon, .input-group-btn { width: 1%;white-space: nowrap; vertical-align: middle }
+.input-group-addon, .input-group-btn { width: 1%; white-space: nowrap; vertical-align: middle }
 .input-group-addon { padding: .5em .75em; margin-bottom: 0; font-size: 0.8rem; font-weight: 400; line-height: 1.25; color: #464a4c; text-align: center; background-color: #eceeef; border: 1px solid rgba(0, 0, 0, .15); border-radius: .1em }
 .input-group-addon.form-control-sm, .input-group-sm > .input-group-addon, .input-group-sm > .input-group-btn > .input-group-addon.btn { font-size: .675rem; }
 .input-group-addon.form-control-lg, .input-group-lg > .input-group-addon, .input-group-lg > .input-group-btn > .input-group-addon.btn { font-size: 1.15rem; }
@@ -235,14 +235,14 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .custom-file-control:lang(en)::before { content: "Browse" }
 /* custom */
 .form-row { margin-bottom: 0.1875rem; }
-.form-row.row { margin-left: 0 }
+.form-row.row { margin-left: 0; margin-right: -1rem }
 .form-row label { margin-bottom: 0.15rem }
 .form-row .col, .form-row .col-1, .form-row .col-10, .form-row .col-11, .form-row .col-12, .form-row .col-2, .form-row .col-3, .form-row .col-4, .form-row .col-5, .form-row .col-6, .form-row .col-7, .form-row .col-8, .form-row .col-9, .form-row .col-lg, .form-row .col-lg-1, .form-row .col-lg-10, .form-row .col-lg-11, .form-row .col-lg-12, .form-row .col-lg-2, .form-row .col-lg-3, .form-row .col-lg-4, .form-row .col-lg-5, .form-row .col-lg-6, .form-row .col-lg-7, .form-row .col-lg-8, .form-row .col-lg-9, .form-row .col-md, .form-row .col-md-1, .form-row .col-md-10, .form-row .col-md-11, .form-row .col-md-12, .form-row .col-md-2, .form-row .col-md-3, .form-row .col-md-4, .form-row .col-md-5, .form-row .col-md-6, .form-row .col-md-7, .form-row .col-md-8, .form-row .col-md-9, .form-row .col-sm, .form-row .col-sm-1, .form-row .col-sm-10, .form-row .col-sm-11, .form-row .col-sm-12, .form-row .col-sm-2, .form-row .col-sm-3, .form-row .col-sm-4, .form-row .col-sm-5, .form-row .col-sm-6, .form-row .col-sm-7, .form-row .col-sm-8, .form-row .col-sm-9, .form-row .col-xl, .form-row .col-xl-1, .form-row .col-xl-10, .form-row .col-xl-11, .form-row .col-xl-12, .form-row .col-xl-2, .form-row .col-xl-3, .form-row .col-xl-4, .form-row .col-xl-5, .form-row .col-xl-6, .form-row .col-xl-7, .form-row .col-xl-8, .form-row .col-xl-9 { padding-left: 0 }
 .form-row .form-control { float: left; }
 .container-body > .form-group:last-child, .container-body > .form-row:last-child { margin-bottom: 0 }
 .form-control-name { position: relative; }
 .form-control-name .form-control { padding-right: 2em }
-.form-control-name .custom-control { display: block; overflow: hidden; position: absolute; z-index: 3; top: 0; right: 0; width: 2em; height: 100%; margin: 0; padding: 0 }
+.form-control-name .custom-control { display: block; overflow: hidden; position: absolute; z-index: 3; top: 0; right: 0; width: 2em; height: 100%; margin: 0; padding: 0; cursor: pointer }
 .form-control-name .custom-control input { position: absolute; left: -100% }
 .form-control-name .custom-control .fa-lock { margin-top: 0.6em; font-size: 1.5em }
 .form-control-name .custom-control .fa-lock::before { content: "\f09c"; color: #ddd }
@@ -255,3 +255,5 @@ input[maxlength="350"], textarea.mce, #editorRow_TinyMCE { width: 100% !importan
 #settingsPane #filemanager_path, #settingsPane #rb_base_dir, #settingsPane input[name=txt_custom_contenttype], input[name=photo] { float: left; width: calc(100% - 6rem) !important; border-top-right-radius: 0; border-bottom-right-radius: 0 }
 #settingsPane #filemanager_path + input[name=reset_filemanager_path], #settingsPane #rb_base_dir + input[name=reset_rb_base_dir], #settingsPane input[name=txt_custom_contenttype] + input[type=button], input[name=photo] + input[type=button] { float: right; width: 6rem !important; border-top-left-radius: 0; border-bottom-left-radius: 0 }
 .navbar-editor > label { margin-bottom: 0 }
+.section-editor textarea { float: left; border-left: none; border-right: none; font-family: 'Inconsolata', 'Monaco', 'Consolas', 'Courier New', 'Courier', monospace; font-weight: 300; font-size: 0.875rem; }
+.dark .section-editor textarea { background-color: #282c34; color: #abb2bf }

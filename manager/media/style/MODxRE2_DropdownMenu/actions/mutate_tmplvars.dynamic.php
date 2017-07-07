@@ -134,7 +134,7 @@ if(is_array($evtOut)) {
 
 		currentParams = {}; // reset;
 
-		if(ctrl) {
+		if(ctrl && ctrl.form) {
 			f = ctrl.form;
 		} else {
 			f = document.forms['mutate'];

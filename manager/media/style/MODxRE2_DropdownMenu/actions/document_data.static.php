@@ -189,10 +189,9 @@ if($numRecords > 0) {
 
 		// дописываем в заголовок класс для неопубликованных плюс по всем ссылкам обратный путь
 		// для сохранения сортировки
-		$class = ($children['deleted'] ? 'text-danger text-decoration-through' : '');
-		$class .= (!$children['published'] ? ' font-italic text-danger' : ' publish');
-		$class .= ($children['hidemenu'] ? ' text-muted' : ' text-primary');
-		$class .= ($children['isfolder'] ? ' font-weight-bold' : '');
+		$class = ($children['deleted'] ? 'text-danger text-decoration-through' : (!$children['published'] ? ' font-italic text-muted' : ' publish'));
+		//$class .= ($children['hidemenu'] ? ' text-muted' : ' text-primary');
+		//$class .= ($children['isfolder'] ? ' font-weight-bold' : '');
 		if($modx->hasPermission('edit_document')) {
 			$title = '<a class="doc-item" href="index.php?a=27&amp;id=' . $children['id'] . $add_path . '">' . $icon . '<span class="' . $class . '">' . $children['pagetitle'] . '</span></a>';
 		} else {
@@ -224,13 +223,13 @@ if($numRecords > 0) {
 	<script type="text/javascript">
 		var actions = {
 			new: function() {
-				document.location.href = "index.php?pid=<?= $_REQUEST['id']?>&a=4";
+				document.location.href = "index.php?pid=<?= $_REQUEST['id'] ?>&a=4";
 			},
 			newlink: function() {
-				document.location.href = "index.php?pid=<?= $_REQUEST['id']?>&a=72";
+				document.location.href = "index.php?pid=<?= $_REQUEST['id'] ?>&a=72";
 			},
 			edit: function() {
-				document.location.href = "index.php?id=<?= $_REQUEST['id']?>&a=27";
+				document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=27";
 			},
 			save: function() {
 				documentDirty = false;
@@ -238,8 +237,8 @@ if($numRecords > 0) {
 				document.mutate.save.click();
 			},
 			delete: function() {
-				if(confirm("<?= $_lang['confirm_delete_resource']?>") === true) {
-					document.location.href = "index.php?id=<?= $_REQUEST['id']?>&a=6";
+				if(confirm("<?= $_lang['confirm_delete_resource'] ?>") === true) {
+					document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=6";
 				}
 			},
 			cancel: function() {
@@ -247,11 +246,11 @@ if($numRecords > 0) {
 				document.location.href = 'index.php?<?=($id == 0 ? 'a=2' : 'a=3&r=1&id=' . $id . $add_path) ?>';
 			},
 			move: function() {
-				document.location.href = "index.php?id=<?= $_REQUEST['id']?>&a=51";
+				document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=51";
 			},
 			duplicate: function() {
-				if(confirm("<?= $_lang['confirm_resource_duplicate']?>") === true) {
-					document.location.href = "index.php?id=<?= $_REQUEST['id']?>&a=94";
+				if(confirm("<?= $_lang['confirm_resource_duplicate'] ?>") === true) {
+					document.location.href = "index.php?id=<?= $_REQUEST['id'] ?>&a=94";
 				}
 			},
 			view: function() {
@@ -464,13 +463,13 @@ if($numRecords > 0) {
 				$filename = $modx->config['base_path'] . "assets/cache/docid_" . $id . ".pageCache.php";
 				$handle = @fopen($filename, "r");
 				if(!$handle) {
-					$buffer = $_lang['page_data_notcached'];
+					$buffer = '<div class="container container-body">' . $_lang['page_data_notcached'] . '</div>';
 				} else {
 					while(!feof($handle)) {
 						$buffer .= fgets($handle, 4096);
 					}
 					fclose($handle);
-					$buffer = $_lang['page_data_cached'] . '<p><textarea style="width: 100%; height: 400px;">' . $modx->htmlspecialchars($buffer) . "</textarea>\n";
+					$buffer = '<div class="navbar navbar-editor">' . $_lang['page_data_cached'] . '</div><div class="section-editor clearfix"><textarea rows="20" wrap="soft">' . $modx->htmlspecialchars($buffer) . "</textarea></div>\n";
 				}
 				echo $buffer;
 				?>
