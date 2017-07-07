@@ -845,6 +845,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 										<input type="hidden" name="parent" value="<?= (isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']) ?>" onchange="documentDirty=true;" />
 									</td>
 								</tr>
+								<tr></tr>
 								<?php
 								/*
 								if($content['type'] == 'reference' || $modx->manager->action == '72') {
