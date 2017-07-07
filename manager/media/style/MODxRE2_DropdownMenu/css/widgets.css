@@ -13,7 +13,7 @@
 .widgets .table .actions a .fa { margin: 0 .05rem; }
 /* custom */
 .widgets #welcome .wm_buttons { text-align: center }
-.widgets #welcome .wm_button { display: inline-block; margin: 0 .5rem 1rem; }
+.widgets #welcome .wm_button { display: inline-block; margin: 0 .25rem 1rem; }
 .widgets #welcome .wm_button a { display: inline-block; text-decoration: none; color: #444; }
 .widgets #welcome .wm_button a .fa { display: inline-block; min-width: 3rem; color: #646b7b; }
 .widgets #welcome .wm_button a:hover .fa { color: #373b46; }
