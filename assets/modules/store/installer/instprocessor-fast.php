@@ -531,7 +531,12 @@ echo "<p><b>" . $_lang['installation_successful'] . "</b></p>";
 function propUpdate($new,$old){
     $newArr = parseProperties($new);
     $oldArr = parseProperties($old);
-    $return = array_merge_recursive($oldArr, $newArr);
+    foreach ($oldArr as $k => $v){
+        if (isset($v['0']['options'])){
+            $oldArr[$k]['0']['options'] = $newArr[$k]['0']['options'];
+        }
+    }
+    $return = $oldArr + $newArr;
     $return = json_encode($return, JSON_UNESCAPED_UNICODE);
     return $return;
 }
@@ -561,6 +566,7 @@ function parseProperties($propertyString, $elementName = null, $elementType = nu
                     case 'list-multi':
                     case 'checkbox':
                     case 'radio':
+                    case 'menu':
                         $property[$key['0']]['0']['value'] = trim($arr['3']);
                         $property[$key['0']]['0']['options'] = trim($arr['2']);
                         $property[$key['0']]['0']['default'] = trim($arr['3']);
