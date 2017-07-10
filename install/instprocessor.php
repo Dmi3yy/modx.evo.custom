@@ -790,6 +790,7 @@ function propUpdate($new,$old){
     }
     $return = $oldArr + $newArr;
     $return = json_encode($return, JSON_UNESCAPED_UNICODE);
+    $return = ($return != '[]') ? $return : '';
     return $return;
 }
 
@@ -798,7 +799,7 @@ function parseProperties($propertyString, $json=false) {
     $propertyString = str_replace('} {', ',', $propertyString );
 
     if(empty($propertyString)) return array();
-    if($propertyString=='{}')  return array();
+    if($propertyString=='{}' || $propertyString=='[]') return array();
     
     $jsonFormat = isJson($propertyString, true);
     $property = array();
@@ -838,6 +839,7 @@ function parseProperties($propertyString, $json=false) {
     if ($json) {
         $property = json_encode($property, JSON_UNESCAPED_UNICODE);
     }
+    $property = ($property != '[]') ? $property : '';
     return $property;
 }
 
