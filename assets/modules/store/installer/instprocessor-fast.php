@@ -318,7 +318,7 @@ if (count($moduleModules )>0) {
             $name = $modx->db->escape($moduleModule[0]);
             $desc = $modx->db->escape($moduleModule[1]);
             $filecontent = $moduleModule[2];
-            $properties = $modx->db->escape($moduleModule[3]);
+            $properties = $moduleModule[3];
             $guid = $modx->db->escape($moduleModule[4]);
             $shared = $modx->db->escape($moduleModule[5]);
             $category = $modx->db->escape($moduleModule[6]);
@@ -343,6 +343,7 @@ if (count($moduleModules )>0) {
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
+                    $properties = $modx->db->escape(parseProperties($properties, true));
                     if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_modules` (name,description,modulecode,properties,guid,enable_sharedparams,category) VALUES('$name','$desc','$module','$properties','$guid','$shared', $category);")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -365,7 +366,7 @@ if (count($modulePlugins )>0) {
             $name = $modx->db->escape($modulePlugin[0]);
             $desc = $modx->db->escape($modulePlugin[1]);
             $filecontent = $modulePlugin[2];
-            $properties = $modx->db->escape($modulePlugin[3]);
+            $properties = $modulePlugin[3];
             $events = explode(",", $modulePlugin[4]);
             $guid = $modx->db->escape($modulePlugin[5]);
             $category = $modx->db->escape($modulePlugin[6]);
@@ -412,6 +413,7 @@ if (count($modulePlugins )>0) {
                         }
                     }
                     if($insert === true) {
+                        $properties = $modx->db->escape(parseProperties($properties, true));
                         if(!@$modx->db->query("INSERT INTO `".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0',$category);",$sqlParser->conn)) {
                             echo "<p>".mysql_error()."</p>";
                             return;
@@ -419,7 +421,7 @@ if (count($modulePlugins )>0) {
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
                 } else {
-                 
+                    $properties = $modx->db->escape(parseProperties($properties, true));
                     if (!@ $modx->db->query("INSERT INTO `" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid',$disabled,$category);")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -455,7 +457,7 @@ if (count($moduleSnippets ) > 0) {
             $name = $modx->db->escape($moduleSnippet[0]);
             $desc = $modx->db->escape($moduleSnippet[1]);
             $filecontent = $moduleSnippet[2];
-            $properties = $modx->db->escape($moduleSnippet[3]);
+            $properties = $moduleSnippet[3];
             $category = $modx->db->escape($moduleSnippet[4]);
             if (!file_exists($filecontent))
                 echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_snippet'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
@@ -479,7 +481,8 @@ if (count($moduleSnippets ) > 0) {
                         return;
                     }
                     echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
-                } else {    
+                } else {  
+                    $properties = $modx->db->escape(parseProperties($properties, true));  
                     if (!$modx->db->query("INSERT INTO `" . $table_prefix . "site_snippets` (name,description,snippet,properties,category) VALUES('$name','$desc','$snippet','$properties',$category);")) {
                         echo "<p>" . mysql_error() . "</p>";
                         return;
@@ -541,7 +544,7 @@ function propUpdate($new,$old){
     return $return;
 }
 
-function parseProperties($propertyString, $elementName = null, $elementType = null) {  
+function parseProperties($propertyString, $json=false) {  
     $propertyString = str_replace('{}', '', $propertyString ); 
     $propertyString = str_replace('} {', ',', $propertyString );
 
@@ -582,6 +585,9 @@ function parseProperties($propertyString, $elementName = null, $elementType = nu
     // new json-format
     } else if(!empty($jsonFormat)){
         $property = $jsonFormat;
+    }
+    if ($json) {
+        $property = json_encode($property, JSON_UNESCAPED_UNICODE);
     }
     return $property;
 }
