@@ -993,7 +993,10 @@ abstract class Core
         if ($redirect = $this->getCFGDef($param, 0)) {
             $redirect = $this->config->loadArray($redirect);
             $query = $header = '';
-            if (is_array($redirect)) {
+            if (isset($redirect[0])) {
+                $page = $redirect[0];
+                $query = http_build_query($_query);
+            } else {
                 if (isset($redirect['query']) && is_array($redirect['query'])) {
                     $query = http_build_query(array_merge($redirect['query'], $_query));
                 }
@@ -1001,11 +1004,12 @@ abstract class Core
                     $header = $redirect['header'];
                 }
                 $page = isset($redirect['page']) ? $redirect['page'] : 0;
-            } else {
-                $page = $redirect;
-                $query = http_build_query($_query);
             }
-            $redirect = $this->modx->makeUrl($page, '', $query, 'full');
+            if (is_numeric($page)) {
+                $redirect = $this->modx->makeUrl($page, '', $query, 'full');
+            } else {
+                $redirect = $page . (empty($query) ? '' : '?' . $query);
+            }
             $this->setField($param, $redirect);
             $this->log('Redirect (' . $param . ') to' . $redirect, array('data' => $this->getFormData('fields')));
             $this->sendRedirect($redirect, $header);

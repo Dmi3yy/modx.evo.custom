@@ -8,6 +8,7 @@ class Login extends Core
 {
     public $user = null;
     protected $requestUri = '';
+    protected $context = '';
 
     /**
      * Login constructor.
@@ -22,6 +23,7 @@ class Login extends Core
             $this->getCFGDef('modelPath', 'assets/lib/MODxAPI/modUsers.php')
         );
         $this->requestUri = $this->modx->config['site_url'].ltrim($_SERVER['REQUEST_URI'],'/');
+        $this->context = $this->getCFGDef('context','web');
         $lang = $this->lexicon->loadLang('login');
         if ($lang) {
             $this->log('Lexicon loaded', array('lexicon' => $lang));
@@ -33,7 +35,7 @@ class Login extends Core
      */
     public function render()
     {
-        if ($this->modx->getLoginUserID('web')) {
+        if ($this->modx->getLoginUserID($this->context)) {
             $this->redirect();
             $this->renderTpl = $this->getCFGDef('skipTpl', $this->lexicon->getMsg('login.default_skipTpl'));
             $this->setValid(false);

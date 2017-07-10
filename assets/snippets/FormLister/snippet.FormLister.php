@@ -8,7 +8,10 @@
  * @var \DocumentParser $modx
  * @var array $params
  */
-if (!isset($formid)) return;
+if (!isset($formid)) {
+    $this->modx->logEvent(0, 1, "Parameter &formid is not set", 'FormLister');
+    return;
+}
 include_once ('__autoload.php');
 $out = '';
 $FLDir = MODX_BASE_PATH . 'assets/snippets/FormLister/';
@@ -36,13 +39,15 @@ if (class_exists($classname)) {
     if (!$FormLister->getFormId()) return;
     $FormLister->initForm();
     $out = $FormLister->render();
-}
-if ($FormLister->getFormStatus() && isset($saveObject) && is_scalar($saveObject)) {
-    $modx->setPlaceholder($saveObject,$FormLister);
-}
+    if ($FormLister->getFormStatus() && isset($saveObject) && is_scalar($saveObject)) {
+        $modx->setPlaceholder($saveObject,$FormLister);
+    }
 
-if (!is_null($FormLister->debug)) {
-    $FormLister->debug->saveLog();
+    if (!is_null($FormLister->debug)) {
+        $FormLister->debug->saveLog();
+    }
+} else {
+    $this->modx->logEvent(0, 1, "Controller {$classname} is missing", 'FormLister');
 }
 
 return $out;
