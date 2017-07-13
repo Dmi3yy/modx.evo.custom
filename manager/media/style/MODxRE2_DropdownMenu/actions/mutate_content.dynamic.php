@@ -72,7 +72,8 @@ if($modx->manager->action == 27) {
 }
 
 // check to see if resource isn't locked
-if($lockedEl = $modx->elementIsLocked(7, $id)) {
+$lockedEl = $modx->elementIsLocked(7, $id);
+if ($lockedEl && $lockedEl['internalKey'] !== $_SESSION['mgrInternalKey']) {
 	$modx->webAlertAndQuit(sprintf($_lang['lock_msg'], $lockedEl['username'], $_lang['resource']));
 }
 // end check for lock
