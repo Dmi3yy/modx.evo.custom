@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
 // invoke OnManagerTreeInit event
@@ -18,16 +18,16 @@ if(is_array($evtOut)) {
 		<a class="treeButton" id="treeMenu_collapsetree" onclick="modx.tree.collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><?php echo $_style['collapse_tree']; ?></a>
 
 		<?php if($modx->hasPermission('new_document')) { ?>
-			<a class="treeButton" id="treeMenu_addresource" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_resource']; ?>"><?php echo $_style['add_doc_tree']; ?></a>
-			<a class="treeButton" id="treeMenu_addweblink" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a>
+			<a class="treeButton" id="treeMenu_addresource" onclick="modx.tabs({url:'<?= MODX_MANAGER_URL ?>?a=4', title: '<?php echo $_lang['add_resource']; ?>'});" title="<?php echo $_lang['add_resource']; ?>"><?php echo $_style['add_doc_tree']; ?></a>
+			<a class="treeButton" id="treeMenu_addweblink" onclick="modx.tabs({url:'<?= MODX_MANAGER_URL ?>?a=72', title: '<?php echo $_lang['add_weblink']; ?>'});" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a>
 		<?php } ?>
 
 		<a class="treeButton" id="treeMenu_refreshtree" onclick="modx.tree.restoreTree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a>
 
 		<a class="treeButton" id="treeMenu_sortingtree" onclick="modx.tree.showSorter(event);" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a>
 
-		<?php if($modx->hasPermission('edit_document')) { ?>
-			<a class="treeButton" id="treeMenu_sortingindex" onclick="top.main.document.location.href='index.php?a=56&id=0';" title="<?php echo $_lang['sort_menuindex']; ?>"><?php echo $_style['sort_menuindex']; ?></a>
+		<?php if($modx->hasPermission('edit_document') && $modx->hasPermission('save_document')) { ?>
+			<a class="treeButton" id="treeMenu_sortingindex" onclick="modx.tabs({url: '<?= MODX_MANAGER_URL ?>?a=56&id=0', title: '<?php echo $_lang['sort_menuindex']; ?>'});" title="<?php echo $_lang['sort_menuindex']; ?>"><?php echo $_style['sort_menuindex']; ?></a>
 		<?php } ?>
 
 		<?php if($use_browser && $modx->hasPermission('assets_images')) { ?>
@@ -46,7 +46,7 @@ if(is_array($evtOut)) {
 			<a class="treeButton treeButtonDisabled" id="treeMenu_emptytrash" title="<?php echo $_lang['empty_recycle_bin_empty']; ?>"><?php echo $_style['empty_recycle_bin_empty']; ?></a>
 		<?php } ?>
 
-		<a class="treeButton<?php echo(isset($_COOKIE['MODX_themeColor']) && $_COOKIE['MODX_themeColor'] == 'dark' ? ' rotate180' : '') ?>" id="treeMenu_theme_dark" onclick="modx.tree.toggleTheme(event)"><i class="fa fa-adjust"></i></a>
+		<a class="treeButton" id="treeMenu_theme_dark" onclick="modx.tree.toggleTheme(event)"><i class="fa fa-adjust"></i></a>
 
 	</div>
 

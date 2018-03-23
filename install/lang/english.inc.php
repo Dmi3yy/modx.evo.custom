@@ -3,8 +3,8 @@
  * EVO Installer language file
  *
  * @author davaeron
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language English
  * @package evo
@@ -43,8 +43,8 @@ $_lang["checking_if_cache_writable"] = 'Checking if <span class="mono">/assets/c
 $_lang["checking_if_config_exist_and_writable"] = 'Checking if <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> exists and is writable: ';
 $_lang["checking_if_export_exists"] = 'Checking if <span class="mono">/assets/export</span> directory exists: ';
 $_lang["checking_if_export_writable"] = 'Checking if <span class="mono">/assets/export</span> directory is writable: ';
-$_lang["checking_if_images_exist"] = 'Checking if <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> and <span class="mono">/assets/.thumbs</span> directories exists: ';
-$_lang["checking_if_images_writable"] = 'Checking if <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> and <span class="mono">/assets/.thumbs</span> directories are writable: ';
+$_lang["checking_if_images_exist"] = 'Checking if <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> and <span class="mono">/assets/.thumbs</span> directories exists: ';
+$_lang["checking_if_images_writable"] = 'Checking if <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> and <span class="mono">/assets/.thumbs</span> directories are writable: ';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Checking MySQL version: ';
 $_lang["checking_php_version"] = 'Checking PHP version: ';
@@ -170,6 +170,7 @@ $_lang["status_failed"] = 'failed!';
 $_lang["status_failed_could_not_create_database"] = 'failed - could not create database';
 $_lang["status_failed_database_collation_does_not_match"] = 'failed - database collation mismatch; use SET NAMES or choose %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'failed - table prefix already in use!';
+$_lang['status_failed_mysqli'] = 'error - mysqli extension for PHP is not installed!';
 $_lang["status_passed"] = 'passed - database selected';
 $_lang["status_passed_database_created"] = 'passed - database created';
 $_lang["status_passed_server"] = 'passed - collations now available';

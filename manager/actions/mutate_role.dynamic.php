@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
 switch((int) $modx->manager->action) {
@@ -18,7 +18,7 @@ switch((int) $modx->manager->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$role = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$role = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 $tbl_user_roles = $modx->getFullTableName('user_roles');
 
@@ -81,7 +81,9 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 		<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 		<input type="hidden" name="id" value="<?= $_GET['id'] ?>">
 
-		<h1><?= $_lang['role_title'] ?></h1>
+		<h1>
+            <i class="fa fa-legal"></i><?= ($roledata['name'] ? $roledata['name'] . '<small>(' . $roledata['id'] . ')</small>' : $_lang['role_title']) ?>
+        </h1>
 
 		<?= $_style['actionbuttons']['dynamic']['savedelete'] ?>
 
@@ -131,7 +133,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								echo render_form('publish_document', $_lang['role_publish_doc']);
 								echo render_form('delete_document', $_lang['role_delete_doc']);
 								echo render_form('empty_trash', $_lang['role_empty_trash']);
-								echo render_form('edit_doc_metatags', $_lang['role_edit_doc_metatags']);
 								echo render_form('empty_cache', $_lang['role_cache_refresh']);
 								echo render_form('view_unpublished', $_lang['role_view_unpublished']);
 								?>
@@ -276,7 +277,6 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 								echo render_form('logs', $_lang['role_view_logs']);
 								echo render_form('settings', $_lang['role_edit_settings']);
 								echo render_form('bk_manager', $_lang['role_bk_manager']);
-								echo render_form('manage_metatags', $_lang['role_manage_metatags']);
 								echo render_form('import_static', $_lang['role_import_static']);
 								echo render_form('export_static', $_lang['role_export_static']);
 								echo render_form('remove_locks', $_lang['role_remove_locks']);
@@ -293,6 +293,12 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	</form>
 
 <?php
+/**
+ * @param string $name
+ * @param string $label
+ * @param string $status
+ * @return string
+ */
 function render_form($name, $label, $status = '') {
 	global $modx, $roledata;
 

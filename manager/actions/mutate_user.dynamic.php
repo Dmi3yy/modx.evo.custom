@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
 switch($modx->manager->action) {
@@ -18,7 +18,7 @@ switch($modx->manager->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$user = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 // check to see the snippet editor isn't locked
 $rs = $modx->db->select('username', $modx->getFullTableName('active_users'), "action=12 AND id='{$user}' AND internalKey!='" . $modx->getLoginUserID() . "'");
@@ -87,8 +87,12 @@ include_once "lang/country/english_country.inc.php";
 if($manager_language != "english" && file_exists($modx->config['site_manager_path'] . "includes/lang/country/" . $manager_language . "_country.inc.php")) {
 	include_once "lang/country/" . $manager_language . "_country.inc.php";
 }
+asort($_country_lang);
 
 $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
+if($which_browser == 'default') {
+	$which_browser = $modx->configGlobal['which_browser'] ? $modx->configGlobal['which_browser'] : $modx->config['which_browser'];
+}
 ?>
 <script type="text/javascript">
 
@@ -208,7 +212,10 @@ $displayStyle = ($_SESSION['browser'] === 'modern') ? 'table-row' : 'block';
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
 	<input type="hidden" name="id" value="<?php echo $user ?>">
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />
-	<h1><i class="fa fa fa-user"></i><?php echo $_lang['user_title']; ?> </h1>
+
+	<h1>
+        <i class="fa fa fa-user"></i><?= ($usernamedata['username'] ? $usernamedata['username'] . '<small>(' . $usernamedata['id'] . ')</small>' : $_lang['user_title']) ?>
+    </h1>
 
 	<?php echo $_style['actionbuttons']['dynamic']['user'] ?>
 

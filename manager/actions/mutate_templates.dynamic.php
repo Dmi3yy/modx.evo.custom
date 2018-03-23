@@ -1,6 +1,6 @@
 <?php
-if(IN_MANAGER_MODE != "true") {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
+if( ! defined('IN_MANAGER_MODE') || IN_MANAGER_MODE !== true) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the EVO Content Manager instead of accessing this file directly.");
 }
 
 switch($modx->manager->action) {
@@ -18,7 +18,7 @@ switch($modx->manager->action) {
 		$modx->webAlertAndQuit($_lang["error_no_privileges"]);
 }
 
-$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+$id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 
 $tbl_site_templates = $modx->getFullTableName('site_templates');
 
@@ -45,7 +45,7 @@ if(!empty($id)) {
 	}
 } else {
 	$_SESSION['itemname'] = $_lang["new_template"];
-	$content['category'] = intval($_REQUEST['catid']);
+	$content['category'] = (int)$_REQUEST['catid'];
 }
 
 if($modx->manager->hasFormValues()) {
@@ -109,7 +109,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 	<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 
 	<h1>
-		<i class="fa fa-newspaper-o"></i><?= $_lang['template_title'] ?><i class="fa fa-question-circle help"></i>
+		<i class="fa fa-newspaper-o"></i><?= ($content['templatename'] ? $content['templatename'] . '<small>(' . $content['id'] . ')</small>' : $_lang['new_template']) ?><i class="fa fa-question-circle help"></i>
 	</h1>
 
 	<?= $_style['actionbuttons']['dynamic']['element'] ?>
@@ -133,7 +133,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 						<label class="col-md-3 col-lg-2">
 							<?= $_lang['template_name'] ?>
 							<?php if($id == $modx->config['default_template']) {
-								echo '<small class="form-text text-danger">' . mb_strtolower(rtrim($_lang['defaulttemplate_title'], ':')) . '</small>';
+								echo '<small class="form-text text-danger">' . mb_strtolower(rtrim($_lang['defaulttemplate_title'], ':'), $modx_manager_charset) . '</small>';
 							} ?>
 						</label>
 						<div class="col-md-9 col-lg-10">

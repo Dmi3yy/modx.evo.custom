@@ -20,7 +20,28 @@ if($_GET['a'] == 2) {
 }
 
 // Favicon
-$_style['favicon']                  = (file_exists(MODX_BASE_PATH . '/favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico');
+$_style['favicon']                  = (file_exists(MODX_BASE_PATH . 'favicon.ico') ? MODX_SITE_URL . 'favicon.ico' : 'media/style/' . $modx->config['manager_theme'] . '/images/favicon.ico');
+
+//Main Menu
+$_style['menu_search']              = '<i class="fa fa-search"></i>';
+$_style['menu_preview_site']        = '<i class="fa fa-desktop"></i>';
+$_style['menu_new_resource']        = '<i class="fa fa-plus"></i>';
+$_style['menu_system']              = '<i class="fa fa-cogs"></i>';
+$_style['menu_user']                = '<i class="fa fa-user-circle"></i>';
+// full screen
+$_style['menu_expand']              = 'fa-expand';
+$_style['menu_compress']            = 'fa-compress';
+//help toggle
+$_style['icons_help']               = '<i class="fa fa-question-circle help"></i>';
+//pages
+$_style['page_settings']            = '<i class="fa fa-sliders fw"></i>';
+$_style['page_shedule']             = '<i class="fa fa-calendar"></i>';
+$_style['page_eventlog']            = '<i class="fa fa-exclamation-triangle"></i>';
+$_style['page_manager_logs']        = '<i class="fa fa-user-secret"></i>';
+$_style['page_sys_info']            = '<i class="fa fa-info-circle"></i>';
+$_style['page_help']                = '<i class="fa fa-question-circle"></i>';
+$_style['page_change_password']     = '<i class="fa fa-lock"></i>';
+$_style['page_logout']              = '<i class="fa fa-sign-out"></i>';
 
 // Tree Menu Toolbar
 $_style['add_doc_tree']             = '<i class="fa fa-file"></i>';
@@ -174,6 +195,7 @@ $_style['actions_refresh']          = 'fa fa-refresh';
 $_style['actions_error']            = 'fa fa-times-circle';
 $_style['actions_info']             = 'fa fa-info-circle';
 $_style['actions_triangle']         = 'fa fa-exclamation-triangle';
+$_style['actions_table']            = 'fa fa-table';
 
 //for back compatibility
 
@@ -191,7 +213,8 @@ $_style['icons_cal_nodate']         = $style_path.'icons/calendar.png';
 $_style['icons_set_parent']         = $style_path.'icons/folder-open.png';
 
 //modules
-$_style['icons_modules']            = 'fa fa-cogs'; //$style_path.'icons/modules.png';
+$_style['icons_module']            = 'fa fa-cube';
+$_style['icons_modules']            = 'fa fa-cubes'; //$style_path.'icons/modules.png';
 $_style['icons_run']                = $style_path.'icons/play.png';
 
 //users and webusers
@@ -239,6 +262,14 @@ $_style['ed_save']                  = $style_path.'misc/ed_save.gif';
 
 // actions buttons templates
 $action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '';
+if (!empty($modx->config['global_tabs']) && !isset($_SESSION['stay'])) {
+    $_REQUEST['stay'] = 2;
+}
+if (isset($_REQUEST['stay'])) {
+    $_SESSION['stay'] = $_REQUEST['stay'];
+} else if (isset($_SESSION['stay'])) {
+    $_REQUEST['stay'] = $_SESSION['stay'];
+}
 $stay = isset($_REQUEST['stay']) ? $_REQUEST['stay'] : '';
 $addnew = 0;
 $run = 0;
@@ -389,15 +420,13 @@ $_style['actionbuttons'] = array(
 				' : '') . '
 			</div>
 		</div>',
-		'newmodule' => '<div id="actions">
+		'newmodule' => ($addnew ? '<div id="actions">
 			<div class="btn-group">
-			' . ($addnew ? '
 				<a id="newModule" class="btn btn-secondary" href="javascript:;" onclick="actions.new();">
 					<i class="' . $_style["actions_new"] . '"></i><span>' . $_lang['new_module'] . '</span>
 				</a>
-			' : '') . '
 			</div>
-		</div>',
+		</div>' : ''),
 		'close' => '<div id="actions">
 			<div class="btn-group">
 				<a id="Button5" class="btn btn-secondary" href="javascript:;" onclick="actions.close();">

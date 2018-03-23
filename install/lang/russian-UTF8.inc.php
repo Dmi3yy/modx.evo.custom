@@ -4,9 +4,10 @@
  *
  * @author Pertsev Dmitriy
  * @author Safronovich Victor
+ * @author Rudnykh Vitalii
  * @author Russian EVO Community
- * @version 1.0.15
- * @date 2014/02/24
+ * @version 1.5.0
+ * @date 2018/02/23
  *
  * @language Russian
  * @package modx
@@ -44,8 +45,8 @@ $_lang["checking_if_cache_writable"] = 'Проверка возможности 
 $_lang["checking_if_config_exist_and_writable"] = 'Проверка существования и возможности записи в файл <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span>: ';
 $_lang["checking_if_export_exists"] = 'Проверка существования папки <span class="mono">/assets/export</span>: ';
 $_lang["checking_if_export_writable"] = 'Проверка возможности записи в папку <span class="mono">/assets/export</span>: ';
-$_lang["checking_if_images_exist"] = 'Проверка существования папок <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> и <span class="mono">/assets/.thumbs</span>: ';
-$_lang["checking_if_images_writable"] = 'Проверка возможности записи в папки <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> и <span class="mono">/assets/.thumbs</span>: ';
+$_lang["checking_if_images_exist"] = 'Проверка существования папок <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> и <span class="mono">/assets/.thumbs</span>: ';
+$_lang["checking_if_images_writable"] = 'Проверка возможности записи в папки <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>,  <span class="mono">/assets/backup</span> и <span class="mono">/assets/.thumbs</span>: ';
 $_lang["checking_mysql_strict_mode"] = 'Проверка MySQL на строгий режим strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Проверка версии MySQL: ';
 $_lang["checking_php_version"] = 'Проверка версии PHP: ';
@@ -168,6 +169,7 @@ $_lang["status_failed"] = 'ошибка!';
 $_lang["status_failed_could_not_create_database"] = 'ошибка - не удается создать базу данных';
 $_lang["status_failed_database_collation_does_not_match"] = 'ошибка - сопоставление базы данных не соответствует; используйте SET NAMES или выберите %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'ошибка - префикс таблицы уже используется!';
+$_lang['status_failed_mysqli'] = 'ошибка - расширение mysqli для php не установлено';
 $_lang["status_passed"] = 'успех - база данных выбрана';
 $_lang["status_passed_database_created"] = 'успех - база данных создана';
 $_lang["status_passed_server"] = 'успех - сопоставление базы данных доступно';
