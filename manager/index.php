@@ -141,9 +141,9 @@ include_once "config.inc.php";
 if (isset($coreClass) && class_exists($coreClass)) {
 	$modx = new $coreClass;
 }
-if (!isset($modx) || !($modx instanceof \DocumentParser)) {
+if (!isset($modx) || !($modx instanceof DocumentParser)) {
 	include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
-	$modx = new \DocumentParser;
+	$modx = evolutionCMS();
 }
 
 $modx->loadExtension("ManagerAPI");
@@ -210,7 +210,7 @@ if(isset($manager_theme) && !isset($_style)) {
 }
 
 // check if user is allowed to access manager interface
-if(isset($allow_manager_access) && $allow_manager_access==0) {
+if(isset($allow_manager_access) && $allow_manager_access==0 && !(isset($_GET['a']) && $_GET['a'] == 8)) {
 	include_once "manager.lockout.inc.php";
 }
 

@@ -198,7 +198,7 @@ if($which_browser == 'default') {
 
 </script>
 
-<form action="index.php?a=32" method="post" name="userform">
+<form name="userform" method="post" action="index.php">
 	<?php
 
 	// invoke OnUserFormPrerender event
@@ -209,6 +209,7 @@ if($which_browser == 'default') {
 		echo implode("", $evtOut);
 	}
 	?>
+    <input type="hidden" name="a" value="32">
 	<input type="hidden" name="mode" value="<?php echo $modx->manager->action; ?>">
 	<input type="hidden" name="id" value="<?php echo $user ?>">
 	<input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked'] == 1 || ($userdata['blockeduntil'] > time() && $userdata['blockeduntil'] != 0) || ($userdata['blockedafter'] < time() && $userdata['blockedafter'] != 0) || $userdata['failedlogins'] > 3) ? "1" : "0" ?>" />
@@ -240,7 +241,9 @@ if($which_browser == 'default') {
 					</tr>
 					<?php if(!empty($userdata['id'])) { ?>
 						<tr id="showname" style="display: <?php echo ($modx->manager->action == '12' && (!isset($usernamedata['oldusername']) || $usernamedata['oldusername'] == $usernamedata['username'])) ? $displayStyle : 'none'; ?> ">
-							<td colspan="3"><i class="<?php echo $_style["icons_user"] ?>"></i>&nbsp;<b><?php echo $modx->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?></b> - <span class="comment"><a href="javascript:;" onClick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
+							<th><?php echo $_lang['username']; ?>:</th>
+							<td>&nbsp;</td>
+							<td><i class="<?php echo $_style["icons_user"] ?>"></i>&nbsp;<b><?php echo $modx->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?></b> - <span class="comment"><a href="javascript:;" onClick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
 								<input type="hidden" name="oldusername" value="<?php echo $modx->htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername'] : $usernamedata['username']); ?>" />
 							</td>
 						</tr>
@@ -551,6 +554,30 @@ if($which_browser == 'default') {
 						<td>&nbsp;</td>
 						<td class='comment'><?php echo $_lang["manager_theme_message"] ?></td>
 					</tr>
+
+					<tr>
+			            <td nowrap class="warning"><?= $_lang['manager_theme_mode'] ?><br>
+			                <small>[(manager_theme_mode)]</small>
+			            </td>
+			            <td>
+							<label><input type="radio" name="manager_theme_mode" value="" <?= $manager_theme_mode == '' ? 'checked="checked"' : "" ?> />
+			                    <?= $_lang['option_default'] ?></label>
+			                <br />
+
+			                <label><input type="radio" name="manager_theme_mode" value="1" <?= $manager_theme_mode == '1' ? 'checked="checked"' : "" ?> />
+			                    <?= $_lang['manager_theme_mode1'] ?></label>
+			                <br />
+			                <label><input type="radio" name="manager_theme_mode" value="2" <?= $manager_theme_mode == '2' ? 'checked="checked"' : "" ?> />
+			                    <?= $_lang['manager_theme_mode2'] ?></label>
+			                <br />
+			                <label><input type="radio" name="manager_theme_mode" value="3" <?= $manager_theme_mode == '3' ? 'checked="checked"' : "" ?> />
+			                    <?= $_lang['manager_theme_mode3'] ?></label>
+			                <br />
+			                <label><input type="radio" name="manager_theme_mode" value="4" <?= ($manager_theme_mode == '4') ? 'checked="checked"' : "" ?> />
+			                    <?= $_lang['manager_theme_mode4'] ?></label>
+			            </td>
+			        </tr>
+
 					<tr>
 						<th><?php echo $_lang["which_browser_title"] ?></th>
 						<td><select name="which_browser" class="inputBox" onChange="documentDirty=true;">

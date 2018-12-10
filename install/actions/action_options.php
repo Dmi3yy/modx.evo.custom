@@ -188,14 +188,15 @@ switch($installMode){
         $database_collation = isset($_POST['database_collation']) ? $_POST['database_collation'] : 'utf8_general_ci';
         $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
         $_POST['database_connection_charset'] = $database_charset;
-        if(empty($_SESSION['databaseloginpassword']))
+        if(!empty($_POST['databaseloginpassword']))
             $_SESSION['databaseloginpassword'] = $_POST['databaseloginpassword'];
-        if(empty($_SESSION['databaseloginname']))
+        if(!empty($_POST['databaseloginname']))
             $_SESSION['databaseloginname'] = $_POST['databaseloginname'];
         break;
     case 1:
         include $base_path . MGR_DIR . '/includes/config.inc.php';
-        if (@ $conn = mysqli_connect($database_server, $database_user, $database_password)) {
+        $host = explode(':', $database_server, 2);
+        if (@ $conn = mysqli_connect($host[0], $database_user, $database_password,'', isset($host[1]) ? $host[1] : null)) {
             if (@ mysqli_query($conn, "USE {$dbase}")) {
                 if (!$rs = mysqli_query($conn, "show session variables like 'collation_database'")) {
                     $rs = mysqli_query($conn, "show session variables like 'collation_server'");

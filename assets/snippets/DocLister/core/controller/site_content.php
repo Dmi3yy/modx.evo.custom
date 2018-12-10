@@ -43,7 +43,7 @@ class site_contentDocLister extends DocLister
     }
 
     /**
-     * @absctract
+     * @abstract
      */
     public function getDocs($tvlist = '')
     {
@@ -52,6 +52,14 @@ class site_contentDocLister extends DocLister
         }
 
         $this->extTV->getAllTV_Name();
+
+        /**
+         * @var $multiCategories multicategories_DL_Extender
+         */
+        $multiCategories = $this->getCFGDef('multiCategories', 0) ? $this->getExtender('multicategories', true) : null;
+        if ($multiCategories) {
+            $multiCategories->init($this);
+        }
 
         /**
          * @var $extJotCount jotcount_DL_Extender
@@ -178,7 +186,7 @@ class site_contentDocLister extends DocLister
                             'data'      => $item,
                             'nameParam' => 'prepare'
                         ));
-                        if (is_bool($item) && $item === false) {
+                        if ($item === false) {
                             $this->skippedDocs++;
                             continue;
                         }
@@ -281,7 +289,7 @@ class site_contentDocLister extends DocLister
 
             if ($extPrepare) {
                 $row = $extPrepare->init($this, array('data' => $row));
-                if (is_bool($row) && $row === false) {
+                if ($row === false) {
                     continue;
                 }
             }
@@ -364,7 +372,7 @@ class site_contentDocLister extends DocLister
                 if (trim($where) == 'WHERE') {
                     $where = '';
                 }
-                $group = $this->getGroupSQL($this->getCFGDef('groupBy', 'c.id'));
+                $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
 
                 $q_true = $q_true ? $q_true : $group != '';
                 if ($q_true) {
@@ -419,7 +427,7 @@ class site_contentDocLister extends DocLister
 
 
             $fields = $this->getCFGDef('selectFields', 'c.*');
-            $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+            $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
             $sort = $this->SortOrderSQL("if(c.pub_date=0,c.createdon,c.pub_date)");
             list($tbl_site_content, $sort) = $this->injectSortByTV(
                 $tbl_site_content . ' ' . $this->_filters['join'],
@@ -543,7 +551,7 @@ class site_contentDocLister extends DocLister
             $where = '';
         }
         $fields = $this->getCFGDef('selectFields', 'c.*');
-        $group = $this->getGroupSQL($this->getCFGDef('groupBy', ''));
+        $group = $this->getGroupSQL($this->getCFGDef('groupBy', $this->getPK()));
 
         if ($sanitarInIDs != "''" || $this->getCFGDef('ignoreEmpty', '0')) {
             $rs = $this->dbQuery("SELECT {$fields} FROM " . $from . " " . $where . " " .

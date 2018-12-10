@@ -292,7 +292,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                 <div class="element-edit-message-tab alert alert-warning">
                     <?= $_lang["bkmgr_restore_msg"] ?>
                 </div>
-                <form method="post" name="mutate" enctype="multipart/form-data" action="index.php">
+                <form name="mutate" method="post" action="index.php" enctype="multipart/form-data">
                     <input type="hidden" name="a" value="93" />
                     <input type="hidden" name="mode" value="restore1" />
                     <?php
@@ -372,7 +372,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                 <div class="element-edit-message-tab alert alert-warning">
                     <?= parsePlaceholder($_lang["bkmgr_snapshot_msg"], array('snapshot_path' => "snapshot_path={$modx->config['snapshot_path']}")) ?>
                 </div>
-                <form method="post" name="snapshot" action="index.php">
+                <form name="snapshot" method="post" action="index.php">
                     <input type="hidden" name="a" value="93" />
                     <input type="hidden" name="mode" value="snapshot" />
                     <?= $_lang["description"] ?>
@@ -387,7 +387,7 @@ if (isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '') {
                 <div>
                     <b><?= $_lang["bkmgr_snapshot_list_title"] ?></b>
                 </div>
-                <form method="post" name="restore2" action="index.php">
+                <form name="restore2" method="post" action="index.php">
                     <input type="hidden" name="a" value="93" />
                     <input type="hidden" name="mode" value="restore2" />
                     <input type="hidden" name="filename" value="" />
@@ -556,7 +556,7 @@ class Mysqldumper
      */
     public function createDump($callBack)
     {
-        global $modx;
+        $modx = evolutionCMS();
         $createtable = array();
 
         // Set line feed
@@ -670,7 +670,7 @@ class Mysqldumper
      */
     public function result2Array($numinarray = 0, $resource)
     {
-        global $modx;
+        $modx = evolutionCMS();
         $array = array();
         while ($row = $modx->db->getRow($resource, 'num')) {
             $array[] = $row[$numinarray];
@@ -694,7 +694,7 @@ class Mysqldumper
      */
     public function loadObjectList($key = '', $resource)
     {
-        global $modx;
+        $modx = evolutionCMS();
         $array = array();
         while ($row = $modx->db->getRow($resource, 'object')) {
             if ($key) {
@@ -734,7 +734,7 @@ class Mysqldumper
  */
 function import_sql($source, $result_code = 'import_ok')
 {
-    global $modx, $e;
+    $modx = evolutionCMS(); global $e;
 
     $rs = null;
     if ($modx->getLockedElements() !== array()) {
@@ -772,7 +772,7 @@ function import_sql($source, $result_code = 'import_ok')
  */
 function dumpSql(&$dumpstring)
 {
-    global $modx;
+    $modx = evolutionCMS();
     $today = $modx->toDateFormat(time(), 'dateOnly');
     $today = str_replace('/', '-', $today);
     $today = strtolower($today);
@@ -805,7 +805,7 @@ function snapshot(&$dumpstring)
  */
 function getSettings()
 {
-    global $modx;
+    $modx = evolutionCMS();
     $tbl_system_settings = $modx->getFullTableName('system_settings');
 
     $rs = $modx->db->select('setting_name, setting_value', $tbl_system_settings);
@@ -829,7 +829,7 @@ function getSettings()
  */
 function restoreSettings($settings)
 {
-    global $modx;
+    $modx = evolutionCMS();
     $tbl_system_settings = $modx->getFullTableName('system_settings');
 
     foreach ($settings as $k => $v) {

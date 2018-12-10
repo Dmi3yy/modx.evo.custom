@@ -13,7 +13,7 @@
  * @return string
  */
 function renderFormElement($field_type, $field_id, $default_text = '', $field_elements = '', $field_value = '', $field_style = '', $row = array(), $tvsArray = array()) {
-	global $modx;
+    $modx = evolutionCMS();
 	global $_style;
 	global $_lang;
 	global $content;
@@ -64,7 +64,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 			case "dropdown": // handler for select boxes
 				$field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" size="1" onchange="documentDirty=true;">';
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform', $tvsArray));
-				while(list($item, $itemvalue) = each($index_list)) {
+                foreach($index_list as $item => $itemvalue) {
 					list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
 					if(strlen($itemvalue) == 0) {
 						$itemvalue = $item;
@@ -76,7 +76,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 			case "listbox": // handler for select boxes
 				$field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '" onchange="documentDirty=true;" size="8">';
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform', $tvsArray));
-				while(list($item, $itemvalue) = each($index_list)) {
+                foreach($index_list as $item => $itemvalue) {
 					list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
 					if(strlen($itemvalue) == 0) {
 						$itemvalue = $item;
@@ -89,7 +89,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 				$field_value = explode("||", $field_value);
 				$field_html .= '<select id="tv' . $field_id . '" name="tv' . $field_id . '[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform', $tvsArray));
-				while(list($item, $itemvalue) = each($index_list)) {
+                foreach($index_list as $item => $itemvalue) {
 					list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
 					if(strlen($itemvalue) == 0) {
 						$itemvalue = $item;
@@ -151,7 +151,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
 			case "option": // handles radio buttons
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id, '', 'tvform', $tvsArray));
 				static $i = 0;
-				while(list($item, $itemvalue) = each($index_list)) {
+                foreach($index_list as $item => $itemvalue) {
 					list($item, $itemvalue) = (is_array($itemvalue)) ? $itemvalue : explode("==", $itemvalue);
 					if(strlen($itemvalue) == 0) {
 						$itemvalue = $item;
@@ -385,7 +385,7 @@ function renderFormElement($field_type, $field_id, $default_text = '', $field_el
  * @return array
  */
 function ParseIntputOptions($v) {
-	global $modx;
+    $modx = evolutionCMS();
 	$a = array();
 	if(is_array($v)) {
 		return $v;

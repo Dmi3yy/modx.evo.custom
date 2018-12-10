@@ -46,7 +46,7 @@ $allowedfiles = array(
 			if(!isset($_POST['import'])) {
 				echo "<div class=\"element-edit-message\">" . $_lang['import_site_message'] . "</div>";
 				?>
-				<form action="index.php" method="post" name="importFrm">
+				<form name="importFrm" method="post" action="index.php">
 					<input type="hidden" name="import" value="import" />
 					<input type="hidden" name="a" value="95" />
 					<input type="hidden" name="parent" value="0" />
@@ -105,7 +105,7 @@ $allowedfiles = array(
  * @return string
  */
 function run() {
-	global $modx, $_lang;
+	$modx = evolutionCMS(); global $_lang;
 
 	$tbl_site_content = $modx->getFullTableName('site_content');
 	$output = '';
@@ -172,7 +172,7 @@ function run() {
  * @param string $mode
  */
 function importFiles($parent, $filedir, $files, $mode) {
-	global $modx;
+	$modx = evolutionCMS();
 	global $_lang, $allowedfiles;
 	global $search_default, $cache_default, $publish_default;
 
@@ -384,7 +384,7 @@ function pop_index($array) {
  * @return array
  */
 function treatContent($src, $filename, $alias) {
-	global $modx;
+	$modx = evolutionCMS();
 
 	$src = mb_convert_encoding($src, $modx->config['modx_charset'], 'UTF-8,SJIS-win,eucJP-win,SJIS,EUC-JP,ASCII');
 
@@ -428,7 +428,7 @@ function treatContent($src, $filename, $alias) {
  * @return void
  */
 function convertLink() {
-	global $modx;
+	$modx = evolutionCMS();
 	$tbl_site_content = $modx->getFullTableName('site_content');
 
 	$rs = $modx->db->select('id,content', $tbl_site_content);

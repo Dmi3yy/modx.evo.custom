@@ -1,6 +1,10 @@
 <?php
     $MODX_SITE_HOSTNAMES = MODX_SITE_HOSTNAMES; // Fix for PHP 5.4
-    if(empty($valid_hostnames) && empty($MODX_SITE_HOSTNAMES)) $valid_hostnames = $_SERVER['HTTP_HOST'];
+    if(empty($valid_hostnames) && empty($MODX_SITE_HOSTNAMES)) {
+        $valid_hostnames = $_SERVER['HTTP_HOST'];
+    } else {
+        $valid_hostnames = $MODX_SITE_HOSTNAMES;
+    }
 ?>
 <!-- Interface & editor settings -->
 <div class="tab-page" id="tabPageSecurity">
@@ -40,7 +44,7 @@
     <th><?php echo $_lang['check_files_onlogin_title'] ?><br><small>[(check_files_onlogin)]</small></th>
     <td>
       <textarea name="check_files_onlogin"><?php echo $check_files_onlogin;?></textarea><br />
-        
+
 </td>
 </tr>
    <tr>
@@ -97,14 +101,20 @@
 </tr>
 <tr><td colspan="2"><div class="split"></div></td></tr>
 <tr>
-<th><?php echo $_lang['mutate_settings.dynamic.php6']; ?><br><small>[(send_errormail)]</small></th>
-<td>
-<?php echo wrap_label($_lang['mutate_settings.dynamic.php7'],form_radio('send_errormail','0'));?><br />
-<?php echo wrap_label('error',form_radio('send_errormail','3'));?><br />
-<?php echo wrap_label('error + warning',form_radio('send_errormail','2'));?><br />
-<?php echo wrap_label('error + warning + information',form_radio('send_errormail','1'));?><br />
-<?php echo parseText($_lang['mutate_settings.dynamic.php8'],array('emailsender'=>$modx->config['emailsender']));?></td>
+    <th><?php echo $_lang['mutate_settings.dynamic.php6']; ?><br><small>[(send_errormail)]</small></th>
+    <td>
+        <?php echo wrap_label($_lang['mutate_settings.dynamic.php7'],form_radio('send_errormail','0'));?><br />
+        <?php echo wrap_label('error',form_radio('send_errormail','3'));?><br />
+        <?php echo wrap_label('error + warning',form_radio('send_errormail','2'));?><br />
+        <?php echo wrap_label('error + warning + information',form_radio('send_errormail','1'));?>
+    </td>
 </tr>
+    <tr>
+        <td width="200">&nbsp;</td>
+        <td class="comment">
+            <?php echo parseText($_lang['mutate_settings.dynamic.php8'],array('emailsender'=>$modx->config['emailsender']));?>
+        </td>
+    </tr>
    <tr>
     <td colspan="2"><div class="split"></div></td>
 </tr>
@@ -216,6 +226,15 @@ if(!$gdAvailable) $use_captcha = 0;
   </tr>
   <tr class="captchaRow" <?php echo showHide($use_captcha==1);?>>
     <td colspan="2"><div class="split"></div></td>
+  </tr>
+  <tr>
+    <td colspan="2">
+        <?php
+            // invoke OnMiscSettingsRender event
+            $evtOut = $modx->invokeEvent('OnSecuritySettingsRender');
+            if(is_array($evtOut)) echo implode("",$evtOut);
+        ?>
+    </td>
   </tr>
 </table>
 </div>

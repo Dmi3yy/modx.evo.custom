@@ -84,7 +84,7 @@ class modxRTEbridge
         foreach($this->gSettingsRows as $param=>$row) {
             if(isset($row['defaultCheckbox']) && $row['defaultCheckbox']) {
                 $useGlobalName = $editorKey . '_' . $param . '_useglobal';
-                $this->modxParams[$param . '_useglobal'] = !empty($editorConfig[$useGlobalName]) || (isset($editorConfig[$useGlobalName]) && is_null($editorConfig[$useGlobalName])) ? '1' : '0';
+                $this->modxParams[$param . '_useglobal'] = !isset($editorConfig[$useGlobalName]) || !empty($editorConfig[$useGlobalName]) || (isset($editorConfig[$useGlobalName]) && is_null($editorConfig[$useGlobalName])) ? '1' : '0';
             }
         }
 
@@ -94,7 +94,7 @@ class modxRTEbridge
             // Handle defaultCheckbox
             if(isset($row['defaultCheckbox']) && $row['defaultCheckbox']) {
                 $useGlobalName = $editorKey . '_' . $param . '_useglobal';
-                $this->modxParams[$param . '_useglobal'] = !empty($editorConfig[$useGlobalName]) || (isset($editorConfig[$useGlobalName]) && is_null($editorConfig[$useGlobalName])) ? '1' : '0';
+                $this->modxParams[$param . '_useglobal'] = !isset($editorConfig[$useGlobalName]) || !empty($editorConfig[$useGlobalName]) || (isset($editorConfig[$useGlobalName]) && is_null($editorConfig[$useGlobalName])) ? '1' : '0';
             }
         };
 
@@ -368,7 +368,7 @@ class modxRTEbridge
         // Load Tv-Options as bridged-params
         if($selector !== 'initBridge') {
             foreach ($this->themeConfig as $key => $conf) {
-                if (isset($this->tvOptions[$selector][$key])) {
+                if (isset($this->tvOptions[$selector][$key]) && $key != 'theme') { // Issue #577
                     $this->themeConfig[$key]['bridged'] = $this->tvOptions[$selector][$key];
                 }
             }
@@ -452,11 +452,11 @@ class modxRTEbridge
     // Get final value of editor-config
     public function determineValue($key, $conf=NULL)
     {
-        if($conf == NULL) { $conf = $this->themeConfig[$key]; };
+        if($conf == NULL && isset($this->themeConfig[$key])) { $conf = $this->themeConfig[$key]; };
 
         $value = isset($this->themeConfig[$key]['bridged']) ? $this->themeConfig[$key]['bridged'] : NULL;
         $value = $value === NULL && isset($this->themeConfig[$key]['force']) ? $this->themeConfig[$key]['force'] : $value;
-        $value = $value === NULL ? $this->themeConfig[$key]['value'] : $value;
+        $value = $value === NULL && isset($this->themeConfig[$key]['value']) ? $this->themeConfig[$key]['value'] : $value;
 
         if(!in_array($conf['type'], array('boolean','bool'))) {
             if ($value === '' && $conf['empty'] === false) {  // Empty values not allowed
@@ -966,7 +966,7 @@ class modxRTEbridge
 
         $templatesArr = array();
 
-        if ($modx->getLoginUserType() === 'manager') {
+        if ($modx->getLoginUserType() === 'manager' || IN_MANAGER_MODE) {
 
             $modx->getSettings();
             $ids    = $modx->config[$this->editorKey.'_template_docs'];
@@ -1017,7 +1017,7 @@ class modxRTEbridge
     {
         global $modx;
 
-        if ($rid > 0 && $modx->getLoginUserType() === 'manager')
+        if ($rid > 0 && ($modx->getLoginUserType() === 'manager' || IN_MANAGER_MODE))
         {
             if(!isset($_POST['secHash']) ||
                !isset($_SESSION['modxRTEbridge']['secHash'][$rid]) ||

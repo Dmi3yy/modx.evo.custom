@@ -20,7 +20,6 @@ include_once("{$core_path}lang/english.inc.php");
 if($manager_language !== 'english' && is_file("{$core_path}lang/{$manager_language}.inc.php")) {
 	include_once("{$core_path}lang/{$manager_language}.inc.php");
 }
-
 // include the logger
 include_once("{$core_path}log.class.inc.php");
 
@@ -147,7 +146,7 @@ if($allowed_ip) {
 if($allowed_days) {
 	$date = getdate();
 	$day = $date['wday'] + 1;
-	if(strpos($allowed_days, $day) === false) {
+	if(!in_array($day,explode(',',$allowed_days))) {
 		jsAlert($_lang['login_processor_date']);
 		return;
 	}
@@ -179,6 +178,8 @@ if(!isset($rt) || !$rt || (is_array($rt) && !in_array(true, $rt))) {
 } else if($rt === true || (is_array($rt) && in_array(true, $rt))) {
 	$matchPassword = true;
 }
+
+$blocked_minutes = (int)$modx->config['blocked_minutes'];
 
 if(!$matchPassword) {
 	jsAlert($_lang['login_processor_wrong_password']);
@@ -297,7 +298,7 @@ if($id > 0) {
  * @param string $msg
  */
 function jsAlert($msg) {
-	global $modx;
+	$modx = evolutionCMS();
 	if($_POST['ajax'] != 1) {
 		echo "<script>window.setTimeout(\"alert('" . addslashes($modx->db->escape($msg)) . "')\",10);history.go(-1)</script>";
 	} else {
@@ -312,7 +313,7 @@ function jsAlert($msg) {
  * @return bool
  */
 function login($username, $givenPassword, $dbasePassword) {
-	global $modx;
+	$modx = evolutionCMS();
 	return $modx->phpass->CheckPassword($givenPassword, $dbasePassword);
 }
 
@@ -324,7 +325,7 @@ function login($username, $givenPassword, $dbasePassword) {
  * @return bool
  */
 function loginV1($internalKey, $givenPassword, $dbasePassword, $username) {
-	global $modx;
+	$modx = evolutionCMS();
 
 	$user_algo = $modx->manager->getV1UserHashAlgorithm($internalKey);
 
@@ -354,7 +355,7 @@ function loginV1($internalKey, $givenPassword, $dbasePassword, $username) {
  * @return bool
  */
 function loginMD5($internalKey, $givenPassword, $dbasePassword, $username) {
-	global $modx;
+	$modx = evolutionCMS();
 
 	if($dbasePassword != md5($givenPassword)) {
 		return false;
@@ -368,7 +369,7 @@ function loginMD5($internalKey, $givenPassword, $dbasePassword, $username) {
  * @param string $password
  */
 function updateNewHash($username, $password) {
-	global $modx;
+	$modx = evolutionCMS();
 
 	$field = array();
 	$field['password'] = $modx->phpass->HashPassword($password);
@@ -382,7 +383,7 @@ function updateNewHash($username, $password) {
  * @param int $blocked_minutes
  */
 function incrementFailedLoginCount($internalKey, $failedlogins, $failed_allowed, $blocked_minutes) {
-	global $modx;
+	$modx = evolutionCMS();
 
 	$failedlogins += 1;
 

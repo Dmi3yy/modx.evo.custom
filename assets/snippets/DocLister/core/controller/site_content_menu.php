@@ -94,7 +94,8 @@ class site_content_menuDocLister extends site_contentDocLister
             }
             $this->config->setConfig(array('hideSubMenus' => 1));
         }
-        $this->levels = $this->extCache->load('menudata');
+        $key = 'menudata' . $maxDepth;
+        $this->levels = $this->extCache->load($key);
         if ($this->levels === false) {
             $this->levels = array();
             $currentLevel = &$this->currentLevel;
@@ -143,7 +144,7 @@ class site_content_menuDocLister extends site_contentDocLister
                 $this->IDs = array_keys($docs);
                 $this->AddTable = array();
             }
-            $this->extCache->save($this->levels, 'menudata');
+            $this->extCache->save($this->levels, $key);
         }
     }
 
@@ -334,7 +335,7 @@ class site_content_menuDocLister extends site_contentDocLister
                             'data'      => $data,
                             'nameParam' => 'prepare'
                         ));
-                        if (is_bool($data) && $data === false) {
+                        if ($data === false) {
                             continue;
                         }
                     }
@@ -634,7 +635,7 @@ class site_content_menuDocLister extends site_contentDocLister
                                 'data'      => $data,
                                 'nameParam' => 'prepare'
                             ));
-                            if (is_bool($data) && $data === false) {
+                            if ($data === false) {
                                 continue;
                             }
                         }

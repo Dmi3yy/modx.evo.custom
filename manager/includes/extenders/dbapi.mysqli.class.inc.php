@@ -49,7 +49,7 @@ class DBAPI
      */
     public function connect($host = '', $dbase = '', $uid = '', $pwd = '')
     {
-        global $modx;
+        $modx = evolutionCMS();
         $uid = $uid ? $uid : $this->config['user'];
         $pwd = $pwd ? $pwd : $this->config['pass'];
         $host = $host ? $host : $this->config['host'];
@@ -60,7 +60,8 @@ class DBAPI
         $tstart = $modx->getMicroTime();
         $safe_count = 0;
         do {
-            $this->conn = new mysqli($host, $uid, $pwd, $dbase);
+            $host = explode(':', $host, 2);
+            $this->conn = new mysqli($host[0], $uid, $pwd, $dbase, isset($host[1]) ? $host[1] : null);
             if ($this->conn->connect_error) {
                 $this->conn = null;
                 if (isset($modx->config['send_errormail']) && $modx->config['send_errormail'] !== '0') {
@@ -144,7 +145,7 @@ class DBAPI
      */
     public function query($sql, $watchError = true)
     {
-        global $modx;
+        $modx = evolutionCMS();
         if ( ! ($this->conn instanceof mysqli)) {
             $this->connect();
         }
@@ -215,7 +216,7 @@ class DBAPI
      */
     public function delete($from, $where = '', $orderBy = '', $limit = '')
     {
-        global $modx;
+        $modx = evolutionCMS();
         $out = false;
         if (!$from) {
             $modx->messageQuit("Empty \$from parameters in DBAPI::delete().");
@@ -249,7 +250,7 @@ class DBAPI
      */
     public function select($fields = "*", $from = "", $where = "", $orderBy = "", $limit = "")
     {
-        global $modx;
+        $modx = evolutionCMS();
 
         if (is_array($fields)) {
             $fields = $this->_getFieldsStringFromArray($fields);
@@ -292,7 +293,7 @@ class DBAPI
      */
     public function update($fields, $table, $where = "")
     {
-        global $modx;
+        $modx = evolutionCMS();
         $out = false;
         if (!$table) {
             $modx->messageQuit('Empty '.$table.' parameter in DBAPI::update().');
@@ -330,7 +331,7 @@ class DBAPI
      */
     public function insert($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "")
     {
-        global $modx;
+        $modx = evolutionCMS();
         $out = false;
         if (!$intotable) {
             $modx->messageQuit("Empty \$intotable parameters in DBAPI::insert().");
@@ -504,7 +505,7 @@ class DBAPI
                     $out = $ds->fetch_array(MYSQLI_BOTH);
                     break;
                 default:
-                    global $modx;
+                    $modx = evolutionCMS();
                     $modx->messageQuit("Unknown get type ($mode) specified for fetchRow - must be empty, 'assoc', 'num' or 'both'.");
 
             }
@@ -564,7 +565,7 @@ class DBAPI
         }
         if ($dsq) {
             $r = $this->getRow($dsq, 'num');
-            $out = isset($r[0]) ? $r[0] : false;
+            $out = is_array($r) && array_key_exists(0, $r) ? $r[0] : false;
         }
 
         return $out;

@@ -77,7 +77,8 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
 
 	</script>
 
-	<form action="index.php?a=36" method="post" name="userform" enctype="multipart/form-data">
+	<form name="userform" method="post" action="index.php" enctype="multipart/form-data">
+        <input type="hidden" name="a" value="36">
 		<input type="hidden" name="mode" value="<?= $modx->manager->action ?>">
 		<input type="hidden" name="id" value="<?= $_GET['id'] ?>">
 
@@ -300,7 +301,7 @@ require_once(MODX_MANAGER_PATH . 'includes/active_user_locks.inc.php');
  * @return string
  */
 function render_form($name, $label, $status = '') {
-	global $modx, $roledata;
+	$modx = evolutionCMS(); global $roledata;
 
 	$tpl = '<label class="d-block" for="[+name+]check">
 		<input name="[+name+]check" id="[+name+]check" class="click" type="checkbox" onchange="changestate(document.userform.[+name+])" [+checked+] [+status+]>

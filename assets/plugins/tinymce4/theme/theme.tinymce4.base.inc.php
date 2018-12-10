@@ -44,7 +44,7 @@ $this->set('statusbar',             true,                           'bool' );   
 
 $this->set('document_base_url',     MODX_SITE_URL,                  'string' );     // https://www.tinymce.com/docs/configure/url-handling/#document_base_url
 $this->set('entity_encoding', $this->pluginParams['entityEncoding'],'string');      // https://www.tinymce.com/docs/configure/content-filtering/#encodingtypes
-$this->set('entities',        $this->pluginParams['entities'],      'string');      // https://www.tinymce.com/docs/configure/content-filtering/#entities
+$this->set('entities',        isset($this->pluginParams['entities']) ? $this->pluginParams['entities'] : '',      'string');      // https://www.tinymce.com/docs/configure/content-filtering/#entities
 
 $this->set('language',              $this->lang('lang_code'),       'string');      // https://www.tinymce.com/docs/configure/localization/#language
 if($this->lang('lang_code') != 'en')
@@ -81,8 +81,8 @@ if($this->pluginParams['paste_as_text'] == 'enabled') {
 
 // @todo: final base-setup like tinymce3 "default"-theme?
 $this->set('plugins', 'anchor visualblocks autolink autosave save advlist fullscreen paste modxlink media contextmenu table youtube image imagetools code textcolor', 'string');    // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
-$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect fontsizeselect pastetext code | fullscreen help', 'string');
-$this->set('toolbar2', 'image media youtube link unlink anchor | alignleft aligncenter alignright | bullist numlist | blockquote outdent indent | table hr | visualblocks styleprops removeformat', 'string');
+$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect fontsizeselect pastetext code | fullscreen help', 'string', false);
+$this->set('toolbar2', 'image media youtube link unlink anchor | alignleft aligncenter alignright | bullist numlist | blockquote outdent indent | table hr | visualblocks styleprops removeformat', 'string', true);
 
 // Bridge does not return NULL, and does not use this->set() itself, so these parameters must be set at least once..
 // Params get translated by bridge because it does not return NULL, so the returned values will be used

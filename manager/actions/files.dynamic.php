@@ -16,8 +16,8 @@ $excludes = array(
     '.svn'
 );
 $alias_suffix = (!empty($friendly_url_suffix)) ? ',' . ltrim($friendly_url_suffix, '.') : '';
-$editablefiles = explode(',', 'txt,php,tpl,less,sass,shtml,html,htm,xml,js,css,pageCache,htaccess,json' . $alias_suffix);
-$inlineviewablefiles = explode(',', 'txt,php,tpl,less,sass,html,htm,xml,js,css,pageCache,htaccess,json' . $alias_suffix);
+$editablefiles = explode(',', 'txt,php,tpl,less,sass,shtml,html,htm,xml,js,css,pageCache,htaccess,json,ini' . $alias_suffix);
+$inlineviewablefiles = explode(',', 'txt,php,tpl,less,sass,html,htm,xml,js,css,pageCache,htaccess,json,ini' . $alias_suffix);
 $viewablefiles = explode(',', 'jpg,gif,png,ico');
 
 $editablefiles = add_dot($editablefiles);
@@ -485,7 +485,7 @@ if (substr($webstart_path, 0, 1) == '/') {
                 @ini_set("upload_max_filesize", $upload_maxsize); // modified by raymond
                 ?>
 
-                <form name="upload" enctype="multipart/form-data" action="index.php" method="post">
+                <form name="upload" method="post" action="index.php" enctype="multipart/form-data">
                     <input type="hidden" name="MAX_FILE_SIZE" value="<?= isset($upload_maxsize) ? $upload_maxsize : 3145728 ?>">
                     <input type="hidden" name="a" value="31">
                     <input type="hidden" name="path" value="<?= $startpath ?>">
@@ -524,7 +524,7 @@ if ($_REQUEST['mode'] == "edit" || $_REQUEST['mode'] == "view") {
             $modx->webAlertAndQuit("Error opening file for reading.");
         }
         ?>
-        <form action="index.php" method="post" name="editFile">
+        <form name="editFile" method="post" action="index.php">
             <input type="hidden" name="a" value="31" />
             <input type="hidden" name="mode" value="save" />
             <input type="hidden" name="path" value="<?= $_REQUEST['path'] ?>" />
@@ -890,7 +890,7 @@ function rrmdir($dir)
  */
 function fileupload()
 {
-    global $modx, $_lang, $startpath, $filemanager_path, $uploadablefiles, $new_file_permissions;
+    $modx = evolutionCMS(); global $_lang, $startpath, $filemanager_path, $uploadablefiles, $new_file_permissions;
     $msg = '';
     foreach ($_FILES['userfile']['name'] as $i => $name) {
         if (empty($_FILES['userfile']['tmp_name'][$i])) continue;

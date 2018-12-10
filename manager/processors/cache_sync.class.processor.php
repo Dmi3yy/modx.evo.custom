@@ -25,7 +25,7 @@ class synccache
      */
     public function __construct()
     {
-        global $modx;
+        $modx = evolutionCMS();
 
         $this->request_time = $_SERVER['REQUEST_TIME'] + $modx->config['server_offset_time'];
     }
@@ -80,7 +80,7 @@ class synccache
      */
     public function getParents($id, $path = '')
     { // modx:returns child's parent
-        global $modx;
+        $modx = evolutionCMS();
         if (empty($this->aliases)) {
             $f = "id, IF(alias='', id, alias) AS alias, parent, alias_visible";
             $rs = $modx->db->select($f, '[+prefix+]site_content', 'deleted=0');
@@ -196,7 +196,7 @@ class synccache
      */
     public function getCacheRefreshTime()
     {
-        global $modx;
+        $modx = evolutionCMS();
 
         // update publish time file
         $timesArr = array();
@@ -252,7 +252,7 @@ class synccache
         $config = array();
         $content .= '$c=&$this->config;';
         while (list($key, $value) = $modx->db->getRow($rs, 'num')) {
-            $content .= '$c[\'' . $key . '\']="' . $this->escapeDoubleQuotes($value) . '";';
+            $content .= '$c[\'' . $modx->db->escape($key) . '\']="' . $this->escapeDoubleQuotes($value) . '";';
             $config[$key] = $value;
         }
 
@@ -313,10 +313,7 @@ class synccache
         $rs = $modx->db->select('*', '[+prefix+]site_htmlsnippets');
         $content .= '$c=&$this->chunkCache;';
         while ($doc = $modx->db->getRow($rs)) {
-            if ($modx->config['minifyphp_incache']) {
-                $doc['snippet'] = $this->php_strip_whitespace($doc['snippet']);
-            }
-            $content .= '$c[\'' . $doc['name'] . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
+            $content .= '$c[\'' . $modx->db->escape($doc['name']) . '\']=\'' . ($doc['disabled'] ? '' : $this->escapeSingleQuotes($doc['snippet'])) . '\';';
         }
 
         // WRITE snippets to cache file
@@ -325,7 +322,7 @@ class synccache
         $rs = $modx->db->select($f, $from);
         $content .= '$s=&$this->snippetCache;';
         while ($row = $modx->db->getRow($rs)) {
-            $key = $row['name'];
+            $key = $modx->db->escape($row['name']);
             if ($row['disabled']) {
                 $content .= '$s[\'' . $key . '\']=\'return false;\';';
             } else {
@@ -351,7 +348,7 @@ class synccache
         $rs = $modx->db->select($f, $from, 'sp.disabled=0');
         $content .= '$p=&$this->pluginCache;';
         while ($row = $modx->db->getRow($rs)) {
-            $key = $row['name'];
+            $key = $modx->db->escape($row['name']);
             $value = trim($row['plugincode']);
             if ($modx->config['minifyphp_incache']) {
                 $value = $this->php_strip_whitespace($value);

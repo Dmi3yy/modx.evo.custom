@@ -127,7 +127,6 @@ class DLphx
         $st = md5($template);
 
         $this->LogPass();
-
         // MODX Chunks
         if (preg_match_all('~(?<!(?:then|else)=`){{([^:\+{}]+)([^{}]*?)}}~s', $template, $matches)) {
             $this->Log('MODX Chunks -> Merging all chunk tags');
@@ -181,6 +180,7 @@ class DLphx
             for ($i = 0; $i < $count; $i++) {
                 $input = $matches[2][$i];
                 $modifiers = $matches[3][$i];
+                if(empty($modifiers)) continue;
                 $var_search[] = $matches[0][$i];
                 switch ($matches[1][$i]) {
                     // Document / Template Variable eXtended

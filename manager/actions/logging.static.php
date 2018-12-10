@@ -64,7 +64,8 @@ $logs = $modx->db->makeArray($rs);
         <div class="container container-body">
             <div class="element-edit-message-tab alert alert-warning"><?= $_lang["mgrlog_query_msg"] ?></div>
 
-            <form action="index.php?a=13" name="logging" method="POST" class="form-group">
+            <form name="logging" method="post" action="index.php" class="form-group">
+                <input type="hidden" name="a" value="13">
                 <div class="row form-row">
                     <div class="col-sm-4 col-md-3 col-lg-2"><b><?= $_lang["mgrlog_user"] ?></b></div>
                     <div class="col-sm-8 col-md-5 col-lg-4">
@@ -281,6 +282,8 @@ if ($limit < 1) {
                     <th class="sortable sortable-numeric" width="1%"><?= $_lang["mgrlog_itemid"] ?></th>
                     <th class="sortable"><?= $_lang["mgrlog_itemname"] ?></th>
                     <th class="sortable" width="1%"><?= $_lang["mgrlog_time"] ?></th>
+                    <th class="sortable" width="1%">IP</th>
+                    <th class="sortable" width="1%">USER_AGENT</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -305,6 +308,8 @@ if ($limit < 1) {
                         <td class="text-xs-right"><?= $logentry['itemid'] ?></td>
                         <td><?= $item ?></td>
                         <td class="text-nowrap"><?= $modx->toDateFormat($logentry['timestamp'] + $server_offset_time) ?></td>
+                        <td class="text-nowrap"><?= $logentry['ip'] ?></td>
+                        <td class="text-nowrap"><?= $logentry['useragent'] ?></td>
                     </tr>
                     <?php
                     $i++;
